@@ -50,6 +50,6 @@
 
 .absolute-right {
   font-size: 1.1rem;
-  float: right;
+  margin-left:auto;
   right: 0.5rem;
 }
