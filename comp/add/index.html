@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>TenkaAssist - 조합 등록</title>
+   <script src="http://127.0.0.1:5500/js/common.js"></script>
+   <link rel="stylesheet" href="http://127.0.0.1:5500/css/common.css" type = "text/css">
+   <script src="http://127.0.0.1:5500/js/characterJson.js"></script>
+   <script src="http://127.0.0.1:5500/js/compAdd.js"></script>
+</head>
+<body>
+   <script src="http://127.0.0.1:5500/js/header.js"></script>
+   <div class="main-container bg-dark">
+      <div class="block">
+         <div class="margin-left titleblock"><span class="titlebox">조합 등록</span></div>
+      </div>
+      <div class="block">
+         <div class="margin-left titleblock">
+            <div id="selectedCh" class="flex">캐릭터를 선택해 추가해 주세요</div>
+            <button style="margin-left:auto;" class="button2" onclick="registerDeck()">등록</button>
+         </div>
+      </div>
+      <div class="block">
+         <textarea id="description" rows="2", cols="30" class="addCompDescription" placeholder="필요한 경우 등록 전에 조합 설명을 적어주세요"></textarea>
+      </div>
+      <div class="block flex">
+         <label class="c-radio"><input type="radio" name="element" value="0" onclick="checkElement(0)"><span>화속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="1" onclick="checkElement(1)"><span>수속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="2" onclick="checkElement(2)"><span>풍속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="3" onclick="checkElement(3)"><span>광속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="4" onclick="checkElement(4)"><span>암속성</span></label>
+      </div>
+      <div class="block flex">
+         <label class="c-radio"><input type="radio" name="role" value="0" onclick="checkRole(0)"><span>딜러</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="1" onclick="checkRole(1)"><span>힐러</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="2" onclick="checkRole(2)"><span>탱커</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="3" onclick="checkRole(3)"><span>서포터</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="4" onclick="checkRole(4)"><span>디스럽터</span></label>
+      </div>
+      <div class="block flex">
+         <label class="c-radio"><input type="radio" name="rarity" value="3" onclick="checkRarity(3)"><span>SSR</span></label>
+         <label class="c-radio"><input type="radio" name="rarity" value="2" onclick="checkRarity(2)"><span>SR</span></label>
+         <label class="c-radio"><input type="radio" name="rarity" value="1" onclick="checkRarity(1)"><span>R</span></label>
+         <label class="c-radio"><input type="radio" name="rarity" value="0" onclick="checkRarity(0)"><span>N</span></label>
+         <input id="searchInput" type="text" class="searchInput" placeholder="검색">
+      </div>
+      <div class="block flex" id="characterContainer">
+         
+      </div>
+   </div>
+</body>
+</html>

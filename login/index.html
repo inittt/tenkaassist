@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>TenkaAssist - 로그인</title>
+   <script src="http://127.0.0.1:5500/js/common.js"></script>
+   <script src="http://127.0.0.1:5500/js/login.js"></script>
+   <link rel="stylesheet" href="http://127.0.0.1:5500/css/common.css" type = "text/css">
+</head>
+<body>
+   <script src="http://127.0.0.1:5500/js/header.js"></script>
+   <div class="main-container bg-dark" id="compcontainer">
+      <div class="block">
+         <div class="margin-left titleblock"><span class="titlebox">로그인</span></div>
+      </div>
+      <div class="block loginBox">
+         <input class="loginInput" name="username" type="text" placeholder="아이디">
+         <input class="loginInput" name="password" type="password" placeholder="비밀번호">
+         <button class="loginButton bg-green" onclick="login()">로그인</button>
+         <button class="loginButton bg-blue" onclick="goRegister()">회원가입</button>
+         <script>
+            function goRegister() {location.href=`${address}/register/index.html`;}
+         </script>
+      </div>
+
+
+   </div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <script src="http://127.0.0.1:5500/js/common.js"></script>
+   <link rel="stylesheet" href="http://127.0.0.1:5500/css/common.css" type = "text/css">
+   <link rel="stylesheet" href="http://127.0.0.1:5500/css/comp.css" type = "text/css">
+   <script src="http://127.0.0.1:5500/js/characterJson.js"></script>
+   <script src="http://127.0.0.1:5500/js/comp.js"></script>
+</head>
+<body>
+   <script src="http://127.0.0.1:5500/js/header.js"></script>
+   <div class="main-container bg-dark">
+      <div class="block">
+         <div class="margin-left titleblock">
+            <span id="titlebox" class="titlebox">/</span>
+            <button class="reportBtn" onclick="reportComp()">!</button>
+            <button class="updateBtn" onclick="updateComp()">수정</button>
+         </div>
+      </div>
+      <div class="block" id="compContainer">
+         <div class="comp-box-custom">
+            <div id="comp-box-in" class="comp-deck margin-left"></div>
+            <div id="dateBox" class="margin-right">
+               <div id="create_at"></div>
+               <div id="update_at"></div>
+               <div id="creator"></div>
+               <div id="updater"></div>
+            </div>
+         </div>
+      </div>
+      <div class="block likeNranking">
+         <div id="ranking"></div>
+         <div id="like" class="hoverlike like"></div>
+      </div>
+      <div class="block">
+         <p class="fs-1_3 margin-left">조합 설명</p><hr>
+         <div id="description" style="width:100%; min-height:5rem;">
+
+
+         </div>
+      </div>
+   </div>
+</body>
+</html>

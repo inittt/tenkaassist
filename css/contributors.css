@@ -1,0 +1,36 @@
+.main-box {
+   display: flex;
+   flex-wrap: wrap;
+}
+.user-box {
+   border:0.1rem solid white;
+   margin: 1rem auto 1rem auto;
+   padding:0.5rem;
+   border-radius: 0.5rem;
+   width:25%;
+   min-width:14rem;
+   background-color: none;
+   min-height:5rem;
+}
+.underline {
+   font-weight: bold;
+   border-bottom: 1px solid white;
+}
+.user-container {
+   display: flex;
+   flex-direction: column;
+}
+.user-contribution-text {
+   padding:0.2rem;
+   margin:0.2rem;
+   display:flex;
+   justify-content: space-between;
+   border-bottom: 1px solid white;
+}
+.user-order {
+   width:2rem;
+}
+.user-point {
+   text-align: right;
+   width:4rem;
+}

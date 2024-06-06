@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>TenkaAssist - 검색</title>
+   <script src="http://127.0.0.1:5500/js/common.js"></script>
+   <link rel="stylesheet" href="http://127.0.0.1:5500/css/common.css" type = "text/css">
+   <link rel="stylesheet" href="http://127.0.0.1:5500/css/dropdown.css" type = "text/css">
+   <script src="http://127.0.0.1:5500/js/search.js"></script>
+   <script src="http://127.0.0.1:5500/js/characterJson.js"></script>
+</head>
+<body onload="init()">
+   <script src="http://127.0.0.1:5500/js/header.js"></script>
+   <div class="main-container bg-dark">
+      <div class="block">
+         <div class="margin-left titleblock">
+            <span class="titlebox">검색결과</span>
+            <div class="dropdown">
+               <button id="dropdownBtn">랭킹순<span class="absolute-right">▼</span></button>
+               <div class="dropdown-content">
+                  <input type="radio" id="option1" name="options" value="랭킹순" checked>
+                  <label class="sortLabel" for="option1">랭킹순</label>
+                  <input type="radio" id="option2" name="options" value="추천순">
+                  <label class="sortLabel" for="option2">추천순</label>
+                  <input type="radio" id="option3" name="options" value="최신등록순">
+                  <label class="sortLabel" for="option3">최신등록순</label>
+                  <input type="radio" id="option4" name="options" value="최신수정순">
+                  <label class="sortLabel" for="option4">최신수정순</label>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div id="compcontainer"></div>
+   </div>
+</body>
+</html>

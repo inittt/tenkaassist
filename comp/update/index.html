@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <script src="http://127.0.0.1:5500/js/common.js"></script>
+   <link rel="stylesheet" href="http://127.0.0.1:5500/css/common.css" type = "text/css">
+   <link rel="stylesheet" href="http://127.0.0.1:5500/css/comp.css" type = "text/css">
+   <script src="http://127.0.0.1:5500/js/characterJson.js"></script>
+   <script src="http://127.0.0.1:5500/js/compUpdate.js"></script>
+</head>
+<body>
+   <script src="http://127.0.0.1:5500/js/header.js"></script>
+   <div class="main-container bg-dark">
+      <div class="block">
+         <div class="margin-left titleblock">
+            <span id="titlebox" class="titlebox">/</span>
+            <button class="finishBtn" onclick="updateFinish()">완료</button>
+         </div>
+      </div>
+      <div class="block" id="compContainer">
+         <div class="comp-box-custom margin-left">
+            <div id="comp-box-in" class="comp-deck"></div>
+         </div>
+      </div>
+      <div class="block">
+         <p class="fs-1_3 margin-left">조합 설명</p><hr>
+         <textarea id="description" rows="2", cols="30" class="addCompDescription" placeholder="필요한 경우 등록 전에 조합 설명을 적어주세요"></textarea>
+      </div>
+   </div>
+</body>
+</html>

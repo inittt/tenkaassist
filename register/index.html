@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>TenkaAssist - 회원가입</title>
+   <script src="http://127.0.0.1:5500/js/common.js"></script>
+   <script src="http://127.0.0.1:5500/js/login.js"></script>
+   <link rel="stylesheet" href="http://127.0.0.1:5500/css/common.css" type = "text/css">
+</head>
+<body>
+   <script src="http://127.0.0.1:5500/js/header.js"></script>
+   <div class="main-container bg-dark" id="compcontainer">
+      <div class="block">
+         <div class="margin-left titleblock"><span class="titlebox">회원가입</span></div>
+      </div>
+      <div class="block loginBox">
+         <input class="loginInput" name="username" type="text" placeholder="아이디">
+         <input class="loginInput" name="password" type="password" placeholder="비밀번호">
+         <input class="loginInput" name="name" type="text" placeholder="닉네임">
+         <button class="loginButton bg-blue" onclick="register()">회원가입</button>
+      </div>
+   </div>
+</body>
+<script>
+   function register() {
+      const username = document.querySelector('input[name="username"]').value;
+      const password = document.querySelector('input[name="password"]').value;
+      const name = document.querySelector('input[name="name"]').value;
+      const formData = new FormData();
+      formData.append("username", username);
+      formData.append("password", password);
+      formData.append("name", name);
+      request(`${server}/users/register`, {
+         method: 'POST',
+         body: formData,
+      }).then(response => {
+         if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+         return response.json();
+      }).then(res => {
+         if (!res.success) alert(res.msg);
+         else {
+            alert("회원가입 성공");
+            location.href = `${address}/login/index.html`;
+         }
+      }).catch(error => {
+         console.log(error);
+      });
+   }
+</script>
+</html>
