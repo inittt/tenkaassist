@@ -86,7 +86,7 @@ function makeBlock(data, sort) {
       compblock.classList.add("block", "hoverblock");
       compblock.innerHTML = stringArr.join("");
       compblock.addEventListener("click", function() {
-         window.location.href = `${address}/comp/index.html?id=${id}`;
+         window.location.href = `${address}/comp/?id=${id}`;
       });
       compcontainer.appendChild(compblock);
    }

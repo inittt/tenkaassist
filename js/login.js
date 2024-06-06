@@ -22,7 +22,7 @@ function loginStart(formData) {
          let data = res.data;
          // 사용자명을 local에 저장
          localStorage.setItem("jwtToken", data);
-         location.href = `${address}/index.html`;
+         location.href = `${address}/`;
       }
    }).catch(error => {
       console.log(error);

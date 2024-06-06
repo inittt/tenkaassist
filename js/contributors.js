@@ -2,11 +2,6 @@ document.addEventListener("DOMContentLoaded", function() {
    loadGameUser();
    loadAddUser();
    loadUpdateUser();
-
-
-
-
-
 });
 
 function loadGameUser() {

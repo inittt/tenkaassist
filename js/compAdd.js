@@ -70,7 +70,7 @@ function registerDeck() {
    }).then(res => {
       if (!res.success) return alert(res.msg);
       alert("등록 성공");
-      location.href = `${address}/comp/index.html?id=${res.data}`
+      location.href = `${address}/comp/?id=${res.data}`
    }).catch(e => {
       alert("조합 등록 실패", e);
    })

@@ -2,11 +2,11 @@ document.addEventListener('DOMContentLoaded', function() {
    let headerSide = document.createElement('div');
    headerSide.classList.add("h-toggle");
    headerSide.innerHTML = `
-      <a class="h-line" href="${address}/index.html">조합목록</a>
-      <a class="h-line" href="${address}/characters/index.html">캐릭터</a>
-      <a class="h-line" href="${address}/game/index.html">밸런스 게임</a>
-      <a class="h-line" href="${address}/comp/add/index.html">조합등록</a>
-      <a class="h-line" href="${address}/contributors/index.html">♥</a>
+      <a class="h-line" href="${address}/">조합목록</a>
+      <a class="h-line" href="${address}/characters/">캐릭터</a>
+      <a class="h-line" href="${address}/game/">밸런스 게임</a>
+      <a class="h-line" href="${address}/comp/add/">조합등록</a>
+      <a class="h-line" href="${address}/contributors/">♥</a>
    `;
 
    let headerMain = document.createElement('header');
@@ -14,12 +14,12 @@ document.addEventListener('DOMContentLoaded', function() {
       <img src="${address}/images/nav-bar.png" class="h-nav-button h-left margin-left">
       <img src="${address}/images/icons/main.webp" class="h-nav-icon h-left margin-left"
          onclick="goMain()">
-      <a class="logo h-left" href="${address}/index.html">TenkaAssist</a>
-      <a class="h-left h-box" href="${address}/index.html">조합목록</a>
-      <a class="h-left h-box" href="${address}/characters/index.html">캐릭터</a>
-      <a class="h-left h-box" href="${address}/game/index.html">밸런스게임</a>
-      <a class="h-left h-box" href="${address}/comp/add/index.html">조합등록</a>
-      <a class="h-left h-box" href="${address}/contributors/index.html">♥</a>
+      <a class="logo h-left" href="${address}/">TenkaAssist</a>
+      <a class="h-left h-box" href="${address}/">조합목록</a>
+      <a class="h-left h-box" href="${address}/characters/">캐릭터</a>
+      <a class="h-left h-box" href="${address}/game/">밸런스게임</a>
+      <a class="h-left h-box" href="${address}/comp/add/">조합등록</a>
+      <a class="h-left h-box" href="${address}/contributors/">♥</a>
       <div id="userInfo" class="user-info h-right margin-right"></div>
    `;
 
@@ -53,10 +53,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function goMain() {
-   location.href = `${address}/index.html`;
+   location.href = `${address}/`;
 }
 function goLogin() {
-   location.href = `${address}/login/index.html`;
+   location.href = `${address}/login/`;
 }
 
 function logout() {

@@ -70,7 +70,7 @@ function updateFinish() {
    }).then(res => {
       if (!res.success) return alert(res.msg);
       alert("수정 성공");
-      location.href = `${address}/comp/index.html?id=${res.data}`
+      location.href = `${address}/comp/?id=${res.data}`
    }).catch(e => {
       alert("조합 수정 실패", e);
    })

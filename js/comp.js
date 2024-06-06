@@ -100,7 +100,7 @@ function makeCompBlock(comp) {
 }
 
 function updateComp() {
-   location.href = `${address}/comp/update/index.html?id=${compId}`;
+   location.href = `${address}/comp/update/?id=${compId}`;
 }
 
 function reportComp() {
