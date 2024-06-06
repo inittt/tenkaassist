@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
          sort = 0;
          document.getElementById('nextTrigger').innerHTML = "로드 중...";
-         document.getElementById('titleboxText').innerHTML = `조합목록 - ${this.value}`;
+         document.getElementById('titleboxText').innerHTML = `조합 - ${this.value}`;
          if ("추천순" === this.value) sort = 1;
          if ("최신등록순" === this.value) sort = 2;
          if ("최신수정순" === this.value) sort = 3;

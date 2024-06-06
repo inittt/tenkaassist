@@ -1,5 +1,26 @@
+/*font*/
+@font-face {
+   font-family: 'Noto_Sans_KR';
+   src: url('fonts/static/NotoSnasKR-Regular.ttf') format('truetype');
+   font-weight: normal;
+   font-style: normal;
+}
+@font-face {
+   font-family: 'Noto_Sans_KR';
+   src: url('fonts/static/NotoSnasKR-Bold.ttf') format('truetype');
+   font-weight: bold;
+   font-style: normal;
+}
+@font-face {
+   font-family: 'Noto_Sans_KR';
+   src: url('fonts/static/NotoSnasKR-ExtraBold.ttf') format('truetype');
+   font-weight: 800;
+   font-style: normal;
+}
+
 #adminContent {display: none;}
 body {
+   font-family: 'Noto_Sans_KR', sans-serif;
    -webkit-user-select: none; /* Chrome, Safari, Opera */
    -moz-user-select: none; /* Firefox */
    -ms-user-select: none; /* IE 10+ */
