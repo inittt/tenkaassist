@@ -3,11 +3,12 @@
    flex-direction: column;
 }
 .gameCompBox {
-   /*border: 1px solid white;*/
+   background-color: #22252e;
    width:100%;
    min-height:10rem;
    display: flex;
    justify-content: center;
+   overflow: hidden;
 }
 #vs {
    display:flex;
