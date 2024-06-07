@@ -115,12 +115,10 @@
 }
 
 @media (max-width: 445px) {
-  .gameCompBox {
-    flex-direction: column;
-  }
+  .gameCompBox {flex-direction: column;}
+  .comp-name {margin-left:auto; margin-right:auto}
+  .comp-deck {margin-left:auto; margin-right:auto}
 }
 @media (min-width: 445px) {
-  .gameCompBox {
-    flex-direction: row;
-  }
+  .gameCompBox {flex-direction: row;}
 }
