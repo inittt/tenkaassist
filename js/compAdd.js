@@ -38,7 +38,7 @@ function getCharactersWithCondition(element, role, rarity, search) {
       innerArray.push(`
          <div class="character" onclick="clickedCh(${id})" style="margin:0.2rem;">
             <div style="margin:0.2rem;">
-               <img id="img_${id}" src="${img}" class="img z-1" alt="NoImg">
+               <img id="img_${id}" src="${img}" class="img z-1" alt="">
                <img id="el_${id}" src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">
                <div class="element${element} ch_img ch_border z-4"></div>
             </div>
@@ -91,7 +91,7 @@ function updateSelected() {
          innerArray.push(`
             <div class="character" onclick="clickedSel(this, ${id})" style="margin:0.2rem;">
                <div style="margin:0.2rem;">
-                  <img src="${address}/images/characters/cs${id}_0_0.webp" class="img z-1" alt="NoImg">
+                  <img src="${address}/images/characters/cs${id}_0_0.webp" class="img z-1" alt="">
                   <img src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">
                   <div class="element${element} ch_img ch_border z-4"></div>
                </div>

@@ -22,6 +22,12 @@
   height:100%;
 }
 
+.dropdown-content input[type="checkbox"] {
+  text-align: center;
+  display: none;
+  height:100%;
+}
+
 .dropdown-content label {
   height:1.5rem;
   font-size:0.9rem;

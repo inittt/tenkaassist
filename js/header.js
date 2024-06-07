@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
    headerSide.innerHTML = `
       <a class="h-line" href="${address}/">조합목록</a>
       <a class="h-line" href="${address}/characters/">캐릭터</a>
-      <a class="h-line" href="${address}/game/">밸런스 게임</a>
+      <a class="h-line" href="${address}/game/">밸런스게임</a>
+      <a class="h-line" href="${address}/recruit/">전지역모집</a>
       <a class="h-line" href="${address}/comp/add/">조합등록</a>
       <a class="h-line" href="${address}/contributors/">♥</a>
    `;
@@ -18,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <a class="h-left h-box" href="${address}/">조합목록</a>
       <a class="h-left h-box" href="${address}/characters/">캐릭터</a>
       <a class="h-left h-box" href="${address}/game/">밸런스게임</a>
+      <a class="h-left h-box" href="${address}/recruit/">전지역모집</a>
       <a class="h-left h-box" href="${address}/comp/add/">조합등록</a>
       <a class="h-left h-box" href="${address}/contributors/">♥</a>
       <div id="userInfo" class="user-info h-right margin-right"></div>

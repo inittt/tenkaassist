@@ -378,6 +378,7 @@ header {
 @media (max-width: 420px) {
    .comp-time {width:10rem;}
    .comp-order {width:5rem;}
+   .main-container {padding:4rem 0 0 0; width:100vw;}
 }
 @media (min-width: 420px) {
    .main-container {width: 100%; padding: 4rem 0 0 0;}

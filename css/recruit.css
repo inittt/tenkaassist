@@ -1,0 +1,41 @@
+/* 라디오 버튼 커스텀 스타일링 */
+.c-checkbox {
+   display: flex;
+   align-items: center;
+   cursor: pointer;
+   position: relative;
+}
+.c-checkbox input {
+   display: none; /* 기본 라디오 버튼 숨김 */
+}
+.c-checkbox span {
+   border-radius: 0.3rem;
+   padding: 0.2rem 0.5rem;
+   border: 2px solid transparent;
+   transition: border-color 0.3s;
+}
+.c-checkbox input:checked + span {
+   font-weight: bold;
+   background-color:#3f568b;
+   border-color: #007BFF; /* 선택된 상태에서 파란색 테두리 */
+}
+.checkbox-container {
+   min-width:25rem;
+}
+.recruit-main {
+   width:auto;
+   display:flex;
+   flex-wrap:wrap;
+}
+#resultBox {
+   min-width:15rem;
+   display: flex;
+   flex-direction: column;
+}
+@media (max-width: 488px) {
+   .checkbox-container{min-width:15rem;}
+   .recruit-main{
+      margin:0;
+      padding:0;
+   }
+}
