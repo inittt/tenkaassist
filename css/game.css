@@ -44,6 +44,7 @@
  }
  
  .dropdown-content {
+   padding-top:0.2rem;
    box-sizing:border-box;
    border:2px solid black;
    display: none;
@@ -74,6 +75,8 @@
  }
  
  #dropdownBtn {
+   display: flex;
+   align-items: center;
    box-sizing:border-box;
    border:2px solid black;
    border-radius: 0.2rem;
@@ -86,7 +89,7 @@
  
  .absolute-right {
    font-size: 1.1rem;
-   float: right;
+   margin-left:auto;
    right: 0.5rem;
  }
 
@@ -109,4 +112,15 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
+}
+
+@media (max-width: 445px) {
+  .gameCompBox {
+    flex-direction: column;
+  }
+}
+@media (min-width: 445px) {
+  .gameCompBox {
+    flex-direction: row;
+  }
 }
