@@ -218,7 +218,7 @@ function makeResult() {
       stringArr.push(`</div><div class="comp-rank">▲ ${ranking.toFixed(2)}</div></div>`);
 
       let compblock = document.createElement('div');
-      compblock.classList.add("block");
+      compblock.classList.add("block-none");
       compblock.innerHTML = stringArr.join("");
       gameBlock.appendChild(compblock);
    }

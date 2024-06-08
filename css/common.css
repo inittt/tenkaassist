@@ -98,6 +98,13 @@ a {color: inherit; text-decoration: none;}
    background-color: #373d4b;
    width:auto;
 }
+.block-none {
+   border-radius: 0.2rem;
+   margin: 0.5rem;
+   padding:0.3rem;
+   background-color: transparent;
+   width:auto;
+}
 .comp-box {
    padding-left:0.5rem;
    cursor:pointer;
