@@ -87,7 +87,8 @@ function makeBlock(data, sort) {
          case 1 : last = `♥ ${recommend}`; break;
          case 2 : last = `${creator}`; break;
          case 3 : last = `${updater}`; break;
-         default : last = `▲ ${ranking.tofixed(2)}`;
+         default : last = `▲ ${typeof ranking === 'number' ? ranking.toFixed(2) : ranking}`;
+         //default : last = `▲ ${ranking.tofixed(2)}`;
       } stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
       let compcontainer = document.getElementById('compcontainer');
       let compblock = document.createElement('div');
