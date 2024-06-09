@@ -1,4 +1,4 @@
-let checkElementN, checkRoleN, checkRarityN;
+let checkElementN, checkRoleN, checkRarityN, isOn = false;
 
 const selected = [];
 document.addEventListener("DOMContentLoaded", function() {
@@ -8,7 +8,27 @@ document.addEventListener("DOMContentLoaded", function() {
    searchInput.addEventListener('input', function() {
       getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, searchInput.value);
    })
+
+   const toggleButton = document.getElementById('leaderBtn');
+   toggleButton.addEventListener('click', () => {
+      isOn = toggleButton.classList.toggle('leaderOn');
+      toggleButton.classList.toggle('leaderOff', !isOn);
+      if (isOn) {
+         document.getElementById("leaderBox").style.visibility = "visible";
+         if (selected.length == 0) document.getElementById('selectedCh').innerHTML = "";
+      } else {
+         document.getElementById("leaderBox").style.visibility = "hidden";
+         if (selected.length == 0) document.getElementById('selectedCh').innerHTML = "캐릭터를 선택해 추가해 주세요<br>(선택 캐릭터가 포함된 조합 검색)";
+      }
+   });
 });
+
+// Leader 상태 On인지 확인 메소드
+function isLeaderOn() {
+   return toggleButton.classList.contains('leaderOn');
+}
+
+
 function getCharactersWithCondition(element, role, rarity, search) {
    const characterContainer = document.getElementById("characterContainer");
    characterContainer.innerHTML = "로드 중...";
@@ -46,7 +66,9 @@ function getCharactersWithCondition(element, role, rarity, search) {
 function searchDeck() {
    if (selected.length > 4) return alert("캐릭터는 5개까지 선택가능합니다");
    if (selected.length < 1) return alert("하나 이상의 캐릭터를 선택해 주세요");
-   location.href = `${address}/search/?list=${selected}`;
+   if (isOn){
+      location.href = `${address}/search/?list=${selected}&leader=${selected[0]}`;
+   } else location.href = `${address}/search/?list=${selected}`;
 }
 
 function resizeButton() {
@@ -59,7 +81,7 @@ function resizeButton() {
 // 검색창에 선택된 캐릭터 이미지 띄우기
 function updateSelected() {
    const div = document.getElementById("selectedCh");
-   if (selected.length == 0) div.innerHTML = "캐릭터를 선택해 추가해 주세요<br>(선택 캐릭터가 포함된 조합 검색)";
+   if (selected.length == 0 && !isOn) div.innerHTML = "캐릭터를 선택해 추가해 주세요<br>(선택 캐릭터가 포함된 조합 검색)";
    else {
       let innerArray = [];
       for(let chId of selected) {
@@ -82,7 +104,6 @@ function updateSelected() {
 
 // 클릭하면 체크표시 활성/비활성화, 리스트에 추가/제거
 function clickedCh(id) {
-   console.log(id);
 
    if (selected.includes(id)) {
       let index = selected.indexOf(id);
@@ -97,7 +118,6 @@ function clickedCh(id) {
    }
    updateSelected();
    resizeButton();
-   console.log(id);
 }
 
 // 검색창의 캐릭 클릭시 제거

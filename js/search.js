@@ -1,5 +1,6 @@
 const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
+const leaderId = params.get('leader');
 
 document.addEventListener("DOMContentLoaded", function() {
    var dropdownBtn = document.getElementById("dropdownBtn");
@@ -32,7 +33,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function getComps(sort) {
    document.getElementById('compcontainer').innerHTML = "";
-   request(`${server}/comps/search/${sort}/${chIds}`, {
+   let url;
+   if (leaderId == null) url = `${server}/comps/search/${sort}/${chIds}`;
+   else {
+      const deckName = `${getCharacter(leaderId).name}덱`;
+      url = `${server}/comps/searchWithLeader/${sort}/${chIds}/${deckName}`;
+   }
+
+   request(url, {
       method: "GET",
    }).then(response => {
       if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');

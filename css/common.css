@@ -177,8 +177,49 @@ a {color: inherit; text-decoration: none;}
    justify-content: right;
 }
 .titleblock {
+   position:relative;
    display:flex;
    align-items: center;
+}
+.leaderButton {
+   margin-left:1rem;
+   width:4rem;
+   border: 2px solid white;
+   font-weight: bold;
+   cursor: pointer;
+   border-radius: 0.3rem;
+   padding: 0.3rem 0.6rem;
+   background-color: #a21d1d;
+   color:white;
+}
+.leaderOn {
+   background-color: #007BFF;
+}
+.leaderOff {
+   background-color: transparent;
+}
+
+.leaderBox {
+   visibility: hidden;
+   position:absolute;
+   top:0;
+}
+#selectedCh {
+   padding-top :0.6rem;
+}
+.leaderText {
+   text-align: center;
+   width:3.3rem;
+   font-size:0.7rem;
+   background-color: #007BFF;
+   margin-bottom:-0.2rem;
+   border-radius: 0.3rem 0.3rem 0 0;
+}
+.leaderBorder {
+   width:2.9rem;
+   height:4rem;
+   border:0.2rem solid #007BFF;
+   border-radius: 0.3rem;
 }
 
 /* 라디오 버튼 커스텀 스타일링 */
