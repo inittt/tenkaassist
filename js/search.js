@@ -36,8 +36,8 @@ function getComps(sort) {
    let url;
    if (leaderId == null) url = `${server}/comps/search/${sort}/${chIds}`;
    else {
-      const deckName = `${getCharacter(leaderId).name}덱`;
-      url = `${server}/comps/searchWithLeader/${sort}/${chIds}/${deckName}`;
+      const leader = getCharacter(leaderId);
+      url = `${server}/comps/searchWithLeader/${sort}/${chIds}/${leader.name}덱`;
    }
 
    request(url, {
@@ -46,7 +46,7 @@ function getComps(sort) {
       if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
       return response.json();
    }).then(res => {
-      if (!res.success) return console.log("데이터 로드 실패");
+      if (!res.success) return console.log(res.msg);
       makeBlock(res.data, sort);
    }).catch(e => {
       console.log("데이터 로드 실패", e);
