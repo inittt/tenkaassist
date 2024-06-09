@@ -36,8 +36,8 @@ function getComps(sort) {
    let url;
    if (leaderId == null) url = `${server}/comps/search/${sort}/${chIds}`;
    else {
-      const leader = getCharacter(Number(leaderId));
-      url = `${server}/comps/searchWithLeader/${sort}/${chIds}/${leader.name}덱`;
+      const deckName = `${getCharacter(Number(leaderId))}덱`;
+      url = `${server}/comps/searchWithLeader/${sort}/${chIds}/${deckName}`;
    }
 
    request(url, {
