@@ -33,17 +33,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function getComps(sort) {
    document.getElementById('compcontainer').innerHTML = "";
-   let url, formData = new FormData();
    if (leaderId == null) url = `${server}/comps/search/${sort}/${chIds}`;
    else {
       const leader = getCharacter(Number(leaderId));
       url = `${server}/comps/searchWithLeader/${sort}/${chIds}/${leader.name}덱`;
-      formData.append('deckName', `${leader}덱`)
    }
 
    request(url, {
       method: "GET",
-      body: formData,
    }).then(response => {
       if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
       return response.json();
