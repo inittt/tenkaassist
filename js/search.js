@@ -38,6 +38,7 @@ function getComps(sort) {
    else {
       const leader = getCharacter(Number(leaderId));
       url = `${server}/comps/searchWithLeader/${sort}/${chIds}/${leader.name}덱`;
+      console.log(`${server}/comps/searchWithLeader/${sort}/${chIds}/${leader.name}덱`);
    }
 
    request(url, {
