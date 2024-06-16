@@ -3,19 +3,19 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>TenkaAssist - 홈</title>
-   <script src="./js/common.js"></script>
-   <link rel="stylesheet" href="./css/common.css" type = "text/css">
-   <link rel="stylesheet" href="./css/dropdown.css" type = "text/css">
-   <script src="./index.js"></script>
-   <script src="./js/characterJson.js"></script>
+   <title>TenkaAssist - 덱메이커</title>
+   <script src="../js/common.js"></script>
+   <link rel="stylesheet" href="../css/common.css" type = "text/css">
+   <link rel="stylesheet" href="../css/dropdown.css" type = "text/css">
+   <script src="../js/characterJson.js"></script>
+   <script src="./make.js"></script>
 </head>
 <body onload="init()">
-   <script src="./js/header.js"></script>
+   <script src="../js/header.js"></script>
    <div class="main-container bg-dark">
       <div class="block">
          <div class="margin-left titleblock">
-            <span id="titleboxText" class="titlebox">조합 - 랭킹순</span>
+            <span class="titlebox">덱메이커</span>
             <div class="dropdown">
                <button id="dropdownBtn">랭킹순<span class="absolute-right">▼</span></button>
                <div class="dropdown-content">
@@ -32,7 +32,6 @@
          </div>
       </div>
       <div id="compcontainer"></div>
-      <div id="nextTrigger" class="nextTrigger"></div>
    </div>
 </body>
 </html>

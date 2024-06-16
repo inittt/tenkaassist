@@ -5,7 +5,6 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>TenkaAssist - 회원가입</title>
    <script src="../js/common.js"></script>
-   <script src="../js/login.js"></script>
    <link rel="stylesheet" href="../css/common.css" type = "text/css">
 </head>
 <body>
@@ -41,7 +40,7 @@
          if (!res.success) alert(res.msg);
          else {
             alert("회원가입 성공");
-            location.href = `${address}/login/index.html`;
+            location.href = `${address}/login/`;
          }
       }).catch(error => {
          console.log(error);

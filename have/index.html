@@ -3,29 +3,27 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>TenkaAssist - 캐릭터</title>
+   <title>TenkaAssist - 보유</title>
    <script src="../js/common.js"></script>
    <link rel="stylesheet" href="../css/common.css" type = "text/css">
    <script src="../js/characterJson.js"></script>
-   <script src="../js/have.js"></script>
+   <script src="./have.js"></script>
 </head>
 <body>
    <script src="../js/header.js"></script>
    <div class="main-container bg-dark">
       <div class="block">
          <div class="margin-left titleblock">
-            <span class="titlebox">캐릭터</span>
+            <span class="titlebox">보유</span>
+            <button class="icon-btn i-save" onclick="setHave()"><img class="icon" src="../images/icons/ico-save.svg"></button>
+            <button class="icon-btn i-load" onclick="synchro()"><img class="icon" src="../images/icons/ico-load.svg"></button>
          </div>
       </div>
       <div class="block">
          <div class="margin-left titleblock">
-            <div id="leaderBox" class="leaderBox">
-               <div id="leaderText" class="leaderText">Leader</div>
-               <div id="leaderBorder" class="leaderBorder"></div>
-            </div>
             <div id="selectedCh" class="flex">
                보유중인 캐릭터를 선택해 주세요<br>
-               (로그인 된 경우 동기화)
+               (로그인 된 경우 동기화 가능)
             </div>
             <button id="characterSearchBtn" class="button characterSearchBtn" onclick="searchDeck()">검색</button>
          </div>

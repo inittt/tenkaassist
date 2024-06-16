@@ -83,13 +83,11 @@ function updateSelected() {
 
 // 클릭하면 체크표시 활성/비활성화, 리스트에 추가/제거
 function clickedCh(id) {
-
    if (selected.includes(id)) {
       let index = selected.indexOf(id);
       if (index !== -1) selected.splice(index, 1);
       document.getElementById(`img_${id}`).src = `${address}/images/characters/cs${id}_0_0.webp`;
       document.getElementById(`el_${id}`).style.opacity = 1;
-
    } else {
       selected.push(id);
       document.getElementById(`img_${id}`).src = `${address}/images/checkmark.png`;
@@ -131,7 +129,6 @@ function checkRole(num) {
    } else checkRoleN = num;
    getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, document.getElementById('searchInput').value);
 }
-
 function checkRarity(num) {
    var obj = document.querySelectorAll('input[type="radio"][name="rarity"]');
    const reversedObj = Array.from(obj).reverse(); 
@@ -150,45 +147,28 @@ function synchro() {
       if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
       return response.json();
    }).then(res => {
-      if (!res.success) return;
+      if (!res.success) return alert(res.msg);
       if (res.data == null || res.data.length == 0) return;
       
       selected.length = 0;
       for(const cid of res.data.split(" ").map(Number)) selected.push(cid);
       updateSelected();
+      getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, document.getElementById('searchInput').value);
    }).catch(error => {
       return;
    });
 }
 
-function getHave() {
-   request(`${server}/users/get/have`, {
-      method: "GET",
-   }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
-      return response.json();
-   }).then(res => {
-      if (!res.success) return;
-      if (res.data == null || res.data.length == 0) return;
-      
-      selected.length = 0;
-      for(const cid of res.data.split(" ").map(Number)) selected.push(cid);
-      updateSelected();
-   }).catch(error => {
-      return;
-   });
-}
-
-function saveHave() {
+function setHave() {
    request(`${server}/users/set/have/${selected.join(" ")}`, {
       method: "PUT",
    }).then(response => {
       if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
       return response.json();
    }).then(res => {
-      if (!res.success) return alert(`저장 실패${res.msg}`);
-      alert("저장 성공");
+      if (!res.success) return alert(res.msg);
+      alert("저장되었습니다");
    }).catch(error => {
-      return alert(`저장 실패\n${error}`);
+      return;
    });
 }
