@@ -234,7 +234,7 @@ a {color: inherit; text-decoration: none;}
 }
 .c-radio span {
    border-radius: 0.3rem;
-   padding: 0.5rem 1rem;
+   padding: 0.4rem 0.8rem;
    border: 2px solid transparent;
    transition: border-color 0.3s;
 }
