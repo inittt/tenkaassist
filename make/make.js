@@ -63,8 +63,8 @@ function makeBlock() {
    const data = possibleDeck.slice();
    switch(sort) {
       case 1: data.sort((a, b) => b.recommend - a.recommend);
-      case 2: jsonArray.sort((a, b) => parseDateString(b.create_at) - parseDateString(a.create_at));
-      case 3: jsonArray.sort((a, b) => parseDateString(b.update_at) - parseDateString(a.update_at));
+      case 2: data.sort((a, b) => parseDateString(b.create_at) - parseDateString(a.create_at));
+      case 3: data.sort((a, b) => parseDateString(b.update_at) - parseDateString(a.update_at));
       default: data.sort((a, b) => a.ranking - b.ranking);
    }
 
@@ -89,7 +89,7 @@ function makeBlock() {
                <div style="margin:0.2rem;">
                   <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
                   <img id="el_${ch.id}" src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">
-                  <div class="element${ch.element} ch_img ch_border z-4"></div>
+                  <div class="element${ch.element} ch_border z-4"></div>
                </div>
                <div class="text-mini">${ch.name}</div>
             </div>
