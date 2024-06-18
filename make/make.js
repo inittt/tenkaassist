@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function getPossibleCompsFromServer() {
-   request(`${server}/comps/getByHave/${chIds}`, {
+   request(`${server}/comps/getAll`, {
       method: "GET",
    }).then(response => {
       if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
@@ -42,14 +42,20 @@ function getPossibleCompsFromServer() {
          document.getElementById('compcontainer').innerHTML = `<div class="block">${res.msg}</div>`
          return;
       }
-      for(const d of res.data) possibleDeck.push(d);
+      setPossible(res.data);
       makeBlock();
    }).catch(e => {
       console.log("데이터 로드 실패", e);
       document.getElementById('compcontainer').innerHTML = `<div class="block">데이터 로드 실패</div>`;
    })
 }
-
+function setPossible(data) {
+   for(const d of data) {
+      const compList = d.compstr.split(" ").map(Number);
+      const haveList = chIds.slice();
+      if (compList.every(item => haveList.includes(item))) possibleDeck.push(d);
+   }
+}
 function makeBlock() {
    const compcontainer = document.getElementById('compcontainer');
    compcontainer.innerHTML = "";
