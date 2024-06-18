@@ -55,7 +55,8 @@ document.addEventListener('DOMContentLoaded', function() {
          userInfo.innerHTML = button;
       });
 
-   setHeaderLine(num);
+   checkAndAssign('curHeader', 0);
+   if (curHeader != 0) document.getElementById(`h-${curHeader}`).classList.add("h-cur");
 });
 
 function goMain() {
@@ -70,6 +71,8 @@ function logout() {
    location.reload();
 }
 
-function setHeaderLine(num) {
-   document.getElementById(`h-${num}`).classList.add("h-cur");
-}
+function checkAndAssign(variableName, value) {
+   if (typeof window[variableName] === 'undefined') {
+     window[variableName] = value;
+   }
+ }

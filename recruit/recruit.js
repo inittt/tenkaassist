@@ -1,4 +1,5 @@
 const selectedTag = [];
+const curHeader = 4;
 const recruitJson = {
    data: [
       // SSR

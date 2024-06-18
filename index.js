@@ -2,6 +2,7 @@ let page = 0; // 시작 페이지
 let isLoading = false;
 let sort = 0;
 let cnt = 1;
+const curHeader = 1;
 
 document.addEventListener("DOMContentLoaded", function() {
    const dropdownBtn = document.getElementById("dropdownBtn");

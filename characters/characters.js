@@ -1,4 +1,5 @@
 let checkElementN, checkRoleN, checkRarityN, isOn = false;
+const curHeader = 2;
 
 const selected = [];
 document.addEventListener("DOMContentLoaded", function() {

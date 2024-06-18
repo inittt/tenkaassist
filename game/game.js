@@ -2,6 +2,7 @@ let champCnt = 8, allComp;
 let win1=[], win2=[], win4=[], win8=[], win16=[], win32=[], win64=[];
 let lose1=[], lose2=[], lose4=[], lose8=[], lose16=[], lose32=[];
 let curRound = 8, cur1, cur2;
+const curHeader = 3;
 document.addEventListener("DOMContentLoaded", function() {
    var dropdownBtn = document.getElementById("dropdownBtn");
    var dropdownContent = document.querySelector(".dropdown-content");
