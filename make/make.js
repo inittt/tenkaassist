@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function getPossibleCompsFromServer() {
-   request(`${server}/comps/make/${list}`, {
+   request(`${server}/comps/make/${chIds}`, {
       method: "GET",
    }).then(response => {
       if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
