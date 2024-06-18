@@ -50,9 +50,9 @@ function getPossibleCompsFromServer() {
    })
 }
 function setPossible(data) {
+   const haveList = chIds.slice().split(",").map(Number);
    for(const d of data) {
       const compList = d.compstr.split(" ").map(Number);
-      const haveList = chIds.slice();
       if (compList.every(item => haveList.includes(item))) possibleDeck.push(d);
    }
 }
