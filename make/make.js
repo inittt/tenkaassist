@@ -1,17 +1,22 @@
 const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const possibleDeck = [];
-let isDataLoaded = false, sort = 0;
+let isDataLoaded = false, sort = 0, mod = 0;
 
 document.addEventListener("DOMContentLoaded", function() {
    var dropdownBtn = document.getElementById("dropdownBtn");
-   var dropdownContent = document.querySelector(".dropdown-content");
- 
+   var dropdownBtn2 = document.getElementById("dropdownBtn2");
+   var dropdownContent = document.getElementById("dropdown-content");
+   var dropdownContent2 = document.getElementById("dropdown-content2");
+
    dropdownBtn.addEventListener("click", function() {
-     dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+      dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+   });
+   dropdownBtn2.addEventListener("click", function() {
+     dropdownContent2.style.display = dropdownContent2.style.display === "block" ? "none" : "block";
    });
  
-   var options = document.querySelectorAll(".dropdown-content input[type='radio']");
+   var options = document.querySelectorAll(".dropdown-content input[type='radio'][name='options']");
    options.forEach(function(option) {
       option.addEventListener("change", function() {
          dropdownBtn.innerText = `${this.value}`;
@@ -21,6 +26,24 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
+         mod = 0;
+         if ("시공2덱" === this.value) mod = 1;
+         if ("시공3덱" === this.value) mod = 2;
+         if ("시공4덱" === this.value) mod = 3;
+         makeBlock();
+      });
+   });
+
+   var options2 = document.querySelectorAll(".dropdown-content input[type='radio'][name='options2']");
+   options2.forEach(function(option) {
+      option.addEventListener("change", function() {
+         dropdownBtn2.innerText = `${this.value}`;
+         const spanElement = document.createElement('span');
+         spanElement.classList.add('absolute-right');
+         spanElement.innerHTML = '▼'
+         dropdownBtn2.appendChild(spanElement);
+         dropdownContent2.style.display = "none";
+
          sort = 0;
          if ("추천순" === this.value) sort = 1;
          if ("최신등록순" === this.value) sort = 2;
@@ -28,6 +51,7 @@ document.addEventListener("DOMContentLoaded", function() {
          makeBlock();
       });
    });
+
    getPossibleCompsFromServer();
 });
 
@@ -51,12 +75,16 @@ function getPossibleCompsFromServer() {
 }
 function setPossible(data) {
    const haveList = chIds.slice().split(",").map(Number);
-   for(const d of data) {
+   for(let d of data) {
       const compList = d.compstr.split(" ").map(Number);
+      d.compstr = compList.slice();
       if (compList.every(item => haveList.includes(item))) possibleDeck.push(d);
    }
 }
 function makeBlock() {
+   if (mod == 1) {makeBlock2Deck(); return;}
+   if (mod == 2) {makeBlock3Deck(); return;}
+   if (mod == 3) {makeBlock4Deck(); return;}
    const compcontainer = document.getElementById('compcontainer');
    compcontainer.innerHTML = "";
 
@@ -82,7 +110,7 @@ function makeBlock() {
       else stringArr.push(`<div class="comp-order">#${cnt}</div>`)
       stringArr.push(`<div class="comp-name">${name}</div><div class="comp-deck">`);
 
-      for(const cid of compstr.split(" ").map(Number)) {
+      for(const cid of compstr) {
          const ch = getCharacter(cid);
          stringArr.push(`
             <div class="character" style="margin:0.2rem;">
@@ -128,4 +156,15 @@ function parseDateString(dateString) {
    let [day, month, year] = datePart.split('/').map(Number);
    let [hours, minutes, seconds] = timePart.split(':').map(Number);
    return new Date(year + 2000, month - 1, day, hours, minutes, seconds);
+}
+
+// 시공용 덱 만들기 함수
+function makeBlock2Deck() {
+
+}
+function makeBlock3Deck() {
+   
+}
+function makeBlock4Deck() {
+   
 }
