@@ -417,6 +417,9 @@ header {
    border-bottom: 2px solid white;
    background-color: #3b5081;
 }
+.h-cur {
+   border-bottom: 2px solid white;
+}
 .characterSearchBtn {
    height:100%;
    min-height: 5.2rem;

@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <a class="h-line" href="${address}/game/">밸런스게임</a>
       <a class="h-line" href="${address}/recruit/">전지역모집</a>
       <a class="h-line" href="${address}/comp/add/">조합등록</a>
+      <a class="h-line" href="${address}/have/">덱메이커</a>
       <a class="h-line" href="${address}/contributors/">♥</a>
    `;
 
@@ -16,12 +17,13 @@ document.addEventListener('DOMContentLoaded', function() {
       <img src="${address}/images/icons/main.webp" class="h-nav-icon h-left margin-left"
          onclick="goMain()">
       <a class="logo h-left" href="${address}/">TenkaAssist</a>
-      <a class="h-left h-box" href="${address}/">조합목록</a>
-      <a class="h-left h-box" href="${address}/characters/">캐릭터</a>
-      <a class="h-left h-box" href="${address}/game/">밸런스게임</a>
-      <a class="h-left h-box" href="${address}/recruit/">전지역모집</a>
-      <a class="h-left h-box" href="${address}/comp/add/">조합등록</a>
-      <a class="h-left h-box" href="${address}/contributors/">♥</a>
+      <a id="h-1" class="h-left h-box" href="${address}/">조합목록</a>
+      <a id="h-2" class="h-left h-box" href="${address}/characters/">캐릭터</a>
+      <a id="h-3" class="h-left h-box" href="${address}/game/">밸런스게임</a>
+      <a id="h-4" class="h-left h-box" href="${address}/recruit/">전지역모집</a>
+      <a id="h-5" class="h-left h-box" href="${address}/comp/add/">조합등록</a>
+      <a id="h-6" class="h-left h-box" href="${address}/have/">덱메이커</a>
+      <a id="h-7" class="h-left h-box" href="${address}/contributors/">♥</a>
       <div id="userInfo" class="user-info h-right margin-right"></div>
    `;
 
@@ -52,6 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
       }).catch(error => {
          userInfo.innerHTML = button;
       });
+
+   setHeaderLine(num);
 });
 
 function goMain() {
@@ -64,4 +68,8 @@ function goLogin() {
 function logout() {
    localStorage.setItem("jwtToken", null);
    location.reload();
+}
+
+function setHeaderLine(num) {
+   document.getElementById(`h-${num}`).classList.add("h-cur");
 }
