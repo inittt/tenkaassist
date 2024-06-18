@@ -38,11 +38,15 @@ function getPossibleCompsFromServer() {
       if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
       return response.json();
    }).then(res => {
-      if (!res.success) return alert(res.msg);
+      if (!res.success) {
+         document.getElementById('compcontainer').innerHTML = `<div class="block">${res.msg}</div>`
+         return;
+      }
       for(const d of res.data) possibleDeck.push(d);
       makeBlock();
    }).catch(e => {
       console.log("데이터 로드 실패", e);
+      document.getElementById('compcontainer').innerHTML = `<div class="block">데이터 로드 실패</div>`;
    })
 }
 
