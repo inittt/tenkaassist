@@ -46,16 +46,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
          sort = 0;
          if ("추천순" === this.value) sort = 1;
-         if ("최신등록순" === this.value) sort = 2;
-         if ("최신수정순" === this.value) sort = 3;
          makeBlock();
       });
    });
 
-   getPossibleCompsFromServer();
+   getAllCompsFromServer();
 });
 
-function getPossibleCompsFromServer() {
+function getAllCompsFromServer() {
    request(`${server}/comps/getAll`, {
       method: "GET",
    }).then(response => {
@@ -82,9 +80,32 @@ function setPossible(data) {
    }
 }
 function makeBlock() {
-   if (mod == 1) {makeBlock2Deck(); return;}
-   if (mod == 2) {makeBlock3Deck(); return;}
-   if (mod == 3) {makeBlock4Deck(); return;}
+   allCombinations.length = 0;
+   if (mod == 1) make2Deck();
+   else if (mod == 2) make3Deck();
+   else if (mod == 3) make4Deck();
+   else makeBlockAllDeck();
+}
+
+function init() {
+   // 라디오 버튼 초기화
+   var rds = document.querySelectorAll(".dropdown-content input[type='radio']");
+   rds.forEach(function(radio) {radio.checked = false;});
+   document.getElementById('option1').checked = true;
+
+}
+
+// 문자열을 Date 타입으로 변환
+function parseDateString(dateString) {
+   let [datePart, timePart] = dateString.split(' ');
+   let [day, month, year] = datePart.split('/').map(Number);
+   let [hours, minutes, seconds] = timePart.split(':').map(Number);
+   return new Date(year + 2000, month - 1, day, hours, minutes, seconds);
+}
+
+/* 덱 만들기 함수 --------------------------------------------------------------------*/
+
+function makeBlockAllDeck() {
    const compcontainer = document.getElementById('compcontainer');
    compcontainer.innerHTML = "";
 
@@ -94,6 +115,63 @@ function makeBlock() {
       case 2: data.sort((a, b) => parseDateString(b.create_at) - parseDateString(a.create_at));
       case 3: data.sort((a, b) => parseDateString(b.update_at) - parseDateString(a.update_at));
       default: data.sort((a, b) => a.ranking - b.ranking);
+   }
+
+   let cnt = 0;
+   for(const bundle of data) {
+      let deckBundle = document.createElement('div');
+      deckBundle.style.border = "2px solid white";
+      deckBundle.style.width = "40%";
+      for(const comp of bundle) {
+         const stringArr = [];
+         cnt++;
+         const id = comp.id, name = comp.name, compstr = comp.compstr;
+         const ranking = comp.ranking, recommend = comp.recommend;
+         stringArr.push(`<div class="comp-box"><div class="comp-deck">`);
+
+         for(const cid of compstr) {
+            const ch = getCharacter(cid);
+            stringArr.push(`
+               <div class="character" style="margin:0.2rem;">
+                  <div style="margin:0.2rem;">
+                     <img src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
+                     <img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">
+                     <div class="element${ch.element} ch_border z-4"></div>
+                  </div>
+                  <div class="text-mini">${ch.name}</div>
+               </div>
+            `);       
+         }
+         let last;
+         if (sort == 1) last = `♥ ${recommend}`;
+         else last = `▲ ${typeof ranking === 'number' ? ranking.toFixed(2) : ranking}`;
+         stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
+
+         let compblock = document.createElement('div');
+         compblock.classList.add("block", "hoverblock");
+         compblock.innerHTML = stringArr.join("");
+         compblock.addEventListener("click", function() {window.location.href = `${address}/comp/?id=${id}`;});
+         deckBundle.appendChild(compblock);
+      }
+      compcontainer.appendChild(deckBundle);
+   }
+   if (cnt == 0) compcontainer.innerHTML = `<div class="block">검색결과 없음</div>`;
+}
+
+let deckCnt;
+const allCombinations = [];
+function make2Deck() {deckCnt = 2; backtrack(0, []); makeBlockNDeck();}
+function make3Deck() {deckCnt = 3; backtrack(0, []); makeBlockNDeck();}
+function make4Deck() {deckCnt = 4; backtrack(0, []); makeBlockNDeck();}
+
+function makeBlockNDeck() {
+   const compcontainer = document.getElementById('compcontainer');
+   compcontainer.innerHTML = "";
+
+   const data = allCombinations.slice();
+   switch(sort) {
+      case 1: data.sort((a, b) => b[0].recommend + b[1].recommend - a[0].recommend - a[1].recommend);
+      default: data.sort((a, b) => a[0].ranking + a[1].ranking - b[0].ranking - b[1].ranking);
    }
 
    let cnt = 0;
@@ -142,29 +220,29 @@ function makeBlock() {
    if (cnt == 0) compcontainer.innerHTML = `<div class="block">검색결과 없음</div>`;
 }
 
-function init() {
-   // 라디오 버튼 초기화
-   var rds = document.querySelectorAll(".dropdown-content input[type='radio']");
-   rds.forEach(function(radio) {radio.checked = false;});
-   document.getElementById('option1').checked = true;
 
-}
 
-// 문자열을 Date 타입으로 변환
-function parseDateString(dateString) {
-   let [datePart, timePart] = dateString.split(' ');
-   let [day, month, year] = datePart.split('/').map(Number);
-   let [hours, minutes, seconds] = timePart.split(':').map(Number);
-   return new Date(year + 2000, month - 1, day, hours, minutes, seconds);
-}
+/* 백트래킹 함수 -----------------------------------------------------------*/
 
-// 시공용 덱 만들기 함수
-function makeBlock2Deck() {
+let usedNumbers = new Set();
+function backtrack(startIndex, selectedEntities) {
+    if (selectedEntities.length === deckCnt) {allCombinations.push([...selectedEntities]); return;}
 
-}
-function makeBlock3Deck() {
-   
-}
-function makeBlock4Deck() {
-   
+    for (let i = startIndex; i < jsonArray.length; i++) {
+        let entity = possibleDeck[i];
+        let canUseEntity = true;
+        let tempUsedNumbers = new Set();
+
+        for (let num of entity.compstr) {
+            if (usedNumbers.has(num)) {canUseEntity = false; break;}
+            tempUsedNumbers.add(num);
+        }
+        if (canUseEntity) {
+            for (let num of tempUsedNumbers) usedNumbers.add(num);
+            selectedEntities.push(entity);
+            backtrack(i+1, selectedEntities);
+            selectedEntities.pop();
+            for (let num of tempUsedNumbers) usedNumbers.delete(num);
+        }
+    }
 }
