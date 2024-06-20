@@ -175,9 +175,10 @@ function makeBlockNDeck() {
       deckBundle.classList.add('deckBundle');
 
       const newP = document.createElement('p');
-      newP.textContent = `# ${++cnt}`;
+      newP.classList.add('newP');
+      newP.textContent = ` # ${++cnt}`;
       deckBundle.appendChild(newP);
-      
+
       for(const comp of bundle) {
          const stringArr = [];
          const id = comp.id, name = comp.name, compstr = comp.compstr;
@@ -208,6 +209,11 @@ function makeBlockNDeck() {
          compblock.addEventListener("click", function() {window.location.href = `${address}/comp/?id=${id}`;});
          deckBundle.appendChild(compblock);
       }
+      compcontainer.appendChild(deckBundle);
+   }
+   if (allCombinations.length % 2 != 0) {
+      let deckBundle = document.createElement('div');
+      deckBundle.classList.add('deckBundle');
       compcontainer.appendChild(deckBundle);
    }
    if (cnt == 0) compcontainer.innerHTML = `<div class="block">검색결과 없음</div>`;
