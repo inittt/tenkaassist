@@ -118,63 +118,6 @@ function makeBlockAllDeck() {
    }
 
    let cnt = 0;
-   for(const bundle of data) {
-      let deckBundle = document.createElement('div');
-      deckBundle.style.border = "2px solid white";
-      deckBundle.style.width = "40%";
-      for(const comp of bundle) {
-         const stringArr = [];
-         cnt++;
-         const id = comp.id, name = comp.name, compstr = comp.compstr;
-         const ranking = comp.ranking, recommend = comp.recommend;
-         stringArr.push(`<div class="comp-box"><div class="comp-deck">`);
-
-         for(const cid of compstr) {
-            const ch = getCharacter(cid);
-            stringArr.push(`
-               <div class="character" style="margin:0.2rem;">
-                  <div style="margin:0.2rem;">
-                     <img src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-                     <img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">
-                     <div class="element${ch.element} ch_border z-4"></div>
-                  </div>
-                  <div class="text-mini">${ch.name}</div>
-               </div>
-            `);       
-         }
-         let last;
-         if (sort == 1) last = `♥ ${recommend}`;
-         else last = `▲ ${typeof ranking === 'number' ? ranking.toFixed(2) : ranking}`;
-         stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
-
-         let compblock = document.createElement('div');
-         compblock.classList.add("block", "hoverblock");
-         compblock.innerHTML = stringArr.join("");
-         compblock.addEventListener("click", function() {window.location.href = `${address}/comp/?id=${id}`;});
-         deckBundle.appendChild(compblock);
-      }
-      compcontainer.appendChild(deckBundle);
-   }
-   if (cnt == 0) compcontainer.innerHTML = `<div class="block">검색결과 없음</div>`;
-}
-
-let deckCnt;
-const allCombinations = [];
-function make2Deck() {deckCnt = 2; backtrack(0, []); makeBlockNDeck();}
-function make3Deck() {deckCnt = 3; backtrack(0, []); makeBlockNDeck();}
-function make4Deck() {deckCnt = 4; backtrack(0, []); makeBlockNDeck();}
-
-function makeBlockNDeck() {
-   const compcontainer = document.getElementById('compcontainer');
-   compcontainer.innerHTML = "";
-
-   const data = allCombinations.slice();
-   switch(sort) {
-      case 1: data.sort((a, b) => b[0].recommend + b[1].recommend - a[0].recommend - a[1].recommend);
-      default: data.sort((a, b) => a[0].ranking + a[1].ranking - b[0].ranking - b[1].ranking);
-   }
-
-   let cnt = 0;
    for(const comp of data) {
       const stringArr = [];
       cnt++;
@@ -216,6 +159,63 @@ function makeBlockNDeck() {
          window.location.href = `${address}/comp/?id=${id}`;
       });
       compcontainer.appendChild(compblock);
+   }
+   if (cnt == 0) compcontainer.innerHTML = `<div class="block">검색결과 없음</div>`;
+}
+
+let deckCnt;
+const allCombinations = [];
+function make2Deck() {deckCnt = 2; backtrack(0, []); makeBlockNDeck();}
+function make3Deck() {deckCnt = 3; backtrack(0, []); makeBlockNDeck();}
+function make4Deck() {deckCnt = 4; backtrack(0, []); makeBlockNDeck();}
+
+function makeBlockNDeck() {
+   const compcontainer = document.getElementById('compcontainer');
+   compcontainer.innerHTML = "";
+
+   const data = allCombinations.slice();
+   switch(sort) {
+      case 1: data.sort((a, b) => b[0].recommend + b[1].recommend - a[0].recommend - a[1].recommend);
+      default: data.sort((a, b) => a[0].ranking + a[1].ranking - b[0].ranking - b[1].ranking);
+   }
+
+   let cnt = 0;
+   for(const bundle of data) {
+      let deckBundle = document.createElement('div');
+      deckBundle.style.border = "2px solid white";
+      deckBundle.style.width = "40%";
+      for(const comp of bundle) {
+         const stringArr = [];
+         cnt++;
+         const id = comp.id, name = comp.name, compstr = comp.compstr;
+         const ranking = comp.ranking, recommend = comp.recommend;
+         stringArr.push(`<div class="comp-box"><div class="comp-deck">`);
+
+         for(const cid of compstr) {
+            const ch = getCharacter(cid);
+            stringArr.push(`
+               <div class="character" style="margin:0.2rem;">
+                  <div style="margin:0.2rem;">
+                     <img src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
+                     <img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">
+                     <div class="element${ch.element} ch_border z-4"></div>
+                  </div>
+                  <div class="text-mini">${ch.name}</div>
+               </div>
+            `);       
+         }
+         let last;
+         if (sort == 1) last = `♥ ${recommend}`;
+         else last = `▲ ${typeof ranking === 'number' ? ranking.toFixed(2) : ranking}`;
+         stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
+
+         let compblock = document.createElement('div');
+         compblock.classList.add("block", "hoverblock");
+         compblock.innerHTML = stringArr.join("");
+         compblock.addEventListener("click", function() {window.location.href = `${address}/comp/?id=${id}`;});
+         deckBundle.appendChild(compblock);
+      }
+      compcontainer.appendChild(deckBundle);
    }
    if (cnt == 0) compcontainer.innerHTML = `<div class="block">검색결과 없음</div>`;
 }
