@@ -26,10 +26,11 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
-         mod = 0;
-         if ("시공2덱" === this.value) mod = 1;
-         if ("시공3덱" === this.value) mod = 2;
-         if ("시공4덱" === this.value) mod = 3;
+         const titleBoxText = document.getElementById('titleBoxText');
+         if ("시공2덱" === this.value) {mod = 1; titleBoxText.innerHTML = '덱메이커 - 2덱';}
+         else if ("시공3덱" === this.value) {mod = 2; titleBoxText.innerHTML = '덱메이커 - 3덱';}
+         else if ("시공4덱" === this.value) {mod = 3; titleBoxText.innerHTML = '덱메이커 - 4덱';}
+         else {mod = 0; titleBoxText.innerHTML = '덱메이커 - 1덱';}
          makeBlock();
       });
    });
