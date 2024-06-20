@@ -230,7 +230,7 @@ let usedNumbers = new Set();
 function backtrack(startIndex, selectedEntities) {
     if (selectedEntities.length === deckCnt) {allCombinations.push([...selectedEntities]); return;}
 
-    for (let i = startIndex; i < jsonArray.length; i++) {
+    for (let i = startIndex; i < possibleDeck.length; i++) {
         let entity = possibleDeck[i];
         let canUseEntity = true;
         let tempUsedNumbers = new Set();
