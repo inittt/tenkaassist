@@ -1,5 +1,5 @@
 .dropdown {
-  width:8rem;
+  width:6rem;
   position: relative;
   display: inline-block;
   margin-left:auto;
@@ -12,7 +12,7 @@
   display: none;
   position: absolute;
   background-color: white;
-  width:8rem;
+  width:6rem;
   z-index: 5;
 }
 
@@ -43,12 +43,27 @@
 }
 
 #dropdownBtn {
+  left:auto;
   display: flex;
   align-items: center;
   box-sizing:border-box;
   border:2px solid black;
   border-radius: 0.2rem;
-  width:8rem;
+  width:6rem;
+  padding: 0.3rem 0.6rem;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+}
+
+#dropdownBtn2 {
+  left:auto;
+  display: flex;
+  align-items: center;
+  box-sizing:border-box;
+  border:2px solid black;
+  border-radius: 0.2rem;
+  width:6rem;
   padding: 0.3rem 0.6rem;
   background-color: white;
   color: black;
