@@ -115,7 +115,7 @@ function makeBlockAllDeck() {
       cnt++;
       const id = comp.id, name = comp.name, compstr = comp.compstr;
       const ranking = comp.ranking, recommend = comp.recommend;
-      stringArr.push(`<div class="comp-box" style="width:100%">`);
+      stringArr.push(`<div class="comp-box">`);
       stringArr.push(`<div class="comp-order">#${cnt}</div>`)
       stringArr.push(`<div class="comp-name">${name}</div><div class="comp-deck">`);
 
@@ -140,6 +140,7 @@ function makeBlockAllDeck() {
 
       let compblock = document.createElement('div');
       compblock.classList.add("block", "hoverblock");
+      compblock.style.width = "100%";
       compblock.innerHTML = stringArr.join("");
       compblock.addEventListener("click", function() {
          window.location.href = `${address}/comp/?id=${id}`;
@@ -172,12 +173,16 @@ function makeBlockNDeck() {
    for(const bundle of data) {
       let deckBundle = document.createElement('div');
       deckBundle.classList.add('deckBundle');
-      cnt++;
+
+      const newP = document.createElement('p');
+      newP.textContent = `# ${++cnt}`;
+      deckBundle.appendChild(newP);
+      
       for(const comp of bundle) {
          const stringArr = [];
          const id = comp.id, name = comp.name, compstr = comp.compstr;
          const ranking = comp.ranking, recommend = comp.recommend;
-         stringArr.push(`<div class="comp-box"># ${cnt}<div class="comp-deck">`);
+         stringArr.push(`<div class="comp-box"><div class="comp-deck">`);
 
          for(const cid of compstr) {
             const ch = getCharacter(cid);
