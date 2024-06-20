@@ -105,7 +105,7 @@ function makeBlockAllDeck() {
 
    const data = possibleDeck.slice();
    switch(sort) {
-      case 1: data.sort((a, b) => b.recommend - a.recommend);
+      case 1: data.sort((a, b) => b.recommend - a.recommend); break;
       default: data.sort((a, b) => a.ranking - b.ranking);
    }
 
@@ -115,12 +115,8 @@ function makeBlockAllDeck() {
       cnt++;
       const id = comp.id, name = comp.name, compstr = comp.compstr;
       const ranking = comp.ranking, recommend = comp.recommend;
-      const creator = comp.creator, updater = comp.updater;
-      const create_at = comp.create_at, update_at = comp.update_at;
-      stringArr.push(`<div class="comp-box">`);
-      if (sort == 2) stringArr.push(`<div class="comp-time">${create_at}</div>`);
-      else if (sort == 3) stringArr.push(`<div class="comp-time">${update_at}</div>`);
-      else stringArr.push(`<div class="comp-order">#${cnt}</div>`)
+      stringArr.push(`<div class="comp-box" style="width:100%">`);
+      stringArr.push(`<div class="comp-order">#${cnt}</div>`)
       stringArr.push(`<div class="comp-name">${name}</div><div class="comp-deck">`);
 
       for(const cid of compstr) {
@@ -139,8 +135,6 @@ function makeBlockAllDeck() {
       let last;
       switch(sort) {
          case 1 : last = `♥ ${recommend}`; break;
-         case 2 : last = `${creator}`; break;
-         case 3 : last = `${updater}`; break;
          default : last = `▲ ${typeof ranking === 'number' ? ranking.toFixed(2) : ranking}`;
       } stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 
@@ -167,7 +161,7 @@ function makeBlockNDeck() {
 
    const data = allCombinations.slice();
    switch(sort) {
-      case 1: data.sort((a, b) => b[0].recommend + b[1].recommend - a[0].recommend - a[1].recommend);
+      case 1: data.sort((a, b) => b[0].recommend + b[1].recommend - a[0].recommend - a[1].recommend); break;
       default: data.sort((a, b) => a[0].ranking + a[1].ranking - b[0].ranking - b[1].ranking);
    }
 
