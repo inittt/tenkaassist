@@ -182,10 +182,12 @@ function makeBlockNDeck() {
    }
 
    let cnt = 0;
+   compcontainer.style.display = "flex";
+   compcontainer.style.flexWrap = "wrap";
+
    for(const bundle of data) {
       let deckBundle = document.createElement('div');
-      deckBundle.style.border = "2px solid white";
-      deckBundle.style.width = "40%";
+      deckBundle.classList.add('deckBundle');
       for(const comp of bundle) {
          const stringArr = [];
          cnt++;

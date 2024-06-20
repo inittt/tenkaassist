@@ -75,3 +75,18 @@
   margin-left:auto;
   right: 0.5rem;
 }
+
+#compcontainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+.deckBundle {
+  border-radius: 0.2rem;
+  border: 2px solid white;
+  flex: 1 1 calc(50% - 10px);
+}
+@media (max-width: 768px) {
+  .deckBundle {
+      flex: 1 1 100%; /* 화면이 작을 때 가로 길이를 100%로 */
+  }
+}
