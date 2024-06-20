@@ -89,10 +89,12 @@ function makeBlock() {
 
 function init() {
    // 라디오 버튼 초기화
-   var rds = document.querySelectorAll(".dropdown-content input[type='radio']");
+   var rds = document.querySelectorAll(".dropdown-content input[type='radio'][name='options']");
+   var rds2 = document.querySelectorAll(".dropdown-content input[type='radio'][name='options2']");
    rds.forEach(function(radio) {radio.checked = false;});
+   rds2.forEach(function(radio) {radio.checked = false;});
    document.getElementById('option1').checked = true;
-
+   document.getElementById('option2-1').checked = true;
 }
 
 // 문자열을 Date 타입으로 변환

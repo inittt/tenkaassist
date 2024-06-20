@@ -43,6 +43,7 @@
 }
 
 #dropdownBtn {
+  left:auto;
   display: flex;
   align-items: center;
   box-sizing:border-box;
