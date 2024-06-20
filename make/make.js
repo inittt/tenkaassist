@@ -97,14 +97,6 @@ function init() {
    document.getElementById('option2-1').checked = true;
 }
 
-// 문자열을 Date 타입으로 변환
-function parseDateString(dateString) {
-   let [datePart, timePart] = dateString.split(' ');
-   let [day, month, year] = datePart.split('/').map(Number);
-   let [hours, minutes, seconds] = timePart.split(':').map(Number);
-   return new Date(year + 2000, month - 1, day, hours, minutes, seconds);
-}
-
 /* 덱 만들기 함수 --------------------------------------------------------------------*/
 
 function makeBlockAllDeck() {
@@ -114,8 +106,6 @@ function makeBlockAllDeck() {
    const data = possibleDeck.slice();
    switch(sort) {
       case 1: data.sort((a, b) => b.recommend - a.recommend);
-      case 2: data.sort((a, b) => parseDateString(b.create_at) - parseDateString(a.create_at));
-      case 3: data.sort((a, b) => parseDateString(b.update_at) - parseDateString(a.update_at));
       default: data.sort((a, b) => a.ranking - b.ranking);
    }
 
@@ -188,12 +178,12 @@ function makeBlockNDeck() {
    for(const bundle of data) {
       let deckBundle = document.createElement('div');
       deckBundle.classList.add('deckBundle');
+      cnt++;
       for(const comp of bundle) {
          const stringArr = [];
-         cnt++;
          const id = comp.id, name = comp.name, compstr = comp.compstr;
          const ranking = comp.ranking, recommend = comp.recommend;
-         stringArr.push(`<div class="comp-box"><div class="comp-deck">`);
+         stringArr.push(`<div class="comp-box"># ${cnt}<div class="comp-deck">`);
 
          for(const cid of compstr) {
             const ch = getCharacter(cid);
