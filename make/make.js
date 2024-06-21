@@ -106,10 +106,8 @@ function makeBlockAllDeck() {
    compcontainer.innerHTML = "";
 
    const data = possibleDeck.slice();
-   switch(sort) {
-      case 1: data.sort((a, b) => b.recommend - a.recommend); break;
-      default: data.sort((a, b) => a.ranking - b.ranking);
-   }
+   if (sort == 1) data.sort((a, b) => b.recommend - a.recommend);
+   else data.sort((a, b) => a.ranking - b.ranking);
 
    let cnt = 0;
    for(const comp of data) {
@@ -164,13 +162,13 @@ function makeBlockNDeck() {
 
    const data = allCombinations.slice();
    if (sort == 1) data.sort((a, b) => {
-      let sumA = a.reduce((sum, item) => sum + (item.recommend || 0));
-      let sumB = b.reduce((sum, item) => sum + (item.recommend || 0));
+      let sumA = a.reduce((sum, item) => sum + (item.recommend || 0), 0);
+      let sumB = b.reduce((sum, item) => sum + (item.recommend || 0), 0);
       return sumB - sumA;
    });
    else data.sort((a, b) => {
-      let sumA = a.reduce((sum, item) => sum + (item.ranking || 0));
-      let sumB = b.reduce((sum, item) => sum + (item.ranking || 0));
+      let sumA = a.reduce((sum, item) => sum + (item.ranking || 0), 0);
+      let sumB = b.reduce((sum, item) => sum + (item.ranking || 0), 0);
       return sumA - sumB;
    });
 
