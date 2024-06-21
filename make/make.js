@@ -171,8 +171,9 @@ function makeBlockNDeck() {
    compcontainer.style.display = "flex";
    compcontainer.style.flexWrap = "wrap";
 
+   let deckBundle;
    for(const bundle of data) {
-      let deckBundle = document.createElement('div');
+      deckBundle = document.createElement('div');
       deckBundle.classList.add('deckBundle');
 
       const newP = document.createElement('p');
@@ -213,8 +214,7 @@ function makeBlockNDeck() {
       compcontainer.appendChild(deckBundle);
    }
    if (allCombinations.length % 2 != 0) {
-      let deckBundle = document.createElement('div');
-      deckBundle.classList.add('deckBundle');
+      deckBundle.style.visibility = "invisible";
       compcontainer.appendChild(deckBundle);
    }
    if (cnt == 0) compcontainer.innerHTML = `<div class="block">검색결과 없음</div>`;
