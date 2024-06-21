@@ -4,7 +4,7 @@ const curHeader = 5;
 const selected = [];
 let chJsonList;
 document.addEventListener("DOMContentLoaded", function() {
-   chJsonList = chJSON.data.splice();
+   chJsonList = chJSON.data.slice();
    addAnyCh();
 
    function autoResize() {
