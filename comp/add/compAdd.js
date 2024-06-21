@@ -5,9 +5,6 @@ const selected = [];
 const chJsonList = chJSON.data.slice();
 addAnyCh();
 document.addEventListener("DOMContentLoaded", function() {
-   chJsonList = chJSON.data.slice();
-   addAnyCh();
-
    function autoResize() {
       var textarea = document.querySelector('.addCompDescription');
       textarea.style.height = 'auto';
