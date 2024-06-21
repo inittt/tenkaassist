@@ -163,15 +163,18 @@ function synchro() {
 }
 
 function setHave() {
-   request(`${server}/users/set/have/${selected.join(" ")}`, {
-      method: "PUT",
-   }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
-      return response.json();
-   }).then(res => {
-      if (!res.success) return alert(res.msg);
-      alert("저장되었습니다");
-   }).catch(error => {
-      return;
-   });
+   if (selected.length == 0) return alert("저장할 캐릭터가 없습니다");
+   else {
+      request(`${server}/users/set/have/${selected.join(" ")}`, {
+         method: "PUT",
+      }).then(response => {
+         if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+         return response.json();
+      }).then(res => {
+         if (!res.success) return alert(res.msg);
+         alert("저장되었습니다");
+      }).catch(error => {
+         return;
+      });
+   }
 }
