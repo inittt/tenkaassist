@@ -154,6 +154,7 @@ function synchro() {
       selected.length = 0;
       for(const cid of res.data.split(" ").map(Number)) selected.push(cid);
       updateSelected();
+      resizeButton();
       getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, document.getElementById('searchInput').value);
    }).catch(error => {
       return;

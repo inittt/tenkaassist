@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
    var options = document.querySelectorAll(".dropdown-content input[type='radio'][name='options']");
    options.forEach(function(option) {
       option.addEventListener("change", function() {
-         dropdownBtn.innerText = `${this.value}`;
+         dropdownBtn.innerText = `조합${this.value}`;
          const spanElement = document.createElement('span');
          spanElement.classList.add('absolute-right');
          spanElement.innerHTML = '▼'
@@ -27,9 +27,9 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownContent.style.display = "none";
 
          const titleBoxText = document.getElementById('titleBoxText');
-         if ("시공2덱" === this.value) {mod = 1; titleBoxText.innerHTML = '덱메이커 - 2덱';}
-         else if ("시공3덱" === this.value) {mod = 2; titleBoxText.innerHTML = '덱메이커 - 3덱';}
-         else if ("시공4덱" === this.value) {mod = 3; titleBoxText.innerHTML = '덱메이커 - 4덱';}
+         if ("2개" === this.value) {mod = 1; titleBoxText.innerHTML = '덱메이커 - 2덱';}
+         else if ("3개" === this.value) {mod = 2; titleBoxText.innerHTML = '덱메이커 - 3덱';}
+         else if ("4개" === this.value) {mod = 3; titleBoxText.innerHTML = '덱메이커 - 4덱';}
          else {mod = 0; titleBoxText.innerHTML = '덱메이커 - 1덱';}
          makeBlock();
       });

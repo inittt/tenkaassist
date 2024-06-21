@@ -86,7 +86,7 @@ a {color: inherit; text-decoration: none;}
 }
 .hoverblock {
    box-sizing: border-box;
-   border: 0.3rem solid transparent;
+   border: 2px solid transparent;
 }
 .hoverblock:hover {
    border-color: #5878c2;
