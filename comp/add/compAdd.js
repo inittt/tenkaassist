@@ -191,5 +191,5 @@ function addAnyCh() {
 function anyCh(name, el, ro) {
    if (el == null) el = 9;
    if (ro == null) ro = 9;
-   return {id : 90000 + el*10 + ro, rarity : 9, fullname : name, name : name, el : el, ro : ro};
+   return {id : 90000 + el*10 + ro, rarity : 9, fullname : name, name : name, element : el, role : ro};
 }
