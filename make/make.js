@@ -77,7 +77,7 @@ function setPossible(data) {
    for(let d of data) {
       const compList = d.compstr.split(" ").map(Number);
       d.compstr = compList.slice();
-      if (compList.every(item => haveList.includes(item) || Math.floor(item.id/10000) == 9))
+      if (compList.every(item => haveList.includes(item) || Math.floor(item/10000) == 9))
          possibleDeck.push(d);
    }
 }
