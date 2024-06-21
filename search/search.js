@@ -74,7 +74,7 @@ function makeBlock(data, sort) {
             <div class="character" style="margin:0.2rem;">
                <div style="margin:0.2rem;">
                   <img src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-                  <img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">
+                  ${Math.floor(id/10000) == 9 ? "" : `<img src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">`}
                   <div class="element${ch.element} ch_img ch_border z-4"></div>
                </div>
                <div class="text-mini">${ch.name}</div>
