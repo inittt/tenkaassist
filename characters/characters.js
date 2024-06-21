@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
          if (selected.length == 0) document.getElementById('selectedCh').innerHTML = "";
       } else {
          document.getElementById("leaderBox").style.visibility = "hidden";
-         if (selected.length == 0) document.getElementById('selectedCh').innerHTML = "캐릭터를 선택해 추가해 주세요<br>(선택 캐릭터가 포함된 조합 검색)";
+         if (selected.length == 0) document.getElementById('selectedCh').innerHTML = "캐릭터를 선택해 추가해 주세요<br>(선택 캐릭터가 전부 포함된 조합 검색)";
       }
    });
 });
@@ -83,7 +83,7 @@ function resizeButton() {
 // 검색창에 선택된 캐릭터 이미지 띄우기
 function updateSelected() {
    const div = document.getElementById("selectedCh");
-   if (selected.length == 0 && !isOn) div.innerHTML = "캐릭터를 선택해 추가해 주세요<br>(선택 캐릭터가 포함된 조합 검색)";
+   if (selected.length == 0 && !isOn) div.innerHTML = "캐릭터를 선택해 추가해 주세요<br>(선택 캐릭터가 전부 포함된 조합 검색)";
    else {
       let innerArray = [];
       for(let chId of selected) {
