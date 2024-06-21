@@ -2,9 +2,11 @@ let checkElementN, checkRoleN, checkRarityN;
 const curHeader = 5;
 
 const selected = [];
-const chJsonList = chJSON.data.splice();
-addAnyCh();
+let chJsonList;
 document.addEventListener("DOMContentLoaded", function() {
+   chJsonList = chJSON.data.splice();
+   addAnyCh();
+
    function autoResize() {
       var textarea = document.querySelector('.addCompDescription');
       textarea.style.height = 'auto';
