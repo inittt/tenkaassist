@@ -214,7 +214,7 @@ function makeBlockNDeck() {
       compcontainer.appendChild(deckBundle);
    }
    if (allCombinations.length % 2 != 0) {
-      deckBundle.style.visibility = "invisible";
+      deckBundle.style.visibility = 'hidden';
       compcontainer.appendChild(deckBundle);
    }
    if (cnt == 0) compcontainer.innerHTML = `<div class="block">검색결과 없음</div>`;
