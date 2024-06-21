@@ -222,7 +222,7 @@ function addAnyCh() {
       chJSON.data.push(anyCh("디스럽터", null, 4));
 
       const el = ['화', '수', '풍', '광', '암'];
-      const ro = ['딜', '힐', '탱', '섶', '디럽'];
+      const ro = ['딜', '힐', '탱', '서폿', '디럽'];
       for(let e = 0; e < 5; e++) for(let r = 0; r < 5; r++) 
             chJSON.data.push(anyCh(el[e]+ro[r], e, r));
 }
