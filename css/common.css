@@ -301,8 +301,9 @@ button:hover {
 .element0 {border: 0.2rem solid red;}
 .element1 {border: 0.2rem solid deepskyblue;}
 .element2 {border: 0.2rem solid limegreen;}
-.element3{border: 0.2rem solid yellow;}
+.element3 {border: 0.2rem solid yellow;}
 .element4 {border: 0.2rem solid darkviolet;}
+.element9 {border: 0.2rem solid white;}
 
 .addCompDescription {
    font-family: sans-serif;

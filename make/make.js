@@ -77,7 +77,8 @@ function setPossible(data) {
    for(let d of data) {
       const compList = d.compstr.split(" ").map(Number);
       d.compstr = compList.slice();
-      if (compList.every(item => haveList.includes(item))) possibleDeck.push(d);
+      if (compList.every(item => haveList.includes(item) || Math.floor(item.id/10000) == 9))
+         possibleDeck.push(d);
    }
 }
 function makeBlock() {
@@ -234,6 +235,7 @@ function backtrack(startIndex, selectedEntities) {
         let tempUsedNumbers = new Set();
 
         for (let num of entity.compstr) {
+            if (Math.floor(num/10000) == 9) continue;
             if (usedNumbers.has(num)) {canUseEntity = false; break;}
             tempUsedNumbers.add(num);
         }

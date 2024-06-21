@@ -2,6 +2,8 @@ let checkElementN, checkRoleN, checkRarityN;
 const curHeader = 5;
 
 const selected = [];
+const chJsonList = chJSON.data.splice();
+addAnyCh();
 document.addEventListener("DOMContentLoaded", function() {
    function autoResize() {
       var textarea = document.querySelector('.addCompDescription');
@@ -22,7 +24,7 @@ function getCharactersWithCondition(element, role, rarity, search) {
    characterContainer.innerHTML = "로드 중...";
 
    search = fixName(search);
-   const dataArray = chJSON.data;
+   const dataArray = chJsonList;
    const filteredData = dataArray.filter(function(obj) { 
       let b1 = true, b2 = true, b3 = true, b4 = true;
       if (element != null) b1 = (obj.element === element); 
@@ -165,3 +167,27 @@ function checkRarity(num) {
    getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, document.getElementById('searchInput').value);
 }
 /*------------------------------------------------------------------------*/
+
+function addAnyCh() {
+   chJsonList.push(anyCh("아무거나", null, null));
+   chJsonList.push(anyCh("화속성", 0, null));
+   chJsonList.push(anyCh("수속성", 1, null));
+   chJsonList.push(anyCh("풍속성", 2, null));
+   chJsonList.push(anyCh("광속성", 3, null));
+   chJsonList.push(anyCh("암속성", 4, null));
+   chJsonList.push(anyCh("딜러", null, 0));
+   chJsonList.push(anyCh("힐러", null, 1));
+   chJsonList.push(anyCh("탱커", null, 2));
+   chJsonList.push(anyCh("서포터", null, 3));
+   chJsonList.push(anyCh("디스럽터", null, 4));
+   
+   const el = ['화', '수', '풍', '광', '암'];
+   const ro = ['딜', '힐', '탱', '섶', '디럽'];
+   for(let e = 0; e < 5; e++) for(let r = 0; r < 5; r++) 
+      chJsonList.push(anyCh(90000 + e*10 + r, el[e]+ro[r], e, r));
+}
+function anyCh(name, el, ro) {
+   if (el == null) el = 9;
+   if (ro == null) ro = 9;
+   return {id : 90000 + el*10 + ro, rarity : 9, fullname : name, name : name, el : el, ro : ro};
+}
