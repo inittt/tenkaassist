@@ -163,10 +163,16 @@ function makeBlockNDeck() {
    compcontainer.innerHTML = "";
 
    const data = allCombinations.slice();
-   switch(sort) {
-      case 1: data.sort((a, b) => b[0].recommend + b[1].recommend - a[0].recommend - a[1].recommend); break;
-      default: data.sort((a, b) => a[0].ranking + a[1].ranking - b[0].ranking - b[1].ranking);
-   }
+   if (sort == 1) data.sort((a, b) => {
+      let sumA = a.reduce((sum, item) => sum + (item.recommend || 0));
+      let sumB = b.reduce((sum, item) => sum + (item.recommend || 0));
+      return sumB - sumA;
+   });
+   else data.sort((a, b) => {
+      let sumA = a.reduce((sum, item) => sum + (item.ranking || 0));
+      let sumB = b.reduce((sum, item) => sum + (item.ranking || 0));
+      return sumA - sumB;
+   });
 
    let cnt = 0;
    compcontainer.style.display = "flex";
