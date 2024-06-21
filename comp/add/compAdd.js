@@ -132,7 +132,7 @@ function clickedCh(id) {
 
 // 검색창의 캐릭 클릭시 제거
 function clickedSel(div, id) {
-   if (Math.floor(id/10000 == 9)) {
+   if (Math.floor(id/10000) == 9) {
       let position = Array.prototype.indexOf.call(div.parentNode.childNodes, div);
       selected.splice(position, 1);
    } else {
