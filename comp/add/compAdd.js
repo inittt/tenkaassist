@@ -2,7 +2,8 @@ let checkElementN, checkRoleN, checkRarityN;
 const curHeader = 5;
 
 const selected = [];
-let chJsonList;
+const chJsonList = chJSON.data.slice();
+addAnyCh();
 document.addEventListener("DOMContentLoaded", function() {
    chJsonList = chJSON.data.slice();
    addAnyCh();
@@ -40,11 +41,13 @@ function getCharactersWithCondition(element, role, rarity, search) {
       let id = champ.id, name = champ.name, element = champ.element, img, role = champ.role;
       if (selected.includes(id)) img = `${address}/images/checkmark.png`
       else img = `${address}/images/characters/cs${id}_0_0.webp`;
+      let roleImg = Math.floor(id/10000) == 9 ? "" : `<img id="el_${id}" src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">`;
+         
       innerArray.push(`
          <div class="character" onclick="clickedCh(${id})" style="margin:0.2rem;">
             <div style="margin:0.2rem;">
                <img id="img_${id}" src="${img}" class="img z-1" alt="">
-               <img id="el_${id}" src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">
+               ${roleImg}
                <div class="element${element} ch_img ch_border z-4"></div>
             </div>
             <div class="text-mini">${name}</div>
@@ -93,11 +96,12 @@ function updateSelected() {
       for(let chId of selected) {
          let champ = getCharacter(chId);
          let id = champ.id, name = champ.name, element = champ.element, role = champ.role;
+         let roleImg = Math.floor(id/10000) == 9 ? "" : `<img src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">`;
          innerArray.push(`
             <div class="character" onclick="clickedSel(this, ${id})" style="margin:0.2rem;">
                <div style="margin:0.2rem;">
                   <img src="${address}/images/characters/cs${id}_0_0.webp" class="img z-1" alt="">
-                  <img src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">
+                  ${roleImg}
                   <div class="element${element} ch_img ch_border z-4"></div>
                </div>
                <div class="text-mini">${name}</div>
@@ -111,32 +115,40 @@ function updateSelected() {
 // 클릭하면 체크표시 활성/비활성화, 리스트에 추가/제거
 function clickedCh(id) {
    if (selected.length > 4) return alert("5개까지 선택 가능합니다");
+   
+   if (Math.floor(id/10000) == 9) selected.push(id);
+   else {
+      if (selected.includes(id)) {
+         let index = selected.indexOf(id);
+         if (index !== -1) selected.splice(index, 1);
+         document.getElementById(`img_${id}`).src = `${address}/images/characters/cs${id}_0_0.webp`;
+         document.getElementById(`el_${id}`).style.opacity = 1;
 
-   if (selected.includes(id)) {
-      let index = selected.indexOf(id);
-      if (index !== -1) selected.splice(index, 1);
-      document.getElementById(`img_${id}`).src = `${address}/images/characters/cs${id}_0_0.webp`;
-      document.getElementById(`el_${id}`).style.opacity = 1;
-
-   } else {
-      selected.push(id);
-      document.getElementById(`img_${id}`).src = `${address}/images/checkmark.png`;
-      document.getElementById(`el_${id}`).style.opacity = 0;
+      } else {
+         selected.push(id);
+         document.getElementById(`img_${id}`).src = `${address}/images/checkmark.png`;
+         document.getElementById(`el_${id}`).style.opacity = 0;
+      }
    }
    updateSelected();
 }
 
 // 검색창의 캐릭 클릭시 제거
 function clickedSel(div, id) {
-   div.parentNode.removeChild(div);
-   let index = selected.indexOf(id);
-   if (index !== -1) selected.splice(index, 1);
+   if (Math.floor(id/10000 == 9)) {
+      let position = Array.prototype.indexOf.call(div.parentNode.childNodes, div);
+      selected.splice(position, 1);
+   } else {
+      div.parentNode.removeChild(div);
+      let index = selected.indexOf(id);
+      if (index !== -1) selected.splice(index, 1);
 
-   let image = document.getElementById(`img_${id}`);
-   if (image != null) image.src = `${address}/images/characters/cs${id}_0_0.webp`;
+      let image = document.getElementById(`img_${id}`);
+      if (image != null) image.src = `${address}/images/characters/cs${id}_0_0.webp`;
 
-   let el = document.getElementById(`el_${id}`);
-   if (el != null) el.style.opacity = 1;
+      let el = document.getElementById(`el_${id}`);
+      if (el != null) el.style.opacity = 1;
+   }
    updateSelected()
 }
 
