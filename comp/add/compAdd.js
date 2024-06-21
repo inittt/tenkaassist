@@ -184,7 +184,7 @@ function addAnyCh() {
    const el = ['화', '수', '풍', '광', '암'];
    const ro = ['딜', '힐', '탱', '섶', '디럽'];
    for(let e = 0; e < 5; e++) for(let r = 0; r < 5; r++) 
-      chJsonList.push(anyCh(90000 + e*10 + r, el[e]+ro[r], e, r));
+      chJsonList.push(anyCh(el[e]+ro[r], e, r));
 }
 function anyCh(name, el, ro) {
    if (el == null) el = 9;
