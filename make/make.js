@@ -1,6 +1,6 @@
 const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
-const possibleDeck = [];
+const possibleDeck = [], allCombinations = [];
 let isDataLoaded = false, sort = 0, mod = 0;
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -82,11 +82,16 @@ function setPossible(data) {
    }
 }
 function makeBlock() {
+   page = 0;
+   bundleCnt = 0;
    allCombinations.length = 0;
-   if (mod == 1) make2Deck();
-   else if (mod == 2) make3Deck();
-   else if (mod == 3) make4Deck();
-   else makeBlockAllDeck();
+
+   if (mod == 0) makeBlockAllDeck();
+   else {
+      deckCnt = mod+1;
+      backtrack(0, []);
+      makeBlockNDeck();
+   }
 }
 
 function init() {
@@ -101,22 +106,42 @@ function init() {
 
 /* 덱 만들기 함수 --------------------------------------------------------------------*/
 
+let deckCnt, bundleCnt = 0, page = 0;
+
 function makeBlockAllDeck() {
    const compcontainer = document.getElementById('compcontainer');
    compcontainer.innerHTML = "";
 
-   const data = possibleDeck.slice();
-   if (sort == 1) data.sort((a, b) => b.recommend - a.recommend);
-   else data.sort((a, b) => a.ranking - b.ranking);
+   allCombinations = [...possibleDeck];
+   if (allCombinations.length == 0) {
+      compcontainer.innerHTML = `<div class="block">검색결과 없음</div>`;
+      return;
+   }
 
-   let cnt = 0;
-   for(const comp of data) {
+   if (sort == 1) allCombinations.sort((a, b) => b.recommend - a.recommend);
+   else allCombinations.sort((a, b) => a.ranking - b.ranking);
+
+   loadBlockAllDeck(page++);
+}
+
+function loadBlockAllDeck(pg) {
+console.log(pg);
+
+   const compcontainer = document.getElementById('compcontainer');
+   bundleCnt = 0;
+   for(let i = pg*10; i < pg*10+10; i++) {
+      const comp = allCombinations[i];
+      if (comp == undefined || comp == null) {
+         const newText = document.createTextNode('더이상 조합이 없습니다');
+         compcontainer.appendChild(newText);
+         return;
+      }
+
       const stringArr = [];
-      cnt++;
       const id = comp.id, name = comp.name, compstr = comp.compstr;
       const ranking = comp.ranking, recommend = comp.recommend;
       stringArr.push(`<div class="comp-box">`);
-      stringArr.push(`<div class="comp-order">#${cnt}</div>`)
+      stringArr.push(`<div class="comp-order">#${++bundleCnt}</div>`)
       stringArr.push(`<div class="comp-name">${name}</div><div class="comp-deck">`);
 
       for(const cid of compstr) {
@@ -147,43 +172,45 @@ function makeBlockAllDeck() {
       });
       compcontainer.appendChild(compblock);
    }
-   if (cnt == 0) compcontainer.innerHTML = `<div class="block">검색결과 없음</div>`;
 }
-
-let deckCnt;
-const allCombinations = [];
-function make2Deck() {deckCnt = 2; backtrack(0, []); makeBlockNDeck();}
-function make3Deck() {deckCnt = 3; backtrack(0, []); makeBlockNDeck();}
-function make4Deck() {deckCnt = 4; backtrack(0, []); makeBlockNDeck();}
-
 function makeBlockNDeck() {
    const compcontainer = document.getElementById('compcontainer');
    compcontainer.innerHTML = "";
-
-   const data = allCombinations.slice();
-   if (sort == 1) data.sort((a, b) => {
+   
+   if (allCombinations.length == 0) {
+      compcontainer.innerHTML = `<div class="block">검색결과 없음</div>`;
+      return;
+   }
+   if (sort == 1) allCombinations.sort((a, b) => {
       let sumA = a.reduce((sum, item) => sum + (item.recommend || 0), 0);
       let sumB = b.reduce((sum, item) => sum + (item.recommend || 0), 0);
       return sumB - sumA;
    });
-   else data.sort((a, b) => {
+   else allCombinations.sort((a, b) => {
       let sumA = a.reduce((sum, item) => sum + (item.ranking || 0), 0);
       let sumB = b.reduce((sum, item) => sum + (item.ranking || 0), 0);
       return sumA - sumB;
    });
+   loadBlockNDeck(page++);
+}
 
-   let cnt = 0;
-   compcontainer.style.display = "flex";
-   compcontainer.style.flexWrap = "wrap";
+function loadBlockNDeck(pg) {
+console.log(pg);
+   const compcontainer = document.getElementById('compcontainer');
+   for(let i = pg*4; i < pg*4+4; i++) {
+      const bundle = allCombinations[i];
+      if (bundle == undefined || bundle == null) {
+         const newText = document.createTextNode('더이상 조합이 없습니다');
+         compcontainer.appendChild(newText);
+         return;
+      }
 
-   let deckBundle;
-   for(const bundle of data) {
-      deckBundle = document.createElement('div');
+      let deckBundle = document.createElement('div');
       deckBundle.classList.add('deckBundle');
 
       const newP = document.createElement('p');
       newP.classList.add('newP');
-      newP.textContent = ` # ${++cnt}`;
+      newP.textContent = ` # ${++bundleCnt}`;
       deckBundle.appendChild(newP);
 
       for(const comp of bundle) {
@@ -218,13 +245,7 @@ function makeBlockNDeck() {
       }
       compcontainer.appendChild(deckBundle);
    }
-   if (allCombinations.length % 2 != 0) {
-      deckBundle.style.visibility = 'hidden';
-      compcontainer.appendChild(deckBundle);
-   }
-   if (cnt == 0) compcontainer.innerHTML = `<div class="block">검색결과 없음</div>`;
 }
-
 
 
 /* 백트래킹 함수 -----------------------------------------------------------*/
@@ -252,3 +273,19 @@ function backtrack(startIndex, selectedEntities) {
         }
     }
 }
+
+/* observer 세팅 로직 ------------------------------------------------------- */
+document.addEventListener('DOMContentLoaded', function() {
+   const observerDiv = document.getElementById('observer');
+   const observer = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(entry => {
+         if (entry.isIntersecting) {
+            if (page > 0) {
+               if (mod == 0) loadBlockAllDeck(page++);
+               else loadBlockNDeck(page++);
+            }
+         }
+      });
+   }, { threshold: 0.1 }); // div가 10% 보일 때 트리거
+   observer.observe(observerDiv);
+});
