@@ -1,6 +1,7 @@
 const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
-const possibleDeck = [], allCombinations = [];
+const possibleDeck = [];
+let allCombinations = [];
 let isDataLoaded = false, sort = 0, mod = 0;
 
 document.addEventListener("DOMContentLoaded", function() {
