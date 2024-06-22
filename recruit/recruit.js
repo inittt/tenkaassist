@@ -184,6 +184,8 @@ function makeSSRBlock(list) {
 
 function makeSRBlock(list) {
    const box = document.getElementById('resultBox');
+   if (list.length == 0) {box.innerHTML = ""; return;}
+   
    const str = [];
    str.push(`<p style="font-weight:bold;">&nbsp;태그조합당 SR 비율</p>`)
    for(const ch of list) {
