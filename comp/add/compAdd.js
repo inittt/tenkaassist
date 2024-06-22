@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", function() {
    }
    selected.push(...tmp);
    updateSelected();
-   
+   getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, document.getElementById('searchInput').value);
 });
 function findByNameOrDefault(name) {
    let result = chJSON.data.find(item => item.name === name);
