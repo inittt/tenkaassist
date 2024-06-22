@@ -102,7 +102,7 @@ function clickedCh(id) {
 // 검색창의 캐릭 클릭시 제거
 function clickedSel(div, id) {
    if (Math.floor(id/10000) == 9) {
-      let children = div.parentNode.childNodes;
+      let children = div.parentNode.children;
       let index = Array.prototype.indexOf.call(children, div);
       if (index !== -1) selected.splice(index, 1);
    } else {
