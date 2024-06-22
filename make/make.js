@@ -86,6 +86,7 @@ function makeBlock() {
    page = 0;
    bundleCnt = 0;
    allCombinations.length = 0;
+   isEndOfDeck = false;
 
    if (mod == 0) makeBlockAllDeck();
    else {
@@ -107,7 +108,7 @@ function init() {
 
 /* 덱 만들기 함수 --------------------------------------------------------------------*/
 
-let deckCnt, bundleCnt = 0, page = 0;
+let deckCnt, bundleCnt = 0, page = 0, isEndOfDeck = false;
 
 function makeBlockAllDeck() {
    const compcontainer = document.getElementById('compcontainer');
@@ -126,14 +127,21 @@ function makeBlockAllDeck() {
 }
 
 function loadBlockAllDeck(pg) {
-console.log(pg);
-
    const compcontainer = document.getElementById('compcontainer');
    for(let i = pg*10; i < pg*10+10; i++) {
       const comp = allCombinations[i];
       if (comp == undefined || comp == null) {
-         const newText = document.createTextNode('더이상 조합이 없습니다');
-         compcontainer.appendChild(newText);
+         isEndOfDeck = true;
+
+         let compblock = document.createElement('div');
+         compblock.classList.add("block", "hoverblock");
+         compblock.style.width = "100%";
+         compblock.innerHTML = "더이상 조합이 없습니다";
+         compcontainer.appendChild(compblock);
+
+
+         // const newText = document.createTextNode('더이상 조합이 없습니다');
+         // compcontainer.appendChild(newText);
          return;
       }
 
@@ -195,13 +203,19 @@ function makeBlockNDeck() {
 }
 
 function loadBlockNDeck(pg) {
-console.log(pg);
    const compcontainer = document.getElementById('compcontainer');
    for(let i = pg*4; i < pg*4+4; i++) {
       const bundle = allCombinations[i];
       if (bundle == undefined || bundle == null) {
-         const newText = document.createTextNode('더이상 조합이 없습니다');
-         compcontainer.appendChild(newText);
+         isEndOfDeck = true;
+
+         let deckBundle = document.createElement('div');
+         deckBundle.classList.add('deckBundle');
+         deckBundle.innerHTML = "더이상 조합이 없습니다";
+         compcontainer.appendChild(deckBundle);
+
+         //const newText = document.createTextNode('더이상 조합이 없습니다');
+         //compcontainer.appendChild(newText);
          return;
       }
 
@@ -280,7 +294,7 @@ document.addEventListener('DOMContentLoaded', function() {
    const observer = new IntersectionObserver(function(entries, observer) {
       entries.forEach(entry => {
          if (entry.isIntersecting) {
-            if (page > 0) {
+            if (page > 0 && !isEndOfDeck) {
                if (mod == 0) loadBlockAllDeck(page++);
                else loadBlockNDeck(page++);
             }
