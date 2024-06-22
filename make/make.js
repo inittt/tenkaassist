@@ -138,10 +138,6 @@ function loadBlockAllDeck(pg) {
          compblock.style.width = "100%";
          compblock.innerHTML = "더이상 조합이 없습니다";
          compcontainer.appendChild(compblock);
-
-
-         // const newText = document.createTextNode('더이상 조합이 없습니다');
-         // compcontainer.appendChild(newText);
          return;
       }
 
@@ -204,7 +200,7 @@ function makeBlockNDeck() {
 
 function loadBlockNDeck(pg) {
    const compcontainer = document.getElementById('compcontainer');
-   for(let i = pg*4; i < pg*4+4; i++) {
+   for(let i = pg*6; i < pg*6+6; i++) {
       const bundle = allCombinations[i];
       if (bundle == undefined || bundle == null) {
          isEndOfDeck = true;
@@ -213,9 +209,6 @@ function loadBlockNDeck(pg) {
          deckBundle.classList.add('deckBundle');
          deckBundle.innerHTML = "더이상 조합이 없습니다";
          compcontainer.appendChild(deckBundle);
-
-         //const newText = document.createTextNode('더이상 조합이 없습니다');
-         //compcontainer.appendChild(newText);
          return;
       }
 
@@ -226,6 +219,9 @@ function loadBlockNDeck(pg) {
       newP.classList.add('newP');
       newP.textContent = ` # ${++bundleCnt}`;
       deckBundle.appendChild(newP);
+
+      if (sort == 1) bundle.sort((a, b) => b.recommend - a.recommend);
+      else bundle.sort((a, b) => a.ranking - b.ranking);
 
       for(const comp of bundle) {
          const stringArr = [];
