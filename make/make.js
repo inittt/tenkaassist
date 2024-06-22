@@ -129,7 +129,6 @@ function loadBlockAllDeck(pg) {
 console.log(pg);
 
    const compcontainer = document.getElementById('compcontainer');
-   bundleCnt = 0;
    for(let i = pg*10; i < pg*10+10; i++) {
       const comp = allCombinations[i];
       if (comp == undefined || comp == null) {
