@@ -101,18 +101,13 @@ function clickedCh(id) {
 
 // 검색창의 캐릭 클릭시 제거
 function clickedSel(div, id) {
-   if (Math.floor(id/10000) == 9) {
-      let children = div.parentNode.children;
-      let index = Array.prototype.indexOf.call(children, div);
-      if (index !== -1) selected.splice(index, 1);
-   } else {
-      let index = selected.indexOf(id);
-      if (index !== -1) selected.splice(index, 1);
-      let image = document.getElementById(`img_${id}`);
-      if (image != null) image.src = `${address}/images/characters/cs${id}_0_0.webp`;
-      let el = document.getElementById(`el_${id}`);
-      if (el != null) el.style.opacity = 1;
-   }
+   let index = selected.indexOf(id);
+   if (index !== -1) selected.splice(index, 1);
+   let image = document.getElementById(`img_${id}`);
+   if (image != null) image.src = `${address}/images/characters/cs${id}_0_0.webp`;
+   let el = document.getElementById(`el_${id}`);
+   if (el != null) el.style.opacity = 1;
+
    updateSelected()
    resizeButton();
 }

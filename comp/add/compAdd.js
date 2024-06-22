@@ -134,7 +134,7 @@ function clickedCh(id) {
 function clickedSel(div, id) {
    if (Math.floor(id/10000) == 9) {
       let position = Array.prototype.indexOf.call(div.parentNode.childNodes, div);
-      selected.splice(position, 1);
+      selected.splice((position-1)/2, 1);
    } else {
       div.parentNode.removeChild(div);
       let index = selected.indexOf(id);

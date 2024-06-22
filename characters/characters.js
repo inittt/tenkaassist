@@ -124,7 +124,6 @@ function clickedCh(id) {
 
 // 검색창의 캐릭 클릭시 제거
 function clickedSel(div, id) {
-   div.parentNode.removeChild(div);
    let index = selected.indexOf(id);
    if (index !== -1) selected.splice(index, 1);
 
