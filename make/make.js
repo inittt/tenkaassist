@@ -27,10 +27,10 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownContent.style.display = "none";
 
          const titleBoxText = document.getElementById('titleBoxText');
-         if ("2개" === this.value) {mod = 1; titleBoxText.innerHTML = '덱추천 - 2덱';}
-         else if ("3개" === this.value) {mod = 2; titleBoxText.innerHTML = '덱추천 - 3덱';}
-         else if ("4개" === this.value) {mod = 3; titleBoxText.innerHTML = '덱추천 - 4덱';}
-         else {mod = 0; titleBoxText.innerHTML = '덱추천 - 1덱';}
+         if ("2개" === this.value) {mod = 1; titleBoxText.innerHTML = '추천덱 - 2덱';}
+         else if ("3개" === this.value) {mod = 2; titleBoxText.innerHTML = '추천덱 - 3덱';}
+         else if ("4개" === this.value) {mod = 3; titleBoxText.innerHTML = '추천덱 - 4덱';}
+         else {mod = 0; titleBoxText.innerHTML = '추천덱 - 1덱';}
          makeBlock();
       });
    });

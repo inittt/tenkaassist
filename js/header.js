@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <a class="h-line" href="${address}/comp/add/">조합등록</a>
       <a class="h-line" href="${address}/game/">밸런스게임</a>
       <a class="h-line" href="${address}/recruit/">전지역모집</a>
-      <a class="h-line" href="${address}/have/">덱추천</a>
+      <a class="h-line" href="${address}/have/">추천덱</a>
       <a class="h-line" href="${address}/contributors/">♥</a>
    `;
 
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <a id="h-5" class="h-left h-box" href="${address}/comp/add/">조합등록</a>
       <a id="h-3" class="h-left h-box" href="${address}/game/">밸런스게임</a>
       <a id="h-4" class="h-left h-box" href="${address}/recruit/">전지역모집</a>
-      <a id="h-6" class="h-left h-box" href="${address}/have/">덱추천</a>
+      <a id="h-6" class="h-left h-box" href="${address}/have/">추천덱</a>
       <a id="h-7" class="h-left h-box" href="${address}/contributors/">♥</a>
       <div id="userInfo" class="user-info h-right margin-right"></div>
    `;
