@@ -133,7 +133,7 @@ function loadAllCompCnt() {
       return response.json();
    }).then(res => {
       if (!res.success) return console.log("덱개수 로드 실패");
-      document.getElementById("cnt-all").innerHTML = `총 덱 개수 : ${res.data}`;
+      document.getElementById("cnt-all").innerHTML = `총 덱 개수 : ${res.data}개`;
    }).catch(e => {
       console.log("덱개수 로드 실패", e);
    })
