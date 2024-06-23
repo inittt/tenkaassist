@@ -44,6 +44,8 @@ document.addEventListener("DOMContentLoaded", function() {
       });
    }, {root: null, rootMargin: '0px', threshold: 0.5, once: false});
    observer.observe(document.getElementById('nextTrigger'));
+
+   loadAllCompCnt();
 });
 
 function getComps(page) {
@@ -121,4 +123,20 @@ function init() {
    rds.forEach(function(radio) {radio.checked = false;});
    document.getElementById('option1').checked = true;
 
+}
+
+function loadAllCompCnt() {
+   request(`${server}/comps/getCnt`, {
+      method: "GET",
+   }).then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   }).then(res => {
+      if (!res.success) {
+         document.getElementById("all-cnt").innerHTML = `총 덱 개수 : ${res.data}`;
+         return console.log("데이터 로드 실패");
+      }
+   }).catch(e => {
+      console.log("데이터 로드 실패", e);
+   })
 }
