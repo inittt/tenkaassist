@@ -66,7 +66,7 @@ function getCharactersWithCondition(element, role, rarity, search) {
 
 // 검색 버튼 누를시
 function searchDeck() {
-   if (selected.length > 4) return alert("캐릭터는 5개까지 선택가능합니다");
+   if (selected.length > 5) return alert("캐릭터는 5개까지 선택가능합니다");
    if (selected.length < 1) return alert("하나 이상의 캐릭터를 선택해 주세요");
    if (isOn){
       location.href = `${address}/search/?list=${selected}&leader=${selected[0]}`;
