@@ -49,7 +49,7 @@ function getCharactersWithCondition(element, role, rarity, search) {
 // 검색 버튼 누를시
 function searchDeck() {
    const go = [...selected];
-   if (selected.length < 1) return alert("하나 이상의 캐릭터를 선택해 주세요");
+   if (go.length < 1) return alert("하나 이상의 캐릭터를 선택해 주세요");
    for(const ch of chJSON.data) {
       if (ch.rarity == 3) continue;
       if (go.indexOf(ch.id) == -1) go.push(ch.id);
