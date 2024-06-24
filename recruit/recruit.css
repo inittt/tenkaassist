@@ -19,6 +19,9 @@
    background-color:#3f568b;
    border-color: #007BFF; /* 선택된 상태에서 파란색 테두리 */
 }
+.c-checkbox .dup + span {
+   border-color: #e01313; /* 선택된 상태에서 파란색 테두리 */
+}
 .checkbox-container {
    min-width:25rem;
 }

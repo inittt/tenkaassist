@@ -83,13 +83,62 @@ const recruitJson = {
       {id:10924, cur:"", per:0, name:"무무", rarity:"NR", tags:"암속성 디스럽터 표준체형 미유 병사 보호 방해 생존력"},
    ]
 };
+const tagMap = new Map([
+   ['화', '화속성'],['수', '수속성'],['풍', '풍속성'],['광', '광속성'],['암', '암속성'],
+   ['딜', '딜러'],['힐', '힐러'],['탱', '탱커'],['서', '서포터'],['디', '디스럽터'],
+   ['인', '인간'],['마', '마족'],['야', '야인'],['작', '작은체형'],['표', '표준체형'],
+   ['빈', '빈유'],['미', '미유'],['거', '거유'],['병', '병사'],['정', '정예'],['리', '리더'],
+   ['방', ''],['데', '데미지'],['보', '보호'],['회', '회복'],['지', '지원'],['쇠', '쇠약'],
+   ['폭', '폭발력'],['생', '생존력'],['전', '전투'],['범', '범위공격'],['반', '반격']
+]);
 
 document.addEventListener("DOMContentLoaded", function() {
    const checkboxes = document.querySelectorAll('input[name="tag"]');
    checkboxes.forEach(function(chkbox) {chkbox.addEventListener('change', function() {
       if (chkbox.checked == true && selectedTag.length > 4) return chkbox.checked = false;
+
+      if (chkbox.checked == true && (chkbox.value == '방어' || chkbox.value == '방해')) {
+         document.getElementById('b1').classList.remove('dup');
+         document.getElementById('b2').classList.remove('dup');
+      } 
       getResult();
    });});
+
+   const tagSearch = document.getElementById("tagSearch");
+   tagSearch.addEventListener('input', (e) => {
+      checkboxes.forEach(function(chkbox) {chkbox.checked = false;})
+      const text = e.target.value;
+      let checkedCnt = 0;
+      console.log(text)
+      for (let i = 0; i < text.length; i++) {
+         const char = text[i];
+         if (!tagMap.has(char) || checkedCnt >= 5) continue;
+         if (char == '방') setBang();
+         else {
+            checkboxes.forEach(checkbox => {
+               if (checkbox.value === tagMap.get(char)) checkbox.checked = true;
+            });
+            checkedCnt++;
+         }
+      }
+      getResult();
+
+      function setBang() {
+         console.log("setbang")
+         let b1 = false, b2 = false;
+         checkboxes.forEach(checkbox => {
+            const val = checkbox.value;
+            if (val === "방어" && checkbox.checked) b1 = true;
+            if (val === "방해" && checkbox.checked) b2 = true;
+         });
+         if (!b1 && !b2) {
+            checkboxes.forEach(checkbox => {
+               const val = checkbox.value;
+               if (val === "방어" || val === "방해") checkbox.classList.add('dup');
+            });
+         }
+      }
+   })
 });
 
 function getResult() {

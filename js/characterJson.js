@@ -207,6 +207,7 @@ function fixName(txt) {
          case "크졸류": return "크르티아";
          case "엘루루": return "앨루루";
          case "엘즈루": return "앨즈루";
+         case "엘리자베스": return "엘자";
          default: return txt;
       }
 }
