@@ -67,6 +67,7 @@ function getAllCompsFromServer() {
          return;
       }
       setPossible(res.data);
+      console.log(possibleDeck);
       makeBlock();
    }).catch(e => {
       console.log("데이터 로드 실패", e);
