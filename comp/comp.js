@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
       return response.json();
    }).then(res => {
       if (!res.success) return console.log(res.msg);
+      if (res.data == null) return;
       for(const cid of res.data.split(" ").map(Number)) {
          if (cid == compId) {
             document.getElementById('like').classList.add("like-already");
