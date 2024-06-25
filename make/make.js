@@ -79,7 +79,7 @@ function setPossible(data) {
    for(let d of data) {
       const compList = d.compstr.split(" ").map(Number);
       d.compstr = compList.slice();
-      if (compList.every(item => haveList.includes(item) || Math.floor(item/10000) == 9))
+      if (compList.every(item => haveList.includes(item) || isAny(item)))
          possibleDeck.push(d);
    }
 }
@@ -155,7 +155,7 @@ function loadBlockAllDeck(pg) {
             <div class="character" style="margin:0.2rem;">
                <div style="margin:0.2rem;">
                   <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-                  ${Math.floor(ch.id/10000) == 9 ? "" : `<img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">`}
+                  ${isAny(ch.id) ? "" : `<img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">`}
                   <div class="element${ch.element} ch_border z-4"></div>
                </div>
                <div class="text-mini">${ch.name}</div>
@@ -236,7 +236,7 @@ function loadBlockNDeck(pg) {
                <div class="character" style="margin:0.2rem;">
                   <div style="margin:0.2rem;">
                      <img src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-                     ${Math.floor(ch.id/10000) == 9 ? "" : `<img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">`}
+                     ${isAny(ch.id) ? "" : `<img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">`}
                      <div class="element${ch.element} ch_border z-4"></div>
                   </div>
                   <div class="text-mini">${ch.name}</div>
@@ -271,7 +271,7 @@ function backtrack(startIndex, selectedEntities) {
         let tempUsedNumbers = new Set();
 
         for (let num of entity.compstr) {
-            if (Math.floor(num/10000) == 9) continue;
+            if (isAny(num)) continue;
             if (usedNumbers.has(num)) {canUseEntity = false; break;}
             tempUsedNumbers.add(num);
         }

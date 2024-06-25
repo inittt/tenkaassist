@@ -35,16 +35,18 @@ function getCharactersWithCondition(element, role, rarity, search) {
    });
    let innerArray = [];
    for(const champ of filteredData) {
-      let id = champ.id, name = champ.name, element = champ.element, img, role = champ.role;
-      if (selected.includes(id)) img = `${address}/images/checkmark.png`;
-      else img = `${address}/images/characters/cs${id}_0_0.webp`;
-      let roleImg = Math.floor(id/10000) == 9 ? "" : `<img id="el_${id}" src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">`;
-         
+      let id = champ.id, name = champ.name, element = champ.element, role = champ.role;
+      let img, opacity = "";
+      if (selected.includes(id) && !isAny(id)) {
+         img = `${address}/images/checkmark.png`;
+         opacity = `style="opacity:0"`;
+      } else img = `${address}/images/characters/cs${id}_0_0.webp`;
+      if (isAny(id)) opacity = `style="opacity:0"`;
       innerArray.push(`
          <div class="character" onclick="clickedCh(${id})" style="margin:0.2rem;">
             <div style="margin:0.2rem;">
                <img id="img_${id}" src="${img}" class="img z-1" alt="">
-               ${roleImg}
+               <img id="el_${id}" src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2" ${opacity}>
                <div class="element${element} ch_img ch_border z-4"></div>
             </div>
             <div class="text-mini">${name}</div>
@@ -93,7 +95,7 @@ function updateSelected() {
       for(let chId of selected) {
          let champ = getCharacter(chId);
          let id = champ.id, name = champ.name, element = champ.element, role = champ.role;
-         let roleImg = Math.floor(id/10000) == 9 ? "" : `<img src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">`;
+         let roleImg = isAny(id) ? "" : `<img src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">`;
          innerArray.push(`
             <div class="character" onclick="clickedSel(this, ${id})" style="margin:0.2rem;">
                <div style="margin:0.2rem;">
@@ -113,7 +115,7 @@ function updateSelected() {
 function clickedCh(id) {
    if (selected.length > 4) return alert("5개까지 선택 가능합니다");
    
-   if (Math.floor(id/10000) == 9) selected.push(id);
+   if (isAny(id)) selected.push(id);
    else {
       if (selected.includes(id)) {
          let index = selected.indexOf(id);
@@ -132,7 +134,7 @@ function clickedCh(id) {
 
 // 검색창의 캐릭 클릭시 제거
 function clickedSel(div, id) {
-   if (Math.floor(id/10000) == 9) {
+   if (isAny(id)) {
       let position = Array.prototype.indexOf.call(div.parentNode.childNodes, div);
       selected.splice((position-1)/2, 1);
    } else {

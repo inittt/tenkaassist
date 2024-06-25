@@ -48,7 +48,7 @@ function getCharactersWithCondition(element, role, rarity, search) {
    for(const champ of filteredData) {
       let id = champ.id, name = champ.name, element = champ.element, role = champ.role;
       let img, opacity = "";
-      if (Math.floor(id/10000) == 9) continue;
+      if (isAny(id)) continue;
       if (selected.includes(id)) {
          img = `${address}/images/checkmark.png`;
          opacity = `style="opacity:0"`;

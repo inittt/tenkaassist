@@ -92,7 +92,7 @@ function makeCompBlock(comp) {
          <div class="character" style="margin:0.2rem;">
             <div style="margin:0.2rem;">
                <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-               ${Math.floor(ch.id/10000) == 9 ? "" : `<img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">`}
+               ${isAny(ch.id) ? "" : `<img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">`}
                <div class="element${ch.element} ch_border z-4"></div>
             </div>
             <div class="text-mini">${ch.name}</div>

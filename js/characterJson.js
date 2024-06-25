@@ -236,3 +236,7 @@ function anyCh(name, el, ro) {
       if (ro == null) ro = 9;
       return {id : 90000 + el*10 + ro, rarity : 9, fullname : name, name : name, element : el, role : ro};
 }
+
+function isAny(id) {
+      return Math.floor(id/10000) == 9;
+}
