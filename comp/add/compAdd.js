@@ -36,8 +36,10 @@ function getCharactersWithCondition(element, role, rarity, search) {
    let innerArray = [];
    for(const champ of filteredData) {
       let id = champ.id, name = champ.name, element = champ.element, img, role = champ.role;
-      if (selected.includes(id)) img = `${address}/images/checkmark.png`
-      else img = `${address}/images/characters/cs${id}_0_0.webp`;
+      if (selected.includes(id)) {
+         img = `${address}/images/checkmark.png`;
+         document.getElementById(`el_${id}`).style.opacity = 0;
+      } else img = `${address}/images/characters/cs${id}_0_0.webp`;
       let roleImg = Math.floor(id/10000) == 9 ? "" : `<img id="el_${id}" src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">`;
          
       innerArray.push(`
