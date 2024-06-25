@@ -61,6 +61,17 @@ document.addEventListener("DOMContentLoaded", function() {
          console.log("데이터 로드 실패", e);
       })
    });
+
+   // admin일때 삭제버튼 보이기
+   request(`${server}/users/isAdmin`, {
+      method: "GET",
+   }).then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   }).then(res => {
+      if (!res.success) return;
+      document.getElementById('deleteBtn').style.display = "block";
+   }).catch(e => {});
 });
 
 function makeCompBlock(comp) {
@@ -118,6 +129,20 @@ function reportComp() {
       } else {
          alert(`신고 성공 (현재 누적 ${res.data}회)`);
       }
+   }).catch(e => {
+      console.log("데이터 로드 실패", e);
+   })
+}
+
+function deleteComp() {
+   request(`${server}/comps/remove/${compId}`, {
+      method: "DELETE",
+   }).then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   }).then(res => {
+      if (!res.success) return alert(res.msg);
+      alert(res.data);
    }).catch(e => {
       console.log("데이터 로드 실패", e);
    })
