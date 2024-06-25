@@ -50,7 +50,8 @@ function getCharactersWithCondition(element, role, rarity, search) {
       if (Math.floor(id/10000) == 9) continue;
       if (selected.includes(id)) {
          img = `${address}/images/checkmark.png`;
-         document.getElementById(`el_${id}`).style.opacity = 0;
+         let eldiv = document.getElementById(`el_${id}`);
+         if (eldiv != null) eldiv.style.opacity = 0;
       } else img = `${address}/images/characters/cs${id}_0_0.webp`;
       innerArray.push(`
          <div class="character" onclick="clickedCh(${id})" style="margin:0.2rem;">
