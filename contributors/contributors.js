@@ -17,7 +17,7 @@ function loadGameUser() {
       const users = []
       let cnt = 0;
       for(const u of res.data) {
-         if (cnt == 10) break;
+         if (u.contribution == 0 || cnt == 10) break;
          users.push(`
             <div class="user-contribution-text">
                <span class="user-order">#${++cnt}</span>
@@ -42,7 +42,7 @@ function loadAddUser() {
       const users = []
       let cnt = 0;
       for(const u of res.data) {
-         if (cnt == 10) break;
+         if (u.addcount == 0 || cnt == 10) break;
          users.push(`
             <div class="user-contribution-text">
                <span class="user-order">#${++cnt}</span>
@@ -67,7 +67,7 @@ function loadUpdateUser() {
       const users = []
       let cnt = 0;
       for(const u of res.data) {
-         if (cnt == 10) break;
+         if (u.updatecount == 0 || cnt == 10) break;
          users.push(`
             <div class="user-contribution-text">
                <span class="user-order">#${++cnt}</span>
