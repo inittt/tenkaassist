@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
-   fetch(`${server}/users/isAdmin`, {
+   request(`${server}/users/isAdmin`, {
          method: "GET",
-         headers: {"jwtToken": `${localStorage.getItem("jwtToken")}`}
       })
       .then(response => {
          if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
@@ -15,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
          } else {
             // 관리자 권한이 있는 경우 페이지 내용을 표시합니다.
             document.getElementById('adminContent').style.display = 'block';
+            setUserCnt();
          }
       })
       .catch(error => {
@@ -23,3 +23,22 @@ document.addEventListener('DOMContentLoaded', function() {
          window.history.back();
       });
 });
+
+function setUserCnt() {
+   request(`${server}/users/getAll`, {
+      method: "GET",
+   })
+   .then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   })
+   .then(res => {
+      console.log(res);
+      if (!res.success) { alert('관리자 권한이 필요합니다.'); return; }
+      // 유저 수 표시
+      document.getElementById('userCnt').innerHTML = res.data;
+   })
+   .catch(error => {
+      alert('서버 오류', error);
+   });
+}
