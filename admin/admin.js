@@ -36,7 +36,7 @@ function setUserCnt() {
       console.log(res);
       if (!res.success) { alert('관리자 권한이 필요합니다.'); return; }
       // 유저 수 표시
-      document.getElementById('userCnt').innerHTML = res.data;
+      document.getElementById('userCnt').innerHTML = res.data.length;
    })
    .catch(error => {
       alert('서버 오류', error);
