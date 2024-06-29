@@ -641,18 +641,18 @@ function setDefault(me) {
             // 여름 만끽3 : 공격시 아군 전체의 궁뎀증 5% (10중첩)
             all_anbf("평", all, "궁뎀증", 5, "여름 만끽3", 1, 10, always);
             // 여름 만끽4 : 공격시 수/화속뎀증 3% (10중첩)
-            for(let idx of getElementCnt("수"))
+            for(let idx of getElementIdx("수"))
                all_anbf("평", comp[idx], "속뎀증", 3, "여름 만끽4", 1, 10, always);
-            for(let idx of getElementCnt("화"))
+            for(let idx of getElementIdx("화"))
                all_anbf("평", comp[idx], "속뎀증", 3, "여름 만끽4", 1, 10, always);
          }
       }
       me.passive = function() {
          // 여름 해변의 꽃1 : 방어 시 수/화 아군이 받는 치유량 50% 증가
          // 여름 해변의 꽃2 : 궁발동시 수/화 아군의 공퍼증 15% 증가 (2중첩)
-         for(let idx of getElementCnt("수"))
+         for(let idx of getElementIdx("수"))
             anbf(me, "궁", comp[idx], "공퍼증", 15, "여름 해변의 꽃2", 1, 2, always);
-         for(let idx of getElementCnt("화"))
+         for(let idx of getElementIdx("화"))
             anbf(me, "궁", comp[idx], "공퍼증", 15, "여름 해변의 꽃2", 1, 2, always);
          // 나에게 굴복하라 : 가뎀증 25% 증가
          tbf(me, "가뎀증", 25, "나에게 굴복하라", always);
@@ -665,8 +665,8 @@ function setDefault(me) {
       me.turnstart = function() {
          // 패시브 오만하구나! : 4턴마다 수/화속뎀증 40%
          if ((GLOBAL_TURN-1)%4 == 0) {            
-            for(let idx of getElementCnt("수")) tbf(comp[idx], "속뎀증", 40, "오만하구나!", 1);
-            for(let idx of getElementCnt("화")) tbf(comp[idx], "속뎀증", 40, "오만하구나!", 1);
+            for(let idx of getElementIdx("수")) tbf(comp[idx], "속뎀증", 40, "오만하구나!", 1);
+            for(let idx of getElementIdx("화")) tbf(comp[idx], "속뎀증", 40, "오만하구나!", 1);
          }
       };
       me.turnover = function() {};

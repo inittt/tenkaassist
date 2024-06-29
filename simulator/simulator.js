@@ -57,6 +57,8 @@ function start(compIds) {
    }
    comp[0].leader();
    for(let i = 0; i < 5; i++) comp[i].passive();
+
+   updateAll();
 }
 
 function do_ult(idx) {
