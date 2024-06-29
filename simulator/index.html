@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>TenkaAssist - 시뮬레이터</title>
+   <script src="../js/common.js"></script>
+   <link rel="stylesheet" href="../css/common.css" type = "text/css">
+   <link rel="stylesheet" href="./simulator.css" type = "text/css">
+   <script src="../js/characterJson.js"></script>
+   <script src="./calculator.js"></script>
+   <script src="./simulator.js"></script>
+</head>
+<body>
+   <script src="../js/header.js"></script>
+   <div class="main-container bg-dark">
+      <div class="block">
+         <div class="margin-left titleblock">
+            <span id="titlebox" class="titlebox">시뮬레이터</span>
+            <input id="ch_input" class="searchInput" type="text" placeholder="캐릭터명 입력" style="width:10rem; margin-left:1rem;">
+            <button class="button" onclick="setComp()">시작</button>
+         </div>
+      </div>
+      <div id="simulator" class="block">
+         <div id="boss" class="progress-bar"></div>
+         <div id="deal"></div>
+         <div id="comp"></div>
+      </div>
+   </div>
+</body>
+</html>

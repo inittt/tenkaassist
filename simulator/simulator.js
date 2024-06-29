@@ -1,0 +1,111 @@
+document.addEventListener("DOMContentLoaded", function() {
+
+
+
+
+});
+
+function setComp() {
+   let strList = document.getElementById("ch_input").value.split(" ");
+   const list = [];
+   for(const s of strList) {
+      let n = fixName(s);
+      let champ = chJSON.data.filter(obj => obj.name === n)[0];
+      if (champ == undefined || champ == null) return alert("캐릭터명이 잘못되었습니다");
+      list.push(champ.id);
+   }
+   makeComp(list);
+   start(list);
+}
+
+function makeComp(list) {
+   const compDiv = document.getElementById('comp');
+   const stringArr = [];
+   let idx = 0;
+   for(const id of list) {
+      const ch = getCharacter(cid);
+      stringArr.push(`
+         <div class="character" style="margin:0.2rem;">
+            <div id="ult${idx}" class="circleBtn" onclick="do_ult(${idx})">궁</div>
+            <div id="atk${idx}" style="margin:0.2rem;" onclick="do_atk(${idx})">
+               <img id="img${idx}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
+               <div class="element${ch.element} ch_border z-4"></div>
+            </div>
+            <div class="text-mini">${ch.name}</div>
+            <div id="def${idx}" class="circleBtn" onclick="do_def(${idx})">방</div>
+         </div>
+      `);  
+      idx++;
+   }
+}
+
+function start(compIds) {
+   GLOBAL_TURN = 1; comp = []; attackOrder = []; ultTurn = [];
+
+   for(const id of compIds) {
+      const tmp = characterData.filter(ch => ch.id === id)[0];
+      const ch = new Champ(tmp.id, tmp.name, tmp.hp*COEF, tmp.atk*COEF, tmp.cd, tmp.el, tmp.ro, tmp.atkMag, tmp.ultMag);
+      comp.push(ch);
+   }
+   comp[0].isLeader = true;
+   for(let i = 0; i < 5; i++) {
+      comp[i] = setDefault(comp[i]);
+      if (comp[i] == undefined || comp[i] == null) return alert("캐릭터 세팅에 문제가 발생");
+   }
+   comp[0].leader();
+   for(let i = 0; i < 5; i++) comp[i].passive();
+}
+
+function do_ult(idx) {
+   comp[idx].ultimate();
+   endAct();
+   updateAll();
+}
+function do_atk(idx) {
+   comp[idx].attack();
+   endAct();
+   updateAll();
+}
+function do_def(idx) {
+   comp[idx].defense();
+   endAct();
+   updateAll();
+}
+
+function endAct() {
+   if (isAllActed()) {
+      for(let i = 0; i < 5; i++) comp[i].turnover();
+      nextTurn();
+      for(let i = 0; i < 5; i++) comp[i].turnstart();
+   }
+}
+
+function isAllActed() {
+   for(let c of comp) if (!c.isActed) return false;
+   return true;
+}
+
+function updateAll() {
+   for(let i = 0; i < 5; i++) {
+      if (comp[i].isActed) {
+         getdiv(`ult${i}`).style.visibility = "hidden";
+         getdiv(`def${i}`).style.visibility = "hidden";
+         getdiv(`img${i}`).src = `${addrsss}/images/icons/ro_9.webp`;
+      } else {
+         if (comp[i].curCd <= 0) getdiv(`ult${i}`).style.visibility = "visible";
+         getdiv(`def${i}`).style.visibility = "visible";
+         getdiv(`img${i}`).src = `${address}/images/characters/cs${comp[i].id}_0_0.webp`;
+      }
+   }
+   getdiv("deal").innerHTML = `데미지 : ${lastDmg}\n발동기 : ${lastAtvDmg}`
+   updateProgressBar(boss.hp, boss.maxHp);
+}
+
+function updateProgressBar(hp, maxhp) {
+   var progressBar = document.getElementById("hpProgressBar");
+   var percentage = ((hp / maxhp) * 100).toFixed(2);
+   progressBar.style.width = percentage + "%";
+   progressBar.textContent = hp;
+}
+
+function getdiv(id) {return document.getElementById(id);}
