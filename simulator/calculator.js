@@ -28,7 +28,7 @@ class Champ {
       this.turnBuff = []; this.nestBuff = []; this.actTurnBuff = []; this.actNestBuff = [];
       this.curAtkAtv = 0; this.curUltAtv = 0;
       this.atkMag = atkMag; this.ultMag = ultMag;
-      this.canCDChange = ture; this.isLeader = false; this.isActed = false;
+      this.canCDChange = true; this.isLeader = false; this.isActed = false;
    }
 // [0공퍼증, 1공고증, 2받뎀증, 3일뎀증, 4받일뎀, 5궁뎀증, 6받궁뎀, 7발뎀증, 8받발뎀, 9가뎀증, 10속뎀증
 // 11평발동, 12궁발동]
