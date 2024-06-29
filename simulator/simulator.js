@@ -26,7 +26,7 @@ function makeComp(list) {
       const ch = getCharacter(id);
       stringArr.push(`
          <div style="display:flex; flex-direction:column;">
-            <button id="ult${idx}" class="act_btn" onclick="do_ult(${idx})" src="${address}/images/icons/btn_up.png">
+            <img id="ult${idx}" class="act_btn" onclick="do_ult(${idx})" src="${address}/images/icons/btn_up.png">
             <div class="character" style="margin:0.2rem;">
                <div id="atk${idx}" style="margin:0.2rem;" onclick="do_atk(${idx})">
                   <img id="img${idx}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
@@ -34,7 +34,7 @@ function makeComp(list) {
                </div>
                <div class="text-mini">${ch.name}</div>
             </div>
-            <button id="def${idx}" class="act_btn" onclick="do_def(${idx})" src="${address}/images/icons/btn_down.png">
+            <img id="def${idx}" class="act_btn" onclick="do_def(${idx})" src="${address}/images/icons/btn_down.png">
          </div>
       `);  
       idx++;
@@ -107,7 +107,7 @@ function updateAll() {
 }
 
 function updateProgressBar(hp, maxhp) {
-   var progressBar = document.getElementById("hpProgressBar");
+   var progressBar = document.getElementById("boss");
    var percentage = ((hp / maxhp) * 100).toFixed(2);
    progressBar.style.width = percentage + "%";
    progressBar.textContent = hp;
