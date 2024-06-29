@@ -13,7 +13,7 @@ class Boss {
       for(const a of atbf) if (a.act == "피격") to_tbf(this, a);
       for(const a of anbf) if (a.act == "피격") to_nbf(this, a);
    }
-   setBossBuff() {
+   setBuff() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       this.li = getBossBuffSizeList(tbf, nbf);
    }
@@ -133,7 +133,7 @@ function to_nbf(me, tmp) {
    }
    if (tmp.who == 0) {
       for(let c of comp) {
-         const exist = c.nestBuff.find(buf => buf.name == n);
+         const exist = c.nestBuff.find(buf => buf.name == tmp.name);
          if (exist) {
             exist.nest += tmp.nest;
             if (exist.nest > exist.maxNest) exist.nest = exist.maxNest;
@@ -142,14 +142,14 @@ function to_nbf(me, tmp) {
    } else if (tmp.who == 1) {
       for(let c of comp) {
          if (c.id == me.id) continue;
-         const exist = c.nestBuff.find(buf => buf.name == n);
+         const exist = c.nestBuff.find(buf => buf.name == tmp.name);
          if (exist) {
             exist.nest += tmp.nest;
             if (exist.nest > exist.maxNest) exist.nest = exist.maxNest;
          } else nbf(c, tmp.type, tmp.size, tmp.name, tmp.nest, tmp.maxNest);
       }
    } else {
-      const exist = tmp.who.nestBuff.find(buf => buf.name == n);
+      const exist = tmp.who.nestBuff.find(buf => buf.name == tmp.name);
       if (exist) {
          exist.nest += tmp.nest;
          if (exist.nest > exist.maxNest) exist.nest = exist.maxNest;
@@ -210,7 +210,7 @@ function getBuffSizeList(tbf, nbf) {
          case "궁발동": res[12] += bf.size*bf.nest/100; break;
       }
    }
-   setBossBuff();
+   boss.setBuff();
    for(let i = 0; i < 13; i++) res[i] += boss.li[i];
    return res;
 }
@@ -220,36 +220,36 @@ function getBossBuffSizeList(tbf, nbf) {
    for(const bf of tbf) {
       if (bf.turn == GLOBAL_TURN) continue;
       switch(bf.type) {
-         case "공퍼증": res[0] += bf.size; break;
-         case "공고증": res[1] += bf.size; break;
-         case "받뎀증": res[2] += bf.size; break;
-         case "일뎀증": res[3] += bf.size; break;
-         case "받일뎀": res[4] += bf.size; break;
-         case "궁뎀증": res[5] += bf.size; break;
-         case "받궁뎀": res[6] += bf.size; break;
-         case "발뎀증": res[7] += bf.size; break;
-         case "받발뎀": res[8] += bf.size; break;
-         case "가뎀증": res[9] += bf.size; break;
-         case "속뎀증": res[10] += bf.size; break;
-         case "평발동": res[11] += bf.size; break;
-         case "궁발동": res[12] += bf.size; break;
+         case "공퍼증": res[0] += bf.size/100; break;
+         case "공고증": res[1] += bf.size/100; break;
+         case "받뎀증": res[2] += bf.size/100; break;
+         case "일뎀증": res[3] += bf.size/100; break;
+         case "받일뎀": res[4] += bf.size/100; break;
+         case "궁뎀증": res[5] += bf.size/100; break;
+         case "받궁뎀": res[6] += bf.size/100; break;
+         case "발뎀증": res[7] += bf.size/100; break;
+         case "받발뎀": res[8] += bf.size/100; break;
+         case "가뎀증": res[9] += bf.size/100; break;
+         case "속뎀증": res[10] += bf.size/100; break;
+         case "평발동": res[11] += bf.size/100; break;
+         case "궁발동": res[12] += bf.size/100; break;
       }
    }
    for(const bf of nbf) {
       if (bf.nest > bf.maxNest) bf.nest = bf.maxNest;
       switch(bf.type) {
-         case "공퍼증": res[0] += bf.size*bf.nest; break;
-         case "공고증": res[1] += bf.size*bf.nest; break;
-         case "받뎀증": res[2] += bf.size*bf.nest; break;
-         case "일뎀증": res[3] += bf.size*bf.nest; break;
-         case "받일뎀": res[4] += bf.size*bf.nest; break;
-         case "궁뎀증": res[5] += bf.size*bf.nest; break;
-         case "받궁뎀": res[6] += bf.size*bf.nest; break;
-         case "발뎀증": res[7] += bf.size*bf.nest; break;
-         case "받발뎀": res[8] += bf.size*bf.nest; break;
-         case "가뎀증": res[9] += bf.size*bf.nest; break;
-         case "평발동": res[11] += bf.size*bf.nest; break;
-         case "궁발동": res[12] += bf.size*bf.nest; break;
+         case "공퍼증": res[0] += bf.size*bf.nest/100; break;
+         case "공고증": res[1] += bf.size*bf.nest/100; break;
+         case "받뎀증": res[2] += bf.size*bf.nest/100; break;
+         case "일뎀증": res[3] += bf.size*bf.nest/100; break;
+         case "받일뎀": res[4] += bf.size*bf.nest/100; break;
+         case "궁뎀증": res[5] += bf.size*bf.nest/100; break;
+         case "받궁뎀": res[6] += bf.size*bf.nest/100; break;
+         case "발뎀증": res[7] += bf.size*bf.nest/100; break;
+         case "받발뎀": res[8] += bf.size*bf.nest/100; break;
+         case "가뎀증": res[9] += bf.size*bf.nest/100; break;
+         case "평발동": res[11] += bf.size*bf.nest/100; break;
+         case "궁발동": res[12] += bf.size*bf.nest/100; break;
       }
    }
    return res;

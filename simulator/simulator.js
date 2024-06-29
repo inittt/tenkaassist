@@ -6,7 +6,8 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function setComp() {
-   let strList = document.getElementById("ch_input").value.split(" ");
+   //let strList = document.getElementById("ch_input").value.split(" ");
+   let strList = ["놀라이티", "로티아", "크이블", "크즈카", "수이블"];
    const list = [];
    for(const s of strList) {
       let n = fixName(s);
@@ -57,7 +58,7 @@ function start(compIds) {
    }
    comp[0].leader();
    for(let i = 0; i < 5; i++) comp[i].passive();
-
+   console.log("여기")
    updateAll();
 }
 
@@ -95,22 +96,23 @@ function updateAll() {
       if (comp[i].isActed) {
          getdiv(`ult${i}`).style.visibility = "hidden";
          getdiv(`def${i}`).style.visibility = "hidden";
-         getdiv(`img${i}`).src = `${addrsss}/images/icons/ro_9.webp`;
+         getdiv(`img${i}`).src = `${address}/images/icons/black.png`;
       } else {
          if (comp[i].curCd <= 0) getdiv(`ult${i}`).style.visibility = "visible";
+         else getdiv(`ult${i}`).style.visibility = "hidden";
          getdiv(`def${i}`).style.visibility = "visible";
          getdiv(`img${i}`).src = `${address}/images/characters/cs${comp[i].id}_0_0.webp`;
       }
    }
-   getdiv("deal").innerHTML = `데미지 : ${lastDmg}\n발동기 : ${lastAtvDmg}`
+   getdiv("deal").innerHTML = `데미지 : ${lastDmg.toFixed(0)}\n발동기 : ${lastAtvDmg.toFixed(0)}`
    updateProgressBar(boss.hp, boss.maxHp);
 }
 
 function updateProgressBar(hp, maxhp) {
    var progressBar = document.getElementById("boss");
-   var percentage = ((hp / maxhp) * 100).toFixed(2);
+   var percentage = ((hp / maxhp) * 100);
    progressBar.style.width = percentage + "%";
-   progressBar.textContent = hp.toFixed(0).toLocaleString();
+   progressBar.textContent = `${hp.toFixed(0).toLocaleString()} (${percentage.toFixed(2)})`;
 }
 
 function getdiv(id) {return document.getElementById(id);}
