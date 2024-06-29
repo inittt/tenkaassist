@@ -23,20 +23,21 @@ function makeComp(list) {
    const stringArr = [];
    let idx = 0;
    for(const id of list) {
-      const ch = getCharacter(cid);
+      const ch = getCharacter(id);
       stringArr.push(`
          <div class="character" style="margin:0.2rem;">
-            <div id="ult${idx}" class="circleBtn" onclick="do_ult(${idx})">궁</div>
+            <button id="ult${idx}" class="act_btn" onclick="do_ult(${idx})" src="${address}/images/icons/btn_up.png">
             <div id="atk${idx}" style="margin:0.2rem;" onclick="do_atk(${idx})">
                <img id="img${idx}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
                <div class="element${ch.element} ch_border z-4"></div>
             </div>
             <div class="text-mini">${ch.name}</div>
-            <div id="def${idx}" class="circleBtn" onclick="do_def(${idx})">방</div>
+            <button id="def${idx}" class="act_btn" onclick="do_def(${idx})" src="${address}/images/icons/btn_down.png">
          </div>
       `);  
       idx++;
    }
+   compDiv.innerHTML = stringArr.join("");
 }
 
 function start(compIds) {
