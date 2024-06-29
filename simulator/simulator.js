@@ -45,7 +45,7 @@ function makeComp(list) {
 
 function start(compIds) {
    GLOBAL_TURN = 1; comp = []; attackOrder = []; ultTurn = [];
-
+   boss.hp = boss.maxHp;
    for(const id of compIds) {
       const tmp = characterData.filter(ch => ch.id === id)[0];
       const ch = new Champ(tmp.id, tmp.name, tmp.hp*COEF, tmp.atk*COEF, tmp.cd, tmp.el, tmp.ro, tmp.atkMag, tmp.ultMag);
@@ -58,7 +58,6 @@ function start(compIds) {
    }
    comp[0].leader();
    for(let i = 0; i < 5; i++) comp[i].passive();
-   console.log("여기")
    updateAll();
 }
 
@@ -68,6 +67,7 @@ function do_ult(idx) {
    updateAll();
 }
 function do_atk(idx) {
+   console.log(comp[idx].name + " 클릭");
    comp[idx].attack();
    endAct();
    updateAll();
@@ -80,6 +80,7 @@ function do_def(idx) {
 
 function endAct() {
    if (isAllActed()) {
+      console.log("TURN " + GLOBAL_TURN + " 끝남")
       for(let i = 0; i < 5; i++) comp[i].turnover();
       nextTurn();
       for(let i = 0; i < 5; i++) comp[i].turnstart();
@@ -104,7 +105,9 @@ function updateAll() {
          getdiv(`img${i}`).src = `${address}/images/characters/cs${comp[i].id}_0_0.webp`;
       }
    }
-   getdiv("deal").innerHTML = `데미지 : ${lastDmg.toFixed(0)}\n발동기 : ${lastAtvDmg.toFixed(0)}`
+   getdiv("turn").innerHTML = `TURN ${GLOBAL_TURN}`;
+   getdiv("deal").innerHTML = `데미지 : ${Math.floor(lastDmg)}`;
+   getdiv("deal_atv").innerHTML = `발동기 : ${Math.floor(lastAtvDmg)}`;
    updateProgressBar(boss.hp, boss.maxHp);
 }
 
@@ -112,7 +115,7 @@ function updateProgressBar(hp, maxhp) {
    var progressBar = document.getElementById("boss");
    var percentage = ((hp / maxhp) * 100);
    progressBar.style.width = percentage + "%";
-   progressBar.textContent = `${hp.toFixed(0).toLocaleString()} (${percentage.toFixed(2)})`;
+   progressBar.textContent = `${Math.floor(hp).toLocaleString()} (${Math.floor(percentage*100)/100})`;
 }
 
 function getdiv(id) {return document.getElementById(id);}
