@@ -110,7 +110,7 @@ function updateProgressBar(hp, maxhp) {
    var progressBar = document.getElementById("boss");
    var percentage = ((hp / maxhp) * 100).toFixed(2);
    progressBar.style.width = percentage + "%";
-   progressBar.textContent = hp;
+   progressBar.textContent = hp.toFixed(0).toLocaleString();
 }
 
 function getdiv(id) {return document.getElementById(id);}

@@ -21,10 +21,12 @@
       </div>
       <div class="block">
          <input id="ch_input" class="searchInput" type="text" placeholder="캐릭터명 입력" style="width:10rem; margin-left:1rem;">
-         <button class="button" onclick="setComp()" style="height:1.5rem;">시작</button>
+         <button class="button" onclick="setComp()" style="height:2rem;">시작</button>
       </div>
       <div id="simulator" class="block">
-         <div id="boss" class="progress-bar"></div>
+         <div id="boss-container" style="width:25rem; padding:0.2rem;">
+            <div id="boss" class="progress-bar"></div>
+         </div>
          <div id="deal"></div>
          <div id="comp" class="comp-deck margin-left"></div>
       </div>
