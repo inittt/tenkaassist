@@ -79,6 +79,8 @@ class Champ {
       for(const a of atbf) if (a.act == "방") to_tbf(this, a);
       for(const a of anbf) if (a.act == "방") to_nbf(this, a);
       this.isActed = true;
+
+      setLast0();
    }
 }
 
@@ -271,6 +273,10 @@ function bossUltimate(me) {
    console.log("발동기 데미지 : " + (lastAtvDmg = ultAtvDmg));
    if (ultDmg > 0) boss.hit(me);
    me.curCd = me.cd;
+}
+function setLast0() {
+   lastDmg = 0;
+   lastAtvDmg = 0;
 }
 
 function deleteBuff(me, name) {
