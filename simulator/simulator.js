@@ -25,13 +25,15 @@ function makeComp(list) {
    for(const id of list) {
       const ch = getCharacter(id);
       stringArr.push(`
-         <div class="character" style="margin:0.2rem;">
+         <div style="display:flex; flex-direction:column;">
             <button id="ult${idx}" class="act_btn" onclick="do_ult(${idx})" src="${address}/images/icons/btn_up.png">
-            <div id="atk${idx}" style="margin:0.2rem;" onclick="do_atk(${idx})">
-               <img id="img${idx}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-               <div class="element${ch.element} ch_border z-4"></div>
+            <div class="character" style="margin:0.2rem;">
+               <div id="atk${idx}" style="margin:0.2rem;" onclick="do_atk(${idx})">
+                  <img id="img${idx}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
+                  <div class="element${ch.element} ch_border z-4"></div>
+               </div>
+               <div class="text-mini">${ch.name}</div>
             </div>
-            <div class="text-mini">${ch.name}</div>
             <button id="def${idx}" class="act_btn" onclick="do_def(${idx})" src="${address}/images/icons/btn_down.png">
          </div>
       `);  
