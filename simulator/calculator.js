@@ -441,16 +441,10 @@ function setDefault(me) {
          deleteBuff(me, "배 가르기1"); // 패시브 극도의 흥분 : 궁 발동시 배가르기 제거
          deleteBuff(me, "극도의 흥분"); // 패시브 : 궁 발동시 극도의 흥분 제거
       }
-      me.ultimate = function() {
-         me.ultbefore();
-         bossUltAttack(me);
-         me.act_ultimate();
-         me.ultafter();
-      };
-      me.attack = function() {
-         bossAttack(me);
-         me.act_attack();
-      };
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
       me.leader = function() {
          for(let c of comp) c.hp *= (1 + 0.2); // 아군 전체의 최대 hp 20% 증가
          for(let c of comp) tbf(c, "궁뎀증", 50, "전쟁의 광기1", always); // 아군 전체의 궁극기 데미지 50% 증가
@@ -493,17 +487,14 @@ function setDefault(me) {
          }
       }
       me.ultafter = function() {}
-      me.ultimate = function() {
-         me.ultbefore();
-         bossUltAttack(me);
-         me.act_ultimate();
-         me.ultafter();
-      };
-      me.attack = function() {
-         bossAttack(me);
-         me.act_attack();
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {
          // 평타 : 자신의 공격 데미지 30%만큼 아군 전체 공격 데미지 증가(1턴)
          for(let c of comp) tbf(c, "공고증", 30*me.getCurAtk(), "피의 축복", 1);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {
+         atkLogic(me);
       };
       me.leader = function() {
          // 순결의 향연 : 아군 암속성 캐릭터는 공100%증가, 궁뎀증 50%;
@@ -542,16 +533,10 @@ function setDefault(me) {
          tbf(me, "평추가", 90, "흔들리는 와인잔2", 4);
       }
       me.ultafter = function() {}
-      me.ultimate = function() {
-         me.ultbefore();
-         bossUltAttack(me);
-         me.act_ultimate();
-         me.ultafter();
-      };
-      me.attack = function() {
-         bossAttack(me);
-         me.act_attack();
-      };
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
       me.leader = function() {
          for(let c of comp) {
             c.hp *= (1 + 0.2); // 아군 전체의 최대 hp 20% 증가
@@ -609,16 +594,10 @@ function setDefault(me) {
          nbf(boss, "받궁뎀", 22.5, "연쇄 트랩!", 1, 2);
       }
       me.ultafter = function() {}
-      me.ultimate = function() {
-         me.ultbefore();
-         bossUltAttack(me);
-         me.act_ultimate();
-         me.ultafter();
-      };
-      me.attack = function() {
-         bossAttack(me);
-         me.act_attack();
-      };
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
       me.leader = function() {
          // 함께 놀수록 재밌는 법~
          // 아군 전체의 공격 데미지 40% 증가
@@ -665,16 +644,10 @@ function setDefault(me) {
          for(let idx of getElementIdx("화", "수")) nbf(comp[idx], "속뎀증", 15, "소녀의 연심은 무적!2", 1, 2);
       }
       me.ultafter = function() {}
-      me.ultimate = function() {
-         me.ultbefore();
-         bossUltAttack(me);
-         me.act_ultimate();
-         me.ultafter();
-      };
-      me.attack = function() {
-         bossAttack(me);
-         me.act_attack();
-      };
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
       me.leader = function() {
          // 고품격 우아함! 이블리스의 초호화 리조트!
          // 아군 전체의 공퍼증 100%
@@ -722,6 +695,18 @@ function setDefault(me) {
    default: return null;
       
    }
+}
+function ultLogic(me) {
+   me.ultbefore();
+   bossUltAttack(me);
+   me.ultafter();
+   me.act_ultimate();
+}
+function atkLogic(me) {
+   me.atkbefore();
+   bossAttack(me);
+   me.atkafter();
+   me.act_attack();
 }
 
 function show_console(idx) {
