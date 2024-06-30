@@ -36,6 +36,9 @@ function makeComp(list) {
                <div class="text-mini">${ch.name}</div>
             </div>
             <img id="def${idx}" class="act_btn" onclick="do_def(${idx})" src="${address}/images/icons/btn_down.png">
+            <div class="act_btn" style="height:2.5rem;">
+               <img class="circleImg" onclick="show_console(${idx})" src="${address}/images/icons/describe.png">
+            </div>
          </div>
       `);  
       idx++;

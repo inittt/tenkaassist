@@ -16,3 +16,8 @@
    background-color:rgb(70, 70, 70);
    border: 2px solid black;
 }
+.circleImg {
+   width:1.5rem;
+   height:1.5rem;
+   border-radius: 50%;
+}

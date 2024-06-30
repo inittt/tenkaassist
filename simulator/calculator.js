@@ -43,13 +43,13 @@ class Champ {
    getAtkDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
-      const res =  (this.atk*(1+li[0])+li[1])*(1+li[2])*(this.atkMag/100)*(1+li[3]+li[4]+li[13])*(1+li[9])*(1+li[10]);
+      const res =  (this.atk*(1+li[0])+li[1])*(1+li[2])*(this.atkMag/100+li[13])*(1+li[3]+li[4])*(1+li[9])*(1+li[10]);
       return Math.floor(res);
    }
    getUltDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
-      const res = (this.atk*(1+li[0])+li[1])*(1+li[2])*(this.ultMag/100)*(1+li[5]+li[6]+li[14])*(1+li[9])*(1+li[10]);
+      const res = (this.atk*(1+li[0])+li[1])*(1+li[2])*(this.ultMag/100+li[14])*(1+li[5]+li[6])*(1+li[9])*(1+li[10]);
       return Math.floor(res);
    }
    getAtkAtvDmg() {
@@ -230,6 +230,7 @@ function getBuffSizeList(tbf, nbf) {
    }
    boss.setBuff();
    for(let i = 0; i < 13; i++) res[i] += boss.li[i];
+   for(let i = 0; i < 13; i++) res[i] = Math.round(res[i]*100)/100;
    return res;
 }
 
@@ -287,7 +288,7 @@ function bossAttack(me) {
    console.log("발동기 데미지 : " + (lastAtvDmg = atkAtvDmg));
    if (atkDmg > 0) boss.hit(me);
 }
-function bossUltimate(me) {
+function bossUltAttack(me) {
    const ultDmg = me.getUltDmg();
    const ultAtvDmg = me.getUltAtvDmg();
    boss.hp -= ultDmg;
@@ -374,7 +375,7 @@ function setDefault(me) {
       me.ultimate = function() {
          me.act_ultimate();
          me.turnBuff.push(tbf("공퍼증", 35, "맹렬한 불길", 3));
-         bossUltimate(me);
+         bossUltAttack(me);
          cdChange(me, -1);
       };
       me.defense = function() {
@@ -396,7 +397,7 @@ function setDefault(me) {
       me.ultimate = function() {
          me.act_ultimate();
          nbf(me, "공퍼증", 30, "마왕 사탄의 호기", 1, 1);
-         bossUltimate(me);
+         bossUltAttack(me);
          me.act_defense();
       };
       me.defense = function() {
@@ -412,7 +413,7 @@ function setDefault(me) {
       me.ultimate = function() {
          me.act_ultimate() // 모든 궁사용시 버프를 적용
          // 툴팁의 궁 이전 버프 적용
-         bossUltimate(me); // 궁 + 발동기
+         bossUltAttack(me); // 궁 + 발동기
          // 툴팁의 궁 이후 버프 적용
       };
       me.attack = function() {
@@ -437,20 +438,25 @@ function setDefault(me) {
       
 // 10022 10096 10098 10128 10042
    case 10022 : // 놀라이티
-      me.ultimate = function() {
-         bossUltimate(me);
-         me.act_ultimate();
+      me.ultbefore = function() {
+         // 타깃은 피격 시 놀라에게 받는 데미지 15% 증가 (8중첩)
          anbf(boss, "피격", me, "받뎀증", 15, "배 가르기1", 1, 8, 4);
+         // 타깃은 받는 데미지 30% 증가 (1중첩)
          nbf(boss, "받뎀증", 30, "배 가르기2", 1, 1);
-
+      }
+      me.ultafter = function() {
          deleteBuff(boss, "배가르기1"); // 패시브 극도의 흥분 : 궁 발동시 배가르기 제거
-         deleteBuff(me, "극도의 흥분"); // 패시브의 궁 발동시 극도의 흥분 제거
-         show_console(me);
+         deleteBuff(me, "극도의 흥분"); // 패시브 : 궁 발동시 극도의 흥분 제거
+      }
+      me.ultimate = function() {
+         me.ultbefore();
+         bossUltAttack(me);
+         me.act_ultimate();
+         me.ultafter();
       };
       me.attack = function() {
          bossAttack(me);
          me.act_attack();
-         show_console(me);
       };
       me.leader = function() {
          for(let c of comp) c.hp *= (1 + 0.2); // 아군 전체의 최대 hp 20% 증가
@@ -471,7 +477,7 @@ function setDefault(me) {
          anbf(me, "방", me, "공퍼증", 100, "극도의 흥분", 1, 1, always);
          // 물고 늘어지기 : 궁극기 발동 시 자신이 가하는 데미지 12% 증가(최대5)
          anbf(me, "궁", me, "가뎀증", 12, "물고 늘어지기", 1, 5, always);
-         // 광견 : 일반 공격 시 궁극기 데미지 증가(2턴), 궁발동시 100%추가(2턴)
+         // 광견 : 일반 공격 시 궁극기 데미지 증가(2턴), 궁발동시 100% 추가데미지(2턴)
          atbf(me, "평", me, "궁뎀증", 50, "아드레날린1", 2, always);
          atbf(me, "평", me, "궁추가", 100, "아드레날린2", 2, always);
          // 궁극기 추격+ : 궁극기 발동 시 30% 발동기
@@ -479,30 +485,32 @@ function setDefault(me) {
       }
       me.defense = function() {
          me.act_defense();
-         show_console(me);
       }
       me.turnstart = function() {};
       me.turnover = function() {};
       return me;
    case 10096 : // 로티아
-      me.ultimate = function() {
-         bossUltimate(me);
-         me.act_ultimate();
-
-         for(let i = 0; i < 5; i++) tbf(comp[i], "공고증", 40*me.getCurAtk(), "피로 물든 밤의 광기1", 1);
+      me.ultbefore = function() {
+         // 아군 전체는 자신의 현재 공40%만큼 공격력 증가 (1턴)
+         for(let c of comp) tbf(c, "공고증", 40*me.getCurAtk(), "피로 물든 밤의 광기1", 1);
+         // 딜디탱에게 공격 시 자신공 15만큼 자신제외 전부 공격력 증가 1턴 부여 (1턴)
          for(let idx of getRoleIdx("딜", "디", "탱")) {
             atbf(comp[idx], "평", allNotMe, "공고증", `${myCurAtk}15`, "피로 물든 밤의 광기2", 1, 1);
             atbf(comp[idx], "궁", allNotMe, "공고증", `${myCurAtk}15`, "피로 물든 밤의 광기2", 1, 1);
          }
-         
-         show_console(me);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {
+         me.ultbefore();
+         bossUltAttack(me);
+         me.act_ultimate();
+         me.ultafter();
       };
       me.attack = function() {
          bossAttack(me);
          me.act_attack();
          // 평타 : 자신의 공격 데미지 30%만큼 아군 전체 공격 데미지 증가(1턴)
          for(let c of comp) tbf(c, "공고증", 30*me.getCurAtk(), "피의 축복", 1);
-         show_console(me);
       };
       me.leader = function() {
          // 순결의 향연 : 아군 암속성 캐릭터는 공100%증가, 궁뎀증 50%;
@@ -526,7 +534,6 @@ function setDefault(me) {
       }
       me.defense = function() {
          me.act_defense();
-         show_console(me);
       }
       me.turnstart = function() {
          // 패시브 피안개 : 4턴 지날 때마다 적군 전체가 받뎀증 30%(1턴)
@@ -535,20 +542,22 @@ function setDefault(me) {
       me.turnover = function() {};
       return me;
    case 10128 : // 크이블
-      me.ultimate = function() {
-         bossUltimate(me);
-         me.act_ultimate()
+      me.ultbefore = function() {
          // 흔들리는 와인잔1 : 타깃이 받는 딜러의 데미지 50% 증가 (2중첩)
          for(let idx of getRoleIdx("딜")) nbf(comp[idx], "받뎀증", 50, "흔들리는 와인잔1", 1, 2);
          // 흔들리는 와인잔2 : 자신은 평타시 90% 데미지 추가 (4턴)
          tbf(me, "평추가", 90, "흔들리는 와인잔2", 4);
-         
-         show_console(me);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {
+         me.ultbefore();
+         bossUltAttack(me);
+         me.act_ultimate();
+         me.ultafter();
       };
       me.attack = function() {
          bossAttack(me);
          me.act_attack();
-         show_console(me);
       };
       me.leader = function() {
          for(let c of comp) {
@@ -597,25 +606,25 @@ function setDefault(me) {
       }
       me.defense = function() {
          me.act_defense();
-         show_console(me);
       }
       me.turnstart = function() {};
       me.turnover = function() {};
       return me;
    case 10098 : // 크즈카
-      me.ultimate = function() {
+      me.ultbefore = function() {
          // 연쇄 트랩 : 타깃이 받는 궁극기 데미지 22.5%증가 (2중첩)
          nbf(boss, "받궁뎀", 22.5, "연쇄 트랩!", 1, 2);
-         bossUltimate(me);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {
+         me.ultbefore();
+         bossUltAttack(me);
          me.act_ultimate();
-         // 패시브 : 궁사용시 다방구 시작~ 4중첩만큼 데미지 추가
-         nbf(boss, "받뎀증", 5, "다방구 시작~", 4, 11);
-         show_console(me);
+         me.ultafter();
       };
       me.attack = function() {
          bossAttack(me);
          me.act_attack();
-         show_console(me);
       };
       me.leader = function() {
          // 함께 놀수록 재밌는 법~
@@ -636,10 +645,11 @@ function setDefault(me) {
          tbf(me, "가뎀증", 35, "시험작 999호1", always);
          // 공격+ : 자신의 공퍼증 10%
          tbf(me, "공퍼증", 10, "공격+", always);
+         // 패시브 : 궁사용시 다방구 시작~ 4중첩만큼 데미지 추가
+         anbf(me, "궁", boss, "받뎀증", 5, "다방구 시작~", 4, 11, always);
       }
       me.defense = function() {
          me.act_defense();
-         show_console(me);
       }
       me.turnstart = function() {
          if (me.isLeader) {
@@ -648,7 +658,6 @@ function setDefault(me) {
             // 리더 : 9번째 턴에서 아군 천체 가뎀증 20% (1중첩)
             if (GLOBAL_TURN == 9) all_nbf("가뎀증", 20, "함께 놀수록 재밌는 법~3", 1, 1);
          }
-         
       };
       me.turnover = function() {
          // 패시브 다방구 시작~ : 1턴마다 받뎀증 5% (11중첩)
@@ -656,22 +665,22 @@ function setDefault(me) {
       };
       return me;
    case 10042 : // 수이블
-      me.ultimate = function() {
-         bossUltimate(me);
-         me.act_ultimate()
+      me.ultbefore = function() {
          // 소녀의 연심은 무적!1 : 아군 수, 화 공퍼증 40%(1턴)
-         for(let idx of getElementIdx("화")) tbf(comp[idx], "공퍼증", 40, "소녀의 연심은 무적!1", 1);
-         for(let idx of getElementIdx("수")) tbf(comp[idx], "공퍼증", 40, "소녀의 연심은 무적!1", 1);
+         for(let idx of getElementIdx("화", "수")) tbf(comp[idx], "공퍼증", 40, "소녀의 연심은 무적!1", 1);
          // 소녀의 연심은 무적!2 : 아군 수, 화 속뎀증 15%(2중첩)
-         for(let idx of getElementIdx("화")) nbf(comp[idx], "속뎀증", 15, "소녀의 연심은 무적!2", 1, 2);
-         for(let idx of getElementIdx("수")) nbf(comp[idx], "속뎀증", 15, "소녀의 연심은 무적!2", 1, 2);
-
-         show_console(me);
+         for(let idx of getElementIdx("화", "수")) nbf(comp[idx], "속뎀증", 15, "소녀의 연심은 무적!2", 1, 2);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {
+         me.ultbefore();
+         bossUltAttack(me);
+         me.act_ultimate();
+         me.ultafter();
       };
       me.attack = function() {
          bossAttack(me);
          me.act_attack();
-         show_console(me);
       };
       me.leader = function() {
          // 고품격 우아함! 이블리스의 초호화 리조트!
@@ -707,13 +716,11 @@ function setDefault(me) {
       }
       me.defense = function() {
          me.act_defense();
-         show_console(me);
       }
       me.turnstart = function() {
-         // 패시브 오만하구나! : 4턴마다 수/화속뎀증 40%
+         // 패시브 오만하구나! : 4턴마다 수/화속뎀증 40% (1턴)
          if ((GLOBAL_TURN-1)%4 == 0) {            
-            for(let idx of getElementIdx("수")) tbf(comp[idx], "속뎀증", 40, "오만하구나!", 1);
-            for(let idx of getElementIdx("화")) tbf(comp[idx], "속뎀증", 40, "오만하구나!", 1);
+            for(let idx of getElementIdx("수", "화")) tbf(comp[idx], "속뎀증", 40, "오만하구나!", 1);
          }
       };
       me.turnover = function() {};
@@ -724,12 +731,12 @@ function setDefault(me) {
    }
 }
 
-function show_console(me) {
+function show_console(idx) {
    console.log(boss_tbfToString());
    console.log(boss_nbfToString());
-   console.log(atbfToString(me));
-   console.log(tbfToString(me));
-   console.log(nbfToString(me));
+   console.log(atbfToString(comp[idx]));
+   console.log(tbfToString(comp[idx]));
+   console.log(nbfToString(comp[idx]));
 }
 function boss_tbfToString() {
    const list = [...boss.turnBuff];
@@ -748,19 +755,19 @@ function atbfToString(me) {
    const str = ["-----------------------------", `${me.name}`, `공격력 : ${me.getCurAtk()}`];
    for(const l of list) {
       const who = l.who == all ? "아군전체" : l.who == allNotMe ? "자신제외아군" : l.who.name;
-      str.push(`${l.name} : ${l.act}시 ${who}에게 ${l.type} ${l.size} (${l.turn}턴) 부여 (${l.ex >= always ? "상시" : ((l.ex - GLOBAL_TURN)+"턴")})`);
+      str.push(`${l.act}시 ${who}에게 ${l.type} ${l.size} (${l.turn}턴) 부여 (${l.ex >= always ? "상시" : ((l.ex - GLOBAL_TURN)+"턴")}) : ${l.name}`);
    }
    return str.join("\n");
 }
 function tbfToString(me) {
    const list = [...me.turnBuff];
    const str = [];
-   for(const l of list) str.push(`${l.name} : ${l.type} ${l.type == "공고증" ? Math.floor(l.size/100) : l.size} (${l.turn >= always ? "상시" : (l.turn - GLOBAL_TURN + "턴")})`);
+   for(const l of list) str.push(`${l.type} ${l.type == "공고증" ? Math.floor(l.size/100) : l.size} (${l.turn >= always ? "상시" : (l.turn - GLOBAL_TURN + "턴")}) : ${l.name}`);
    return str.join("\n");
 }
 function nbfToString(me) {
    const list = [...me.nestBuff];
    const str = [];
-   for(const l of list) str.push(`${l.name} : ${l.type} ${l.size*l.nest} (${l.nest}중첩)`);
+   for(const l of list) str.push(`${l.type} ${l.size*l.nest} (${l.nest}중첩) : ${l.name}`);
    return str.join("\n");
 }
