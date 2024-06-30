@@ -3,12 +3,13 @@ document.addEventListener('DOMContentLoaded', function() {
    headerSide.classList.add("h-toggle");
    headerSide.innerHTML = `
       <a class="h-line" href="${address}/">조합목록</a>
-      <a class="h-line" href="${address}/characters/">조합검색</a>
-      <a class="h-line" href="${address}/comp/add/">조합등록</a>
-      <a class="h-line" href="${address}/game/">밸런스게임</a>
+      <a class="h-line" href="${address}/characters/">검색</a>
+      <a class="h-line" href="${address}/comp/add/">등록</a>
+      <a class="h-line" href="${address}/game/">게임</a>
       <a class="h-line" href="${address}/recruit/">전지역모집</a>
       <a class="h-line" href="${address}/have/">추천덱</a>
       <a class="h-line" href="${address}/contributors/">♥</a>
+      <a class="h-line" href="${address}/simulator/">계산기demo</a>
    `;
 
    let headerMain = document.createElement('header');
@@ -18,12 +19,13 @@ document.addEventListener('DOMContentLoaded', function() {
          onclick="goMain()">
       <a class="logo h-left" href="${address}/">TenkaAssist</a>
       <a id="h-1" class="h-left h-box" href="${address}/">조합목록</a>
-      <a id="h-2" class="h-left h-box" href="${address}/characters/">조합검색</a>
-      <a id="h-5" class="h-left h-box" href="${address}/comp/add/">조합등록</a>
-      <a id="h-3" class="h-left h-box" href="${address}/game/">밸런스게임</a>
+      <a id="h-2" class="h-left h-box" href="${address}/characters/">검색</a>
+      <a id="h-5" class="h-left h-box" href="${address}/comp/add/">등록</a>
+      <a id="h-3" class="h-left h-box" href="${address}/game/">게임</a>
       <a id="h-4" class="h-left h-box" href="${address}/recruit/">전지역모집</a>
       <a id="h-6" class="h-left h-box" href="${address}/have/">추천덱</a>
       <a id="h-7" class="h-left h-box" href="${address}/contributors/">♥</a>
+      <a id="h-7" class="h-left h-box" href="${address}/simulator/">계산기demo</a>
       <div id="userInfo" class="user-info h-right margin-right"></div>
    `;
 
