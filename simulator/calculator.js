@@ -1,10 +1,11 @@
 const COEF = 2*1.3*1.25, all = 0, allNotMe = 1, myCurAtk = "a", always = 100;
-let comp = [], attackOrder = [], ultTurn = [], GLOBAL_TURN = 1;
+let comp = [], GLOBAL_TURN = 1;
 let lastDmg = 0, lastAtvDmg = 0;
 class Boss {
    constructor() {
       // this.hp = 10854389981;
       // this.maxHp = 10854389981;
+      this.name = "타깃"
       this.hp = 5063653034;
       this.maxHp = 5063653034;
       this.turnBuff = []; this.nestBuff = []; this.actTurnBuff = []; this.actNestBuff = [];
@@ -37,32 +38,27 @@ class Champ {
    getCurAtk() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
-      const res =  this.atk*(1+li[0]) + li[1];
-      return Math.floor(res);
+      return this.atk*(1+li[0]) + li[1];
    }
    getAtkDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
-      const res =  (this.atk*(1+li[0])+li[1])*(1+li[2])*(this.atkMag/100+li[13])*(1+li[3]+li[4])*(1+li[9])*(1+li[10]);
-      return Math.floor(res);
+      return (this.atk*(1+li[0])+li[1])*(1+li[2])*(this.atkMag/100+li[13])*(1+li[3]+li[4])*(1+li[9])*(1+li[10]);
    }
    getUltDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
-      const res = (this.atk*(1+li[0])+li[1])*(1+li[2])*(this.ultMag/100+li[14])*(1+li[5]+li[6])*(1+li[9])*(1+li[10]);
-      return Math.floor(res);
+      return (this.atk*(1+li[0])+li[1])*(1+li[2])*(this.ultMag/100+li[14])*(1+li[5]+li[6])*(1+li[9])*(1+li[10]);
    }
    getAtkAtvDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
-      const res =  (this.atk*(1+li[0])+li[1])*(1+li[2])*(this.curAtkAtv/100+li[11])*(1+li[5]+li[6]+li[7]+li[8])*(1+li[9])*(1+li[10]);
-      return Math.floor(res);
+      return (this.atk*(1+li[0])+li[1])*(1+li[2])*(this.curAtkAtv/100+li[11])*(1+li[5]+li[6]+li[7]+li[8])*(1+li[9])*(1+li[10]);
    }
    getUltAtvDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
-      const res =  (this.atk*(1+li[0])+li[1])*(1+li[2])*(this.curUltAtv/100+li[12])*(1+li[5]+li[6]+li[7]+li[8])*(1+li[9])*(1+li[10]);
-      return Math.floor(res);
+      return (this.atk*(1+li[0])+li[1])*(1+li[2])*(this.curUltAtv/100+li[12])*(1+li[5]+li[6]+li[7]+li[8])*(1+li[9])*(1+li[10]);
    }
    act_attack() {
       const atbf = [...this.actTurnBuff], anbf = [...this.actNestBuff];
@@ -230,7 +226,6 @@ function getBuffSizeList(tbf, nbf) {
    }
    boss.setBuff();
    for(let i = 0; i < 13; i++) res[i] += boss.li[i];
-   for(let i = 0; i < 13; i++) res[i] = Math.round(res[i]*100)/100;
    return res;
 }
 
@@ -282,19 +277,17 @@ function getBossBuffSizeList(tbf, nbf) {
 function bossAttack(me) {
    const atkDmg = me.getAtkDmg();
    const atkAtvDmg = me.getAtkAtvDmg();
-   boss.hp -= atkDmg;
-   console.log("일반공격 데미지 : " + (lastDmg = atkDmg));
-   boss.hp -= atkAtvDmg;
-   console.log("발동기 데미지 : " + (lastAtvDmg = atkAtvDmg));
+   boss.hp -= (lastDmg = atkDmg);
+   boss.hp -= (lastAtvDmg = atkAtvDmg);
+   //console.log(`일반공격 데미지 : ${lastDmg}\n발동기 데미지 : ${lastAtvDmg}`);
    if (atkDmg > 0) boss.hit(me);
 }
 function bossUltAttack(me) {
    const ultDmg = me.getUltDmg();
    const ultAtvDmg = me.getUltAtvDmg();
-   boss.hp -= ultDmg;
-   console.log("궁극기 데미지 : " + (lastDmg = ultDmg));
-   boss.hp -= ultAtvDmg;
-   console.log("발동기 데미지 : " + (lastAtvDmg = ultAtvDmg));
+   boss.hp -= (lastDmg = ultDmg);
+   boss.hp -= (lastAtvDmg = ultAtvDmg);
+   //console.log(`궁극기 데미지 : ${lastDmg}\n발동기 데미지 : ${lastAtvDmg}`);
    if (ultDmg > 0) boss.hit(me);
    me.curCd = me.cd;
 }
@@ -445,7 +438,7 @@ function setDefault(me) {
          nbf(boss, "받뎀증", 30, "배 가르기2", 1, 1);
       }
       me.ultafter = function() {
-         deleteBuff(boss, "배가르기1"); // 패시브 극도의 흥분 : 궁 발동시 배가르기 제거
+         deleteBuff(me, "배 가르기1"); // 패시브 극도의 흥분 : 궁 발동시 배가르기 제거
          deleteBuff(me, "극도의 흥분"); // 패시브 : 궁 발동시 극도의 흥분 제거
       }
       me.ultimate = function() {
@@ -480,7 +473,7 @@ function setDefault(me) {
          // 광견 : 일반 공격 시 궁극기 데미지 증가(2턴), 궁발동시 100% 추가데미지(2턴)
          atbf(me, "평", me, "궁뎀증", 50, "아드레날린1", 2, always);
          atbf(me, "평", me, "궁추가", 100, "아드레날린2", 2, always);
-         // 궁극기 추격+ : 궁극기 발동 시 30% 발동기
+         // 궁극기 추격+ : 궁극기 발동 시 30% 추가데미지
          anbf(me, "궁", me, "궁추가", 30, "궁극기 추격+", 1, 1, always)
       }
       me.defense = function() {
@@ -734,6 +727,7 @@ function setDefault(me) {
 function show_console(idx) {
    console.log(boss_tbfToString());
    console.log(boss_nbfToString());
+   console.log(anbfToString(comp[idx]));
    console.log(atbfToString(comp[idx]));
    console.log(tbfToString(comp[idx]));
    console.log(nbfToString(comp[idx]));
@@ -750,12 +744,24 @@ function boss_nbfToString() {
    for(const l of list) str.push(`${l.name} : ${l.type} ${l.size*l.nest} (${l.nest}중첩)`);
    return str.join("\n");
 }
-function atbfToString(me) {
-   const list = [...me.actTurnBuff];
+
+function anbfToString(me) {
+   const list = [...me.actNestBuff];
    const str = ["-----------------------------", `${me.name}`, `공격력 : ${me.getCurAtk()}`];
    for(const l of list) {
       const who = l.who == all ? "아군전체" : l.who == allNotMe ? "자신제외아군" : l.who.name;
-      str.push(`${l.act}시 ${who}에게 ${l.type} ${l.size} (${l.turn}턴) 부여 (${l.ex >= always ? "상시" : ((l.ex - GLOBAL_TURN)+"턴")}) : ${l.name}`);
+      const aaact = l.act == "평" ? "평타" : l.act == "방" ? "방어" : l.act;
+      str.push(`${aaact}시 ${who}에게 ${l.type} ${l.size} ${l.nest}중첩 (최대 ${l.maxNest}중첩) 부여 (${l.ex >= always ? "상시" : ((l.ex - GLOBAL_TURN)+"턴")}) : ${l.name}`);
+   }
+   return str.join("\n");
+}
+function atbfToString(me) {
+   const list = [...me.actTurnBuff];
+   const str = [];
+   for(const l of list) {
+      const who = l.who == all ? "아군전체" : l.who == allNotMe ? "자신제외아군" : l.who.name;
+      const aaact = l.act == "평" ? "평타" : l.act == "방" ? "방어" : l.act;
+      str.push(`${aaact}시 ${who}에게 ${l.type} ${l.size} (${l.turn}턴) 부여 (${l.ex >= always ? "상시" : ((l.ex - GLOBAL_TURN)+"턴")}) : ${l.name}`);
    }
    return str.join("\n");
 }

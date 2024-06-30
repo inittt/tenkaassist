@@ -47,8 +47,12 @@ function makeComp(list) {
 }
 
 function start(compIds) {
-   GLOBAL_TURN = 1; comp = []; attackOrder = []; ultTurn = [];
+   document.getElementById("simulator").style.display = "flex";
+   GLOBAL_TURN = 1; comp = [];
+   lastDmg = 0; lastAtvDmg = 0;
    boss.hp = boss.maxHp;
+   boss.turnBuff = [];
+   boss.nestBuff = [];
    for(const id of compIds) {
       const tmp = characterData.filter(ch => ch.id === id)[0];
       const ch = new Champ(tmp.id, tmp.name, tmp.hp*COEF, tmp.atk*COEF, tmp.cd, tmp.el, tmp.ro, tmp.atkMag, tmp.ultMag);
@@ -70,7 +74,6 @@ function do_ult(idx) {
    updateAll();
 }
 function do_atk(idx) {
-   console.log(comp[idx].name + " 클릭");
    comp[idx].attack();
    endAct();
    updateAll();
@@ -115,10 +118,12 @@ function updateAll() {
 }
 
 function updateProgressBar(hp, maxhp) {
-   var progressBar = document.getElementById("boss");
-   var percentage = ((hp / maxhp) * 100);
+   const progressBar = document.getElementById("boss");
+   const percentage = ((hp / maxhp) * 100);
+   const bossHpText = document.getElementById("boss-hp");
    progressBar.style.width = percentage + "%";
-   progressBar.textContent = `${Math.floor(hp).toLocaleString()} (${Math.floor(percentage*100)/100})`;
+   //progressBar.textContent = `${Math.floor(hp).toLocaleString()} (${Math.floor(percentage*100)/100}%)`;
+   bossHpText.innerHTML = `${Math.floor(hp).toLocaleString()} (${Math.floor(percentage*100)/100}%)`;
 }
 
 function getdiv(id) {return document.getElementById(id);}

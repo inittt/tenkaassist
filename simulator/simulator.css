@@ -1,23 +1,41 @@
+#simulator {
+   display:none;
+   flex-direction:column;
+   justify-content: center;
+   align-items: center;
+}
 .progress-bar {
-   height: 1.8rem;
-   background-color: #76c7c0;
+   height: 1rem;
+   background-color: #d1fffb;
    width: 0;
-   border-radius: 0.9rem;
    text-align: center;
-   line-height: 1rem;
    color: white;
    font-weight: bold;
+   border-radius: 3px;
 }
 .act_btn {
-   margin:0.2rem;
+   margin:0.4rem;
    width:2.5rem;
+   display:flex;
+   align-items: center;
+   justify-content: center;
 }
-#boss_container {
-   background-color:rgb(70, 70, 70);
-   border: 2px solid black;
+#boss-container {
+   margin-top:0.2rem;
+   width:25rem;
+   background-color:black;
+   display:flex;
+   flex-direction: column;
+   border-radius: 3px;
+   border:1px solid white;
 }
 .circleImg {
    width:1.5rem;
    height:1.5rem;
    border-radius: 50%;
+}
+
+.comp-sim {
+   display:flex; 
+   justify-content: center;
 }
