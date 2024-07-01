@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", function() {
-
+   getdiv("bossBuffBtn").innerHTML = `
+      <img class="circleImg" onclick="show_console(-1)" src="${address}/images/icons/describe.png">
+      <img class="circleImg" onclick="show_simple(-1)" src="${address}/images/icons/star.png">
+   `;
 
 
 
@@ -40,6 +43,7 @@ function makeComp(list) {
             <img id="def${idx}" class="act_btn" onclick="do_def(${idx})" src="${address}/images/icons/btn_down.png">
             <div class="act_btn" style="height:2.5rem;">
                <img class="circleImg" onclick="show_console(${idx})" src="${address}/images/icons/describe.png">
+               <img class="circleImg" onclick="show_simple(${idx})" src="${address}/images/icons/star.png">
             </div>
          </div>
       `);  

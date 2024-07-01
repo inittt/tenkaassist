@@ -317,23 +317,30 @@ function getBossBuffSizeList(tbf, nbf) {
 
 function bossAttack(me) {
    const atkDmg = me.getAtkDmg();
-   const atkAtvDmg = me.getAtkAtvDmg();
    boss.hp -= (lastDmg = atkDmg);
-   boss.hp -= (lastAtvDmg = atkAtvDmg);
    if (boss.hp < 0) boss.hp = 0; 
-   //console.log(`일반공격 데미지 : ${lastDmg}\n발동기 데미지 : ${lastAtvDmg}`);
    if (atkDmg > 0) boss.hit(me);
 }
 function bossUltAttack(me) {
    const ultDmg = me.getUltDmg();
-   const ultAtvDmg = me.getUltAtvDmg();
    boss.hp -= (lastDmg = ultDmg);
-   boss.hp -= (lastAtvDmg = ultAtvDmg);
    if (boss.hp < 0) boss.hp = 0; 
-   //console.log(`궁극기 데미지 : ${lastDmg}\n발동기 데미지 : ${lastAtvDmg}`);
    if (ultDmg > 0) boss.hit(me);
    me.curCd = me.cd;
 }
+
+function bossAtkAtvAttack(me) {
+   const atkAtvDmg = me.getAtkAtvDmg();
+   boss.hp -= (lastAtvDmg = atkAtvDmg);
+   if (boss.hp < 0) boss.hp = 0; 
+}
+
+function bossUltAtvAttack(me) {
+   const ultAtvDmg = me.getUltAtvDmg();
+   boss.hp -= (lastAtvDmg = ultAtvDmg);
+   if (boss.hp < 0) boss.hp = 0; 
+}
+
 function setLast0() {
    lastDmg = 0;
    lastAtvDmg = 0;
@@ -735,37 +742,33 @@ function ultLogic(me) {
    bossUltAttack(me);
    me.ultafter();
    me.act_ultimate();
+   bossUltAtvAttack(me);
 }
 function atkLogic(me) {
    me.atkbefore();
    bossAttack(me);
    me.atkafter();
    me.act_attack();
+   bossAtkAtvAttack(me);
 }
 function hpUpAll(amount) {for(let c of comp) c.hp *= (1+amount/100);}
 function hpUpMe(me, amount) {me.hp *= (1+amount/100);}
 function show_console(idx) {
-   console.log(boss_tbfToString() + "\n" + boss_nbfToString());
-   console.log(anbfToString(comp[idx]) + "\n" + atbfToString(comp[idx]));
-   console.log(tbfToString(comp[idx]) + "\n" + nbfToString(comp[idx]));
-   console.log(buffListToString(comp[idx]));
+   if (idx == -1) {
+      console.log(tbfToString(boss) + "\n" + nbfToString(boss));
+      console.log(tbfToString(boss) + "\n" + nbfToString(boss));
+   } else {
+      console.log(anbfToString(comp[idx]) + "\n" + atbfToString(comp[idx]));
+      console.log(tbfToString(comp[idx]) + "\n" + nbfToString(comp[idx]));
+   }
 }
-function boss_tbfToString() {
-   const list = [...boss.turnBuff];
-   const str = ["-----------------------------", `boss`];
-   for(const l of list) str.push(`${l.name} : ${l.type} ${l.type == "공고증" ? Math.floor(l.size/100) : l.size} (${l.turn >= always ? "상시" : (l.turn - GLOBAL_TURN + "턴")})`);
-   return str.join("\n");
+function show_simple(idx) {
+   if (idx == -1) console.log(buffListToString(boss));
+   else console.log(buffListToString(comp[idx]));
 }
-function boss_nbfToString() {
-   const list = [...boss.nestBuff];
-   const str = [];
-   for(const l of list) str.push(`${l.name} : ${l.type} ${l.size*l.nest} (${l.nest}중첩)`);
-   return str.join("\n");
-}
-
 function anbfToString(me) {
    const list = [...me.actNestBuff];
-   const str = ["-----------------------------", `${me.name}`];
+   const str = ["=============================================================================", `이름 : ${me.name}`];
    for(const l of list) {
       const who = l.who == all ? "아군전체" : l.who == allNotMe ? "자신제외아군" : l.who.name;
       const aaact = l.act == "평" ? "평타" : l.act == "방" ? "방어" : l.act;
