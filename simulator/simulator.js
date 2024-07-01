@@ -26,8 +26,9 @@ function makeComp(list) {
    for(const id of list) {
       const ch = getCharacter(id);
       stringArr.push(`
-         <div style="display:flex; flex-direction:column;">
+         <div style="display:flex; flex-direction:column; align-items:center">
             <img id="ult${idx}" class="act_btn" onclick="do_ult(${idx})" src="${address}/images/icons/btn_up.png">
+            <div id="cd-max${idx}" class="cd-container"><div id="cd${idx}" class="cd"></div></div>
             <div class="character" style="margin:0.2rem;">
                <div id="atk${idx}" style="margin:0.2rem;" onclick="do_atk(${idx})">
                   <img id="img${idx}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
@@ -102,6 +103,7 @@ function isAllActed() {
 
 function updateAll() {
    for(let i = 0; i < 5; i++) {
+      updateCdBar(i);
       if (comp[i].isActed) {
          getdiv(`ult${i}`).style.visibility = "hidden";
          getdiv(`def${i}`).style.visibility = "hidden";
@@ -119,7 +121,11 @@ function updateAll() {
    getdiv("deal_atv").innerHTML = `발동기 : ${Math.floor(lastAtvDmg).toLocaleString()}`;
    updateProgressBar(boss.hp, boss.maxHp);
 }
-
+function updateCdBar(i) {
+   const cdBar = getdiv(`cd${i}`);
+   const percentage = (1 - (comp[i].curCd / comp[i].cd))*100;
+   cdBar.style.width = percentage + "%";
+}
 function updateProgressBar(hp, maxhp) {
    const progressBar = document.getElementById("boss");
    const percentage = ((hp / maxhp) * 100);
