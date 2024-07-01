@@ -1,6 +1,7 @@
 const COEF = 2*1.3*1.25, all = 0, allNotMe = 1, myCurAtk = "a", always = 100;
 let comp = [], GLOBAL_TURN = 1;
 let lastDmg = 0, lastAtvDmg = 0;
+const priorityList = ["공고증"];
 class Boss {
    constructor() {
       // this.hp = 10854389981;
@@ -33,43 +34,72 @@ class Champ {
       this.atkMag = atkMag; this.ultMag = ultMag;
       this.canCDChange = true; this.isLeader = false; this.isActed = false;
    }
-// [0공퍼증, 1공고증, 2받뎀증, 3일뎀증, 4받일뎀, 5궁뎀증, 6받궁뎀, 7발뎀증, 8받발뎀, 9가뎀증, 10속뎀증
-// 11평발동, 12궁발동, 13평추가, 14궁추가]
+// [0공퍼증, 1공고증, 2받뎀증, 3일뎀증, 4받일뎀, 5궁뎀증, 6받궁뎀, 7발뎀증, 8받발뎀, 9가뎀증, 10속뎀증, 11받속뎀
+// 12평발동, 13궁발동, 14평추가, 15궁추가, 16발효증, 17받직뎀, 18받캐뎀]
    getCurAtk() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
-      return this.atk*(1+li[0]) + li[1];
+      return Math.floor(this.atk*(1+li[0])+li[1]);
    }
    getAtkDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
-      return (this.atk*(1+li[0])+li[1])*(1+li[2])*(this.atkMag/100+li[13])*(1+li[3]+li[4])*(1+li[9])*(1+li[10]);
+      return this.getCurAtk()*(1+li[2])*(this.atkMag/100+li[14])*(1+li[3]+li[4]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
    }
    getUltDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
-      return (this.atk*(1+li[0])+li[1])*(1+li[2])*(this.ultMag/100+li[14])*(1+li[5]+li[6])*(1+li[9])*(1+li[10]);
+      return this.getCurAtk()*(1+li[2])*(this.ultMag/100+li[15])*(1+li[5]+li[6]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
    }
    getAtkAtvDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
-      return (this.atk*(1+li[0])+li[1])*(1+li[2])*(this.curAtkAtv/100+li[11])*(1+li[5]+li[6]+li[7]+li[8])*(1+li[9])*(1+li[10]);
+      return this.getCurAtk()*(1+li[2])*((this.curAtkAtv/100+li[12])*(1+li[16]))*(1+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
    }
    getUltAtvDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
-      return (this.atk*(1+li[0])+li[1])*(1+li[2])*(this.curUltAtv/100+li[12])*(1+li[5]+li[6]+li[7]+li[8])*(1+li[9])*(1+li[10]);
+      return this.getCurAtk()*(1+li[2])*((this.curUltAtv/100+li[13])*(1+li[16]))*(1+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
    }
    act_attack() {
-      const atbf = [...this.actTurnBuff], anbf = [...this.actNestBuff];
-      for(const a of atbf) if (a.act == "평" || a.act == "행동") to_tbf(this, a);
-      for(const a of anbf) if (a.act == "평" || a.act == "행동") to_nbf(this, a);
+      const atbf_tmp = [...this.actTurnBuff], anbf_tmp = [...this.actNestBuff];
+      const atbf = atbf_tmp.filter(item => item.type != "공고증");
+      const anbf = anbf_tmp.filter(item => item.type != "공고증");
+      const tmp1 = atbf_tmp.filter(item => item.type == "공고증");
+      const tmp2 = anbf_tmp.filter(item => item.type == "공고증");
+
+      for(const a of atbf) {
+         if (a.act == "평" || a.act == "행동" || (a.act == "공격" && this.ultMag > 0)) to_tbf(this, a);
+      }
+      for(const a of anbf) {
+         if (a.act == "평" || a.act == "행동" || (a.act == "공격" && this.ultMag > 0)) to_nbf(this, a);
+      }
+      for(const a of tmp1) {
+         if (a.act == "평" || a.act == "행동" || (a.act == "공격" && this.ultMag > 0)) to_tbf(this, a);
+      }
+      for(const a of tmp2) {
+         if (a.act == "평" || a.act == "행동" || (a.act == "공격" && this.ultMag > 0)) to_nbf(this, a);
+      }
       this.isActed = true;
    }
    act_ultimate() {
-      const atbf = [...this.actTurnBuff], anbf = [...this.actNestBuff];
-      for(const a of atbf) if (a.act == "궁" || a.act == "행동") to_tbf(this, a);
-      for(const a of anbf) if (a.act == "궁" || a.act == "행동") to_nbf(this, a);
+      const atbf_tmp = [...this.actTurnBuff], anbf_tmp = [...this.actNestBuff];
+      const atbf = atbf_tmp.filter(item => item.type != "공고증");
+      const anbf = anbf_tmp.filter(item => item.type != "공고증");
+      const tmp1 = atbf_tmp.filter(item => item.type == "공고증");
+      const tmp2 = anbf_tmp.filter(item => item.type == "공고증");
+      for(const a of atbf) {
+         if (a.act == "궁" || a.act == "행동" || (a.act == "공격" && this.ultMag > 0)) to_tbf(this, a);
+      }
+      for(const a of anbf) {
+         if (a.act == "궁" || a.act == "행동" || (a.act == "공격" && this.ultMag > 0)) to_nbf(this, a);
+      }
+      for(const a of tmp1) {
+         if (a.act == "궁" || a.act == "행동" || (a.act == "공격" && this.ultMag > 0)) to_tbf(this, a);
+      }
+      for(const a of tmp2) {
+         if (a.act == "궁" || a.act == "행동" || (a.act == "공격" && this.ultMag > 0)) to_nbf(this, a);
+      }
       this.isActed = true;
    }
    heal() {
@@ -85,6 +115,13 @@ class Champ {
 
       setLast0();
    }
+}
+function sortBuff(a, b) {
+   const indexA = priorityList.indexOf(a.type);
+   const indexB = priorityList.indexOf(b.type);
+   const priorityA = indexA === -1 ? -Infinity : indexA;
+   const priorityB = indexB === -1 ? -Infinity : indexB;
+   return priorityA - priorityB;
 }
 
 function nextTurn() {
@@ -103,34 +140,36 @@ function nextTurn() {
 
 // turnBuff = {type: 버프종류, size: 버프량, name: name, turn:turn}
 function tbf(me, ty, s, n, t) {
-   me.turnBuff.push({type: ty, size: s, name: n, turn: GLOBAL_TURN + t});
+   if (me == all) {for(let c of comp) tbf(c, ty, s, n, t);}
+   else me.turnBuff.push({type: ty, size: s, name: n, turn: GLOBAL_TURN + t});
 }
 // nestBuff = {type: 버프종류, size: 버프량, name: name, nest: 중첩, maxNest: 맥스중첩}
 function nbf(me, ty, s, n, e, e2) {
-   const exist = me.nestBuff.find(buf => buf.name == n);
-   if (exist) {
-      exist.nest += e;
-      if (exist.nest > exist.maxNest) exist.nest = exist.maxNest;
-   } else me.nestBuff.push({type: ty, size: s, name: n, nest: e, maxNest: e2});
+   if (me == all) {for(let c of comp) nbf(c, ty, s, n, e, e2);}
+   else {
+      const exist = me.nestBuff.find(buf => buf.name == n);
+      if (exist) {
+         exist.nest += e;
+         if (exist.nest > exist.maxNest) exist.nest = exist.maxNest;
+      } else me.nestBuff.push({type: ty, size: s, name: n, nest: e, maxNest: e2});
+   }
 }
 // 행동시 턴제 버프를 turnBuff에 추가
 function to_tbf(me, tmp) {
    if (tmp.ex == GLOBAL_TURN) return;
    let size = tmp.size;
-   if (typeof tmp.size == 'string') {
-      if (tmp.size.charAt(0) == myCurAtk) size = Number(tmp.size.substring(1)) * me.getCurAtk();
+   if (typeof size == 'string') {
+      if (size.charAt(0) == myCurAtk) size = Number(size.substring(1)) * me.getCurAtk();
    }
    if (tmp.type == "힐") {
       if (tmp.who == all) for(let c of comp) c.heal();
       else if (tmp.who == allNotMe) for(let c of comp) if (c.id != me.id) c.heal();
       else tmp.who.heal();
    } else {
-      if (tmp.who == all) all_tbf(tmp.type, size, tmp.name, tmp.turn);
+      if (tmp.who == all) for(let c of comp) tbf(c, tmp.type, size, tmp.name, tmp.turn);
       else if (tmp.who == allNotMe) {
          for(let c of comp) if (c.id != me.id) tbf(c, tmp.type, size, tmp.name, tmp.turn);
-      } else {
-         tbf(tmp.who, tmp.type, size, tmp.name, tmp.turn);
-      }
+      } else tbf(tmp.who, tmp.type, size, tmp.name, tmp.turn);
    }
 }
 // 행동시 중첩형 버프를 nestBuff에 추가
@@ -140,40 +179,22 @@ function to_nbf(me, tmp) {
    if (typeof tmp.size == 'string') {
       if (tmp.size.charAt(0) == myCurAtk) size = Number(tmp.size.substring(1)) * me.getCurAtk();
    }
-   if (tmp.who == 0) {
-      for(let c of comp) {
-         const exist = c.nestBuff.find(buf => buf.name == tmp.name);
-         if (exist) {
-            exist.nest += tmp.nest;
-            if (exist.nest > exist.maxNest) exist.nest = exist.maxNest;
-         } else nbf(c, tmp.type, size, tmp.name, tmp.nest, tmp.maxNest);
-      }
-   } else if (tmp.who == 1) {
-      for(let c of comp) {
-         if (c.id == me.id) continue;
-         const exist = c.nestBuff.find(buf => buf.name == tmp.name);
-         if (exist) {
-            exist.nest += tmp.nest;
-            if (exist.nest > exist.maxNest) exist.nest = exist.maxNest;
-         } else nbf(c, tmp.type, size, tmp.name, tmp.nest, tmp.maxNest);
-      }
-   } else {
-      const exist = tmp.who.nestBuff.find(buf => buf.name == tmp.name);
-      if (exist) {
-         exist.nest += tmp.nest;
-         if (exist.nest > exist.maxNest) exist.nest = exist.maxNest;
-      } else nbf(tmp.who, tmp.type, size, tmp.name, tmp.nest, tmp.maxNest);
-   }
+   if (tmp.who == all) for(let c of comp) nbf(c, tmp.type, size, tmp.name, tmp.nest, tmp.maxNest);
+   if (tmp.who == allNotMe) {
+      for(let c of comp) if (c.id != me.id) nbf(c, tmp.type, size, tmp.name, tmp.nest, tmp.maxNest);
+   } else nbf(tmp.who, tmp.type, size, tmp.name, tmp.nest, tmp.maxNest);
 }
 // 행동 시 턴 버프 추가
 // '누가' '무슨행동시' '누구에게' ~~ t턴 버프 부여 (trn턴)
 function atbf(me, act, who, ty, s, n, t, trn) {
-   me.actTurnBuff.push({act:act, who:who, type: ty, size: s, name: n, turn: t, ex: GLOBAL_TURN + trn});
+   if (me == all) {for(let c of comp) atbf(c, act, who, ty, s, n, t, trn);}
+   else me.actTurnBuff.push({act:act, who:who, type: ty, size: s, name: n, turn: t, ex: GLOBAL_TURN + trn});
 }
 // 행동 시 중첩형 버프 추가
 // '누가' '무슨행동시' '누구에게' ~~ 중첩 버프 부여 (trn턴)
 function anbf(me, act, who, ty, s, n, e, e2, trn) {
-   me.actNestBuff.push({act:act, who:who, type: ty, size: s, name: n, nest: e, maxNest: e2, ex: GLOBAL_TURN + trn});
+   if (me == all) {for(let c of comp) anbf(c, act, who, ty, s, n, e, e2, trn);}
+   else me.actNestBuff.push({act:act, who:who, type: ty, size: s, name: n, nest: e, maxNest: e2, ex: GLOBAL_TURN + trn});
 }
 
 function cdChange(me, size) {
@@ -183,7 +204,7 @@ function cdChange(me, size) {
 
 // buff들을 리스트에 버프량만큼 담아 리턴
 function getBuffSizeList(tbf, nbf) {
-   const res = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+   const res = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
    for(const bf of tbf) {
       if (bf.turn == GLOBAL_TURN) continue;
       switch(bf.type) {
@@ -198,10 +219,15 @@ function getBuffSizeList(tbf, nbf) {
          case "받발뎀": res[8] += bf.size/100; break;
          case "가뎀증": res[9] += bf.size/100; break;
          case "속뎀증": res[10] += bf.size/100; break;
-         case "평발동": res[11] += bf.size/100; break;
-         case "궁발동": res[12] += bf.size/100; break;
-         case "평추가": res[13] += bf.size/100; break;
-         case "궁추가": res[14] += bf.size/100; break;
+         case "받속뎀": res[11] += bf.size/100; break;
+         case "평발동": res[12] += bf.size/100; break;
+         case "궁발동": res[13] += bf.size/100; break;
+         case "평추가": res[14] += bf.size/100; break;
+         case "궁추가": res[15] += bf.size/100; break;
+         case "발효증": res[16] += bf.size/100; break;
+         case "받직뎀": res[17] += bf.size/100; break;
+         case "받캐뎀": res[18] += bf.size/100; break;
+         default: console.log("버프 누락 : " + bf.type);
       }
    }
    for(const bf of nbf) {
@@ -218,19 +244,24 @@ function getBuffSizeList(tbf, nbf) {
          case "받발뎀": res[8] += bf.size*bf.nest/100; break;
          case "가뎀증": res[9] += bf.size*bf.nest/100; break;
          case "속뎀증": res[10] += bf.size*bf.nest/100; break;
-         case "평발동": res[11] += bf.size*bf.nest/100; break;
-         case "궁발동": res[12] += bf.size*bf.nest/100; break;
-         case "평추가": res[13] += bf.size*bf.nest/100; break;
-         case "궁추가": res[14] += bf.size*bf.nest/100; break;
+         case "받속뎀": res[11] += bf.size*bf.nest/100; break;
+         case "평발동": res[12] += bf.size*bf.nest/100; break;
+         case "궁발동": res[13] += bf.size*bf.nest/100; break;
+         case "평추가": res[14] += bf.size*bf.nest/100; break;
+         case "궁추가": res[15] += bf.size*bf.nest/100; break;
+         case "발효증": res[16] += bf.size*bf.nest/100; break;
+         case "받직뎀": res[17] += bf.size*bf.nest/100; break;
+         case "받캐뎀": res[18] += bf.size*bf.nest/100; break;
+         default: console.log("버프 누락 : " + bf.type);
       }
    }
    boss.setBuff();
-   for(let i = 0; i < 13; i++) res[i] += boss.li[i];
+   for(let i = 0; i < 17; i++) res[i] += boss.li[i];
    return res;
 }
 
 function getBossBuffSizeList(tbf, nbf) {
-   const res = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+   const res = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
    for(const bf of tbf) {
       if (bf.turn == GLOBAL_TURN) continue;
       switch(bf.type) {
@@ -245,10 +276,15 @@ function getBossBuffSizeList(tbf, nbf) {
          case "받발뎀": res[8] += bf.size/100; break;
          case "가뎀증": res[9] += bf.size/100; break;
          case "속뎀증": res[10] += bf.size/100; break;
-         case "평발동": res[11] += bf.size/100; break;
-         case "궁발동": res[12] += bf.size/100; break;
-         case "평추가": res[13] += bf.size/100; break;
-         case "궁추가": res[14] += bf.size/100; break;
+         case "받속뎀": res[11] += bf.size/100; break;
+         case "평발동": res[12] += bf.size/100; break;
+         case "궁발동": res[13] += bf.size/100; break;
+         case "평추가": res[14] += bf.size/100; break;
+         case "궁추가": res[15] += bf.size/100; break;
+         case "발효증": res[16] += bf.size/100; break;
+         case "받직뎀": res[17] += bf.size/100; break;
+         case "받캐뎀": res[18] += bf.size/100; break;
+         default: console.log("버프 누락 : " + bf.type);
       }
    }
    for(const bf of nbf) {
@@ -265,10 +301,15 @@ function getBossBuffSizeList(tbf, nbf) {
          case "받발뎀": res[8] += bf.size*bf.nest/100; break;
          case "가뎀증": res[9] += bf.size*bf.nest/100; break;
          case "속뎀증": res[10] += bf.size*bf.nest/100; break;
-         case "평발동": res[11] += bf.size*bf.nest/100; break;
-         case "궁발동": res[12] += bf.size*bf.nest/100; break;
-         case "평추가": res[13] += bf.size*bf.nest/100; break;
-         case "궁추가": res[14] += bf.size*bf.nest/100; break;
+         case "받속뎀": res[11] += bf.size*bf.nest/100; break;
+         case "평발동": res[12] += bf.size*bf.nest/100; break;
+         case "궁발동": res[13] += bf.size*bf.nest/100; break;
+         case "평추가": res[14] += bf.size*bf.nest/100; break;
+         case "궁추가": res[15] += bf.size*bf.nest/100; break;
+         case "발효증": res[16] += bf.size*bf.nest/100; break;
+         case "받직뎀": res[17] += bf.size*bf.nest/100; break;
+         case "받캐뎀": res[18] += bf.size*bf.nest/100; break;
+         default: console.log("버프 누락 : " + bf.type);
       }
    }
    return res;
@@ -279,6 +320,7 @@ function bossAttack(me) {
    const atkAtvDmg = me.getAtkAtvDmg();
    boss.hp -= (lastDmg = atkDmg);
    boss.hp -= (lastAtvDmg = atkAtvDmg);
+   if (boss.hp < 0) boss.hp = 0; 
    //console.log(`일반공격 데미지 : ${lastDmg}\n발동기 데미지 : ${lastAtvDmg}`);
    if (atkDmg > 0) boss.hit(me);
 }
@@ -287,6 +329,7 @@ function bossUltAttack(me) {
    const ultAtvDmg = me.getUltAtvDmg();
    boss.hp -= (lastDmg = ultDmg);
    boss.hp -= (lastAtvDmg = ultAtvDmg);
+   if (boss.hp < 0) boss.hp = 0; 
    //console.log(`궁극기 데미지 : ${lastDmg}\n발동기 데미지 : ${lastAtvDmg}`);
    if (ultDmg > 0) boss.hit(me);
    me.curCd = me.cd;
@@ -324,18 +367,6 @@ function getRoleIdx() {
 }
 
 function hpUpAll(amount) {for(let c of comp) c.hp *= (1 + amount/100);}
-function all_tbf(ty, s, n, t) {for(let c of comp) tbf(c, ty, s, n, t);}
-function all_nbf(ty, s, n, e, e2) {for(let c of comp) nbf(c, ty, s, n, e, e2);}
-function all_atbf(act, who, ty, s, n, t, trn) {for(let c of comp) atbf(c, act, who, ty, s, n, t, trn);}
-function all_anbf(act, who, ty, s, n, e1, e2, trn) {for(let c of comp) anbf(c, act, who, ty, s, n, e1, e2, trn);}
-
-
-
-
-
-
-
-
 
 
 /* -------------------------------------------------------------------------------------- */
@@ -432,32 +463,39 @@ function setDefault(me) {
 // 10022 10096 10098 10128 10042
    case 10022 : // 놀라이티
       me.ultbefore = function() {
-         // 타깃은 피격 시 놀라에게 받는 데미지 15% 증가 (8중첩)
-         anbf(boss, "피격", me, "받뎀증", 15, "배 가르기1", 1, 8, 4);
-         // 타깃은 받는 데미지 30% 증가 (1중첩)
-         nbf(boss, "받뎀증", 30, "배 가르기2", 1, 1);
+         // 궁사용시 타깃은 피격 시 놀라에게 받는 데미지 15% 증가 1중첩(추가타에 적용)
+         nbf(me, "받캐뎀", 15, "배 가르기1", 1, 8);
       }
       me.ultafter = function() {
          deleteBuff(me, "배 가르기1"); // 패시브 극도의 흥분 : 궁 발동시 배가르기 제거
          deleteBuff(me, "극도의 흥분"); // 패시브 : 궁 발동시 극도의 흥분 제거
+         
+         // 타깃은 피격 시 놀라에게 받는 데미지 15% 증가 (8중첩)
+         anbf(boss, "피격", me, "받캐뎀", 15, "배 가르기1", 1, 8, 4);
+         // 타깃은 받는 데미지 30% 증가 (1중첩)
+         nbf(boss, "받뎀증", 30, "배 가르기2", 1, 1);
       }
       me.ultimate = function() {ultLogic(me);};
       me.atkbefore = function() {}
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
       me.leader = function() {
-         for(let c of comp) c.hp *= (1 + 0.2); // 아군 전체의 최대 hp 20% 증가
+         hpUpAll(20); // 아군 전체의 최대 hp 20% 증가
          for(let c of comp) tbf(c, "궁뎀증", 50, "전쟁의 광기1", always); // 아군 전체의 궁극기 데미지 50% 증가
          for(let idx of getRoleIdx("딜", "디", "탱")) {
             tbf(comp[idx], "공퍼증", 40, "전쟁의 광기2", always); // 아군 딜디탱은 공격 데미지 40% 증가
-            tbf(comp[idx], "가뎀증", 25, "전쟁의 광기2", always); // 아군 딜디탱은 가하는 데미지 25% 증가
+            tbf(comp[idx], "가뎀증", 25, "전쟁의 광기3", always); // 아군 딜디탱은 가하는 데미지 25% 증가
             if (idx != 0) {
                // 자신을 제외한 아군 딜디탱은 궁극기 사용 시 1번에게 공격 데미지 90%증가
-               atbf(comp[idx], "궁", comp[0], "공퍼증", 90, "학살 시간이다!", 1, always);
+               atbf(comp[idx], "궁", comp[0], "공퍼증", 90, "학살 시간이다!1", 1, always);
                // 자신을 제외한 아군 딜디탱은 궁극기 사용 시 1번에게 궁사용시 데미지 80% 추가
-               atbf(comp[idx], "궁", comp[0], "궁추가", 80, "학살 시간이다!", 1, always);
+               atbf(comp[idx], "궁", comp[0], "궁추가", 80, "학살 시간이다!2", 1, always);
             }
          }
+         // 매턴 아군전체 힐(50턴) -> turnstart에 추가됨
+         // 궁발동시 아군 전체 현재공200만큼 치유
+         atbf(me, "궁", all, "힐", myCurAtk+200, "전쟁의 광기4", 1, always);
+
       }
       me.passive = function() {
          // 극도의 흥분 : 방어시 자신의 공격 데미지 100% 증가
@@ -468,22 +506,24 @@ function setDefault(me) {
          atbf(me, "평", me, "궁뎀증", 50, "아드레날린1", 2, always);
          atbf(me, "평", me, "궁추가", 100, "아드레날린2", 2, always);
          // 궁극기 추격+ : 궁극기 발동 시 30% 추가데미지
-         anbf(me, "궁", me, "궁추가", 30, "궁극기 추격+", 1, 1, always)
+         tbf(me, "궁추가", 30, "궁극기 추격+", always)
       }
       me.defense = function() {
          me.act_defense();
       }
-      me.turnstart = function() {};
+      me.turnstart = function() {
+         // 리더효과 매턴 아군 전체 힐(50턴)
+         if (me.isLeader && GLOBAL_TURN == 2) for(let c of comp) c.heal();
+      };
       me.turnover = function() {};
       return me;
    case 10096 : // 로티아
       me.ultbefore = function() {
          // 아군 전체는 자신의 현재 공40%만큼 공격력 증가 (1턴)
          for(let c of comp) tbf(c, "공고증", 40*me.getCurAtk(), "피로 물든 밤의 광기1", 1);
-         // 딜디탱에게 공격 시 자신공 15만큼 자신제외 전부 공격력 증가 1턴 부여 (1턴)
+         // 딜디탱에게 공격 시 자신공 15%만큼 자신제외전부 공격력 증가 1턴 부여 (1턴)
          for(let idx of getRoleIdx("딜", "디", "탱")) {
-            atbf(comp[idx], "평", allNotMe, "공고증", `${myCurAtk}15`, "피로 물든 밤의 광기2", 1, 1);
-            atbf(comp[idx], "궁", allNotMe, "공고증", `${myCurAtk}15`, "피로 물든 밤의 광기2", 1, 1);
+            atbf(comp[idx], "공격", allNotMe, "공고증", `${myCurAtk}15`, "피로 물든 밤의 광기2", 1, 1);
          }
       }
       me.ultafter = function() {}
@@ -514,7 +554,7 @@ function setDefault(me) {
             atbf(comp[idx], "행동", all, "공퍼증", 15, "소나타", 50, 1);
          }
          // 공격+
-         nbf(me, "공퍼증", 10, "공격+", 1, 1);
+         tbf(me, "공퍼증", 10, "공격+", always);
       }
       me.defense = function() {
          me.act_defense();
@@ -528,7 +568,8 @@ function setDefault(me) {
    case 10128 : // 크이블
       me.ultbefore = function() {
          // 흔들리는 와인잔1 : 타깃이 받는 딜러의 데미지 50% 증가 (2중첩)
-         for(let idx of getRoleIdx("딜")) nbf(comp[idx], "받뎀증", 50, "흔들리는 와인잔1", 1, 2);
+         // 받는 딜러 데미지가 ->  궁/평뎀증 판정
+         for(let idx of getRoleIdx("딜")) nbf(comp[idx], "받직뎀", 50, "흔들리는 와인잔1", 1, 2);
          // 흔들리는 와인잔2 : 자신은 평타시 90% 데미지 추가 (4턴)
          tbf(me, "평추가", 90, "흔들리는 와인잔2", 4);
       }
@@ -538,10 +579,8 @@ function setDefault(me) {
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
       me.leader = function() {
-         for(let c of comp) {
-            c.hp *= (1 + 0.2); // 아군 전체의 최대 hp 20% 증가
-            nbf(c, "공퍼증", 40, "숨막히는 여왕", 1, 1); // 아군 전체 공퍼증40%
-         }
+         hpUpAll(20); // 아군 전체의 최대 hp 20% 증가
+         nbf(all, "공퍼증", 40, "숨막히는 여왕", 1, 1); // 아군 전체 공퍼증40%
          let lightCnt = getElementCnt("광"), dealerCnt = getRoleCnt("딜");
          let lightPos = getElementIdx("광"), dealerPos = getRoleIdx("딜");
          // 팀에 최소 3명이 광속성이면 자신은
@@ -601,16 +640,16 @@ function setDefault(me) {
       me.leader = function() {
          // 함께 놀수록 재밌는 법~
          // 아군 전체의 공격 데미지 40% 증가
-         all_tbf("공퍼증", 40, "함께 놀수록 재밌는 법~1", always);
+         tbf(all, "공퍼증", 40, "함께 놀수록 재밌는 법~1", always);
          // 아군 전체의 최대 hp 10% 증가
          hpUpAll(10);
          // 아군 전체가 크리스마스 최고! 획득
-         // 크리스마스 최고!1 : 탱커가 있으면 자신의 공퍼증 50%
-         if (getRoleCnt("탱") > 0) all_tbf("공퍼증", 50, "크리스마스 최고!1", always);
-         // 크리스마스 최고!2 : 2명이상 광속성이면 자신의 공퍼증 25%
-         if (getElementCnt("광") >= 2) all_tbf("공퍼증", 25, "크리스마스 최고!2", always);
-         // 크리스마스 최고!3 : 화속성 있으면 자신의 공퍼증 25%
-         if (getElementCnt("화") > 0) all_tbf("공퍼증", 25, "크리스마스 최고!3", always);
+         // 크리스마스 최고!1 : 탱커가 있으면 아군 전체가 공퍼증 50%
+         if (getRoleCnt("탱") > 0) tbf(all, "공퍼증", 50, "크리스마스 최고!1", always);
+         // 크리스마스 최고!2 : 2명이상 광속성이면 아군 전체가 공퍼증 25%
+         if (getElementCnt("광") >= 2) tbf(all, "공퍼증", 25, "크리스마스 최고!2", always);
+         // 크리스마스 최고!3 : 화속성 있으면 아군 전체가 공퍼증 25%
+         if (getElementCnt("화") > 0) tbf(all, "공퍼증", 25, "크리스마스 최고!3", always);
       }
       me.passive = function() {
          // 시험작 999호 : 자신의 가뎀증 35%
@@ -626,9 +665,9 @@ function setDefault(me) {
       me.turnstart = function() {
          if (me.isLeader) {
             // 리더 : 5번째 턴에서 아군전체 궁뎀증 30% (1중첩)
-            if (GLOBAL_TURN == 5) all_nbf("궁뎀증", 30, "함께 놀수록 재밌는 법~2", 1, 1);
+            if (GLOBAL_TURN == 5) nbf(all, "궁뎀증", 30, "함께 놀수록 재밌는 법~2", 1, 1);
             // 리더 : 9번째 턴에서 아군 천체 가뎀증 20% (1중첩)
-            if (GLOBAL_TURN == 9) all_nbf("가뎀증", 20, "함께 놀수록 재밌는 법~3", 1, 1);
+            if (GLOBAL_TURN == 9) nbf(all, "가뎀증", 20, "함께 놀수록 재밌는 법~3", 1, 1);
          }
       };
       me.turnover = function() {
@@ -640,8 +679,8 @@ function setDefault(me) {
       me.ultbefore = function() {
          // 소녀의 연심은 무적!1 : 아군 수, 화 공퍼증 40%(1턴)
          for(let idx of getElementIdx("화", "수")) tbf(comp[idx], "공퍼증", 40, "소녀의 연심은 무적!1", 1);
-         // 소녀의 연심은 무적!2 : 아군 수, 화 속뎀증 15%(2중첩)
-         for(let idx of getElementIdx("화", "수")) nbf(comp[idx], "속뎀증", 15, "소녀의 연심은 무적!2", 1, 2);
+         // 소녀의 연심은 무적!2 : 아군 수, 화 받속뎀 15%(2중첩)
+         for(let idx of getElementIdx("화", "수")) nbf(comp[idx], "받속뎀", 15, "소녀의 연심은 무적!2", 1, 2);
       }
       me.ultafter = function() {}
       me.ultimate = function() {ultLogic(me);};
@@ -651,21 +690,19 @@ function setDefault(me) {
       me.leader = function() {
          // 고품격 우아함! 이블리스의 초호화 리조트!
          // 아군 전체의 공퍼증 100%
-         all_tbf("공퍼증", 100, "이블리스의 초호화 리조트!", always);
+         tbf(all, "공퍼증", 100, "이블리스의 초호화 리조트!", always);
          // 자신이 공격 시 아군 전체가 최대hp 25% 아머 획득
 
          // 아군 전체가 딜러이면 모두 여름 만끽 발동
-         if (getRoleCnt == 5) {
+         if (getRoleCnt("딜") == 5) {
             // 여름 만끽1 : 공격 시 아군 전체를 치유
-            all_atbf("평", all, "힐", 1, "여름 만끽 1", 1, always);
+            atbf(all, "공격", all, "힐", 1, "여름 만끽 1", 1, always);
             // 여름 만끽2 : 궁발동시 아군 전체 아머 부여(1턴)
             // 여름 만끽3 : 공격시 아군 전체의 궁뎀증 5% (10중첩)
-            all_anbf("평", all, "궁뎀증", 5, "여름 만끽3", 1, 10, always);
-            // 여름 만끽4 : 공격시 수/화속뎀증 3% (10중첩)
-            for(let idx of getElementIdx("수"))
-               all_anbf("평", comp[idx], "속뎀증", 3, "여름 만끽4", 1, 10, always);
-            for(let idx of getElementIdx("화"))
-               all_anbf("평", comp[idx], "속뎀증", 3, "여름 만끽4", 1, 10, always);
+            anbf(all, "공격", all, "궁뎀증", 5, "여름 만끽3", 1, 10, always);
+            // 여름 만끽4 : 공격시 수/화받속뎀 3% (10중첩)
+            for(let idx of getElementIdx("수")) anbf(all, "공격", comp[idx], "받속뎀", 3, "여름 만끽4", 1, 10, always);
+            for(let idx of getElementIdx("화")) anbf(all, "공격", comp[idx], "받속뎀", 3, "여름 만끽4", 1, 10, always);
          }
       }
       me.passive = function() {
@@ -676,7 +713,7 @@ function setDefault(me) {
          for(let idx of getElementIdx("화"))
             anbf(me, "궁", comp[idx], "공퍼증", 15, "여름 해변의 꽃2", 1, 2, always);
          // 나에게 굴복하라 : 가뎀증 25% 증가
-         tbf(me, "가뎀증", 25, "나에게 굴복하라", always);
+         tbf(me, "가뎀증", 25, "나에게 굴복하라!", always);
          // 공격력 증가 : 자신의 공퍼증 10%
          tbf(me, "공퍼증", 10, "공격력 증가", always);
       }
@@ -684,9 +721,9 @@ function setDefault(me) {
          me.act_defense();
       }
       me.turnstart = function() {
-         // 패시브 오만하구나! : 4턴마다 수/화속뎀증 40% (1턴)
-         if ((GLOBAL_TURN-1)%4 == 0) {            
-            for(let idx of getElementIdx("수", "화")) tbf(comp[idx], "속뎀증", 40, "오만하구나!", 1);
+         // 패시브 오만하구나! : 4턴마다 타깃이 받는 수/화속뎀증 40% (1턴)
+         if ((GLOBAL_TURN-1)%4 == 0) {
+            for(let idx of getElementIdx("수", "화")) tbf(comp[idx], "받속뎀", 40, "오만하구나!", 1);
          }
       };
       me.turnover = function() {};
@@ -708,14 +745,13 @@ function atkLogic(me) {
    me.atkafter();
    me.act_attack();
 }
-
+function hpUpAll(amount) {for(let c of comp) c.hp *= (1+amount/100);}
+function hpUpMe(me, amount) {me.hp *= (1+amount/100);}
 function show_console(idx) {
-   console.log(boss_tbfToString());
-   console.log(boss_nbfToString());
-   console.log(anbfToString(comp[idx]));
-   console.log(atbfToString(comp[idx]));
-   console.log(tbfToString(comp[idx]));
-   console.log(nbfToString(comp[idx]));
+   console.log(boss_tbfToString() + "\n" + boss_nbfToString());
+   console.log(anbfToString(comp[idx]) + "\n" + atbfToString(comp[idx]));
+   console.log(tbfToString(comp[idx]) + "\n" + nbfToString(comp[idx]));
+   console.log(buffListToString(comp[idx]));
 }
 function boss_tbfToString() {
    const list = [...boss.turnBuff];
@@ -732,7 +768,7 @@ function boss_nbfToString() {
 
 function anbfToString(me) {
    const list = [...me.actNestBuff];
-   const str = ["-----------------------------", `${me.name}`, `공격력 : ${me.getCurAtk()}`];
+   const str = ["-----------------------------", `${me.name}`];
    for(const l of list) {
       const who = l.who == all ? "아군전체" : l.who == allNotMe ? "자신제외아군" : l.who.name;
       const aaact = l.act == "평" ? "평타" : l.act == "방" ? "방어" : l.act;
@@ -753,12 +789,30 @@ function atbfToString(me) {
 function tbfToString(me) {
    const list = [...me.turnBuff];
    const str = [];
-   for(const l of list) str.push(`${l.type} ${l.type == "공고증" ? Math.floor(l.size/100) : l.size} (${l.turn >= always ? "상시" : (l.turn - GLOBAL_TURN + "턴")}) : ${l.name}`);
+   for(const l of list) {
+      str.push(`${l.type} ${l.type == "공고증" ? Math.floor(l.size/100) : l.size} (${l.turn >= always ? "상시" : (l.turn - GLOBAL_TURN + "턴")}) : ${l.name}`);
+   }
    return str.join("\n");
 }
 function nbfToString(me) {
    const list = [...me.nestBuff];
    const str = [];
-   for(const l of list) str.push(`${l.type} ${l.size*l.nest} (${l.nest}중첩) : ${l.name}`);
+   for(const l of list) {
+      str.push(`${l.type} ${l.size*l.nest} (${l.nest}중첩) : ${l.name}`);
+   }
    return str.join("\n");
+}
+function buffListToString(me) {
+   const tbf = [...me.turnBuff], nbf = [...me.nestBuff];
+   const li = getBuffSizeList(tbf, nbf);
+   const tx = ["공퍼증", "공고증", "받뎀증", "일뎀증", "받일뎀", "궁뎀증", "받궁뎀", "발뎀증", "받발뎀", "가뎀증",
+       "속뎀증", "받속뎀", "평발동", "궁발동", "평추가", "궁추가", "발효증", "받직뎀", "받캐뎀"];
+   const strList = [`공격력 : ${me.getCurAtk().toFixed(0)}`];
+   for(let i = 0; i < li.length; i++) {
+      if (li[i] == 0) continue;
+      let info = (li[i]*100)+"%";
+      if (i == 1) info = Math.floor(li[1]);
+      strList.push(tx[i] + " : " + info);
+   }
+   return strList.join("\n");
 }

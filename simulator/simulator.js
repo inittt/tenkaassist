@@ -31,7 +31,8 @@ function makeComp(list) {
             <div class="character" style="margin:0.2rem;">
                <div id="atk${idx}" style="margin:0.2rem;" onclick="do_atk(${idx})">
                   <img id="img${idx}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-                  <div class="element${ch.element} ch_border z-4"></div>
+                  <img id="act${idx}" src="${address}/images/icons/black.png" class="acted z-2" alt="">
+                  <div id="el${idx}" class="element${ch.element} ch_border z-4"></div>
                </div>
                <div class="text-mini">${ch.name}</div>
             </div>
@@ -74,6 +75,7 @@ function do_ult(idx) {
    updateAll();
 }
 function do_atk(idx) {
+   if (comp[idx].isActed) return;
    comp[idx].attack();
    endAct();
    updateAll();
@@ -103,17 +105,18 @@ function updateAll() {
       if (comp[i].isActed) {
          getdiv(`ult${i}`).style.visibility = "hidden";
          getdiv(`def${i}`).style.visibility = "hidden";
-         getdiv(`img${i}`).src = `${address}/images/icons/black.png`;
+         getdiv(`act${i}`).style.display = "block";
+         getdiv(`el${i}`).style.cursor = "default";
       } else {
-         if (comp[i].curCd <= 0) getdiv(`ult${i}`).style.visibility = "visible";
-         else getdiv(`ult${i}`).style.visibility = "hidden";
+         getdiv(`ult${i}`).style.visibility = comp[i].curCd <= 0 ? "visible" : "hidden";
          getdiv(`def${i}`).style.visibility = "visible";
-         getdiv(`img${i}`).src = `${address}/images/characters/cs${comp[i].id}_0_0.webp`;
+         getdiv(`act${i}`).style.display = "none";
+         getdiv(`el${i}`).style.cursor = "pointer";
       }
    }
    getdiv("turn").innerHTML = `TURN ${GLOBAL_TURN}`;
-   getdiv("deal").innerHTML = `데미지 : ${Math.floor(lastDmg)}`;
-   getdiv("deal_atv").innerHTML = `발동기 : ${Math.floor(lastAtvDmg)}`;
+   getdiv("deal").innerHTML = `데미지 : ${Math.floor(lastDmg).toLocaleString()}`;
+   getdiv("deal_atv").innerHTML = `발동기 : ${Math.floor(lastAtvDmg).toLocaleString()}`;
    updateProgressBar(boss.hp, boss.maxHp);
 }
 

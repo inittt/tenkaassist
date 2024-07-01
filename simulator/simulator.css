@@ -19,6 +19,7 @@
    display:flex;
    align-items: center;
    justify-content: center;
+   cursor:pointer;
 }
 #boss-container {
    margin-top:0.2rem;
@@ -33,9 +34,23 @@
    width:1.5rem;
    height:1.5rem;
    border-radius: 50%;
+   cursor:pointer;
 }
 
 .comp-sim {
    display:flex; 
    justify-content: center;
+}
+
+.acted {
+   border-radius: 0.5rem;
+   position:absolute;
+   left:0.2rem;
+   top:0.2rem;
+   width:2.5rem;
+   height:2.5rem;
+   background-color: black;
+   opacity: 0.8;
+   cursor: none;
+   display:none;
 }
