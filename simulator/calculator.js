@@ -33,6 +33,16 @@ class Champ {
       this.curAtkAtv = 0; this.curUltAtv = 0;
       this.atkMag = atkMag; this.ultMag = ultMag;
       this.canCDChange = true; this.isLeader = false; this.isActed = false;
+      this.armor = 0;
+   }
+   getArmor() {
+      const tbf = [...this.turnBuff];
+      let res = 0;
+      for(let bf of tbf) {
+         if (bf.turn == GLOBAL_TURN) continue;
+         if (bf.type == "아머") res += bf.size;
+      }
+      return res;
    }
 // [0공퍼증, 1공고증, 2받뎀증, 3일뎀증, 4받일뎀, 5궁뎀증, 6받궁뎀, 7발뎀증, 8받발뎀, 9가뎀증, 10속뎀증, 11받속뎀
 // 12평발동, 13궁발동, 14평추가, 15궁추가, 16발효증, 17받직뎀, 18받캐뎀]
@@ -381,89 +391,43 @@ const characterData = [
    {id:10001, name:"바알", hp:962383, atk:254657, cd:4, el:"화", ro:"딜", atkMag:100, ultMag:422},
    {id:10002, name:"사탄", hp:1384007, atk:177152, cd:3, el:"암", ro:"탱", atkMag:50, ultMag:0},
    
+// 10022 10096 10098 10128 10042
    {id:10022, name:"놀라이티", hp:922524, atk:292745, cd:4, el:"화", ro:"딜", atkMag:100, ultMag:514},
    {id:10096, name:"로티아", hp:894179, atk:302045, cd:4, el:"암", ro:"섶", atkMag:0, ultMag:0},
    {id:10098, name:"크즈카", hp:941125, atk:286987, cd:4, el:"광", ro:"딜", atkMag:100, ultMag:514},
    {id:10128, name:"크이블", hp:956625, atk:282116, cd:4, el:"광", ro:"딜", atkMag:100, ultMag:514},
    {id:10042, name:"수이블", hp:956625, atk:282116, cd:4, el:"수", ro:"딜", atkMag:100, ultMag:514},
-   
+// 10141 10133 10088 10119 10123
+   {id:10141, name:"관나나", hp:945111, atk:285659, cd:6, el:"풍", ro:"딜", atkMag:99.9, ultMag:199.8},
+   {id:10133, name:"나나미", hp:926067, atk:291416, cd:3, el:"암", ro:"섶", atkMag:0, ultMag:0},
+   {id:10088, name:"신빨강", hp:946882, atk:285216, cd:3, el:"화", ro:"딜", atkMag:100, ultMag:397},
+   {id:10119, name:"수이카", hp:996485, atk:271044, cd:3, el:"화", ro:"힐", atkMag:0, ultMag:0},
+   {id:10123, name:"악미루", hp:930053, atk:290530, cd:3, el:"암", ro:"딜", atkMag:100, ultMag:397},
 ];
 
 function setDefault(me) {
    switch(me.id) {
-   case 10001: // 바알
+   case "base" :
+      me.ultbefore = function() {}
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
       me.leader = function() {
-         nbf(me, "공퍼증", 125, "마왕 바알의 꿍꿍이", 1, 1);
+      
       }
       me.passive = function() {
-         nbf(me, "공퍼증", 25, "마왕의 육체", 1, 1);
-         nbf(me, "일뎀증", 10, "일반 공격 데미지+", 1, 1);
+      
       }
-      me.attack = function() {
-         me.act_attack();
-         bossAttack(me);
-      };
-      me.ultimate = function() {
-         me.act_ultimate();
-         me.turnBuff.push(tbf("공퍼증", 35, "맹렬한 불길", 3));
-         bossUltAttack(me);
-         cdChange(me, -1);
-      };
-      me.defense = function() {
-         me.act_defense();
-      }
-      me.turnstart = function() {};
-      me.turnover = function() {};
-      return me;
-   case 10002: // 사탄
-      me.leader = function() {
-         nbf(me, "공퍼증", -25, "마왕 사탄의 호기", 1, 1);
-      }
-      me.passive = function() {}
-      me.attack = function() {
-         me.act_attack();
-         bossAttack(me);
-         me.act_defense();
-      };
-      me.ultimate = function() {
-         me.act_ultimate();
-         nbf(me, "공퍼증", 30, "마왕 사탄의 호기", 1, 1);
-         bossUltAttack(me);
-         me.act_defense();
-      };
-      me.defense = function() {
-         me.act_defense();
-      }
+      me.defense = function() {me.act_defense();}
       me.turnstart = function() {
-         me.heal();
+         if (me.isLeader) {}
       };
-      me.turnover = function() {};
+      me.turnover = function() {
+         if (me.isLeader) {}
+      };
       return me;
-   case 0 :
-      //TODO: 계속 할 것
-      me.ultimate = function() {
-         me.act_ultimate() // 모든 궁사용시 버프를 적용
-         // 툴팁의 궁 이전 버프 적용
-         bossUltAttack(me); // 궁 + 발동기
-         // 툴팁의 궁 이후 버프 적용
-      };
-      me.attack = function() {
-         me.act_attack() // 모든 공격시 버프를 적용
-         // 툴팁의 공격 이전 버프 적용
-         bossAttack(me); // 공격 + 발동기
-         // 툴팁의 공격 이후 버프 적용
-      };
-      me.leader = function() {
-      }
-      me.passive = function() {
-      }
-      me.defense = function() {
-         me.act_defense();
-      }
-      me.turnstart = function() {};
-      me.turnover = function() {};
-      return me;
-
 
 
       
@@ -515,12 +479,10 @@ function setDefault(me) {
          // 궁극기 추격+ : 궁극기 발동 시 30% 추가데미지
          tbf(me, "궁추가", 30, "궁극기 추격+", always)
       }
-      me.defense = function() {
-         me.act_defense();
-      }
+      me.defense = function() {me.act_defense();}
       me.turnstart = function() {
          // 리더효과 매턴 아군 전체 힐(50턴)
-         if (me.isLeader && GLOBAL_TURN == 2) for(let c of comp) c.heal();
+         if (me.isLeader && GLOBAL_TURN > 1) for(let c of comp) c.heal();
       };
       me.turnover = function() {};
       return me;
@@ -540,9 +502,7 @@ function setDefault(me) {
          for(let c of comp) tbf(c, "공고증", 30*me.getCurAtk(), "피의 축복", 1);
       }
       me.atkafter = function() {}
-      me.attack = function() {
-         atkLogic(me);
-      };
+      me.attack = function() {atkLogic(me);};
       me.leader = function() {
          // 순결의 향연 : 아군 암속성 캐릭터는 공100%증가, 궁뎀증 50%;
          for(let idx of getElementIdx("암")) {
@@ -733,6 +693,246 @@ function setDefault(me) {
       me.turnover = function() {};
       return me;
 
+// 10141 10133 10088 10119 10123
+   case 10141 : // 관나나
+      me.ultbefore = function() { // 백발백중이다냥!
+         // 아군 전체의 발동형 스킬 효과 100% 증가(6턴)
+         // 타깃이 받는 풍속성 데미지 30% 증가(6턴)
+         // 자신의 공격 데미지의 33.3%만큼 타깃에게 6회 데미지 (199.8%)
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 심연과의 동행
+
+         // 아군 전체의 최대 hp 20% 증가
+         // 아군 전체의 공격 데미지 50% 증가
+         // 자신은 <진실 조사> 획득
+         // <진실 조사>
+         // 첫 번째 턴에서 자신의 현재 궁극기 cd 3턴 감소
+         // 공격 데미지 40% 증가
+         // 가하는 데미지 50% 증가
+         // 공격 시 '자신의 공격 데미지의 100%만큼 타깃에게 데미지' 발동
+         // 궁극기 발동 시 '타깃이 받는 풍속성 데미지 30% 증가(6턴)' 발동
+         // 현재 hp <= 99% 시 <붕괴 직면> 발동
+         // 방어 시 '자신은 <붕괴 직면> 효과의 영향을 받지 않음(1턴)' 발동
+         // <붕괴 직면>
+         // 피격 시 '자신의 <이성치> 모든 중첩 수 제거' 발동
+      }
+      me.passive = function() {
+         // 야옹이 요원 탐험 중
+         // 첫 번째 턴에서 '자신은 50중첩의 <이성치> 획득(최대 50)' 발동
+         // 1턴이 지날 때마다 '자신의 <이성치> 중첩 수 10 감소' 발동
+         // 심연 직시
+         // 자신의 <이성치> 중첩 수 == 50 일 시 '발동형 스킬 효과 30% 증가' 활성화
+         // 자신의 <이성치> 중첩 수 >= 40 일 시 '가하는 데미지 20% 증가' 활성화
+         // 자신의 <이성치> 중첩 수 >= 30 일 시 '공격 시 "자신의 공격 데미지의 100%만큼 타깃에게 데미지" 발동' 활성화
+         // 자신의 <이성치> 중첩 수 >= 20 일 시 '공격 데미지 65% 중가' 활성화
+         // 자신의 <이성치> 중첩 수 >= 10 일 시 '공격 데미지 65% 증가' 활성화
+         // 자신의 <이성치> 중첩 수 < 1   일 시 <잃어버린 이성> 활성화
+         // <잃어버린 이성>
+         // 1턴이 지날 때마다 <최고신의 그림자> 발동
+         // <최고신의 그림자>
+         // 자신은 50중첩의 <이성치> 획득(최대 50중첩), 자신에게 수면 부여(1턴)
+         // 정보부대 수틱 제 1조
+         // 첫 번째 턴에서 '자신의 현재 궁극기 cd 3턴 감소' 발동
+         // 궁극기 발동 시 <이성치:바보 시저> 발동
+         // <이성치:바보 시저>
+         // 자신의 공격 데미지의 100%만큼 타깃에게 데미지
+         // 자신은 50중첩의 <이성치> 획득(최대 50중첩)
+         // 자신은 '<이성치> 중첩 수 감소' 효과의 영향을 받지 않음(4턴)
+         // 발동+
+         // 자신의 발동형 스킬 효과 30% 증가
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {}
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+      };
+      return me;
+   case 10133 : // 나나미
+      me.ultbefore = function() { // 이것이 바로 프로 아이돌의 매력
+         // 자신의 기본 공격 데미지의 70% 만큼 아군 전체의 공격 데미지 증가(4턴)
+         // 아군 전체의 궁극기 데미지 40% 증가(4턴)
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() { // 한눈 팔기 없기~
+         // 자신의 공격 데미지의 25%만큼 아군 전체에게 아머 강화(1턴)
+         // 자신의 최대 hp 30%만큼 아군 전체에게 아머 강화(1턴)
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 악수회 시간이야~
+         // 아군 전체의 공격 데미지 50% 증가
+         // 아군 전체의 가하는 발동형 스킬 효과 100% 증가
+         // 아군 전체의 가하는 데미지 20% 증가
+         // 자신은 팀에 서포터 캐릭터 2명 이상 있을 시 '받는 아머 효과 600% 감소' 발동
+         // 자신 이외의 아군은 <돈은 사라지지 않아> 획득
+         // <돈은 사라지지 않아>
+         // 공격 시 '자신의 공격 데미지의 30%만큼 1번 자리 아군에게 아머 강화 부여(1턴)
+         // 자신은 <나나미의 형상으로 변한 것뿐> 획득
+         // <나나미의 형상으로 변한 것뿐>
+         // 일반 공격 시 '자신의 현재 아머량 55% 만큼 타깃에게 데미지' 발동
+         // 궁극기 발동 시 '자신의 현재 아머량 60%만큼 타깃에게 데미지' 발동
+         // 공격 시 '자신의 현재 아머량 100% 만큼 자신의 아머에 확정 데미지' 발동
+      
+      }
+      me.passive = function() {
+         // 무대 준비
+         // 자신이 가하는 아머 강화 효과 15% 증가
+         // 청순 아이돌
+         // 궁극기 발동 시 '자신의 공격 데미지의 25%만큼 아군 전체에게 아머 강화(1턴)' 추가 
+         // 궁극기 발동 시 '자신의 최대 hp 30%만큼 아군 전체에게 아머 강화(1턴)' 추가
+         // OnlySex
+         // 1턴마다 '자신의 공격 데미지의 25%만큼 아군 전체의 공격 데미지 증가(1턴)' 발동
+         // 공격+
+         // 자신의 공격 데미지 10% 증가
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {}
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+      };
+      return me;
+   case 10088 : // 신빨강
+      me.ultbefore = function() {// 아나스티의 특데 칵테일
+         // 타깃이 받는 데미지 20% 증가(7턴)
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 열정적인 쌍성 점장
+         // 궁극기 발동 시, '아군 전체가 가하는 데미지 35% 증가(1턴)' 발동
+         // 아군 전체가 <술>, <미인>, <기도>, <예쁜 동생> 효과 획득
+         // <술>
+         // 팀원 중 최소 1/2/3 명의 딜러가 있을 시 각각 '공격 데미지 15/20/30% 증가' 발동
+         // <미인>
+         // 팀원 중 최소 1/2/3 명의 디스럽터가 있을 시 각각 '공격 데미지 15/20/30% 증가' 발동
+         // <기도>
+         // 팀원 중 최소 1명의 탱커가 있을 시 '궁극기 데미지 50% 증가' 발동
+         // <예쁜 동생>
+         // [푸른 은하 아나스나]가 아군 측에서 살아 있을 경우 '가하는 데미지 20% 증가' 발동
+         
+      }
+      me.passive = function() {
+         // 기세등등
+         // 궁극기 발동 시 '아군 전체의 궁극기 데미지 25% 증가(1턴) 발동
+         // 연애 충동
+         // 궁극기 발동 시 , <추가 주문> 효과 발동
+         // <추가 주문>
+         // 아군의 딜러와 디스럽터는 '궁극기 발동 시 "공격 데미지의 77%만큼 타깃에게 데미지" 효과 발동(1턴)' 획득
+         // 칠석의 기원
+         // 일곱 번째 턴 시작시 '아군 전체가 가하는 데미지 30% 증가(최대1중첩)' 효과 발동
+         // 공격 데미지+
+         // 공격 데미지 10% 증가
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {}
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+      };
+      return me;
+   case 10119 : // 수이카
+      me.ultbefore = function() { // 아이카의 여름 칵테일
+         // 아군 전체의 발동형 스킬 효과 100% 증가(3턴)
+         // 아군 전체가 가하는 데미지 30% 증가(3턴)
+         // 아군 전체의 공격 데미지 50% 증가(3턴)
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {
+         // 자신의 공격 데미지의 50%만큼 매턴 아군 전체를 치유(3턴)
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 아군 전체의 공격 데미지 50% 증가
+         // 자신은 <전속 종업원> 획득
+         // <전속 종업원>
+         // 가하는 데미지 50% 증가
+         // 일반 공격 시 '자신의 공격 데미지의 100% 만큼 타깃에게 데미지' 발동
+         // 궁극기 발동 시 '자신의 공격 데미지의 250%만큼 타깃에게 데미지' 발동
+         // 아군 탱커는 '팀에 최소 2명 이상의 탱커가 있을 시 <시저 님은 영원히 옳다> 발동' 획득
+         // <시저 님은 영원히 옳다>
+         // 가하는 데미지 50% 증가
+         // 일반 공격 시 '자신의 공격 데미지의 100%만큼 자신의 최대 hp50% 만큼 타깃에게 데미지' 발동
+         // 궁극기 발동 시 '자신의 공격 데미지의 250%만큼, 자신의 최대 hp125% 만큼 타깃에게 데미지' 발동
+         // 공격 시 '자신에게 부여된 도발 효과 및 방어 상태 해제' 발동
+      }
+      me.passive = function() {
+         // 메이드... 종업원 섹스 테크닉!
+         // 궁극기 발동 시 '자신의 공격 데미지의 150%만큼 아군 전체를 치유' 발동
+         // 궁극기 발동 시 '자신의 공격 데미지의 250%만큼 타깃에게 데미지' 발동
+         // 아름다운 맛~
+         // 아군 전체가 받는 지속형 치유향 20% 증가
+         // 공격 데미지 50% 증가
+         // 꾸잉 꾸잉 뀨~
+         // 발동형 스킬이 가하는 데미지 75% 증가
+         // 궁극기 발동 시 '자신의 최대 hp15%만큼 아군 전체에게 실드 부여(1턴)' 발동
+         // 공격+
+         // 자신의 공격 데미지 10% 증가
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {}
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+      };
+      return me;
+   case 10123 : // 악미루
+      me.ultbefore = function() { // 안닌궁주 보너스!
+         // 아군 전체의 발동형 스킬 효과 100% 증가(4턴)
+         
+      }
+      me.ultafter = function() {
+         // 아군 전체 딜러, 디스럽터가 공격 시 효과 '자신의 공격력의 59%만큼 타깃에게 데미지(3턴)' 획득
+
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 다같이 먀먀먀
+         // 아군 전체의 최대 hp 20% 증가
+         // 아군 전체의 공격 데미지 70% 증가
+         // 아군 전체가 '팀원 중 3명 이상의 딜러가 있으면 <같이 먀먀먀먀먀> 발동' 획득
+         // 아군 전체가 '팀원 중 2명 이상의 디스럽터가 있으면 <같이 먀먀먀먀먀> 발동' 획득
+         // <같이 먀먀먀먀먀>
+         // 발동형 스킬 효과 150% 증가
+         // 가하는 데미지 30% 증가
+         // 궁극기 발동 시 '타깃이 받는 화/수/풍/광/암 속성 데미지 5% 증가(2턴)
+
+      }
+      me.passive = function() {
+         // 18x18=88
+         // 궁극기 발동 시 '자신의 공격 데미지 40% 증가(최대 2중첩)' 발동
+         // 마음을 훔치는 소악마가 로그인했다고~
+         // 궁극기 발동 시 '타깃이 받는 궁극기 데미지 20% 증가(4턴) 발동
+         // 오늘은 야한 미루 꿈 꿔
+         // 궁극기 발동 시 '타깃이 받는 데미지 20% 증가(4턴)' 발동
+         // 궁극기+
+         // 자신의 궁극기 데미지 10% 증가
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {}
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+      };
+      return me;
    default: return null;
       
    }
@@ -753,13 +953,23 @@ function atkLogic(me) {
 }
 function hpUpAll(amount) {for(let c of comp) c.hp *= (1+amount/100);}
 function hpUpMe(me, amount) {me.hp *= (1+amount/100);}
+
+
+
+
+
+
+
+
+/* ------------------------------------------------------------------------*/
+// 콘솔 띄우는 로직
 function show_console(idx) {
    if (idx == -1) {
-      console.log(tbfToString(boss) + "\n" + nbfToString(boss));
-      console.log(tbfToString(boss) + "\n" + nbfToString(boss));
+      console.log(atbfToString(boss) + "\n" + anbfToString(boss)
+      + "\n" + tbfToString(boss) + "\n" + nbfToString(boss));
    } else {
-      console.log(anbfToString(comp[idx]) + "\n" + atbfToString(comp[idx]));
-      console.log(tbfToString(comp[idx]) + "\n" + nbfToString(comp[idx]));
+      console.log(anbfToString(comp[idx]) + "\n" + atbfToString(comp[idx])
+      + "\n" + tbfToString(comp[idx]) + "\n" + nbfToString(comp[idx]));
    }
 }
 function show_simple(idx) {
@@ -768,7 +978,7 @@ function show_simple(idx) {
 }
 function anbfToString(me) {
    const list = [...me.actNestBuff];
-   const str = ["=============================================================================", `이름 : ${me.name}`];
+   const str = ["=============================================================================", `버프상세 : ${me.name}`, ""];
    for(const l of list) {
       const who = l.who == all ? "아군전체" : l.who == allNotMe ? "자신제외아군" : l.who.name;
       const aaact = l.act == "평" ? "평타" : l.act == "방" ? "방어" : l.act;
@@ -807,7 +1017,8 @@ function buffListToString(me) {
    const li = getBuffSizeList(tbf, nbf);
    const tx = ["공퍼증", "공고증", "받뎀증", "일뎀증", "받일뎀", "궁뎀증", "받궁뎀", "발뎀증", "받발뎀", "가뎀증",
        "속뎀증", "받속뎀", "평발동", "궁발동", "평추가", "궁추가", "발효증", "받직뎀", "받캐뎀"];
-   const strList = [`공격력 : ${me.getCurAtk().toFixed(0)}`];
+   const strList = ["=============================================================================", `버프요약 : ${me.name}`, ""];
+   strList.push(me.name == "타깃" ? `공격력 : 0` : `공격력 : ${me.getCurAtk().toFixed(0)}`);
    for(let i = 0; i < li.length; i++) {
       if (li[i] == 0) continue;
       let info = (li[i]*100)+"%";
