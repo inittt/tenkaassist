@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
    getdiv("bossBuffBtn").innerHTML = `
-      <img class="circleImg" onclick="show_console(-1)" src="${address}/images/icons/describe.png">
-      <img class="circleImg" onclick="show_simple(-1)" src="${address}/images/icons/star.png">
+      <img class="circleImg" onclick="show_simple(-1)" src="${address}/images/icons/describe.png">
+      <img class="circleImg" onclick="show_console(-1)" src="${address}/images/icons/star.png">
    `;
 
 
@@ -9,8 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function setComp() {
-   //let strList = document.getElementById("ch_input").value.split(" ");
-   let strList = ["놀라이티", "로티아", "크이블", "크즈카", "수이블"];
+   let strList = document.getElementById("ch_input").value.split(" ");
    const list = [];
    for(const s of strList) {
       let n = fixName(s);
@@ -38,12 +37,13 @@ function makeComp(list) {
                   <img id="act${idx}" src="${address}/images/icons/black.png" class="acted z-2" alt="">
                   <div id="el${idx}" class="element${ch.element} ch_border z-4"></div>
                </div>
+               <div id="cd-max${idx}" class="shd-container"><div id="shd${idx}" class="shd"></div></div>
                <div class="text-mini">${ch.name}</div>
             </div>
             <img id="def${idx}" class="act_btn" onclick="do_def(${idx})" src="${address}/images/icons/btn_down.png">
             <div class="act_btn" style="height:2.5rem;">
-               <img class="circleImg" onclick="show_console(${idx})" src="${address}/images/icons/describe.png">
-               <img class="circleImg" onclick="show_simple(${idx})" src="${address}/images/icons/star.png">
+               <img class="circleImg" onclick="show_simple(${idx})" src="${address}/images/icons/describe.png">
+               <img class="circleImg" onclick="show_console(${idx})" src="${address}/images/icons/star.png">
             </div>
          </div>
       `);  
@@ -71,6 +71,7 @@ function start(compIds) {
    }
    comp[0].leader();
    for(let i = 0; i < 5; i++) comp[i].passive();
+   for(let i = 0; i < 5; i++) comp[i].turnstart();
    updateAll();
 }
 
@@ -108,6 +109,7 @@ function isAllActed() {
 function updateAll() {
    for(let i = 0; i < 5; i++) {
       updateCdBar(i);
+      updateShdBar(i);
       if (comp[i].isActed) {
          getdiv(`ult${i}`).style.visibility = "hidden";
          getdiv(`def${i}`).style.visibility = "hidden";
@@ -129,6 +131,12 @@ function updateCdBar(i) {
    const cdBar = getdiv(`cd${i}`);
    const percentage = (1 - (comp[i].curCd / comp[i].cd))*100;
    cdBar.style.width = percentage + "%";
+}
+
+function updateShdBar(i) {
+   const shdBar = getdiv(`shd${i}`);
+   const percentage = (comp[i].getArmor() / comp[i].hp)*100;
+   shdBar.style.width = percentage + "%";
 }
 function updateProgressBar(hp, maxhp) {
    const progressBar = document.getElementById("boss");

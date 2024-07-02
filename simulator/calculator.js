@@ -1,4 +1,4 @@
-const COEF = 2*1.3*1.25, all = 0, allNotMe = 1, myCurAtk = "a", always = 100;
+const COEF = 2*1.3*1.25, all = 0, allNotMe = 1, myCurAtk = "a", myCurShd = "b", always = 100;
 let comp = [], GLOBAL_TURN = 1;
 let lastDmg = 0, lastAtvDmg = 0;
 const priorityList = ["공고증"];
@@ -27,25 +27,22 @@ const boss = new Boss();
 class Champ {
    // ex) constructor(10011, "바니카", 5005, 2222, 3, "풍속성", "딜러", 100, 500)
    constructor(id, name, hp, atk, cd, el, ro, atkMag, ultMag) {
-      this.id = id; this.name = name; this.hp = hp; this.atk = atk;
+      this.id = id; this.name = name; this.hp = hp; this.curHp = hp; this.atk = atk;
       this.cd = cd; this.curCd = cd; this.element = el; this.role = ro;
       this.turnBuff = []; this.nestBuff = []; this.actTurnBuff = []; this.actNestBuff = [];
       this.curAtkAtv = 0; this.curUltAtv = 0;
       this.atkMag = atkMag; this.ultMag = ultMag;
       this.canCDChange = true; this.isLeader = false; this.isActed = false;
-      this.armor = 0;
+      this.armor = 0; this.armorUp = 1;
    }
    getArmor() {
       const tbf = [...this.turnBuff];
       let res = 0;
-      for(let bf of tbf) {
-         if (bf.turn == GLOBAL_TURN) continue;
-         if (bf.type == "아머") res += bf.size;
-      }
+      for(let bf of tbf) if (bf.type == "아머") res += bf.size;
       return res;
    }
 // [0공퍼증, 1공고증, 2받뎀증, 3일뎀증, 4받일뎀, 5궁뎀증, 6받궁뎀, 7발뎀증, 8받발뎀, 9가뎀증, 10속뎀증, 11받속뎀
-// 12평발동, 13궁발동, 14평추가, 15궁추가, 16발효증, 17받직뎀, 18받캐뎀]
+// 12평발동, 13궁발동, 14평추가, 15궁추가, 16발효증, 17받직뎀, 18받캐뎀, 19평발동고, 20궁발동고]
    getCurAtk() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
@@ -64,40 +61,42 @@ class Champ {
    getAtkAtvDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
-      return this.getCurAtk()*(1+li[2])*((this.curAtkAtv/100+li[12])*(1+li[16]))*(1+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
+      const fixAdd = li[19]*(1+li[5]+li[6]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
+      return fixAdd + this.getCurAtk()*(1+li[2])*(this.curAtkAtv/100+li[12])*(1+li[16])*(1+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
    }
    getUltAtvDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
-      return this.getCurAtk()*(1+li[2])*((this.curUltAtv/100+li[13])*(1+li[16]))*(1+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
+      const fixAdd = li[20]*(1+li[5]+li[6]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
+      return fixAdd + this.getCurAtk()*(1+li[2])*(this.curUltAtv/100+li[13])*(1+li[16])*(1+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
    }
    act_attack() {
       const atbf_tmp = [...this.actTurnBuff], anbf_tmp = [...this.actNestBuff];
-      const atbf = atbf_tmp.filter(item => item.type != "공고증");
-      const anbf = anbf_tmp.filter(item => item.type != "공고증");
-      const tmp1 = atbf_tmp.filter(item => item.type == "공고증");
-      const tmp2 = anbf_tmp.filter(item => item.type == "공고증");
+      const atbf = atbf_tmp.filter(item => item.type != "공고증" && item.type != "아머");
+      const anbf = anbf_tmp.filter(item => item.type != "공고증" && item.type != "아머");
+      const tmp1 = atbf_tmp.filter(item => item.type == "공고증" || item.type == "아머");
+      const tmp2 = anbf_tmp.filter(item => item.type == "공고증" || item.type == "아머");
 
       for(const a of atbf) {
-         if (a.act == "평" || a.act == "행동" || (a.act == "공격" && this.ultMag > 0)) to_tbf(this, a);
+         if (a.act == "평" || a.act == "행동" || (a.act == "공격" && this.atkMag > 0)) to_tbf(this, a);
       }
       for(const a of anbf) {
-         if (a.act == "평" || a.act == "행동" || (a.act == "공격" && this.ultMag > 0)) to_nbf(this, a);
+         if (a.act == "평" || a.act == "행동" || (a.act == "공격" && this.atkMag > 0)) to_nbf(this, a);
       }
       for(const a of tmp1) {
-         if (a.act == "평" || a.act == "행동" || (a.act == "공격" && this.ultMag > 0)) to_tbf(this, a);
+         if (a.act == "평" || a.act == "행동" || (a.act == "공격" && this.atkMag > 0)) to_tbf(this, a);
       }
       for(const a of tmp2) {
-         if (a.act == "평" || a.act == "행동" || (a.act == "공격" && this.ultMag > 0)) to_nbf(this, a);
+         if (a.act == "평" || a.act == "행동" || (a.act == "공격" && this.atkMag > 0)) to_nbf(this, a);
       }
       this.isActed = true;
    }
    act_ultimate() {
       const atbf_tmp = [...this.actTurnBuff], anbf_tmp = [...this.actNestBuff];
-      const atbf = atbf_tmp.filter(item => item.type != "공고증");
-      const anbf = anbf_tmp.filter(item => item.type != "공고증");
-      const tmp1 = atbf_tmp.filter(item => item.type == "공고증");
-      const tmp2 = anbf_tmp.filter(item => item.type == "공고증");
+      const atbf = atbf_tmp.filter(item => item.type != "공고증" && item.type != "아머");
+      const anbf = anbf_tmp.filter(item => item.type != "공고증" && item.type != "아머");
+      const tmp1 = atbf_tmp.filter(item => item.type == "공고증" || item.type == "아머");
+      const tmp2 = anbf_tmp.filter(item => item.type == "공고증" || item.type == "아머");
       for(const a of atbf) {
          if (a.act == "궁" || a.act == "행동" || (a.act == "공격" && this.ultMag > 0)) to_tbf(this, a);
       }
@@ -111,11 +110,6 @@ class Champ {
          if (a.act == "궁" || a.act == "행동" || (a.act == "공격" && this.ultMag > 0)) to_nbf(this, a);
       }
       this.isActed = true;
-   }
-   heal() {
-      const atbf = [...this.actTurnBuff], anbf = [...this.actNestBuff];
-      for(const a of atbf) if (a.act == "힐") to_tbf(this, a);
-      for(const a of anbf) if (a.act == "힐") to_nbf(this, a);
    }
    act_defense() {
       const atbf = [...this.actTurnBuff], anbf = [...this.actNestBuff];
@@ -125,13 +119,16 @@ class Champ {
 
       setLast0();
    }
-}
-function sortBuff(a, b) {
-   const indexA = priorityList.indexOf(a.type);
-   const indexB = priorityList.indexOf(b.type);
-   const priorityA = indexA === -1 ? -Infinity : indexA;
-   const priorityB = indexB === -1 ? -Infinity : indexB;
-   return priorityA - priorityB;
+   heal() {
+      const atbf = [...this.actTurnBuff], anbf = [...this.actNestBuff];
+      for(const a of atbf) if (a.act == "힐") to_tbf(this, a);
+      for(const a of anbf) if (a.act == "힐") to_nbf(this, a);
+   }
+   hit() {
+      const atbf = [...this.actTurnBuff], anbf = [...this.actNestBuff];
+      for(const a of atbf) if (a.act == "피격") to_tbf(this, a);
+      for(const a of anbf) if (a.act == "피격") to_nbf(this, a);
+   }
 }
 
 function nextTurn() {
@@ -150,17 +147,50 @@ function nextTurn() {
 
 // turnBuff = {type: 버프종류, size: 버프량, name: name, turn:turn}
 function tbf(me, ty, s, n, t) {
+   if (typeof s == 'string') {
+      if (s.charAt(0) == myCurAtk) {
+         let tmp = str.slice(1);
+         let thisId = tmp.slice(0, 5), per = tmp.slice(5);
+         let target = comp.filter(i => i.id == Number(thisId))[0];
+         s = Number(per) * target.getCurAtk();
+      } else if (s.charAt(0) == myCurShd) {
+         let tmp = str.slice(1);
+         let thisId = tmp.slice(0, 5), per = tmp.slice(5);
+         let target = comp.filter(i => i.id == Number(thisId))[0];
+         s = Number(per) * target.getArmor();
+      }
+   }
    if (me == all) {for(let c of comp) tbf(c, ty, s, n, t);}
-   else me.turnBuff.push({type: ty, size: s, name: n, turn: GLOBAL_TURN + t});
+   else {
+      if (ty == "아머") s = s/100;
+      me.turnBuff.push({type: ty, size: s, name: n, turn: GLOBAL_TURN + t});
+   }
 }
 // nestBuff = {type: 버프종류, size: 버프량, name: name, nest: 중첩, maxNest: 맥스중첩}
 function nbf(me, ty, s, n, e, e2) {
+   if (typeof s == 'string') {
+      if (typeof s == 'string') {
+         if (s.charAt(0) == myCurAtk) {
+            let tmp = str.slice(1);
+            let thisId = tmp.slice(0, 5), per = tmp.slice(5);
+            let target = comp.filter(i => i.id == Number(thisId))[0];
+            s = Number(per) * target.getCurAtk();
+         } else if (s.charAt(0) == myCurShd) {
+            let tmp = str.slice(1);
+            let thisId = tmp.slice(0, 5), per = tmp.slice(5);
+            let target = comp.filter(i => i.id == Number(thisId))[0];
+            s = Number(per) * target.getArmor();
+         }
+      }
+   }
+   if (ty == "아머") s = s/100;
    if (me == all) {for(let c of comp) nbf(c, ty, s, n, e, e2);}
    else {
       const exist = me.nestBuff.find(buf => buf.name == n);
       if (exist) {
          exist.nest += e;
          if (exist.nest > exist.maxNest) exist.nest = exist.maxNest;
+         if (exist.nest < 0) exist.nest = 0;
       } else me.nestBuff.push({type: ty, size: s, name: n, nest: e, maxNest: e2});
    }
 }
@@ -168,9 +198,6 @@ function nbf(me, ty, s, n, e, e2) {
 function to_tbf(me, tmp) {
    if (tmp.ex == GLOBAL_TURN) return;
    let size = tmp.size;
-   if (typeof size == 'string') {
-      if (size.charAt(0) == myCurAtk) size = Number(size.substring(1)) * me.getCurAtk();
-   }
    if (tmp.type == "힐") {
       if (tmp.who == all) for(let c of comp) c.heal();
       else if (tmp.who == allNotMe) for(let c of comp) if (c.id != me.id) c.heal();
@@ -186,9 +213,6 @@ function to_tbf(me, tmp) {
 function to_nbf(me, tmp) {
    if (tmp.ex == GLOBAL_TURN) return;
    let size = tmp.size;
-   if (typeof tmp.size == 'string') {
-      if (tmp.size.charAt(0) == myCurAtk) size = Number(tmp.size.substring(1)) * me.getCurAtk();
-   }
    if (tmp.who == all) for(let c of comp) nbf(c, tmp.type, size, tmp.name, tmp.nest, tmp.maxNest);
    if (tmp.who == allNotMe) {
       for(let c of comp) if (c.id != me.id) nbf(c, tmp.type, size, tmp.name, tmp.nest, tmp.maxNest);
@@ -212,12 +236,16 @@ function cdChange(me, size) {
    me.curCd += size;
 }
 
+
 // buff들을 리스트에 버프량만큼 담아 리턴
+const buff_ex = ["아머", "<이성치>", "<이성치>감소X"];
 function getBuffSizeList(tbf, nbf) {
-   const res = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+   const res = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
    for(const bf of tbf) {
+      if (buff_ex.includes(bf.type)) continue;
       if (bf.turn == GLOBAL_TURN) continue;
       switch(bf.type) {
+         case "아머": break;
          case "공퍼증": res[0] += bf.size/100; break;
          case "공고증": res[1] += bf.size/100; break;
          case "받뎀증": res[2] += bf.size/100; break;
@@ -237,10 +265,13 @@ function getBuffSizeList(tbf, nbf) {
          case "발효증": res[16] += bf.size/100; break;
          case "받직뎀": res[17] += bf.size/100; break;
          case "받캐뎀": res[18] += bf.size/100; break;
+         case "평발동고": res[19] += bf.size/100; break;
+         case "궁발동고": res[20] += bf.size/100; break;
          default: console.log("버프 누락 : " + bf.type);
       }
    }
    for(const bf of nbf) {
+      if (buff_ex.includes(bf.type)) continue;
       if (bf.nest > bf.maxNest) bf.nest = bf.maxNest;
       switch(bf.type) {
          case "공퍼증": res[0] += bf.size*bf.nest/100; break;
@@ -262,6 +293,8 @@ function getBuffSizeList(tbf, nbf) {
          case "발효증": res[16] += bf.size*bf.nest/100; break;
          case "받직뎀": res[17] += bf.size*bf.nest/100; break;
          case "받캐뎀": res[18] += bf.size*bf.nest/100; break;
+         case "평발동고": res[19] += bf.size*bf.nest/100; break;
+         case "궁발동고": res[20] += bf.size*bf.nest/100; break;
          default: console.log("버프 누락 : " + bf.type);
       }
    }
@@ -269,12 +302,12 @@ function getBuffSizeList(tbf, nbf) {
    for(let i = 0; i < 17; i++) res[i] += boss.li[i];
    return res;
 }
-
 function getBossBuffSizeList(tbf, nbf) {
-   const res = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+   const res = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
    for(const bf of tbf) {
       if (bf.turn == GLOBAL_TURN) continue;
       switch(bf.type) {
+         case "아머": break;
          case "공퍼증": res[0] += bf.size/100; break;
          case "공고증": res[1] += bf.size/100; break;
          case "받뎀증": res[2] += bf.size/100; break;
@@ -294,6 +327,8 @@ function getBossBuffSizeList(tbf, nbf) {
          case "발효증": res[16] += bf.size/100; break;
          case "받직뎀": res[17] += bf.size/100; break;
          case "받캐뎀": res[18] += bf.size/100; break;
+         case "평발동고": res[19] += bf.size/100; break;
+         case "궁발동고": res[20] += bf.size/100; break;
          default: console.log("버프 누락 : " + bf.type);
       }
    }
@@ -319,6 +354,8 @@ function getBossBuffSizeList(tbf, nbf) {
          case "발효증": res[16] += bf.size*bf.nest/100; break;
          case "받직뎀": res[17] += bf.size*bf.nest/100; break;
          case "받캐뎀": res[18] += bf.size*bf.nest/100; break;
+         case "평발동고": res[19] += bf.size*bf.nest/100; break;
+         case "궁발동고": res[20] += bf.size*bf.nest/100; break;
          default: console.log("버프 누락 : " + bf.type);
       }
    }
@@ -366,6 +403,16 @@ function deleteBuff(me, name) {
       if (me.nestBuff[i].name === name) me.nestBuff.splice(i, 1);
    }
 }
+function deleteBuffType(me, type) {
+   // turnBuff 배열에서 name이 일치하는 요소 제거
+   for (let i = me.turnBuff.length - 1; i >= 0; i--) {
+      if (me.turnBuff[i].type === type) me.turnBuff.splice(i, 1);
+   }
+   // nestBuff 배열에서 name이 일치하는 요소 제거
+   for (let i = me.nestBuff.length - 1; i >= 0; i--) {
+      if (me.nestBuff[i].type === type) me.nestBuff.splice(i, 1);
+   }
+}
 
 function getElementCnt(el) {let res = 0; for(let c of comp) if (c.element == el) res++; return res;}
 function getRoleCnt(ro) {let res = 0; for(let c of comp) if (c.role == ro) res++; return res;}
@@ -383,7 +430,7 @@ function getRoleIdx() {
    return res;
 }
 
-function hpUpAll(amount) {for(let c of comp) c.hp *= (1 + amount/100);}
+function hpUpAll(amount) {for(let c of comp) c.curHp = c.hp = Math.floor(c.hp * (1 + amount/100));}
 
 
 /* -------------------------------------------------------------------------------------- */
@@ -465,7 +512,7 @@ function setDefault(me) {
          }
          // 매턴 아군전체 힐(50턴) -> turnstart에 추가됨
          // 궁발동시 아군 전체 현재공200만큼 치유
-         atbf(me, "궁", all, "힐", myCurAtk+200, "전쟁의 광기4", 1, always);
+         atbf(me, "궁", all, "힐", myCurAtk+me.id+200, "전쟁의 광기4", 1, always);
 
       }
       me.passive = function() {
@@ -492,7 +539,11 @@ function setDefault(me) {
          for(let c of comp) tbf(c, "공고증", 40*me.getCurAtk(), "피로 물든 밤의 광기1", 1);
          // 딜디탱에게 공격 시 자신공 15%만큼 자신제외전부 공격력 증가 1턴 부여 (1턴)
          for(let idx of getRoleIdx("딜", "디", "탱")) {
-            atbf(comp[idx], "공격", allNotMe, "공고증", `${myCurAtk}15`, "피로 물든 밤의 광기2", 1, 1);
+            for(let c of comp) {
+               if (c.id != comp[idx].id) {
+                  atbf(comp[idx], "공격", c, "공고증", myCurAtk+comp[idx].id+15, "피로 물든 밤의 광기2", 1, 1);
+               }
+            }
          }
       }
       me.ultafter = function() {}
@@ -695,9 +746,21 @@ function setDefault(me) {
 
 // 10141 10133 10088 10119 10123
    case 10141 : // 관나나
+      me.getSAN = function() {
+         const li = [...me.nestBuff];
+         const exist = li.filter(bf => bf.type == "<이성치>");
+         return exist.length > 0 ? exist[0].nest : 0;
+      }
+      me.isSANFix = function() {
+         const li = [...me.turnBuff];
+         const exist = li.filter(bf => bf.type == "<이성치>감소X");
+         return exist.length > 0 ? true : false;
+      }
       me.ultbefore = function() { // 백발백중이다냥!
          // 아군 전체의 발동형 스킬 효과 100% 증가(6턴)
+         tbf(all, "발효증", 100, "백발백중이다냥!1", 6);
          // 타깃이 받는 풍속성 데미지 30% 증가(6턴)
+         for(let idx of getElementIdx("풍")) tbf(comp[idx], "받속뎀", 30, "백발백중이다냥!2", 6);
          // 자신의 공격 데미지의 33.3%만큼 타깃에게 6회 데미지 (199.8%)
       }
       me.ultafter = function() {}
@@ -706,104 +769,167 @@ function setDefault(me) {
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
       me.leader = function() { // 심연과의 동행
-
          // 아군 전체의 최대 hp 20% 증가
+         hpUpAll(20);
          // 아군 전체의 공격 데미지 50% 증가
+         tbf(all, "공퍼증", 50, "심연과의 동행", always);
          // 자신은 <진실 조사> 획득
          // <진실 조사>
          // 첫 번째 턴에서 자신의 현재 궁극기 cd 3턴 감소
+         cdChange(me, -3);
          // 공격 데미지 40% 증가
+         tbf(me, "공퍼증", 40, "진실 조사1", always);
          // 가하는 데미지 50% 증가
+         tbf(me, "가뎀증", 50, "진실 조사2", always);
          // 공격 시 '자신의 공격 데미지의 100%만큼 타깃에게 데미지' 발동
+         tbf(me, "평발동", 100, "진실 조사3", always);
+         tbf(me, "궁발동", 100, "진실 조사3", always);
          // 궁극기 발동 시 '타깃이 받는 풍속성 데미지 30% 증가(6턴)' 발동
+         for(let idx of getElementIdx("풍")) atbf(me, "궁", comp[idx], "속뎀증", 30, "진실 조사4", 6, always);
          // 현재 hp <= 99% 시 <붕괴 직면> 발동
+         // <붕괴 직면> : 피격 시 '자신의 <이성치> 모든 중첩 수 제거' 발동
+         me.hit = function() {
+            if (!me.isSANFix()) {
+               const per = me.curHp / me.hp * 100;
+               if (per <= 99) {
+                  nbf(me, "<이성치>", 0, "야옹이 요원 탐험 중", 0, 50);
+                  deleteBuff(me, "심연 직시");
+               }
+            }
+            const atbf = [...me.actTurnBuff], anbf = [...me.actNestBuff];
+            for(const a of atbf) if (a.act == "피격") to_tbf(me, a);
+            for(const a of anbf) if (a.act == "피격") to_nbf(me, a);
+         }
          // 방어 시 '자신은 <붕괴 직면> 효과의 영향을 받지 않음(1턴)' 발동
-         // <붕괴 직면>
-         // 피격 시 '자신의 <이성치> 모든 중첩 수 제거' 발동
+         atbf(me, "방", me, "<이성치>감소X", 0, "진실 조사6", 1, always);
       }
       me.passive = function() {
          // 야옹이 요원 탐험 중
          // 첫 번째 턴에서 '자신은 50중첩의 <이성치> 획득(최대 50)' 발동
-         // 1턴이 지날 때마다 '자신의 <이성치> 중첩 수 10 감소' 발동
-         // 심연 직시
-         // 자신의 <이성치> 중첩 수 == 50 일 시 '발동형 스킬 효과 30% 증가' 활성화
-         // 자신의 <이성치> 중첩 수 >= 40 일 시 '가하는 데미지 20% 증가' 활성화
-         // 자신의 <이성치> 중첩 수 >= 30 일 시 '공격 시 "자신의 공격 데미지의 100%만큼 타깃에게 데미지" 발동' 활성화
-         // 자신의 <이성치> 중첩 수 >= 20 일 시 '공격 데미지 65% 중가' 활성화
-         // 자신의 <이성치> 중첩 수 >= 10 일 시 '공격 데미지 65% 증가' 활성화
-         // 자신의 <이성치> 중첩 수 < 1   일 시 <잃어버린 이성> 활성화
-         // <잃어버린 이성>
-         // 1턴이 지날 때마다 <최고신의 그림자> 발동
-         // <최고신의 그림자>
-         // 자신은 50중첩의 <이성치> 획득(최대 50중첩), 자신에게 수면 부여(1턴)
-         // 정보부대 수틱 제 1조
+         nbf(me, "<이성치>", 0, "야옹이 요원 탐험 중", 50, 50);
+         // 1턴이 지날 때마다 '자신의 <이성치> 중첩 수 10 감소' 발동 => turnover로
+         // 심연 직시 => turnover로
+         
+         // 정보부대 수칙 제 1조
          // 첫 번째 턴에서 '자신의 현재 궁극기 cd 3턴 감소' 발동
+         cdChange(me, -3);
          // 궁극기 발동 시 <이성치:바보 시저> 발동
          // <이성치:바보 시저>
          // 자신의 공격 데미지의 100%만큼 타깃에게 데미지
+         tbf(me, "궁발동", 100, "이성치-바보 시저1", always);
          // 자신은 50중첩의 <이성치> 획득(최대 50중첩)
+         nbf(me, "<이성치>", 0, "야옹이 요원 탐험 중", 50, 50);
          // 자신은 '<이성치> 중첩 수 감소' 효과의 영향을 받지 않음(4턴)
+         tbf(me, "<이성치>감소X", 0, "이성치-바보 시저2", 4);
          // 발동+
          // 자신의 발동형 스킬 효과 30% 증가
+         tbf(me, "발효증", 30, "발동+", always);
       }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {
-         if (me.isLeader) {}
+         // 심연 직시
+         const san = me.getSAN();
+         console.log("이성치 : " + san)
+         // 자신의 <이성치> 중첩 수 == 50 일 시 '발동형 스킬 효과 30% 증가' 활성화
+         if (san == 50) tbf(me, "발효증", 30, "심연 직시", 1);
+         // 자신의 <이성치> 중첩 수 >= 40 일 시 '가하는 데미지 20% 증가' 활성화
+         if (san >= 40) tbf(me, "가뎀증", 20, "심연 직시", 1);
+         // 자신의 <이성치> 중첩 수 >= 30 일 시 '공격 시 "자신의 공격 데미지의 100%만큼 타깃에게 데미지" 발동' 활성화
+         if (san >= 30) {
+            tbf(me, "평발동", 100, "심연 직시", 1);
+            tbf(me, "궁발동", 100, "심연 직시", 1);
+         }
+         // 자신의 <이성치> 중첩 수 >= 20 일 시 '공격 데미지 65% 중가' 활성화
+         if (san >= 20) tbf(me, "공퍼증", 65, "심연 직시", 1);
+         // 자신의 <이성치> 중첩 수 >= 10 일 시 '공격 데미지 65% 증가' 활성화
+         if (san >= 10) tbf(me, "공퍼증", 65, "심연 직시", 1);
+         // 자신의 <이성치> 중첩 수 < 1   일 시 <잃어버린 이성> 활성화 => turnover로
       };
       me.turnover = function() {
          if (me.isLeader) {}
+         // 자신의 <이성치> 중첩 수 < 1   일 시 <잃어버린 이성> 활성화
+         // <잃어버린 이성> : 1턴이 지날 때마다 <최고신의 그림자> 발동
+         // <최고신의 그림자> : 자신은 50중첩의 <이성치> 획득(최대 50중첩)
+         if (me.getSAN() < 1) nbf(me, "<이성치>", 0, "야옹이 요원 탐험 중", 50, 50);
+         else {
+            // 패시브 : 야옹이 요원 탐험 중
+            if (!me.isSANFix()) nbf(me, "<이성치>", 0, "야옹이 요원 탐험 중", -10, 50);
+         }
       };
       return me;
    case 10133 : // 나나미
       me.ultbefore = function() { // 이것이 바로 프로 아이돌의 매력
          // 자신의 기본 공격 데미지의 70% 만큼 아군 전체의 공격 데미지 증가(4턴)
+         tbf(all, "공고증", 70*me.atk, "이것이 바로 프로 아이돌의 매력1", 4);
          // 아군 전체의 궁극기 데미지 40% 증가(4턴)
+         tbf(all, "궁뎀증", 40, "이것이 바로 프로 아이돌의 매력2", 4);
       }
       me.ultafter = function() {}
       me.ultimate = function() {ultLogic(me);};
       me.atkbefore = function() { // 한눈 팔기 없기~
          // 자신의 공격 데미지의 25%만큼 아군 전체에게 아머 강화(1턴)
+         tbf(all, "아머", 25*me.getCurAtk()*me.armorUp, "한눈 팔기 없기~1", 1);
          // 자신의 최대 hp 30%만큼 아군 전체에게 아머 강화(1턴)
+         tbf(all, "아머", 30*me.hp*me.armorUp, "한눈 팔기 없기~2", 1);
       }
-      me.atkafter = function() {}
+      me.atkafter = function() {
+         // <나나미의 형상으로 변한 것뿐> : 공격 시 '자신의 현재 아머량 100% 만큼 자신의 아머에 확정 데미지' 발동
+         if (me.isLeader) {
+            me.hit();
+            deleteBuffType(me, "아머");
+         }
+      }
       me.attack = function() {atkLogic(me);};
       me.leader = function() { // 악수회 시간이야~
          // 아군 전체의 공격 데미지 50% 증가
+         tbf(all, "공퍼증", 50, "악수회 시간이야~1", always);
          // 아군 전체의 가하는 발동형 스킬 효과 100% 증가
+         tbf(all, "발효증", 100, "악수회 시간이야~2", always);
          // 아군 전체의 가하는 데미지 20% 증가
+         tbf(all, "가뎀증", 20, "악수회 시간이야~3", always);
          // 자신은 팀에 서포터 캐릭터 2명 이상 있을 시 '받는 아머 효과 600% 감소' 발동
+         if (getRoleCnt("섶") >= 2) me.getArmor = function() {return 0;}
          // 자신 이외의 아군은 <돈은 사라지지 않아> 획득
-         // <돈은 사라지지 않아>
-         // 공격 시 '자신의 공격 데미지의 30%만큼 1번 자리 아군에게 아머 강화 부여(1턴)
+         // <돈은 사라지지 않아> : 공격 시 '자신의 공격 데미지의 30%만큼 1번 자리 아군에게 아머 강화 부여(1턴)
+         for(let c of comp) if (c.id != me.id) atbf(c, "공격", comp[0], "아머", myCurAtk+c.id+30, 1, always);
          // 자신은 <나나미의 형상으로 변한 것뿐> 획득
          // <나나미의 형상으로 변한 것뿐>
          // 일반 공격 시 '자신의 현재 아머량 55% 만큼 타깃에게 데미지' 발동
+         tbf(me, "평발동고", myCurShd+me.id+55, "나나미의 형상으로 변한 것뿐1", always);
          // 궁극기 발동 시 '자신의 현재 아머량 60%만큼 타깃에게 데미지' 발동
-         // 공격 시 '자신의 현재 아머량 100% 만큼 자신의 아머에 확정 데미지' 발동
-      
+         tbf(me, "궁발동고", myCurShd+me.id+60, "나나미의 형상으로 변한 것뿐2", always);
+         // 공격 시 '자신의 현재 아머량 100% 만큼 자신의 아머에 확정 데미지' 발동 => atkafter로
       }
       me.passive = function() {
          // 무대 준비
          // 자신이 가하는 아머 강화 효과 15% 증가
+         me.armorUp += 0.15;
          // 청순 아이돌
          // 궁극기 발동 시 '자신의 공격 데미지의 25%만큼 아군 전체에게 아머 강화(1턴)' 추가 
+         atbf(me, "궁", all, "아머", myCurAtk+me.id+(25*me.armorUp), "청순 아이돌1", 1, always);
          // 궁극기 발동 시 '자신의 최대 hp 30%만큼 아군 전체에게 아머 강화(1턴)' 추가
-         // OnlySex
-         // 1턴마다 '자신의 공격 데미지의 25%만큼 아군 전체의 공격 데미지 증가(1턴)' 발동
+         atbf(me, "궁", all, "아머", me.hp*30*me.armorUp, "청순 아이돌2", 1, always);
+
+         // OnlySex => turnstart로
+
          // 공격+
          // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격+", always);
       }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {
          if (me.isLeader) {}
+         // OnlySex : 1턴마다 '자신의 공격 데미지의 25%만큼 아군 전체의 공격 데미지 증가(1턴)' 발동
+         if (GLOBAL_TURN > 1) for(let c of comp) tbf(c, "공고증", 25*me.getCurAtk(), "OnlySex", 1);
       };
       me.turnover = function() {
          if (me.isLeader) {}
       };
       return me;
    case 10088 : // 신빨강
-      me.ultbefore = function() {// 아나스티의 특데 칵테일
+      me.ultbefore = function() {// 아나스티의 특제 칵테일
          // 타깃이 받는 데미지 20% 증가(7턴)
+         tbf(boss, "받뎀증", 20, "아나스티의 특제 칵테일", 7);
       }
       me.ultafter = function() {}
       me.ultimate = function() {ultLogic(me);};
@@ -812,32 +938,46 @@ function setDefault(me) {
       me.attack = function() {atkLogic(me);};
       me.leader = function() { // 열정적인 쌍성 점장
          // 궁극기 발동 시, '아군 전체가 가하는 데미지 35% 증가(1턴)' 발동
+         atbf(me, "궁", all, "가뎀증", 35, "열정적인 쌍성 점장", 1, always);
          // 아군 전체가 <술>, <미인>, <기도>, <예쁜 동생> 효과 획득
          // <술>
          // 팀원 중 최소 1/2/3 명의 딜러가 있을 시 각각 '공격 데미지 15/20/30% 증가' 발동
+         const dealCnt = getRoleCnt("딜");
+         if (dealCnt >= 1) tbf(all, "공퍼증", 15, "술1", always);
+         if (dealCnt >= 2) tbf(all, "공퍼증", 20, "술2", always);
+         if (dealCnt >= 3) tbf(all, "공퍼증", 30, "술3", always);
          // <미인>
          // 팀원 중 최소 1/2/3 명의 디스럽터가 있을 시 각각 '공격 데미지 15/20/30% 증가' 발동
+         const disrupterCnt = getRoleCnt("디");
+         if (disrupterCnt >= 1) tbf(all, "공퍼증", 15, "미인1", always);
+         if (disrupterCnt >= 2) tbf(all, "공퍼증", 20, "미인2", always);
+         if (disrupterCnt >= 3) tbf(all, "공퍼증", 30, "미인3", always);
          // <기도>
          // 팀원 중 최소 1명의 탱커가 있을 시 '궁극기 데미지 50% 증가' 발동
+         if (getRoleCnt("탱") >= 1) tbf(all, "궁뎀증", 50, "기도", always);
          // <예쁜 동생>
          // [푸른 은하 아나스나]가 아군 측에서 살아 있을 경우 '가하는 데미지 20% 증가' 발동
-         
+         for (let c of comp) if (c.name == "신파랑") tbf(all, "가뎀증", 20, "예쁜 동생", always);
       }
       me.passive = function() {
          // 기세등등
          // 궁극기 발동 시 '아군 전체의 궁극기 데미지 25% 증가(1턴) 발동
-         // 연애 충동
-         // 궁극기 발동 시 , <추가 주문> 효과 발동
+         atbf(me, "궁", all, "궁뎀증", 25, "기세등등", 1, always);
+         // 연애 충동 : 궁극기 발동 시 , <추가 주문> 효과 발동
          // <추가 주문>
          // 아군의 딜러와 디스럽터는 '궁극기 발동 시 "공격 데미지의 77%만큼 타깃에게 데미지" 효과 발동(1턴)' 획득
-         // 칠석의 기원
-         // 일곱 번째 턴 시작시 '아군 전체가 가하는 데미지 30% 증가(최대1중첩)' 효과 발동
+         for(let idx of getRoleIdx("딜", "디")) atbf(comp[idx], "궁", comp[idx], "궁발동", 77, "추가 주문", 1, always);
+         // 칠석의 기원 => turnstart로
+
          // 공격 데미지+
          // 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격 데미지+", always);
       }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {
          if (me.isLeader) {}
+         // 칠석의 기원 : 일곱 번째 턴 시작시 '아군 전체가 가하는 데미지 30% 증가(최대1중첩)' 효과 발동
+         if (GLOBAL_TURN == 7) nbf(all, "가뎀증", 30, "칠석의 기원", 1, 1);
       };
       me.turnover = function() {
          if (me.isLeader) {}
@@ -846,42 +986,65 @@ function setDefault(me) {
    case 10119 : // 수이카
       me.ultbefore = function() { // 아이카의 여름 칵테일
          // 아군 전체의 발동형 스킬 효과 100% 증가(3턴)
+         tbf(all, "발효증", 100, "아이카의 여름 칵테일1", 3);
          // 아군 전체가 가하는 데미지 30% 증가(3턴)
+         tbf(all, "가뎀증", 30, "아이카의 여름 칵테일2", 3);
          // 아군 전체의 공격 데미지 50% 증가(3턴)
+         tbf(all, "공퍼증", 50, "아이카의 여름 칵테일3", 3);
       }
       me.ultafter = function() {}
-      me.ultimate = function() {ultLogic(me);};
+      me.ultimate = function() {ultLogic(me);}
+      me.healTurn = [];
       me.atkbefore = function() {
          // 자신의 공격 데미지의 50%만큼 매턴 아군 전체를 치유(3턴)
+         me.healTurn.push(GLOBAL_TURN, GLOBAL_TURN+1, GLOBAL_TURN+2);
       }
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
-      me.leader = function() {
+      me.leader = function() { // 시저 님은 신이야
          // 아군 전체의 공격 데미지 50% 증가
+         tbf(all, "공퍼증", 50, "시저 님은 신이야", always);
          // 자신은 <전속 종업원> 획득
          // <전속 종업원>
          // 가하는 데미지 50% 증가
+         tbf(me, "가뎀증", 50, "전속 종업원1", always);
          // 일반 공격 시 '자신의 공격 데미지의 100% 만큼 타깃에게 데미지' 발동
+         tbf(me, "평발동", 100, "전속 종업원2", always);
          // 궁극기 발동 시 '자신의 공격 데미지의 250%만큼 타깃에게 데미지' 발동
+         tbf(me, "궁발동", 250, "전속 종업원3", always);
          // 아군 탱커는 '팀에 최소 2명 이상의 탱커가 있을 시 <시저 님은 영원히 옳다> 발동' 획득
          // <시저 님은 영원히 옳다>
-         // 가하는 데미지 50% 증가
-         // 일반 공격 시 '자신의 공격 데미지의 100%만큼 자신의 최대 hp50% 만큼 타깃에게 데미지' 발동
-         // 궁극기 발동 시 '자신의 공격 데미지의 250%만큼, 자신의 최대 hp125% 만큼 타깃에게 데미지' 발동
-         // 공격 시 '자신에게 부여된 도발 효과 및 방어 상태 해제' 발동
+         for(let idx of getRoleIdx("탱")) {
+            // 가하는 데미지 50% 증가
+            tbf(comp[idx], "가뎀증", 50, "시저 님은 영원히 옳다1", always);
+            // 일반 공격 시 '자신의 공격 데미지의 100%만큼 자신의 최대 hp50% 만큼 타깃에게 데미지' 발동
+            tbf(comp[idx], "평발동", 100, "시저 님은 영원히 옳다2", always);
+            tbf(comp[idx], "평발동고", hp*50, "시저 님은 영원히 옳다2", always);
+            // 궁극기 발동 시 '자신의 공격 데미지의 250%만큼, 자신의 최대 hp125% 만큼 타깃에게 데미지' 발동
+            tbf(comp[idx], "궁발동", 250, "시저 님은 영원히 옳다3", always);
+            tbf(comp[idx], "궁발동고", hp*125, "시저 님은 영원히 옳다3", always);
+            // 공격 시 '자신에게 부여된 도발 효과 및 방어 상태 해제' 발동
+            // TODO
+         }
       }
       me.passive = function() {
          // 메이드... 종업원 섹스 테크닉!
          // 궁극기 발동 시 '자신의 공격 데미지의 150%만큼 아군 전체를 치유' 발동
+         atbf(me, "궁", all, "힐", 150, "메이드... 종업원 섹스 테크닉!1", always)
          // 궁극기 발동 시 '자신의 공격 데미지의 250%만큼 타깃에게 데미지' 발동
+         tbf(me, "궁발동", 250, "메이드... 종업원 섹스 테크닉!2", always);
          // 아름다운 맛~
-         // 아군 전체가 받는 지속형 치유향 20% 증가
+         // TODO: 아군 전체가 받는 지속형 치유향 20% 증가
          // 공격 데미지 50% 증가
+         tbf(me, "공퍼증", 50, "아름다운 맛~", always);
          // 꾸잉 꾸잉 뀨~
          // 발동형 스킬이 가하는 데미지 75% 증가
+         tbf(me, "가뎀증", 75, "꾸잉 꾸잉 뀨~", always);
          // 궁극기 발동 시 '자신의 최대 hp15%만큼 아군 전체에게 실드 부여(1턴)' 발동
+         atbf(me, "궁", all, "아머", me.hp*15, 1, always);
          // 공격+
          // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격+", always);
       }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {
@@ -889,16 +1052,21 @@ function setDefault(me) {
       };
       me.turnover = function() {
          if (me.isLeader) {}
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp) c.heal();
+         me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me;
    case 10123 : // 악미루
       me.ultbefore = function() { // 안닌궁주 보너스!
          // 아군 전체의 발동형 스킬 효과 100% 증가(4턴)
-         
+         tbf(all, "발효증", 100, "안닌궁주 보너스!", 4);
       }
       me.ultafter = function() {
          // 아군 전체 딜러, 디스럽터가 공격 시 효과 '자신의 공격력의 59%만큼 타깃에게 데미지(3턴)' 획득
-
+         for(let idx of getRoleIdx("딜", "디")) {
+            tbf(comp[idx], "평발동", 59, "안닌궁주 보너스2", 3);
+            tbf(comp[idx], "궁발동", 59, "안닌궁주 보너스2", 3);
+         }
       }
       me.ultimate = function() {ultLogic(me);};
       me.atkbefore = function() {}
@@ -906,24 +1074,34 @@ function setDefault(me) {
       me.attack = function() {atkLogic(me);};
       me.leader = function() { // 다같이 먀먀먀
          // 아군 전체의 최대 hp 20% 증가
+         hpUpAll(20);
          // 아군 전체의 공격 데미지 70% 증가
+         tbf(all, "공퍼증", 70, "다같이 먀먀먀", always);
          // 아군 전체가 '팀원 중 3명 이상의 딜러가 있으면 <같이 먀먀먀먀먀> 발동' 획득
          // 아군 전체가 '팀원 중 2명 이상의 디스럽터가 있으면 <같이 먀먀먀먀먀> 발동' 획득
          // <같이 먀먀먀먀먀>
-         // 발동형 스킬 효과 150% 증가
-         // 가하는 데미지 30% 증가
-         // 궁극기 발동 시 '타깃이 받는 화/수/풍/광/암 속성 데미지 5% 증가(2턴)
-
+         if (getRoleCnt("딜") >= 3 || getRoleCnt("디") >= 2) {
+            // 발동형 스킬 효과 150% 증가
+            tbf(all, "발효증", 150, "같이 먀먀먀먀먀1", always);
+            // 가하는 데미지 30% 증가
+            tbf(all, "가뎀증", 30, "같이 먀먀먀먀먀2", always);
+            // 궁극기 발동 시 '타깃이 받는 화/수/풍/광/암 속성 데미지 5% 증가(2턴)
+            tbf(all, "궁", boss, "받속뎀", 5, "같이 먀먀먀먀먀3", 2, always);
+         }
       }
       me.passive = function() {
          // 18x18=88
          // 궁극기 발동 시 '자신의 공격 데미지 40% 증가(최대 2중첩)' 발동
+         anbf(me, "궁", me, "공퍼증", 40, "18x18=88", 1, 2, always);
          // 마음을 훔치는 소악마가 로그인했다고~
          // 궁극기 발동 시 '타깃이 받는 궁극기 데미지 20% 증가(4턴) 발동
+         atbf(me, "궁", boss, "받궁뎀", 40, "마음을 훔치는 소악마가 로그인했다고~", 4, always);
          // 오늘은 야한 미루 꿈 꿔
          // 궁극기 발동 시 '타깃이 받는 데미지 20% 증가(4턴)' 발동
+         atbf(me, "궁", boss, "받뎀증", 20, "오늘은 야한 미루 꿈 꿔", 4, always);
          // 궁극기+
          // 자신의 궁극기 데미지 10% 증가
+         tbf(me, "궁뎀증", 10, "궁극기+", always);
       }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {
@@ -1019,10 +1197,11 @@ function buffListToString(me) {
        "속뎀증", "받속뎀", "평발동", "궁발동", "평추가", "궁추가", "발효증", "받직뎀", "받캐뎀"];
    const strList = ["=============================================================================", `버프요약 : ${me.name}`, ""];
    strList.push(me.name == "타깃" ? `공격력 : 0` : `공격력 : ${me.getCurAtk().toFixed(0)}`);
+   strList.push("현재 아머 수치 : " + me.getArmor().toFixed(0));
    for(let i = 0; i < li.length; i++) {
       if (li[i] == 0) continue;
-      let info = (li[i]*100)+"%";
-      if (i == 1) info = Math.floor(li[1]);
+      let info = Math.floor(li[i]*100000)/1000+"%";
+      if (i == 1) info = Math.floor(li[1]); // 공고증
       strList.push(tx[i] + " : " + info);
    }
    return strList.join("\n");

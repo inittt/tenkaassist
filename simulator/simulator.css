@@ -69,3 +69,15 @@
    cursor: none;
    display:none;
 }
+.shd-container {
+   width:2.5rem;
+   background-color:rgb(154, 228, 42);
+   border-radius: 3px;
+   border:0.1rem solid white;
+}
+.shd {
+   height: 0.5rem;
+   background-color: #d1fffb;
+   width: 0;
+   border-radius: 1px;
+}
