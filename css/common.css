@@ -127,6 +127,17 @@ a {color: inherit; text-decoration: none;}
    height:1rem;
    background-color: black;
 }
+.chked {
+   border-radius: 0.5rem;
+   position:absolute;
+   left:0.2rem;
+   top:0.2rem;
+   width:2.5rem;
+   height:2.5rem;
+   background-color: black;
+   cursor: none;
+   display:none;
+}
 .z-1 {z-index: 1;}
 .z-2 {z-index: 2;}
 .z-3 {z-index: 3;}

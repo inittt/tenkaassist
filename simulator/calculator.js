@@ -1,7 +1,6 @@
 const COEF = 2*1.3*1.25, all = 0, allNotMe = 1, myCurAtk = "a", myCurShd = "b", always = 100;
 let comp = [], GLOBAL_TURN = 1;
 let lastDmg = 0, lastAtvDmg = 0;
-const priorityList = ["공고증"];
 class Boss {
    constructor() {
       // this.hp = 10854389981;
@@ -966,7 +965,10 @@ function setDefault(me) {
          // 연애 충동 : 궁극기 발동 시 , <추가 주문> 효과 발동
          // <추가 주문>
          // 아군의 딜러와 디스럽터는 '궁극기 발동 시 "공격 데미지의 77%만큼 타깃에게 데미지" 효과 발동(1턴)' 획득
-         for(let idx of getRoleIdx("딜", "디")) atbf(comp[idx], "궁", comp[idx], "궁발동", 77, "추가 주문", 1, always);
+         for(let idx of getRoleIdx("딜", "디")) {
+            if (comp[idx].id == me.id) continue;
+            atbf(me, "궁", comp[idx], "궁발동", 77, "추가 주문", 1, always);
+         }
          // 칠석의 기원 => turnstart로
 
          // 공격 데미지+

@@ -36,17 +36,16 @@ function getCharactersWithCondition(element, role, rarity, search) {
    let innerArray = [];
    for(const champ of filteredData) {
       let id = champ.id, name = champ.name, element = champ.element, role = champ.role;
-      let img, opacity = "";
-      if (selected.includes(id) && !isAny(id)) {
-         img = `${address}/images/checkmark.png`;
-         opacity = `style="opacity:0"`;
-      } else img = `${address}/images/characters/cs${id}_0_0.webp`;
-      if (isAny(id)) opacity = `style="opacity:0"`;
+      let chk_option = "none", opacity = `style="opacity:1"`;
+      let roleImg = `<img id="el_${id}" src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">`;
+      if (selected.includes(id) && !isAny(id)) chk_option = "block";
+      if (isAny(id)) {opacity = `style="opacity:0"`; roleImg = "";}
       innerArray.push(`
          <div class="character" onclick="clickedCh(${id})" style="margin:0.2rem;">
             <div style="margin:0.2rem;">
-               <img id="img_${id}" src="${img}" class="img z-1" alt="">
-               <img id="el_${id}" src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2" ${opacity}>
+               <img id="img_${id}" src="${address}/images/characters/cs${id}_0_0.webp" class="img z-1" alt="">
+               ${roleImg}
+               <img id="chk_${id}" src="${address}/images/checkmark.png" class="chked z-3" style="display:${chk_option}">
                <div class="element${element} ch_img ch_border z-4"></div>
             </div>
             <div class="text-mini">${name}</div>
@@ -113,20 +112,19 @@ function updateSelected() {
 
 // 클릭하면 체크표시 활성/비활성화, 리스트에 추가/제거
 function clickedCh(id) {
-   if (selected.length > 4) return alert("5개까지 선택 가능합니다");
-   
+   if (selected.length > 4 && !selected.includes(id)) return alert("5개까지 선택 가능합니다");
+   if (selected.length > 4 && isAny(id)) return alert("5개까지 선택 가능합니다");
+
    if (isAny(id)) selected.push(id);
    else {
       if (selected.includes(id)) {
          let index = selected.indexOf(id);
          if (index !== -1) selected.splice(index, 1);
-         document.getElementById(`img_${id}`).src = `${address}/images/characters/cs${id}_0_0.webp`;
-         document.getElementById(`el_${id}`).style.opacity = 1;
+         document.getElementById(`chk_${id}`).style.display = "none";
 
       } else {
          selected.push(id);
-         document.getElementById(`img_${id}`).src = `${address}/images/checkmark.png`;
-         document.getElementById(`el_${id}`).style.opacity = 0;
+         document.getElementById(`chk_${id}`).style.display = "block";
       }
    }
    updateSelected();
@@ -142,11 +140,8 @@ function clickedSel(div, id) {
       let index = selected.indexOf(id);
       if (index !== -1) selected.splice(index, 1);
 
-      let image = document.getElementById(`img_${id}`);
-      if (image != null) image.src = `${address}/images/characters/cs${id}_0_0.webp`;
-
-      let el = document.getElementById(`el_${id}`);
-      if (el != null) el.style.opacity = 1;
+      let chk = document.getElementById(`chk_${id}`);
+      if (chk != null) chk.style.display = "none";
    }
    updateSelected()
 }

@@ -34,7 +34,7 @@ function makeComp(list) {
             <div class="character" style="margin:0.2rem;">
                <div id="atk${idx}" style="margin:0.2rem;" onclick="do_atk(${idx})">
                   <img id="img${idx}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-                  <img id="act${idx}" src="${address}/images/icons/black.png" class="acted z-2" alt="">
+                  <div id="act${idx}" class="acted z-2"></div>
                   <div id="el${idx}" class="element${ch.element} ch_border z-4"></div>
                </div>
                <div id="cd-max${idx}" class="shd-container"><div id="shd${idx}" class="shd"></div></div>
