@@ -11,6 +11,8 @@ class Boss {
       this.turnBuff = []; this.nestBuff = []; this.actTurnBuff = []; this.actNestBuff = [];
       this.li = [];
    }
+   getCurAtk() {return 0};
+   getArmor() {return 0}
    hit() {
       const atbf = [...this.actTurnBuff], anbf = [...this.actNestBuff];
       for(const a of atbf) if (a.act == "피격") to_tbf(this, a);
@@ -61,13 +63,13 @@ class Champ {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
       const fixAdd = li[19]*(1+li[5]+li[6]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
-      return fixAdd + this.getCurAtk()*(1+li[2])*(this.curAtkAtv/100+li[12])*(1+li[16])*(1+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
+      return fixAdd + this.getCurAtk()*(1+li[2])*(this.curAtkAtv/100+li[12])*(1+0)*(1+li[16]+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
    }
    getUltAtvDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
       const fixAdd = li[20]*(1+li[5]+li[6]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
-      return fixAdd + this.getCurAtk()*(1+li[2])*(this.curUltAtv/100+li[13])*(1+li[16])*(1+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
+      return fixAdd + this.getCurAtk()*(1+li[2])*(this.curUltAtv/100+li[13])*(1+0)*(1+li[16]+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
    }
    act_attack() {
       const atbf_tmp = [...this.actTurnBuff], anbf_tmp = [...this.actNestBuff];
@@ -148,12 +150,12 @@ function nextTurn() {
 function tbf(me, ty, s, n, t) {
    if (typeof s == 'string') {
       if (s.charAt(0) == myCurAtk) {
-         let tmp = str.slice(1);
+         let tmp = s.slice(1);
          let thisId = tmp.slice(0, 5), per = tmp.slice(5);
          let target = comp.filter(i => i.id == Number(thisId))[0];
          s = Number(per) * target.getCurAtk();
       } else if (s.charAt(0) == myCurShd) {
-         let tmp = str.slice(1);
+         let tmp = s.slice(1);
          let thisId = tmp.slice(0, 5), per = tmp.slice(5);
          let target = comp.filter(i => i.id == Number(thisId))[0];
          s = Number(per) * target.getArmor();
@@ -168,23 +170,21 @@ function tbf(me, ty, s, n, t) {
 // nestBuff = {type: 버프종류, size: 버프량, name: name, nest: 중첩, maxNest: 맥스중첩}
 function nbf(me, ty, s, n, e, e2) {
    if (typeof s == 'string') {
-      if (typeof s == 'string') {
-         if (s.charAt(0) == myCurAtk) {
-            let tmp = str.slice(1);
-            let thisId = tmp.slice(0, 5), per = tmp.slice(5);
-            let target = comp.filter(i => i.id == Number(thisId))[0];
-            s = Number(per) * target.getCurAtk();
-         } else if (s.charAt(0) == myCurShd) {
-            let tmp = str.slice(1);
-            let thisId = tmp.slice(0, 5), per = tmp.slice(5);
-            let target = comp.filter(i => i.id == Number(thisId))[0];
-            s = Number(per) * target.getArmor();
-         }
+      if (s.charAt(0) == myCurAtk) {
+         let tmp = s.slice(1);
+         let thisId = tmp.slice(0, 5), per = tmp.slice(5);
+         let target = comp.filter(i => i.id == Number(thisId))[0];
+         s = Number(per) * target.getCurAtk();
+      } else if (s.charAt(0) == myCurShd) {
+         let tmp = s.slice(1);
+         let thisId = tmp.slice(0, 5), per = tmp.slice(5);
+         let target = comp.filter(i => i.id == Number(thisId))[0];
+         s = Number(per) * target.getArmor();
       }
    }
-   if (ty == "아머") s = s/100;
    if (me == all) {for(let c of comp) nbf(c, ty, s, n, e, e2);}
    else {
+      if (ty == "아머") s = s/100;
       const exist = me.nestBuff.find(buf => buf.name == n);
       if (exist) {
          exist.nest += e;
@@ -244,7 +244,6 @@ function getBuffSizeList(tbf, nbf) {
       if (buff_ex.includes(bf.type)) continue;
       if (bf.turn == GLOBAL_TURN) continue;
       switch(bf.type) {
-         case "아머": break;
          case "공퍼증": res[0] += bf.size/100; break;
          case "공고증": res[1] += bf.size/100; break;
          case "받뎀증": res[2] += bf.size/100; break;
@@ -784,7 +783,7 @@ function setDefault(me) {
          tbf(me, "평발동", 100, "진실 조사3", always);
          tbf(me, "궁발동", 100, "진실 조사3", always);
          // 궁극기 발동 시 '타깃이 받는 풍속성 데미지 30% 증가(6턴)' 발동
-         for(let idx of getElementIdx("풍")) atbf(me, "궁", comp[idx], "속뎀증", 30, "진실 조사4", 6, always);
+         for(let idx of getElementIdx("풍")) atbf(me, "궁", comp[idx], "받속뎀", 30, "진실 조사4", 6, always);
          // 현재 hp <= 99% 시 <붕괴 직면> 발동
          // <붕괴 직면> : 피격 시 '자신의 <이성치> 모든 중첩 수 제거' 발동
          me.hit = function() {
@@ -817,16 +816,15 @@ function setDefault(me) {
          // 자신의 공격 데미지의 100%만큼 타깃에게 데미지
          tbf(me, "궁발동", 100, "이성치-바보 시저1", always);
          // 자신은 50중첩의 <이성치> 획득(최대 50중첩)
-         nbf(me, "<이성치>", 0, "야옹이 요원 탐험 중", 50, 50);
+         anbf(me, "궁", me, "<이성치>", 0, "야옹이 요원 탐험 중", 50, 50, always);
          // 자신은 '<이성치> 중첩 수 감소' 효과의 영향을 받지 않음(4턴)
-         tbf(me, "<이성치>감소X", 0, "이성치-바보 시저2", 4);
+         atbf(me, "궁", me, "<이성치>감소X", 0, "이성치-바보 시저2", 4, always);
          // 발동+
          // 자신의 발동형 스킬 효과 30% 증가
          tbf(me, "발효증", 30, "발동+", always);
       }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {
-         // 심연 직시
          const san = me.getSAN();
          console.log("이성치 : " + san)
          // 자신의 <이성치> 중첩 수 == 50 일 시 '발동형 스킬 효과 30% 증가' 활성화
@@ -846,6 +844,7 @@ function setDefault(me) {
       };
       me.turnover = function() {
          if (me.isLeader) {}
+         // 심연 직시
          // 자신의 <이성치> 중첩 수 < 1   일 시 <잃어버린 이성> 활성화
          // <잃어버린 이성> : 1턴이 지날 때마다 <최고신의 그림자> 발동
          // <최고신의 그림자> : 자신은 50중첩의 <이성치> 획득(최대 50중첩)
@@ -1041,9 +1040,9 @@ function setDefault(me) {
          tbf(me, "공퍼증", 50, "아름다운 맛~", always);
          // 꾸잉 꾸잉 뀨~
          // 발동형 스킬이 가하는 데미지 75% 증가
-         tbf(me, "가뎀증", 75, "꾸잉 꾸잉 뀨~", always);
+         tbf(me, "발효증", 75, "꾸잉 꾸잉 뀨~1", always);
          // 궁극기 발동 시 '자신의 최대 hp15%만큼 아군 전체에게 실드 부여(1턴)' 발동
-         atbf(me, "궁", all, "아머", me.hp*15, 1, always);
+         atbf(me, "궁", all, "아머", me.hp*15, "꾸잉 꾸잉 뀨~2", 1, always);
          // 공격+
          // 자신의 공격 데미지 10% 증가
          tbf(me, "공퍼증", 10, "공격+", always);
@@ -1063,14 +1062,14 @@ function setDefault(me) {
          // 아군 전체의 발동형 스킬 효과 100% 증가(4턴)
          tbf(all, "발효증", 100, "안닌궁주 보너스!", 4);
       }
-      me.ultafter = function() {
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
          // 아군 전체 딜러, 디스럽터가 공격 시 효과 '자신의 공격력의 59%만큼 타깃에게 데미지(3턴)' 획득
          for(let idx of getRoleIdx("딜", "디")) {
-            tbf(comp[idx], "평발동", 59, "안닌궁주 보너스2", 3);
-            tbf(comp[idx], "궁발동", 59, "안닌궁주 보너스2", 3);
+            tbf(comp[idx], "평발동", 59, "안닌궁주 보너스!2", 3);
+            tbf(comp[idx], "궁발동", 59, "안닌궁주 보너스!2", 3);
          }
-      }
-      me.ultimate = function() {ultLogic(me);};
+      };
       me.atkbefore = function() {}
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
@@ -1097,7 +1096,7 @@ function setDefault(me) {
          anbf(me, "궁", me, "공퍼증", 40, "18x18=88", 1, 2, always);
          // 마음을 훔치는 소악마가 로그인했다고~
          // 궁극기 발동 시 '타깃이 받는 궁극기 데미지 20% 증가(4턴) 발동
-         atbf(me, "궁", boss, "받궁뎀", 40, "마음을 훔치는 소악마가 로그인했다고~", 4, always);
+         atbf(me, "궁", boss, "받궁뎀", 20, "마음을 훔치는 소악마가 로그인했다고~", 4, always);
          // 오늘은 야한 미루 꿈 꿔
          // 궁극기 발동 시 '타깃이 받는 데미지 20% 증가(4턴)' 발동
          atbf(me, "궁", boss, "받뎀증", 20, "오늘은 야한 미루 꿈 꿔", 4, always);
@@ -1194,15 +1193,15 @@ function nbfToString(me) {
 }
 function buffListToString(me) {
    const tbf = [...me.turnBuff], nbf = [...me.nestBuff];
-   const li = getBuffSizeList(tbf, nbf);
+   const li = getBossBuffSizeList(tbf, nbf);
    const tx = ["공퍼증", "공고증", "받뎀증", "일뎀증", "받일뎀", "궁뎀증", "받궁뎀", "발뎀증", "받발뎀", "가뎀증",
        "속뎀증", "받속뎀", "평발동", "궁발동", "평추가", "궁추가", "발효증", "받직뎀", "받캐뎀"];
    const strList = ["=============================================================================", `버프요약 : ${me.name}`, ""];
-   strList.push(me.name == "타깃" ? `공격력 : 0` : `공격력 : ${me.getCurAtk().toFixed(0)}`);
+   strList.push(`공격력 : ${me.getCurAtk().toFixed(0)}`);
    strList.push("현재 아머 수치 : " + me.getArmor().toFixed(0));
    for(let i = 0; i < li.length; i++) {
       if (li[i] == 0) continue;
-      let info = Math.floor(li[i]*100000)/1000+"%";
+      let info = Math.floor(li[i]*100000)/1000+"%"; // 소수점 줄이기
       if (i == 1) info = Math.floor(li[1]); // 공고증
       strList.push(tx[i] + " : " + info);
    }
