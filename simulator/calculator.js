@@ -63,13 +63,13 @@ class Champ {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
       const fixAdd = li[19]*(1+li[5]+li[6]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
-      return fixAdd + this.getCurAtk()*(1+li[2])*(this.curAtkAtv/100+li[12])*(1+0)*(1+li[16]+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
+      return fixAdd + this.getCurAtk()*(1+li[2])*(this.curAtkAtv/100+li[12])*(1+li[16]+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
    }
    getUltAtvDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
       const fixAdd = li[20]*(1+li[5]+li[6]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
-      return fixAdd + this.getCurAtk()*(1+li[2])*(this.curUltAtv/100+li[13])*(1+0)*(1+li[16]+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
+      return fixAdd + this.getCurAtk()*(1+li[2])*(this.curUltAtv/100+li[13])*(1+li[16]+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
    }
    act_attack() {
       const atbf_tmp = [...this.actTurnBuff], anbf_tmp = [...this.actNestBuff];
@@ -303,9 +303,9 @@ function getBuffSizeList(tbf, nbf) {
 function getBossBuffSizeList(tbf, nbf) {
    const res = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
    for(const bf of tbf) {
+      if (buff_ex.includes(bf.type)) continue;
       if (bf.turn == GLOBAL_TURN) continue;
       switch(bf.type) {
-         case "아머": break;
          case "공퍼증": res[0] += bf.size/100; break;
          case "공고증": res[1] += bf.size/100; break;
          case "받뎀증": res[2] += bf.size/100; break;
@@ -331,6 +331,7 @@ function getBossBuffSizeList(tbf, nbf) {
       }
    }
    for(const bf of nbf) {
+      if (buff_ex.includes(bf.type)) continue;
       if (bf.nest > bf.maxNest) bf.nest = bf.maxNest;
       switch(bf.type) {
          case "공퍼증": res[0] += bf.size*bf.nest/100; break;
@@ -799,14 +800,13 @@ function setDefault(me) {
             for(const a of anbf) if (a.act == "피격") to_nbf(me, a);
          }
          // 방어 시 '자신은 <붕괴 직면> 효과의 영향을 받지 않음(1턴)' 발동
-         atbf(me, "방", me, "<이성치>감소X", 0, "진실 조사6", 1, always);
       }
       me.passive = function() {
          // 야옹이 요원 탐험 중
          // 첫 번째 턴에서 '자신은 50중첩의 <이성치> 획득(최대 50)' 발동
          nbf(me, "<이성치>", 0, "야옹이 요원 탐험 중", 50, 50);
          // 1턴이 지날 때마다 '자신의 <이성치> 중첩 수 10 감소' 발동 => turnover로
-         // 심연 직시 => turnover로
+         // 심연 직시 => turnstart로
          
          // 정보부대 수칙 제 1조
          // 첫 번째 턴에서 '자신의 현재 궁극기 cd 3턴 감소' 발동
@@ -825,6 +825,15 @@ function setDefault(me) {
       }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {
+         // 심연 직시
+         // 자신의 <이성치> 중첩 수 < 1   일 시 <잃어버린 이성> 활성화
+         // <잃어버린 이성> : 1턴이 지날 때마다 <최고신의 그림자> 발동
+         // <최고신의 그림자> : 자신은 50중첩의 <이성치> 획득(최대 50중첩)
+         if (me.getSAN() < 1) nbf(me, "<이성치>", 0, "야옹이 요원 탐험 중", 50, 50);
+         else {
+            // 패시브 : 야옹이 요원 탐험 중
+            if (GLOBAL_TURN > 1 && !me.isSANFix()) nbf(me, "<이성치>", 0, "야옹이 요원 탐험 중", -10, 50);
+         }
          const san = me.getSAN();
          console.log("이성치 : " + san)
          // 자신의 <이성치> 중첩 수 == 50 일 시 '발동형 스킬 효과 30% 증가' 활성화
@@ -844,15 +853,6 @@ function setDefault(me) {
       };
       me.turnover = function() {
          if (me.isLeader) {}
-         // 심연 직시
-         // 자신의 <이성치> 중첩 수 < 1   일 시 <잃어버린 이성> 활성화
-         // <잃어버린 이성> : 1턴이 지날 때마다 <최고신의 그림자> 발동
-         // <최고신의 그림자> : 자신은 50중첩의 <이성치> 획득(최대 50중첩)
-         if (me.getSAN() < 1) nbf(me, "<이성치>", 0, "야옹이 요원 탐험 중", 50, 50);
-         else {
-            // 패시브 : 야옹이 요원 탐험 중
-            if (!me.isSANFix()) nbf(me, "<이성치>", 0, "야옹이 요원 탐험 중", -10, 50);
-         }
       };
       return me;
    case 10133 : // 나나미
@@ -1063,7 +1063,8 @@ function setDefault(me) {
          tbf(all, "발효증", 100, "안닌궁주 보너스!", 4);
       }
       me.ultafter = function() {}
-      me.ultimate = function() {ultLogic(me);
+      me.ultimate = function() {
+         ultLogic(me);
          // 아군 전체 딜러, 디스럽터가 공격 시 효과 '자신의 공격력의 59%만큼 타깃에게 데미지(3턴)' 획득
          for(let idx of getRoleIdx("딜", "디")) {
             tbf(comp[idx], "평발동", 59, "안닌궁주 보너스!2", 3);
