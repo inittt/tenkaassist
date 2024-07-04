@@ -25,6 +25,14 @@ class Boss {
 }
 
 const boss = new Boss();
+const priorityOrder = ["공고증", "아머"];
+function sortByPriority(a, b) {
+   const aIndex = priorityOrder.indexOf(a.type);
+   const bIndex = priorityOrder.indexOf(b.type);
+   if (aIndex === -1) return -1;
+   if (bIndex === -1) return 1;
+   return aIndex - bIndex;
+}
 class Champ {
    // ex) constructor(10011, "바니카", 5005, 2222, 3, "풍속성", "딜러", 100, 500)
    constructor(id, name, hp, atk, cd, el, ro, atkMag, ultMag) {
@@ -73,42 +81,25 @@ class Champ {
    }
    act_attack() {
       const atbf_tmp = [...this.actTurnBuff], anbf_tmp = [...this.actNestBuff];
-      const atbf = atbf_tmp.filter(item => item.type != "공고증" && item.type != "아머");
-      const anbf = anbf_tmp.filter(item => item.type != "공고증" && item.type != "아머");
-      const tmp1 = atbf_tmp.filter(item => item.type == "공고증" || item.type == "아머");
-      const tmp2 = anbf_tmp.filter(item => item.type == "공고증" || item.type == "아머");
-
-      for(const a of atbf) {
-         if (a.act == "평" || a.act == "행동" || (a.act == "공격" && this.atkMag > 0)) to_tbf(this, a);
-      }
+      const atbf = atbf_tmp.sort(sortByPriority);
+      const anbf = anbf_tmp.sort(sortByPriority);
       for(const a of anbf) {
          if (a.act == "평" || a.act == "행동" || (a.act == "공격" && this.atkMag > 0)) to_nbf(this, a);
       }
-      for(const a of tmp1) {
+      for(const a of atbf) {
          if (a.act == "평" || a.act == "행동" || (a.act == "공격" && this.atkMag > 0)) to_tbf(this, a);
-      }
-      for(const a of tmp2) {
-         if (a.act == "평" || a.act == "행동" || (a.act == "공격" && this.atkMag > 0)) to_nbf(this, a);
       }
       this.isActed = true;
    }
    act_ultimate() {
       const atbf_tmp = [...this.actTurnBuff], anbf_tmp = [...this.actNestBuff];
-      const atbf = atbf_tmp.filter(item => item.type != "공고증" && item.type != "아머");
-      const anbf = anbf_tmp.filter(item => item.type != "공고증" && item.type != "아머");
-      const tmp1 = atbf_tmp.filter(item => item.type == "공고증" || item.type == "아머");
-      const tmp2 = anbf_tmp.filter(item => item.type == "공고증" || item.type == "아머");
-      for(const a of atbf) {
-         if (a.act == "궁" || a.act == "행동" || (a.act == "공격" && this.ultMag > 0)) to_tbf(this, a);
-      }
+      const atbf = atbf_tmp.sort(sortByPriority);
+      const anbf = anbf_tmp.sort(sortByPriority);
       for(const a of anbf) {
          if (a.act == "궁" || a.act == "행동" || (a.act == "공격" && this.ultMag > 0)) to_nbf(this, a);
       }
-      for(const a of tmp1) {
+      for(const a of atbf) {
          if (a.act == "궁" || a.act == "행동" || (a.act == "공격" && this.ultMag > 0)) to_tbf(this, a);
-      }
-      for(const a of tmp2) {
-         if (a.act == "궁" || a.act == "행동" || (a.act == "공격" && this.ultMag > 0)) to_nbf(this, a);
       }
       this.isActed = true;
    }
@@ -131,6 +122,7 @@ class Champ {
       for(const a of anbf) if (a.act == "피격") to_nbf(this, a);
    }
 }
+
 
 function nextTurn() {
    GLOBAL_TURN += 1;
