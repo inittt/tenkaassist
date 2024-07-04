@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <a id="h-4" class="h-left h-box" href="${address}/recruit/">전지역모집</a>
       <a id="h-6" class="h-left h-box" href="${address}/have/">추천덱</a>
       <a id="h-7" class="h-left h-box" href="${address}/selectSimulator/">시뮬레이터</a>
-      <a id="h-7" class="h-left h-box" href="${address}/contributors/">♥</a>
+      <a id="h-8" class="h-left h-box" href="${address}/contributors/">♥</a>
       <div id="userInfo" class="user-info h-right margin-right"></div>
    `;
 
