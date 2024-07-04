@@ -34,6 +34,7 @@ function setComp() {
       if (champ == undefined || champ == null) return alert("캐릭터명이 잘못되었습니다");
       list.push(champ.id);
    }
+   boss.maxHp = 10854389981;
    makeComp(list);
    start(list);
 }

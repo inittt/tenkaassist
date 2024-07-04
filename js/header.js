@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
       <a class="h-line" href="${address}/game/">게임</a>
       <a class="h-line" href="${address}/recruit/">전지역모집</a>
       <a class="h-line" href="${address}/have/">추천덱</a>
+      <a class="h-line" href="${address}/selectSimulator/">시뮬레이터</a>
       <a class="h-line" href="${address}/contributors/">♥</a>
-      <a class="h-line" href="${address}/simulator/">계산기demo</a>
    `;
 
    let headerMain = document.createElement('header');
@@ -24,8 +24,8 @@ document.addEventListener('DOMContentLoaded', function() {
       <a id="h-3" class="h-left h-box" href="${address}/game/">게임</a>
       <a id="h-4" class="h-left h-box" href="${address}/recruit/">전지역모집</a>
       <a id="h-6" class="h-left h-box" href="${address}/have/">추천덱</a>
+      <a id="h-7" class="h-left h-box" href="${address}/selectSimulator/">시뮬레이터</a>
       <a id="h-7" class="h-left h-box" href="${address}/contributors/">♥</a>
-      <a id="h-7" class="h-left h-box" href="${address}/simulator/">계산기demo</a>
       <div id="userInfo" class="user-info h-right margin-right"></div>
    `;
 

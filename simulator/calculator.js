@@ -73,13 +73,13 @@ class Champ {
    getAtkAtvDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
-      const fixAdd = li[19]*(1+li[5]+li[6]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
+      const fixAdd = li[19]*(1+li[2])*(1+li[16]+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
       return fixAdd + this.getCurAtk()*(1+li[2])*(this.curAtkAtv/100+li[12])*(1+li[16]+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
    }
    getUltAtvDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
-      const fixAdd = li[20]*(1+li[5]+li[6]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
+      const fixAdd = li[20]*(1+li[2])*(1+li[16]+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
       return fixAdd + this.getCurAtk()*(1+li[2])*(this.curUltAtv/100+li[13])*(1+li[16]+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
    }
    act_attack() {
@@ -1002,15 +1002,15 @@ function setDefault(me) {
          tbf(me, "궁발동", 250, "전속 종업원3", always);
          // 아군 탱커는 '팀에 최소 2명 이상의 탱커가 있을 시 <시저 님은 영원히 옳다> 발동' 획득
          // <시저 님은 영원히 옳다>
-         for(let idx of getRoleIdx("탱")) {
+         if (getRoleCnt("탱") >= 2) for(let idx of getRoleIdx("탱")) {
             // 가하는 데미지 50% 증가
             tbf(comp[idx], "가뎀증", 50, "시저 님은 영원히 옳다1", always);
             // 일반 공격 시 '자신의 공격 데미지의 100%만큼 자신의 최대 hp50% 만큼 타깃에게 데미지' 발동
             tbf(comp[idx], "평발동", 100, "시저 님은 영원히 옳다2", always);
-            tbf(comp[idx], "평발동고", hp*50, "시저 님은 영원히 옳다2", always);
+            tbf(comp[idx], "평발동고", comp[idx].hp*50, "시저 님은 영원히 옳다2", always);
             // 궁극기 발동 시 '자신의 공격 데미지의 250%만큼, 자신의 최대 hp125% 만큼 타깃에게 데미지' 발동
             tbf(comp[idx], "궁발동", 250, "시저 님은 영원히 옳다3", always);
-            tbf(comp[idx], "궁발동고", hp*125, "시저 님은 영원히 옳다3", always);
+            tbf(comp[idx], "궁발동고", comp[idx].hp*125, "시저 님은 영원히 옳다3", always);
             // 공격 시 '자신에게 부여된 도발 효과 및 방어 상태 해제' 발동
             // TODO
          }
