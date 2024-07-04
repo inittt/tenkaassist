@@ -1,5 +1,5 @@
 let checkElementN, checkRoleN, checkRarityN;
-const curHeader = 5;
+const curHeader = 7;
 
 const selected = [];
 const chJsonList = chJSON.data.slice();

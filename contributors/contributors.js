@@ -1,4 +1,4 @@
-const curHeader = 7;
+const curHeader = 8;
 
 document.addEventListener("DOMContentLoaded", function() {
    loadGameUser();

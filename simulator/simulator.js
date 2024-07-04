@@ -1,5 +1,6 @@
 const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
+const curHeader = 7;
 
 document.addEventListener("DOMContentLoaded", function() {
    getdiv("bossBuffBtn").innerHTML = `
