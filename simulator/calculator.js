@@ -1097,6 +1097,70 @@ function setDefault(me) {
          if (me.isLeader) {}
       };
       return me;
+// 10144 10126 10134
+   case 10144 : // 수저
+      me.ultbefore = function() {}
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+      
+      }
+      me.passive = function() {
+      
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {}
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+      };
+      return me;
+   case 10126 : // 할쿠
+      me.ultbefore = function() {}
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+      
+      }
+      me.passive = function() {
+      
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {}
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+      };
+      return me;
+   case 10134 : // 가엘리
+      me.ultbefore = function() {}
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+      
+      }
+      me.passive = function() {
+      
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {}
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+      };
+      return me;
    default: return null;
       
    }
