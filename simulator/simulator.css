@@ -24,7 +24,7 @@
 #boss-container {
    margin-top:0.2rem;
    margin-bottom: 0.5rem;
-   width:25rem;
+   width:20rem;
    background-color:black;
    display:flex;
    flex-direction: column;
