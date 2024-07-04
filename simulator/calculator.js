@@ -1347,6 +1347,50 @@ function setDefault(me) {
          me.turnHeal = false;
       };
       return me;
+// 10139
+   case 10139 : // 불타라
+      me.ultbefore = function() {}
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+      
+      }
+      me.passive = function() {
+      
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {}
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+      };
+      return me;
+   case 10108 : // 코바알
+      me.ultbefore = function() {}
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+      
+      }
+      me.passive = function() {
+      
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {}
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+      };
+      return me; 
+   
    default: return null;
       
    }

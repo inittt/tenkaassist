@@ -1,27 +1,8 @@
-const params = new URLSearchParams(window.location.search);
-const chIds = params.get('list');
-
 document.addEventListener("DOMContentLoaded", function() {
    getdiv("bossBuffBtn").innerHTML = `
       <img class="circleImg" onclick="show_simple(-1)" src="${address}/images/icons/describe.png">
       <img class="circleImg" onclick="show_console(-1)" src="${address}/images/icons/star.png">
    `;
-   const chIdsNumber = chIds.split(",").map(Number);
-   const chNameList = [];
-   for(let id of chIdsNumber) {
-      const ch = chJSON.data.filter(item => item.id == id);
-      if (ch == undefined || ch == null || ch.length == 0) {
-         alert("캐릭터를 찾을 수 없음");
-         history.back();
-      } else {
-         const character = ch[0];
-         //TODO: 삭제?-----------
-         if (!character.ok) {alert("준비 중인 캐릭터가 포함되어 있습니다"); history.back();}
-         //---------------------
-         chNameList.push(character.name);
-      }
-   }
-   getdiv("ch_input").value = chNameList.join(" ");
 });
 
 function setComp() {
