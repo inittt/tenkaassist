@@ -147,28 +147,5 @@ function checkRarity(num) {
 /*------------------------------------------------------------------------*/
 
 
-// TODO: 지울 것 -------------------------------------------------------------
-const params = new URLSearchParams(window.location.search);
-const idList = params.get('a');
-
-document.addEventListener("DOMContentLoaded", function() {
-   if (idList == null) return;
-
-   const tmp = [];
-   for(const name of idList.split(/[,\s]+/)) {
-      const ch = findByNameOrDefault(fixName(name));
-      if (ch == null) return;
-      tmp.push(ch.id);
-   }
-   selected.push(...tmp);
-   updateSelected();
-   getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, document.getElementById('searchInput').value);
-});
-function findByNameOrDefault(name) {
-   let result = chJSON.data.find(item => item.name === name);
-   return result !== undefined ? result : null;
- }
-
-
 
 
