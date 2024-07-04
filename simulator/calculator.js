@@ -413,8 +413,18 @@ function deleteBuffType(me, type) {
    }
 }
 
-function getElementCnt(el) {let res = 0; for(let c of comp) if (c.element == el) res++; return res;}
-function getRoleCnt(ro) {let res = 0; for(let c of comp) if (c.role == ro) res++; return res;}
+function getElementCnt(el) {
+   let res = 0;
+   const element = ["화", "수", "풍", "광", "암"];
+   for(let c of comp) if (element[c.element] == el) res++; 
+   return res;
+}
+function getRoleCnt(ro) {
+   let res = 0;
+   const role = ["딜", "힐", "탱", "섶", "디"];
+   for(let c of comp) if (role[c.role] == ro) res++;
+   return res;
+}
 function getElementIdx() {
    let res = [];
    const args = Array.from(arguments);

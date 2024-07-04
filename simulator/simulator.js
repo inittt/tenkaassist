@@ -60,8 +60,8 @@ function start(compIds) {
    boss.turnBuff = [];
    boss.nestBuff = [];
    for(const id of compIds) {
-      const tmp = characterData.filter(ch => ch.id === id)[0];
-      const ch = new Champ(tmp.id, tmp.name, tmp.hp*COEF, tmp.atk*COEF, tmp.cd, tmp.el, tmp.ro, tmp.atkMag, tmp.ultMag);
+      const tmp = chJSON.data.filter(ch => ch.id === id)[0];
+      const ch = new Champ(tmp.id, tmp.name, tmp.hp*COEF, tmp.atk*COEF, tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag);
       comp.push(ch);
    }
    comp[0].isLeader = true;
