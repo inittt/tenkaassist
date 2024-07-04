@@ -443,24 +443,6 @@ function hpUpAll(amount) {for(let c of comp) c.curHp = c.hp = Math.floor(c.hp * 
 
 
 /* -------------------------------------------------------------------------------------- */
-const characterData = [
-   {id:10001, name:"바알", hp:962383, atk:254657, cd:4, el:"화", ro:"딜", atkMag:100, ultMag:422},
-   {id:10002, name:"사탄", hp:1384007, atk:177152, cd:3, el:"암", ro:"탱", atkMag:50, ultMag:0},
-   
-// 10022 10096 10098 10128 10042
-   {id:10022, name:"놀라이티", hp:922524, atk:292745, cd:4, el:"화", ro:"딜", atkMag:100, ultMag:514},
-   {id:10096, name:"로티아", hp:894179, atk:302045, cd:4, el:"암", ro:"섶", atkMag:0, ultMag:0},
-   {id:10098, name:"크즈카", hp:941125, atk:286987, cd:4, el:"광", ro:"딜", atkMag:100, ultMag:514},
-   {id:10128, name:"크이블", hp:956625, atk:282116, cd:4, el:"광", ro:"딜", atkMag:100, ultMag:514},
-   {id:10042, name:"수이블", hp:956625, atk:282116, cd:4, el:"수", ro:"딜", atkMag:100, ultMag:514},
-// 10141 10133 10088 10119 10123
-   {id:10141, name:"관나나", hp:945111, atk:285659, cd:6, el:"풍", ro:"딜", atkMag:99.9, ultMag:199.8},
-   {id:10133, name:"나나미", hp:926067, atk:291416, cd:3, el:"암", ro:"섶", atkMag:0, ultMag:0},
-   {id:10088, name:"신빨강", hp:946882, atk:285216, cd:3, el:"화", ro:"딜", atkMag:100, ultMag:397},
-   {id:10119, name:"수이카", hp:996485, atk:271044, cd:3, el:"화", ro:"힐", atkMag:0, ultMag:0},
-   {id:10123, name:"악미루", hp:930053, atk:290530, cd:3, el:"암", ro:"딜", atkMag:100, ultMag:397},
-];
-
 function setDefault(me) {
    switch(me.id) {
    case "base" :
