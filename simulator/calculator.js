@@ -45,6 +45,12 @@ class Champ {
       this.armor = 0; this.armorUp = 1;
       this.hpAtkDmg = 0; this.hpUltDmg = 0;
    }
+   getAtvEff() {
+      const tbf = [...this.turnBuff];
+      let res = 1;
+      for(let bf of tbf) if (bf.type == "발효증") res += bf.size/100;
+      return res;
+   }
    getArmor() {
       const tbf = [...this.turnBuff];
       let res = 0;
@@ -192,6 +198,7 @@ function nbf(me, ty, s, n, e, e2) {
 function to_tbf(me, tmp) {
    if (tmp.ex == GLOBAL_TURN) return;
    let size = tmp.size;
+   if (tmp.type == "아머") tmp.size *= me.getAtvEff();
    if (tmp.type == "힐") {
       if (tmp.who == all) for(let c of comp) c.heal();
       else if (tmp.who == allNotMe) for(let c of comp) if (c.id != me.id) c.heal();
@@ -1434,6 +1441,23 @@ function show_simple(idx) {
    if (idx == -1) console.log(buffListToString(boss));
    else console.log(buffListToString(comp[idx]));
 }
+function buffListToString(me) {
+   const tbf = [...me.turnBuff], nbf = [...me.nestBuff];
+   const li = getBossBuffSizeList(tbf, nbf);
+   const tx = ["공퍼증", "공고증", "받뎀증", "일뎀증", "받일뎀", "궁뎀증", "받궁뎀", "발뎀증", "받발뎀", "가뎀증",
+       "속뎀증", "받속뎀", "평발동", "궁발동", "평추가", "궁추가", "발효증", "받직뎀", "받캐뎀"];
+   const strList = ["=============================================================================", `버프요약 : ${me.name}`, ""];
+   strList.push(`HP : ${me.hp.toFixed(0)}`);
+   strList.push(`ATK : ${me.getCurAtk().toFixed(0)}`);
+   strList.push("현재 아머 수치 : " + me.getArmor().toFixed(0));
+   for(let i = 0; i < li.length; i++) {
+      if (li[i] == 0) continue;
+      let info = Math.floor(li[i]*100000)/1000+"%"; // 소수점 줄이기
+      if (i == 1) info = Math.floor(li[1]); // 공고증
+      strList.push(tx[i] + " : " + info);
+   }
+   return strList.join("\n");
+}
 function anbfToString(me) {
    const list = [...me.actNestBuff];
    const str = ["=============================================================================", `버프상세 : ${me.name}`, ""];
@@ -1469,21 +1493,4 @@ function nbfToString(me) {
       str.push(`${l.type} ${l.size*l.nest} (${l.nest}중첩) : ${l.name}`);
    }
    return str.join("\n");
-}
-function buffListToString(me) {
-   const tbf = [...me.turnBuff], nbf = [...me.nestBuff];
-   const li = getBossBuffSizeList(tbf, nbf);
-   const tx = ["공퍼증", "공고증", "받뎀증", "일뎀증", "받일뎀", "궁뎀증", "받궁뎀", "발뎀증", "받발뎀", "가뎀증",
-       "속뎀증", "받속뎀", "평발동", "궁발동", "평추가", "궁추가", "발효증", "받직뎀", "받캐뎀"];
-   const strList = ["=============================================================================", `버프요약 : ${me.name}`, ""];
-   strList.push(`HP : ${me.hp.toFixed(0)}`);
-   strList.push(`ATK : ${me.getCurAtk().toFixed(0)}`);
-   strList.push("현재 아머 수치 : " + me.getArmor().toFixed(0));
-   for(let i = 0; i < li.length; i++) {
-      if (li[i] == 0) continue;
-      let info = Math.floor(li[i]*100000)/1000+"%"; // 소수점 줄이기
-      if (i == 1) info = Math.floor(li[1]); // 공고증
-      strList.push(tx[i] + " : " + info);
-   }
-   return strList.join("\n");
 }
