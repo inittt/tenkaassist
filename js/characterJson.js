@@ -66,7 +66,7 @@ const chJSON = { data : [
 {ok : false, id : 10068, rarity : 3, fullname : "원기 충전 렌", name : "렌", element : 0, role : 1},
 {ok : false, id : 10069, rarity : 3, fullname : "사랑을 찾아서 스즈란", name : "스즈란", element : 0, role : 3},
 {ok : false, id : 10071, rarity : 3, fullname : "저주의 감시인 스타샤", name : "스타샤", element : 0, role : 0},
-{ok : false, id : 10072, rarity : 3, fullname : "새신부 바알", name : "신바알", element : 0, role : 3},
+{ok : false, id : 10072, rarity : 3, hp:958397, atk:281673, cd:4, atkMag:0, ultMag:0, fullname : "새신부 바알", name : "신바알", element : 0, role : 3},
 {ok : false, id : 10074, rarity : 3, fullname : "유키히메 이치카", name : "이치카", element : 1, role : 0},
 {ok : false, id : 10075, rarity : 3, fullname : "이상한 나라의 치즈루", name : "앨즈루", element : 2, role : 3},
 {ok : false, id : 10076, rarity : 3, fullname : "이상한 나라의 루루", name : "앨루루", element : 2, role : 0},

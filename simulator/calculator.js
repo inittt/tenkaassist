@@ -214,7 +214,7 @@ function to_nbf(me, tmp) {
    if (tmp.ex == GLOBAL_TURN) return;
    let size = tmp.size;
    if (tmp.who == all) for(let c of comp) nbf(c, tmp.type, size, tmp.name, tmp.nest, tmp.maxNest);
-   if (tmp.who == allNotMe) {
+   else if (tmp.who == allNotMe) {
       for(let c of comp) if (c.id != me.id) nbf(c, tmp.type, size, tmp.name, tmp.nest, tmp.maxNest);
    } else nbf(tmp.who, tmp.type, size, tmp.name, tmp.nest, tmp.maxNest);
 }
@@ -517,7 +517,7 @@ function setDefault(me) {
 
       }
       me.passive = function() {
-         // 극도의 흥분 : 방어시 자신의 공격 데미지 100% 증가
+         // 극도의 흥분 : 방어시 자신의 공격 데미지 100% 증가(최대 1중첩)
          anbf(me, "방", me, "공퍼증", 100, "극도의 흥분", 1, 1, always);
          // 물고 늘어지기 : 궁극기 발동 시 자신이 가하는 데미지 12% 증가(최대5)
          anbf(me, "궁", me, "가뎀증", 12, "물고 늘어지기", 1, 5, always);
@@ -580,7 +580,7 @@ function setDefault(me) {
       }
       me.turnstart = function() {
          // 패시브 피안개 : 4턴 지날 때마다 적군 전체가 받뎀증 30%(1턴)
-         if ((GLOBAL_TURN-1)%4 == 0) tbf(boss, "받뎀증", 30, "피안개", 1);
+         if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%4 == 0) tbf(boss, "받뎀증", 30, "피안개", 1);
       };
       me.turnover = function() {};
       return me;
@@ -1313,7 +1313,7 @@ function setDefault(me) {
          atbf(me, "궁", boss, "받뎀증", 30, "<슬픔을 몰아내는 빛>1", 1, always);
          // 아군 딜러, 디스럽터는 "궁극기 발동 시, '자신의 공격 데미지의 80% 만큼 타깃에게 데미지' 추가(1턴)" 획득
          for(let idx of getRoleIdx("딜", "디"))
-            atbf(comp[idx], "궁추가", 80, "<슬픔을 몰아내는 빛>2", always);
+            atbf(me, "궁", comp[idx], "궁추가", 80, "<슬픔을 몰아내는 빛>2", 1, always);
 
          // 아군 전체는 "아군에 4가지 속성의 동료가 있을 시, <아이돌 댄스팀> 발동" 획득
          let a1 = getElementCnt("화") > 0 ? 1 : 0, a2 = getElementCnt("수") > 0 ? 1 : 0;
@@ -1522,7 +1522,80 @@ function setDefault(me) {
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me; 
-   
+// 10072
+   case 10072 : // 신바알
+      me.ultbefore = function() { // 부케 임자는 이미 정해졌엉~
+         // 자신의 공격 데미지 50%만큼 자신의 공격 데미지 증가(1턴)
+         tbf(me, "공고증", myCurAtk+me.id+50, "부케 임자는 이미 정해졌엉~1", 1);
+         // 자신의 공격 데미지 75%만큼 2번 자리 아군의 공격 데미지 증가(1턴)
+         tbf(comp[1], "공고증", myCurAtk+me.id+75, "부케 임자는 이미 정해졌엉~2", 1);
+         // 아군 2번 자리의 일반 공격 데미지 100% 증가(2턴)
+         tbf(comp[1], "일뎀증", 100, "부케 임자는 이미 정해졌엉~3", 2);
+         // 아군 2번 자리의 궁극기 피해량 40% 증가(1턴)
+         tbf(comp[1], "궁뎀증", 40, "부케 임자는 이미 정해졌엉~4", 1);
+
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() { // 부케 던지기
+         // 자신의 공격 데미지 75%만큼 아군 2번 자리의 공격 데미지 증가(1턴)
+         tbf(comp[1], "공고증", myCurAtk+me.id+75, "부케 던지기", 1);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 마왕의 연애 시뮬레이션
+         // 자신의 공격 데미지 80% 증가
+         tbf(me, "공퍼증", 80, "마왕의 연애 시뮬레이션1", always);
+         // 자신의 입히는 피해량(가뎀증) 30% 증가
+         tbf(me, "가뎀증", 30, "마왕의 연애 시뮬레이션2", always);
+         // 자신의 일반 공격 데미지 125% 증가
+         tbf(me, "일뎀증", 125, "마왕의 연애 시뮬레이션3", always);
+         // 자신의 궁극기 데미지 50% 증가
+         tbf(me, "궁뎀증", 50, "마왕의 연애 시뮬레이션4", always);
+
+         // <마왕 바알이 원하는 고백> 발동
+         // 자신은 "일반 공격 시 추가 스킬 '자신의 공격 데미지 125%만큼 타깃에게 데미지'(50턴) 추가" 효과 획득
+         tbf(me, "평추가", 125, "<마왕 바알이 원하는 고백>1", 50);
+         // 자신은 "궁극기 발동 시 추가 스킬 '자신의 공격 데미지 500%만큼 타깃에게 데미지'(50턴) 추가" 효과 획득 
+         tbf(me, "궁추가", 500, "<마왕 바알이 원하는 고백>2", 50);
+      }
+      me.passive = function() {
+         // 친구의 도움은 필수!
+         // 아군 2번 자리의 공격(가하는) 데미지 25% 증가(50턴) 발동
+         tbf(comp[1], "가뎀증", 25, "친구의 도움은 필수!", 50);
+         // TODO: 아군 4번 자리가 받는 데미지 20% 감소(50턴) 발동
+
+         // 첫 번째 턴에서 "자신의 궁극기 CD 4턴 감소" 발동
+         cdChange(me, -4);
+
+         // <밀당의 매력> => turnover로
+         // 1턴마다 "자신의 공격 데미지 15% 증가(최대 8중첩)" 발동
+
+         // 시크릿 연애 대작전
+         // 2턴마다 "<밀당의 매력>이 부여한 공격 데미지 증가 상태 1중첩" 효과 발동 => turnover로
+         // 1턴마다 "자신의 공격 데미지 35%만큼 자신의 공격 데미지 증가(1턴)" 효과 발동 => turnstart로
+
+         // 공격력 증가
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격력 증가", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {}
+         // 시크릿 연애 대작전
+         // 1턴마다 "자신의 공격 데미지 35%만큼 자신의 공격 데미지 증가(1턴)" 효과 발동
+         if (GLOBAL_TURN > 1) tbf(me, "공고증", myCurAtk+me.id+35, "시크릿 연애 대작전", 1);
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+         // <밀당의 매력>
+         // 1턴마다 "자신의 공격 데미지 15% 증가(최대 8중첩)" 발동
+         nbf(me, "공퍼증", 15, "<밀당의 매력>", 1, 8);
+         // 시크릿 연애 대작전
+         // 2턴마다 "<밀당의 매력>이 부여한 공격 데미지 증가 상태 1중첩" 효과 발동
+         if (GLOBAL_TURN % 2 == 0) nbf(me, "공퍼증", 15, "<밀당의 매력>", 1, 8);
+      };
+      return me;
    default: return null;
       
    }
