@@ -231,14 +231,9 @@ function anbf(me, act, who, ty, s, n, e, e2, trn) {
    else me.actNestBuff.push({act:act, who:who, type: ty, size: s, name: n, nest: e, maxNest: e2, ex: GLOBAL_TURN + trn});
 }
 
-function cdChange(me, size) {
-   if (!me.canCDChange) return;
-   me.curCd += size;
-}
-
 
 // buff들을 리스트에 버프량만큼 담아 리턴
-const buff_ex = ["아머", "<이성치>", "<이성치>감소X", "<연쇄 트랩>"];
+const buff_ex = ["아머", "<이성치>", "<이성치>감소X", "<연쇄 트랩>", "<마법소녀의 힘>"];
 function getBuffSizeList(tbf, nbf) {
    const res = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
    for(const bf of tbf) {
@@ -416,14 +411,16 @@ function deleteBuffType(me, type) {
 
 const element = ["화", "수", "풍", "광", "암"];
 const role = ["딜", "힐", "탱", "섶", "디"];
-function getElementCnt(el) {
+function getElementCnt() {
    let res = 0;
-   for(let c of comp) if (element[c.element] == el) res++; 
+   const args = Array.from(arguments);
+   for(let i = 0; i < 5; i++) if (args.includes(element[comp[i].element])) res++;
    return res;
 }
-function getRoleCnt(ro) {
+function getRoleCnt() {
    let res = 0;
-   for(let c of comp) if (role[c.role] == ro) res++;
+   const args = Array.from(arguments);
+   for(let i = 0; i < 5; i++) if (args.includes(role[comp[i].role])) res++;
    return res;
 }
 function getElementIdx() {
@@ -440,8 +437,20 @@ function getRoleIdx() {
    return res;
 }
 
-function hpUpAll(amount) {for(let c of comp) c.curHp = c.hp = Math.floor(c.hp * (1 + amount/100));}
-
+function hpUpAll(amount) {
+   for(let c of comp) {
+      c.hp = Math.floor(c.hp * (1 + amount/100))
+      c.curHp = Math.floor(c.curHp * (1 + amount/100));
+   }
+}
+function hpUpMe(me, amount) {
+   me.hp = Math.floor(me.hp * (1 + amount/100))
+   me.curHp = Math.floor(me.curHp * (1 + amount/100));
+}
+function cdChange(me, size) {
+   if (!me.canCDChange) return;
+   me.curCd += size;
+}
 
 /* -------------------------------------------------------------------------------------- */
 function setDefault(me) {
@@ -1186,9 +1195,9 @@ function setDefault(me) {
       }
       me.getTrapNest = function() {
          const li = [...me.nestBuff]
-         const buf = li.filter(item => item.type == "<연쇄 트랩>")[0];
-         if (buf == undefined || buf == null || buf.length == 0) return 0;
-         return buf.nest > buf.maxNest ? buf.maxNest : buf.nest;
+         const buf = li.filter(item => item.type == "<연쇄 트랩>");
+         if (buf.length == 0) return 0;
+         return buf[0].nest > buf[0].maxNest ? buf[0].maxNest : buf[0].nest;
       }
       me.ultafter = function() {
          // 할로윈 미궁 : 궁발동 시 "자신의 <연쇄 트랩> 중첩 수에 따라 '타깃이 받는 화/수속성 데미지 3% 증가(1턴)'"발동
@@ -1353,40 +1362,154 @@ function setDefault(me) {
          me.turnHeal = false;
       };
       return me;
-// 10139
+// 10139 10108
    case 10139 : // 불타라
-      me.ultbefore = function() {}
-      me.ultafter = function() {}
+      me.ultbefore = function() { // 마법소녀 초건전 빔
+         // 타깃이 받는 광속성 데미지 20% 증가(최대 1중첩)
+         for(let idx of getElementIdx("광")) nbf(comp[idx], "받속뎀", 20, "마법소녀 초건전 빔1", 1, 1); 
+         // 타깃이 받는 데미지 10% 증가(최대 2중첩)
+         nbf(boss, "받뎀증", 10, "마법소녀 초건전 빔2", 1, 2);
+         // 아군 전체의 공격 데미지 10% 증가(최대 1중첩)
+         nbf(all, "공퍼증", 10, "마법소녀 초건전 빔3", 1, 1);
+      }
+      me.ultafter = function() {
+         // 서포트 변신
+         // 궁극기 발동 시 "자신의 현재 궁극기 CD 2턴 감소" 발동
+         cdChange(me, -2);
+      }
       me.ultimate = function() {ultLogic(me);};
       me.atkbefore = function() {}
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
-      me.leader = function() {
-      
+      me.leader = function() { // 이것이 바로 우정의 힘
+         let elCnt = getElementCnt("광", "화");
+         if (elCnt > 4) elCnt = 4;
+         // 자신의 <마법소녀의 힘> >= 2중첩일시 "공격 데미지 50% 증가, 가하는 데미지 20% 증가" 발동
+         if (elCnt >= 2) {
+            tbf(me, "공퍼증", 50, "이것이 바로 우정의 힘1", always);
+            tbf(me, "가뎀증", 20, "이것이 바로 우정의 힘2", always);
+         }
+         // 자신의 <마법소녀의 힘> >= 3중첩일시 "공격 시 '타깃이 받는 데미지 10% 증가(최대 4중첩)'발동" 발동
+         if (elCnt >= 3) anbf(me, "공격", boss, "받뎀증", 10, "이것이 바로 우정의 힘3", 1, 4, always);
+         // 자신의 <마법소녀의 힘> >= 4중첩일시 "궁극기 발동 시 '자신의 공격 데미지의 120%만큼 타깃에게 데미지'추가"발동
+         if (elCnt >= 4) tbf(me, "궁추가", 120, "이것이 바로 우정의 힘4", always);
+         nbf(me, "<마법소녀의 힘>", 0, "이것이 바로 우정의 힘", 4, 4);
+
+         // 아군 광/화속성 캐릭터는 <마법소녀 집결> 획득
+         for(let idx of getElementIdx("광", "화")) {
+            // <마법소녀 집결>
+            // 최대 hp30% 증가
+            hpUpMe(comp[idx], 30);
+            // 공격 데미지 100% 증가
+            tbf(comp[idx], "공퍼증", 100, "<마법소녀 집결>1", always);
+            // 가하는 데미지 20% 증가
+            tbf(comp[idx], "가뎀증", 20, "<마법소녀 집결>2", always);
+            // 궁극기 데미지 40% 증가
+            tbf(comp[idx], "궁뎀증", 40, "<마법소녀 집결>3", always);
+            // 행동 시 "1번 자리 아군은 '마법소녀의 힘(최대 4중첩) 획득" 발동(행동 후 본 효과 제거) => leader 첫줄로
+         }
       }
       me.passive = function() {
-      
+         // 서포트 변신
+         // 자신 이외의 광속성 딜러는 궁극기 CD 변동 효과 면역
+         for(let idx of getElementIdx("광")) {
+            if (me.id == comp[idx].id) continue;
+            comp[idx].canCDChange = false;
+         }
+         // 궁극기 발동 시 "자신의 현재 궁극기 CD 2턴 감소" 발동 => ultafter로
+
+         // 블링블링 베개 분쇄기
+         // 궁극기 발동 시 "자신이 가하는 데미지 15% 증가(최대 2중첩)" 발동
+         anbf(me, "궁", me, "가뎀증", 15, "블링블링 베개 분쇄기", 1, 2, always);
+
+         // 어렴풋이 보여
+         // 첫 번째 턴 시작 시 "자신의 현재 궁극기 CD 2턴 감소" 발동 => turnstart로
+
+         // 궁극기 발동 시 "타깃이 받는 광속성 데미지 20% 증가(최대 1중첩)" 발동
+         for(let idx of getElementIdx("광"))
+            anbf(me, "궁", comp[idx], "받속뎀", 20, "어렴풋이 보여", 1, 1, always);
+
+         // 궁극기+
+         // 자신의 궁극기 데미지 10% 증가
+         tbf(me, "궁뎀증", 10, "궁극기+", always);
       }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {
          if (me.isLeader) {}
+         // 어렴풋이 보여
+         // 첫 번째 턴 시작 시 "자신의 현재 궁극기 CD 2턴 감소" 발동
+         if (GLOBAL_TURN == 1) cdChange(me, -2);
       };
       me.turnover = function() {
          if (me.isLeader) {}
       };
       return me;
    case 10108 : // 코바알
-      me.ultbefore = function() {}
+      me.healTurn = [];
+      me.ultbefore = function() { // 발렌타인 초콜릿 대방출~
+         // 자신의 공격 데미지의 20%만큼 동료 전체의 공격 데미지 증가(1턴)
+         for(let c of comp) if (c.id != me.id)
+            tbf(c, "공고증", myCurAtk+me.id+20, "발렌타인 초콜릿 대방출~1", 1);
+         // 타깃이 받는 데미지 30% 증가(최대 2중첩)
+         nbf(boss, "받뎀증", 30, "발렌타인 초콜릿 대방출~2", 1, 2);
+         // 자신의 공격 데미지의 150%만큼 매턴 아군 전체를 치유(3턴)
+         me.healTurn.push(GLOBAL_TURN, GLOBAL_TURN+1, GLOBAL_TURN+2);
+      }
       me.ultafter = function() {}
       me.ultimate = function() {ultLogic(me);};
-      me.atkbefore = function() {}
+      me.atkbefore = function() { // 달콤한 맛
+         // 자신의 공격 데미지의 20%만큼 동료 전체의 공격 데미지 증가(1턴)
+         for(let c of comp) if (c.id != me.id)
+            tbf(c, "공고증", myCurAtk+me.id+20, "달콤한 맛", 1);
+         // 자신의 공격 데미지의 20%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+         // 자신의 공격 데미지의 20%만큼 매턴 아군 전체를 치유(2턴)
+         me.healTurn.push(GLOBAL_TURN, GLOBAL_TURN+1);
+      }
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
-      me.leader = function() {
-      
+      me.leader = function() { // 연애하는 소녀의 기분이란
+         // 아군 전체의 최대 hp20% 증가
+         hpUpAll(20);
+         // 아군 전체의 공격 데미지 50% 증가
+         tbf(all, "공퍼증", 50, "연애하는 소녀의 기분이란", always);
+
+         // 아군 전체는 "팀에 화속성 동료가 최소 3명일 경우 <모두 함께 초콜릿을 만들어보자> 발동" 획득
+         if (getElementCnt("화") >= 3) {
+            // <모두 함께 초콜릿을 만들어보자>
+            // 궁극기 발동 시 "타깃이 받는 궁극기 데미지 15% 증가(2턴)" 발동
+            atbf(all, "궁", boss, "받궁뎀", 15, "<모두 함께 초콜릿을 만들어보자>1", 2, always);
+            // 궁극기 발동 시 "타깃이 받는 화속성 데미지 15% 증가(2턴)" 발동
+            for(let idx of getElementIdx("화"))
+               atbf(all, "궁", comp[idx], "받속뎀", 15, "<모두 함께 초콜릿을 만들어보자>2", 2, always);
+         }
+
+         // 3번 자리 동료는 <가장 사랑하는 그대에게> 획득
+         // <가장 사랑하는 그대에게>
+         // 공격 데미지 70% 증가
+         tbf(comp[2], "공퍼증", 70, "<가장 사랑하는 그대에게>1", always);
+         // 궁극기 발동 시 "자신이 가하는 데미지 20% 증가(최대 2중첩)" 발동
+         atbf(comp[2], "궁", comp[2], "가뎀증", 20, "<가장 사랑하는 그대에게>2", 1, 2, always);
       }
       me.passive = function() {
-      
+         // 상인의 마케팅 전략
+         // TODO: 최대 hp가 가장 낮은 아군은 "받는 피해 15% 감소" 획득
+
+         // 사랑에 사랑을 더해줄게
+         // TODO: 아군 전체가 받는 궁극기 데미지 10% 감소
+         // TODO: 궁극기 발동 시 "아군 전체가 받는 치유 회복량 20% 증가(최대 2중첩)" 발동
+
+         // 초콜릿? 차? 아니면 나?
+         // 아군 힐러, 서포터는 <격정의 밤> 획득
+         for(let idx of getRoleIdx("힐", "섶")) {
+            // <격정의 밤>
+            // 공격 데미지 40% 증가
+            tbf(comp[idx], "공퍼증", 40, "<격정의 밤>", always);
+            // TODO: 방어 시 "아군 전체가 받는 지속형 치유 20% 증가(1턴)" 발동
+         }
+         // 공격 데미지+
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격 데미지+", always);
       }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {
@@ -1394,6 +1517,9 @@ function setDefault(me) {
       };
       me.turnover = function() {
          if (me.isLeader) {}
+         // 매턴 아군 전체를 치유
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp) c.heal();
+         me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me; 
    
@@ -1415,8 +1541,6 @@ function atkLogic(me) {
    me.act_attack();
    bossAtkAtvAttack(me);
 }
-function hpUpAll(amount) {for(let c of comp) c.hp *= (1+amount/100);}
-function hpUpMe(me, amount) {me.hp *= (1+amount/100);}
 
 
 
