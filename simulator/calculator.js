@@ -198,7 +198,6 @@ function nbf(me, ty, s, n, e, e2) {
 function to_tbf(me, tmp) {
    if (tmp.ex == GLOBAL_TURN) return;
    let size = tmp.size;
-   if (tmp.type == "아머") tmp.size *= me.getAtvEff();
    if (tmp.type == "힐") {
       if (tmp.who == all) for(let c of comp) c.heal();
       else if (tmp.who == allNotMe) for(let c of comp) if (c.id != me.id) c.heal();
