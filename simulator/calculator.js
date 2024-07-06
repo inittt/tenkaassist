@@ -36,7 +36,8 @@ function sortByPriority(a, b) {
 class Champ {
    // ex) constructor(10011, "바니카", 5005, 2222, 3, "풍속성", "딜러", 100, 500)
    constructor(id, name, hp, atk, cd, el, ro, atkMag, ultMag) {
-      this.id = id; this.name = name; this.hp = hp; this.curHp = hp; this.atk = atk;
+      this.id = id; this.name = name; this.atk = atk;
+      this.hp = hp; this.curHp = hp; this.hpUp = 0;
       this.cd = cd; this.curCd = cd; this.element = el; this.role = ro;
       this.turnBuff = []; this.nestBuff = []; this.actTurnBuff = []; this.actNestBuff = [];
       this.curAtkAtv = 0; this.curUltAtv = 0;
@@ -437,15 +438,13 @@ function getRoleIdx() {
    return res;
 }
 
-function hpUpAll(amount) {
+function hpUpAll(amount) {for(let c of comp) c.hpUp += amount;}
+function hpUpMe(me, amount) {me.hpUp += amount;}
+function setHpUp() {
    for(let c of comp) {
-      c.hp = Math.floor(c.hp * (1 + amount/100))
-      c.curHp = Math.floor(c.curHp * (1 + amount/100));
+      c.hp = Math.floor(c.hp * (1 + c.hpUp/100))
+      c.curHp = Math.floor(c.curHp * (1 + c.hpUp/100));
    }
-}
-function hpUpMe(me, amount) {
-   me.hp = Math.floor(me.hp * (1 + amount/100))
-   me.curHp = Math.floor(me.curHp * (1 + amount/100));
 }
 function cdChange(me, size) {
    if (!me.canCDChange) return;
@@ -453,8 +452,7 @@ function cdChange(me, size) {
 }
 
 /* -------------------------------------------------------------------------------------- */
-function setDefault(me) {
-   switch(me.id) {
+function setDefault(me) {switch(me.id) {
    case "base" :
       me.ultbefore = function() {}
       me.ultafter = function() {}
@@ -462,25 +460,13 @@ function setDefault(me) {
       me.atkbefore = function() {}
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
-      me.leader = function() {
-      
-      }
-      me.passive = function() {
-      
-      }
+      me.leader = function() {}
+      me.passive = function() {}
       me.defense = function() {me.act_defense();}
-      me.turnstart = function() {
-         if (me.isLeader) {}
-      };
-      me.turnover = function() {
-         if (me.isLeader) {}
-      };
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
       return me;
-
-
-      
-// 10022 10096 10098 10128 10042
-   case 10022 : // 놀라이티
+   case 10022 : // 놀라이티   ok
       me.ultbefore = function() {
          // 궁사용시 타깃은 피격 시 놀라에게 받는 데미지 15% 증가 1중첩(추가타에 적용)
          nbf(me, "받캐뎀", 15, "배 가르기1", 1, 8);
@@ -534,7 +520,190 @@ function setDefault(me) {
       };
       me.turnover = function() {};
       return me;
-   case 10096 : // 로티아
+   case 10042 : // 수이블     ok
+      me.ultbefore = function() {
+         // 소녀의 연심은 무적!1 : 아군 수, 화 공퍼증 40%(1턴)
+         for(let idx of getElementIdx("화", "수")) tbf(comp[idx], "공퍼증", 40, "소녀의 연심은 무적!1", 1);
+         // 소녀의 연심은 무적!2 : 아군 수, 화 받속뎀 15%(2중첩)
+         for(let idx of getElementIdx("화", "수")) nbf(comp[idx], "받속뎀", 15, "소녀의 연심은 무적!2", 1, 2);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 고품격 우아함! 이블리스의 초호화 리조트!
+         // 아군 전체의 공퍼증 100%
+         tbf(all, "공퍼증", 100, "이블리스의 초호화 리조트!", always);
+         // 자신이 공격 시 아군 전체가 최대hp 25% 아머 획득
+
+         // 아군 전체가 딜러이면 모두 여름 만끽 발동
+         if (getRoleCnt("딜") == 5) {
+            // 여름 만끽1 : 공격 시 아군 전체를 치유
+            atbf(all, "공격", all, "힐", 1, "여름 만끽 1", 1, always);
+            // 여름 만끽2 : 궁발동시 아군 전체 아머 부여(1턴)
+            // 여름 만끽3 : 공격시 아군 전체의 궁뎀증 5% (10중첩)
+            anbf(all, "공격", all, "궁뎀증", 5, "여름 만끽3", 1, 10, always);
+            // 여름 만끽4 : 공격시 수/화받속뎀 3% (10중첩)
+            for(let idx of getElementIdx("수", "화")) anbf(all, "공격", comp[idx], "받속뎀", 3, "여름 만끽4", 1, 10, always);
+         }
+      }
+      me.passive = function() {
+         // 여름 해변의 꽃1 : 방어 시 수/화 아군이 받는 치유량 50% 증가
+         // 여름 해변의 꽃2 : 궁발동시 수/화 아군의 공퍼증 15% 증가 (2중첩)
+         for(let idx of getElementIdx("수", "화"))
+            anbf(me, "궁", comp[idx], "공퍼증", 15, "여름 해변의 꽃2", 1, 2, always);
+         // 나에게 굴복하라 : 가뎀증 25% 증가
+         tbf(me, "가뎀증", 25, "나에게 굴복하라!", always);
+         // 공격력 증가 : 자신의 공퍼증 10%
+         tbf(me, "공퍼증", 10, "공격력 증가", always);
+      }
+      me.defense = function() {
+         me.act_defense();
+      }
+      me.turnstart = function() {
+         // 패시브 오만하구나! : 4턴마다 타깃이 받는 수/화속뎀증 40% (1턴)
+         if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%4 == 0) {
+            for(let idx of getElementIdx("수", "화")) tbf(comp[idx], "받속뎀", 40, "오만하구나!", 1);
+         }
+      };
+      me.turnover = function() {};
+      return me;
+   case 10072 : // 신바알     ok
+      me.ultbefore = function() { // 부케 임자는 이미 정해졌엉~
+         // 자신의 공격 데미지 50%만큼 자신의 공격 데미지 증가(1턴)
+         tbf(me, "공고증", myCurAtk+me.id+50, "부케 임자는 이미 정해졌엉~1", 1);
+         // 자신의 공격 데미지 75%만큼 2번 자리 아군의 공격 데미지 증가(1턴)
+         tbf(comp[1], "공고증", myCurAtk+me.id+75, "부케 임자는 이미 정해졌엉~2", 1);
+         // 아군 2번 자리의 일반 공격 데미지 100% 증가(2턴)
+         tbf(comp[1], "일뎀증", 100, "부케 임자는 이미 정해졌엉~3", 2);
+         // 아군 2번 자리의 궁극기 피해량 40% 증가(1턴)
+         tbf(comp[1], "궁뎀증", 40, "부케 임자는 이미 정해졌엉~4", 1);
+
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() { // 부케 던지기
+         // 자신의 공격 데미지 75%만큼 아군 2번 자리의 공격 데미지 증가(1턴)
+         tbf(comp[1], "공고증", myCurAtk+me.id+75, "부케 던지기", 1);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 마왕의 연애 시뮬레이션
+         // 자신의 공격 데미지 80% 증가
+         tbf(me, "공퍼증", 80, "마왕의 연애 시뮬레이션1", always);
+         // 자신의 입히는 피해량(가뎀증) 30% 증가
+         tbf(me, "가뎀증", 30, "마왕의 연애 시뮬레이션2", always);
+         // 자신의 일반 공격 데미지 125% 증가
+         tbf(me, "일뎀증", 125, "마왕의 연애 시뮬레이션3", always);
+         // 자신의 궁극기 데미지 50% 증가
+         tbf(me, "궁뎀증", 50, "마왕의 연애 시뮬레이션4", always);
+
+         // <마왕 바알이 원하는 고백> 발동
+         // 자신은 "일반 공격 시 추가 스킬 '자신의 공격 데미지 125%만큼 타깃에게 데미지'(50턴) 추가" 효과 획득
+         tbf(me, "평추가", 125, "<마왕 바알이 원하는 고백>1", 50);
+         // 자신은 "궁극기 발동 시 추가 스킬 '자신의 공격 데미지 500%만큼 타깃에게 데미지'(50턴) 추가" 효과 획득 
+         tbf(me, "궁추가", 500, "<마왕 바알이 원하는 고백>2", 50);
+      }
+      me.passive = function() {
+         // 친구의 도움은 필수!
+         // 아군 2번 자리의 공격(가하는) 데미지 25% 증가(50턴) 발동
+         tbf(comp[1], "가뎀증", 25, "친구의 도움은 필수!", 50);
+         // TODO: 아군 4번 자리가 받는 데미지 20% 감소(50턴) 발동
+
+         // 첫 번째 턴에서 "자신의 궁극기 CD 4턴 감소" 발동
+         cdChange(me, -4);
+
+         // <밀당의 매력> => turnover로
+         // 1턴마다 "자신의 공격 데미지 15% 증가(최대 8중첩)" 발동
+
+         // 시크릿 연애 대작전
+         // 2턴마다 "<밀당의 매력>이 부여한 공격 데미지 증가 상태 1중첩" 효과 발동 => turnover로
+         // 1턴마다 "자신의 공격 데미지 35%만큼 자신의 공격 데미지 증가(1턴)" 효과 발동 => turnstart로
+
+         // 공격력 증가
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격력 증가", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {}
+         // 시크릿 연애 대작전
+         // 1턴마다 "자신의 공격 데미지 35%만큼 자신의 공격 데미지 증가(1턴)" 효과 발동
+         if (GLOBAL_TURN > 1) tbf(me, "공고증", myCurAtk+me.id+35, "시크릿 연애 대작전", 1);
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+         // <밀당의 매력>
+         // 1턴마다 "자신의 공격 데미지 15% 증가(최대 8중첩)" 발동
+         nbf(me, "공퍼증", 15, "<밀당의 매력>", 1, 8);
+         // 시크릿 연애 대작전
+         // 2턴마다 "<밀당의 매력>이 부여한 공격 데미지 증가 상태 1중첩" 효과 발동
+         if (GLOBAL_TURN % 2 == 0) nbf(me, "공퍼증", 15, "<밀당의 매력>", 1, 8);
+      };
+      return me;
+   case 10088 : // 신빨강     ok
+      me.ultbefore = function() {// 아나스티의 특제 칵테일
+         // 타깃이 받는 데미지 20% 증가(7턴)
+         tbf(boss, "받뎀증", 20, "아나스티의 특제 칵테일", 7);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 열정적인 쌍성 점장
+         // 궁극기 발동 시, '아군 전체가 가하는 데미지 35% 증가(1턴)' 발동
+         atbf(me, "궁", all, "가뎀증", 35, "열정적인 쌍성 점장", 1, always);
+         // 아군 전체가 <술>, <미인>, <기도>, <예쁜 동생> 효과 획득
+         // <술>
+         // 팀원 중 최소 1/2/3 명의 딜러가 있을 시 각각 '공격 데미지 15/20/30% 증가' 발동
+         const dealCnt = getRoleCnt("딜");
+         if (dealCnt >= 1) tbf(all, "공퍼증", 15, "술1", always);
+         if (dealCnt >= 2) tbf(all, "공퍼증", 20, "술2", always);
+         if (dealCnt >= 3) tbf(all, "공퍼증", 30, "술3", always);
+         // <미인>
+         // 팀원 중 최소 1/2/3 명의 디스럽터가 있을 시 각각 '공격 데미지 15/20/30% 증가' 발동
+         const disrupterCnt = getRoleCnt("디");
+         if (disrupterCnt >= 1) tbf(all, "공퍼증", 15, "미인1", always);
+         if (disrupterCnt >= 2) tbf(all, "공퍼증", 20, "미인2", always);
+         if (disrupterCnt >= 3) tbf(all, "공퍼증", 30, "미인3", always);
+         // <기도>
+         // 팀원 중 최소 1명의 탱커가 있을 시 '궁극기 데미지 50% 증가' 발동
+         if (getRoleCnt("탱") >= 1) tbf(all, "궁뎀증", 50, "기도", always);
+         // <예쁜 동생>
+         // [푸른 은하 아나스나]가 아군 측에서 살아 있을 경우 '가하는 데미지 20% 증가' 발동
+         for (let c of comp) if (c.name == "신파랑") tbf(all, "가뎀증", 20, "예쁜 동생", always);
+      }
+      me.passive = function() {
+         // 기세등등
+         // 궁극기 발동 시 '아군 전체의 궁극기 데미지 25% 증가(1턴) 발동
+         atbf(me, "궁", all, "궁뎀증", 25, "기세등등", 1, always);
+         // 연애 충동 : 궁극기 발동 시 , <추가 주문> 효과 발동
+         // <추가 주문>
+         // 아군의 딜러와 디스럽터는 '궁극기 발동 시 "공격 데미지의 77%만큼 타깃에게 데미지" 효과 발동(1턴)' 획득
+         for(let idx of getRoleIdx("딜", "디")) {
+            if (comp[idx].id == me.id) continue;
+            atbf(me, "궁", comp[idx], "궁발동", 77, "추가 주문", 1, always);
+         }
+         // 칠석의 기원 => turnstart로
+
+         // 공격 데미지+
+         // 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {}
+         // 칠석의 기원 : 일곱 번째 턴 시작시 '아군 전체가 가하는 데미지 30% 증가(최대1중첩)' 효과 발동
+         if (GLOBAL_TURN == 7) nbf(all, "가뎀증", 30, "칠석의 기원", 1, 1);
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+      };
+      return me;
+   case 10096 : // 로티아     ok
       me.ultbefore = function() {
          // 아군 전체는 자신의 현재 공40%만큼 공격력 증가 (1턴)
          for(let c of comp) tbf(c, "공고증", 40*me.getCurAtk(), "피로 물든 밤의 광기1", 1);
@@ -584,7 +753,350 @@ function setDefault(me) {
       };
       me.turnover = function() {};
       return me;
-   case 10128 : // 크이블
+   case 10098 : // 크즈카     ok
+      me.ultbefore = function() {
+         // 연쇄 트랩 : 타깃이 받는 궁극기 데미지 22.5%증가 (2중첩)
+         nbf(boss, "받궁뎀", 22.5, "연쇄 트랩!", 1, 2);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 함께 놀수록 재밌는 법~
+         // 아군 전체의 공격 데미지 40% 증가
+         tbf(all, "공퍼증", 40, "함께 놀수록 재밌는 법~1", always);
+         // 아군 전체의 최대 hp 10% 증가
+         hpUpAll(10);
+         // 아군 전체가 크리스마스 최고! 획득
+         // 크리스마스 최고!1 : 탱커가 있으면 아군 전체가 공퍼증 50%
+         if (getRoleCnt("탱") > 0) tbf(all, "공퍼증", 50, "크리스마스 최고!1", always);
+         // 크리스마스 최고!2 : 2명이상 광속성이면 아군 전체가 공퍼증 25%
+         if (getElementCnt("광") >= 2) tbf(all, "공퍼증", 25, "크리스마스 최고!2", always);
+         // 크리스마스 최고!3 : 화속성 있으면 아군 전체가 공퍼증 25%
+         if (getElementCnt("화") > 0) tbf(all, "공퍼증", 25, "크리스마스 최고!3", always);
+      }
+      me.passive = function() {
+         // 시험작 999호 : 자신의 가뎀증 35%
+         tbf(me, "가뎀증", 35, "시험작 999호1", always);
+         // 공격+ : 자신의 공퍼증 10%
+         tbf(me, "공퍼증", 10, "공격+", always);
+         // 패시브 : 궁사용시 다방구 시작~ 4중첩만큼 데미지 추가
+         anbf(me, "궁", boss, "받뎀증", 5, "다방구 시작~", 4, 11, always);
+      }
+      me.defense = function() {
+         me.act_defense();
+      }
+      me.turnstart = function() {
+         if (me.isLeader) {
+            // 리더 : 5번째 턴에서 아군전체 궁뎀증 30% (1중첩)
+            if (GLOBAL_TURN == 5) nbf(all, "궁뎀증", 30, "함께 놀수록 재밌는 법~2", 1, 1);
+            // 리더 : 9번째 턴에서 아군 천체 가뎀증 20% (1중첩)
+            if (GLOBAL_TURN == 9) nbf(all, "가뎀증", 20, "함께 놀수록 재밌는 법~3", 1, 1);
+         }
+      };
+      me.turnover = function() {
+         // 패시브 다방구 시작~ : 1턴마다 받뎀증 5% (11중첩)
+         nbf(boss, "받뎀증", 5, "다방구 시작~", 1, 11);
+      };
+      return me;
+   case 10108 : // 코바알     ok
+      me.healTurn = [];
+      me.ultbefore = function() { // 발렌타인 초콜릿 대방출~
+         // 자신의 공격 데미지의 20%만큼 동료 전체의 공격 데미지 증가(1턴)
+         for(let c of comp) if (c.id != me.id)
+            tbf(c, "공고증", myCurAtk+me.id+20, "발렌타인 초콜릿 대방출~1", 1);
+         // 타깃이 받는 데미지 30% 증가(최대 2중첩)
+         nbf(boss, "받뎀증", 30, "발렌타인 초콜릿 대방출~2", 1, 2);
+         // 자신의 공격 데미지의 150%만큼 매턴 아군 전체를 치유(3턴)
+         me.healTurn.push(GLOBAL_TURN, GLOBAL_TURN+1, GLOBAL_TURN+2);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() { // 달콤한 맛
+         // 자신의 공격 데미지의 20%만큼 동료 전체의 공격 데미지 증가(1턴)
+         for(let c of comp) if (c.id != me.id)
+            tbf(c, "공고증", myCurAtk+me.id+20, "달콤한 맛", 1);
+         // 자신의 공격 데미지의 20%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+         // 자신의 공격 데미지의 20%만큼 매턴 아군 전체를 치유(2턴)
+         me.healTurn.push(GLOBAL_TURN, GLOBAL_TURN+1);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 연애하는 소녀의 기분이란
+         // 아군 전체의 최대 hp20% 증가
+         hpUpAll(20);
+         // 아군 전체의 공격 데미지 50% 증가
+         tbf(all, "공퍼증", 50, "연애하는 소녀의 기분이란", always);
+
+         // 아군 전체는 "팀에 화속성 동료가 최소 3명일 경우 <모두 함께 초콜릿을 만들어보자> 발동" 획득
+         if (getElementCnt("화") >= 3) {
+            // <모두 함께 초콜릿을 만들어보자>
+            // 궁극기 발동 시 "타깃이 받는 궁극기 데미지 15% 증가(2턴)" 발동
+            atbf(all, "궁", boss, "받궁뎀", 15, "<모두 함께 초콜릿을 만들어보자>1", 2, always);
+            // 궁극기 발동 시 "타깃이 받는 화속성 데미지 15% 증가(2턴)" 발동
+            for(let idx of getElementIdx("화"))
+               atbf(all, "궁", comp[idx], "받속뎀", 15, "<모두 함께 초콜릿을 만들어보자>2", 2, always);
+         }
+
+         // 3번 자리 동료는 <가장 사랑하는 그대에게> 획득
+         // <가장 사랑하는 그대에게>
+         // 공격 데미지 70% 증가
+         tbf(comp[2], "공퍼증", 70, "<가장 사랑하는 그대에게>1", always);
+         // 궁극기 발동 시 "자신이 가하는 데미지 20% 증가(최대 2중첩)" 발동
+         atbf(comp[2], "궁", comp[2], "가뎀증", 20, "<가장 사랑하는 그대에게>2", 1, 2, always);
+      }
+      me.passive = function() {
+         // 상인의 마케팅 전략
+         // TODO: 최대 hp가 가장 낮은 아군은 "받는 피해 15% 감소" 획득
+
+         // 사랑에 사랑을 더해줄게
+         // TODO: 아군 전체가 받는 궁극기 데미지 10% 감소
+         // TODO: 궁극기 발동 시 "아군 전체가 받는 치유 회복량 20% 증가(최대 2중첩)" 발동
+
+         // 초콜릿? 차? 아니면 나?
+         // 아군 힐러, 서포터는 <격정의 밤> 획득
+         for(let idx of getRoleIdx("힐", "섶")) {
+            // <격정의 밤>
+            // 공격 데미지 40% 증가
+            tbf(comp[idx], "공퍼증", 40, "<격정의 밤>", always);
+            // TODO: 방어 시 "아군 전체가 받는 지속형 치유 20% 증가(1턴)" 발동
+         }
+         // 공격 데미지+
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {}
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+         // 매턴 아군 전체를 치유
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp) c.heal();
+         me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
+      };
+      return me; 
+   case 10119 : // 수이카     ok
+      me.ultbefore = function() { // 아이카의 여름 칵테일
+         // 아군 전체의 발동형 스킬 효과 100% 증가(3턴)
+         tbf(all, "발효증", 100, "아이카의 여름 칵테일1", 3);
+         // 아군 전체가 가하는 데미지 30% 증가(3턴)
+         tbf(all, "가뎀증", 30, "아이카의 여름 칵테일2", 3);
+         // 아군 전체의 공격 데미지 50% 증가(3턴)
+         tbf(all, "공퍼증", 50, "아이카의 여름 칵테일3", 3);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);}
+      me.healTurn = [];
+      me.atkbefore = function() {
+         // 자신의 공격 데미지의 50%만큼 매턴 아군 전체를 치유(3턴)
+         me.healTurn.push(GLOBAL_TURN, GLOBAL_TURN+1, GLOBAL_TURN+2);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 시저 님은 신이야
+         // 아군 전체의 공격 데미지 50% 증가
+         tbf(all, "공퍼증", 50, "시저 님은 신이야", always);
+         // 자신은 <전속 종업원> 획득
+         // <전속 종업원>
+         // 가하는 데미지 50% 증가
+         tbf(me, "가뎀증", 50, "전속 종업원1", always);
+         // 일반 공격 시 '자신의 공격 데미지의 100% 만큼 타깃에게 데미지' 발동
+         tbf(me, "평발동", 100, "전속 종업원2", always);
+         // 궁극기 발동 시 '자신의 공격 데미지의 250%만큼 타깃에게 데미지' 발동
+         tbf(me, "궁발동", 250, "전속 종업원3", always);
+         // 아군 탱커는 '팀에 최소 2명 이상의 탱커가 있을 시 <시저 님은 영원히 옳다> 발동' 획득
+         // <시저 님은 영원히 옳다>
+         if (getRoleCnt("탱") >= 2) for(let idx of getRoleIdx("탱")) {
+            // 가하는 데미지 50% 증가
+            tbf(comp[idx], "가뎀증", 50, "시저 님은 영원히 옳다1", always);
+            // 일반 공격 시 '자신의 공격 데미지의 100%만큼 자신의 최대 hp50% 만큼 타깃에게 데미지' 발동
+            tbf(comp[idx], "평발동", 100, "시저 님은 영원히 옳다2", always);
+            tbf(comp[idx], "평발동고", comp[idx].hp*50, "시저 님은 영원히 옳다2", always);
+            // 궁극기 발동 시 '자신의 공격 데미지의 250%만큼, 자신의 최대 hp125% 만큼 타깃에게 데미지' 발동
+            tbf(comp[idx], "궁발동", 250, "시저 님은 영원히 옳다3", always);
+            tbf(comp[idx], "궁발동고", comp[idx].hp*125, "시저 님은 영원히 옳다3", always);
+            // 공격 시 '자신에게 부여된 도발 효과 및 방어 상태 해제' 발동
+            // TODO
+         }
+      }
+      me.passive = function() {
+         // 메이드... 종업원 섹스 테크닉!
+         // 궁극기 발동 시 '자신의 공격 데미지의 150%만큼 아군 전체를 치유' 발동
+         atbf(me, "궁", all, "힐", 150, "메이드... 종업원 섹스 테크닉!1", always)
+         // 궁극기 발동 시 '자신의 공격 데미지의 250%만큼 타깃에게 데미지' 발동
+         tbf(me, "궁발동", 250, "메이드... 종업원 섹스 테크닉!2", always);
+         // 아름다운 맛~
+         // TODO: 아군 전체가 받는 지속형 치유향 20% 증가
+         // 공격 데미지 50% 증가
+         tbf(me, "공퍼증", 50, "아름다운 맛~", always);
+         // 꾸잉 꾸잉 뀨~
+         // 발동형 스킬이 가하는 데미지 75% 증가
+         tbf(me, "발효증", 75, "꾸잉 꾸잉 뀨~1", always);
+         // 궁극기 발동 시 '자신의 최대 hp15%만큼 아군 전체에게 실드 부여(1턴)' 발동
+         atbf(me, "궁", all, "아머", me.hp*15, "꾸잉 꾸잉 뀨~2", 1, always);
+         // 공격+
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {}
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp) c.heal();
+         me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
+      };
+      return me;
+   case 10123 : // 악미루     ok
+      me.ultbefore = function() { // 안닌궁주 보너스!
+         // 아군 전체의 발동형 스킬 효과 100% 증가(4턴)
+         tbf(all, "발효증", 100, "안닌궁주 보너스!", 4);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {
+         ultLogic(me);
+         // 아군 전체 딜러, 디스럽터가 공격 시 효과 '자신의 공격력의 59%만큼 타깃에게 데미지(3턴)' 획득
+         for(let idx of getRoleIdx("딜", "디")) {
+            tbf(comp[idx], "평발동", 59, "안닌궁주 보너스!2", 3);
+            tbf(comp[idx], "궁발동", 59, "안닌궁주 보너스!2", 3);
+         }
+      };
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 다같이 먀먀먀
+         // 아군 전체의 최대 hp 20% 증가
+         hpUpAll(20);
+         // 아군 전체의 공격 데미지 70% 증가
+         tbf(all, "공퍼증", 70, "다같이 먀먀먀", always);
+         // 아군 전체가 '팀원 중 3명 이상의 딜러가 있으면 <같이 먀먀먀먀먀> 발동' 획득
+         // 아군 전체가 '팀원 중 2명 이상의 디스럽터가 있으면 <같이 먀먀먀먀먀> 발동' 획득
+         // <같이 먀먀먀먀먀>
+         if (getRoleCnt("딜") >= 3 || getRoleCnt("디") >= 2) {
+            // 발동형 스킬 효과 150% 증가
+            tbf(all, "발효증", 150, "같이 먀먀먀먀먀1", always);
+            // 가하는 데미지 30% 증가
+            tbf(all, "가뎀증", 30, "같이 먀먀먀먀먀2", always);
+            // 궁극기 발동 시 '타깃이 받는 화/수/풍/광/암 속성 데미지 5% 증가(2턴)
+            tbf(all, "궁", boss, "받속뎀", 5, "같이 먀먀먀먀먀3", 2, always);
+         }
+      }
+      me.passive = function() {
+         // 18x18=88
+         // 궁극기 발동 시 '자신의 공격 데미지 40% 증가(최대 2중첩)' 발동
+         anbf(me, "궁", me, "공퍼증", 40, "18x18=88", 1, 2, always);
+         // 마음을 훔치는 소악마가 로그인했다고~
+         // 궁극기 발동 시 '타깃이 받는 궁극기 데미지 20% 증가(4턴) 발동
+         atbf(me, "궁", boss, "받궁뎀", 20, "마음을 훔치는 소악마가 로그인했다고~", 4, always);
+         // 오늘은 야한 미루 꿈 꿔
+         // 궁극기 발동 시 '타깃이 받는 데미지 20% 증가(4턴)' 발동
+         atbf(me, "궁", boss, "받뎀증", 20, "오늘은 야한 미루 꿈 꿔", 4, always);
+         // 궁극기+
+         // 자신의 궁극기 데미지 10% 증가
+         tbf(me, "궁뎀증", 10, "궁극기+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {}
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+      };
+      return me;
+   case 10126 : // 할쿠       ok
+      me.ultbefore = function() { // 사탕을 줘도 장난 칠거야!
+         // 타깃이 받는 데미지 45% 증가(4턴)
+         tbf(boss, "받뎀증", 45, "사탕을 줘도 장난 칠거야!1", 4);
+         // 타깃이 받는 데미지 20% 증가(최대 1중첩)
+         nbf(boss, "받뎀증", 20, "사탕을 줘도 장난 칠거야!2", 1, 1);
+         // 아군 전체의 궁극기 데미지 30% 증가(4턴)
+         tbf(all, "궁뎀증", 30, "사탕을 줘도 장난 칠거야!3", 4);
+      }
+      me.getTrapNest = function() {
+         const li = [...me.nestBuff]
+         const buf = li.filter(item => item.type == "<연쇄 트랩>");
+         if (buf.length == 0) return 0;
+         return buf[0].nest > buf[0].maxNest ? buf[0].maxNest : buf[0].nest;
+      }
+      me.ultafter = function() {
+         // 할로윈 미궁 : 궁발동 시 "자신의 <연쇄 트랩> 중첩 수에 따라 '타깃이 받는 화/수속성 데미지 3% 증가(1턴)'"발동
+         for(let idx of getElementIdx("화", "수"))
+            tbf(comp[idx], "받속뎀", 3*me.getTrapNest(), "할로윈 미궁", 1);
+         if (!me.isLeader) return;
+         // 궁극기 발동 시 "자신의 <연쇄 트랩> 중첩 수에 따라 '타깃이 받는 광/암속성 데미지 6% 증가(1턴) 발동' 발동"
+         for(let idx of getElementIdx("광", "암"))
+            tbf(comp[idx], "받속뎀", 6*me.getTrapNest(), "참신한 말썽꾸러기2", 1);
+         // 궁극기 발동 시 "자신의 <연쇄 트랩> 중첩 수에 따라 "타깃이 받는 화/수속성 데미지 3% 증가(1턴) 발동' 발동"
+         for(let idx of getElementIdx("화", "수"))
+            tbf(comp[idx], "받속뎀", 3*me.getTrapNest(), "참신한 말썽꾸러기3", 1);
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() { // 찹쌀 끈적끈적탄
+         // 자신의 공격 데미지의 30% 만큼 아군 전체의 공격 데미지 증가(1턴)
+         for(let c of comp) tbf(c, "공고증", myCurAtk+me.id+30, "찹쌀 끈적끈적탄", 1);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 참신한 말썽꾸러기
+         // 아군 전체의 최대 hp 30% 증가
+         hpUpAll(30);
+         // 궁극기 발동 시 "자신의 최대 hp 10% 만큼 아군 전체에게 실드 부여(1턴) 발동"
+         atbf(me, "궁", all, "아머", me.hp*10, "참신한 말썽꾸러기1", 1, always);
+         // 궁극기 발동 시 "자신의 <연쇄 트랩> 중첩 수에 따라 '타깃이 받는 광/암속성 데미지 6% 증가(1턴) 발동' 발동"
+         // => ultafter로
+         // 궁극기 발동 시 "자신의 <연쇄 트랩> 중첩 수에 따라 "타깃이 받는 화/수속성 데미지 3% 증가(1턴) 발동' 발동"
+         // => ultafter로
+
+         // 아군 전체는 "팀에 4종 위치의 캐릭터가 편성되어 있을 시 <할로윈 장난 파티!> 활성화" 획득
+         // <할로윈 장난 파티>
+         let a1 = getRoleCnt("딜") > 0 ? 1 : 0, a2 = getRoleCnt("힐") > 0 ? 1 : 0;
+         let a3 = getRoleCnt("탱") > 0 ? 1 : 0, a4 = getRoleCnt("섶") > 0 ? 1 : 0;
+         let a5 = getRoleCnt("디") > 0 ? 1 : 0;
+         if (a1+a2+a3+a4+a5 == 4) {
+            // 공격 데미지 120% 증가
+            tbf(all, "공퍼증", 120, "<할로윈 장난 파티>1", always);
+            // 가하는 데미지 50% 증가
+            tbf(all, "가뎀증", 50, "<할로윈 장난 파티>2", always);
+         }
+      }
+      me.passive = function() {
+         // 작은 몸과 큰 머리
+         // TODO: 현재 hp<=99% 일 시 "자신이 받는 데미지 10% 감소" 발동
+         // 1턴마다 "자신에게 <연쇄 트랩> 부여(최대 9중첩)" 발동 => turnover로
+
+         // 천방백계
+         // 궁극기 발동 시 "자신의 공격 데미지의 30%만큼 아군 전체의 공격 데미지 증가(1턴)" 발동
+         atbf(me, "궁", all, "공고증", myCurAtk+me.id+30, "천방백계1", 1, always);
+         // 현재 자신의 <연쇄 트랩> 중첩 수 > 3 일 시 "받는 실드 효과 20% 증가" 활성화 => turnstart로
+         // 현재 자신의 <연쇄 트랩> 중첩 수 > 6 일 시 "공격 데미지 20% 증가" 활성화 => turnstart로
+         // 현재 자신의 <연쇄 트랩> 중첩 수 = 9 일 시 "공격 데미지 20% 증가" 활성화 => turnstart로
+
+         // 할로윈 미궁 => ultafter로
+
+         // 데미지 감소+
+         // TODO: 자신이 받는 데미지 5% 감소
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {}
+         // TODO: 현재 자신의 <연쇄 트랩> 중첩 수 > 3 일 시 "받는 실드 효과 20% 증가" 활성화
+         // 현재 자신의 <연쇄 트랩> 중첩 수 > 6 일 시 "공격 데미지 20% 증가" 활성화
+         if (me.getTrapNest() > 6) tbf(me, "공퍼증", 20, "천방백계3", 1);
+         // 현재 자신의 <연쇄 트랩> 중첩 수 = 9 일 시 "공격 데미지 20% 증가" 활성화
+         if (me.getTrapNest() == 9) tbf(me, "공퍼증", 20, "천방백계4", 1);
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+         // 1턴마다 "자신에게 <연쇄 트랩> 부여(최대 9중첩)" 발동
+         nbf(me, "<연쇄 트랩>", 0, "작은 몸과 큰 머리", 1, 9);
+      };
+      return me;
+   case 10128 : // 크이블     ok
       me.ultbefore = function() {
          // 흔들리는 와인잔1 : 타깃이 받는 딜러의 데미지 50% 증가 (2중첩)
          // 받는 딜러 데미지가 ->  궁/평뎀증 판정
@@ -646,107 +1158,247 @@ function setDefault(me) {
       me.turnstart = function() {};
       me.turnover = function() {};
       return me;
-   case 10098 : // 크즈카
-      me.ultbefore = function() {
-         // 연쇄 트랩 : 타깃이 받는 궁극기 데미지 22.5%증가 (2중첩)
-         nbf(boss, "받궁뎀", 22.5, "연쇄 트랩!", 1, 2);
+   case 10133 : // 나나미     ok
+      me.ultbefore = function() { // 이것이 바로 프로 아이돌의 매력
+         // 자신의 기본 공격 데미지의 70% 만큼 아군 전체의 공격 데미지 증가(4턴)
+         tbf(all, "공고증", 70*me.atk, "이것이 바로 프로 아이돌의 매력1", 4);
+         // 아군 전체의 궁극기 데미지 40% 증가(4턴)
+         tbf(all, "궁뎀증", 40, "이것이 바로 프로 아이돌의 매력2", 4);
       }
       me.ultafter = function() {}
       me.ultimate = function() {ultLogic(me);};
-      me.atkbefore = function() {}
-      me.atkafter = function() {}
+      me.atkbefore = function() { // 한눈 팔기 없기~
+         // 자신의 공격 데미지의 25%만큼 아군 전체에게 아머 강화(1턴)
+         tbf(all, "아머", 25*me.getCurAtk()*me.armorUp, "한눈 팔기 없기~1", 1);
+         // 자신의 최대 hp 30%만큼 아군 전체에게 아머 강화(1턴)
+         tbf(all, "아머", 30*me.hp*me.armorUp, "한눈 팔기 없기~2", 1);
+      }
+      me.atkafter = function() {
+         // <나나미의 형상으로 변한 것뿐> : 공격 시 '자신의 현재 아머량 100% 만큼 자신의 아머에 확정 데미지' 발동
+         if (me.isLeader) {
+            me.hit();
+            deleteBuffType(me, "아머");
+         }
+      }
       me.attack = function() {atkLogic(me);};
-      me.leader = function() {
-         // 함께 놀수록 재밌는 법~
-         // 아군 전체의 공격 데미지 40% 증가
-         tbf(all, "공퍼증", 40, "함께 놀수록 재밌는 법~1", always);
-         // 아군 전체의 최대 hp 10% 증가
-         hpUpAll(10);
-         // 아군 전체가 크리스마스 최고! 획득
-         // 크리스마스 최고!1 : 탱커가 있으면 아군 전체가 공퍼증 50%
-         if (getRoleCnt("탱") > 0) tbf(all, "공퍼증", 50, "크리스마스 최고!1", always);
-         // 크리스마스 최고!2 : 2명이상 광속성이면 아군 전체가 공퍼증 25%
-         if (getElementCnt("광") >= 2) tbf(all, "공퍼증", 25, "크리스마스 최고!2", always);
-         // 크리스마스 최고!3 : 화속성 있으면 아군 전체가 공퍼증 25%
-         if (getElementCnt("화") > 0) tbf(all, "공퍼증", 25, "크리스마스 최고!3", always);
+      me.leader = function() { // 악수회 시간이야~
+         // 아군 전체의 공격 데미지 50% 증가
+         tbf(all, "공퍼증", 50, "악수회 시간이야~1", always);
+         // 아군 전체의 가하는 발동형 스킬 효과 100% 증가
+         tbf(all, "발효증", 100, "악수회 시간이야~2", always);
+         // 아군 전체의 가하는 데미지 20% 증가
+         tbf(all, "가뎀증", 20, "악수회 시간이야~3", always);
+         // 자신은 팀에 서포터 캐릭터 2명 이상 있을 시 '받는 아머 효과 600% 감소' 발동
+         if (getRoleCnt("섶") >= 2) me.getArmor = function() {return 0;}
+         // 자신 이외의 아군은 <돈은 사라지지 않아> 획득
+         // <돈은 사라지지 않아> : 공격 시 '자신의 공격 데미지의 30%만큼 1번 자리 아군에게 아머 강화 부여(1턴)
+         for(let c of comp) if (c.id != me.id) atbf(c, "공격", comp[0], "아머", myCurAtk+c.id+30, 1, always);
+         // 자신은 <나나미의 형상으로 변한 것뿐> 획득
+         // <나나미의 형상으로 변한 것뿐>
+         // 일반 공격 시 '자신의 현재 아머량 55% 만큼 타깃에게 데미지' 발동
+         tbf(me, "평발동고", myCurShd+me.id+55, "나나미의 형상으로 변한 것뿐1", always);
+         // 궁극기 발동 시 '자신의 현재 아머량 60%만큼 타깃에게 데미지' 발동
+         tbf(me, "궁발동고", myCurShd+me.id+60, "나나미의 형상으로 변한 것뿐2", always);
+         // 공격 시 '자신의 현재 아머량 100% 만큼 자신의 아머에 확정 데미지' 발동 => atkafter로
       }
       me.passive = function() {
-         // 시험작 999호 : 자신의 가뎀증 35%
-         tbf(me, "가뎀증", 35, "시험작 999호1", always);
-         // 공격+ : 자신의 공퍼증 10%
+         // 무대 준비
+         // 자신이 가하는 아머 강화 효과 15% 증가
+         me.armorUp += 0.15;
+         // 청순 아이돌
+         // 궁극기 발동 시 '자신의 공격 데미지의 25%만큼 아군 전체에게 아머 강화(1턴)' 추가 
+         atbf(me, "궁", all, "아머", myCurAtk+me.id+(25*me.armorUp), "청순 아이돌1", 1, always);
+         // 궁극기 발동 시 '자신의 최대 hp 30%만큼 아군 전체에게 아머 강화(1턴)' 추가
+         atbf(me, "궁", all, "아머", me.hp*30*me.armorUp, "청순 아이돌2", 1, always);
+
+         // OnlySex => turnstart로
+
+         // 공격+
+         // 자신의 공격 데미지 10% 증가
          tbf(me, "공퍼증", 10, "공격+", always);
-         // 패시브 : 궁사용시 다방구 시작~ 4중첩만큼 데미지 추가
-         anbf(me, "궁", boss, "받뎀증", 5, "다방구 시작~", 4, 11, always);
       }
-      me.defense = function() {
-         me.act_defense();
-      }
+      me.defense = function() {me.act_defense();}
       me.turnstart = function() {
-         if (me.isLeader) {
-            // 리더 : 5번째 턴에서 아군전체 궁뎀증 30% (1중첩)
-            if (GLOBAL_TURN == 5) nbf(all, "궁뎀증", 30, "함께 놀수록 재밌는 법~2", 1, 1);
-            // 리더 : 9번째 턴에서 아군 천체 가뎀증 20% (1중첩)
-            if (GLOBAL_TURN == 9) nbf(all, "가뎀증", 20, "함께 놀수록 재밌는 법~3", 1, 1);
-         }
+         if (me.isLeader) {}
+         // OnlySex : 1턴마다 '자신의 공격 데미지의 25%만큼 아군 전체의 공격 데미지 증가(1턴)' 발동
+         if (GLOBAL_TURN > 1) for(let c of comp) tbf(c, "공고증", 25*me.getCurAtk(), "OnlySex", 1);
       };
       me.turnover = function() {
-         // 패시브 다방구 시작~ : 1턴마다 받뎀증 5% (11중첩)
-         nbf(boss, "받뎀증", 5, "다방구 시작~", 1, 11);
+         if (me.isLeader) {}
       };
       return me;
-   case 10042 : // 수이블
-      me.ultbefore = function() {
-         // 소녀의 연심은 무적!1 : 아군 수, 화 공퍼증 40%(1턴)
-         for(let idx of getElementIdx("화", "수")) tbf(comp[idx], "공퍼증", 40, "소녀의 연심은 무적!1", 1);
-         // 소녀의 연심은 무적!2 : 아군 수, 화 받속뎀 15%(2중첩)
-         for(let idx of getElementIdx("화", "수")) nbf(comp[idx], "받속뎀", 15, "소녀의 연심은 무적!2", 1, 2);
+   case 10134 : // 가엘리     ok
+      me.turnHeal = false;
+      me.turnAtkBonus = false;
+      me.ultbefore = function() { // 다들 함께 불러요~
+         // 아군 딜러, 디스럽터는 "궁극기 발동 시 '자신의 공격 데미지의 75%만큼 타깃에게 데미지' 추가" 획득(1턴)
+         for(let idx of getRoleIdx("딜", "디"))
+            tbf(comp[idx], "궁추가", 75, "다들 함께 불러요~2", 1);
+         // 아군 전체가 가하는 데미지 60% 증가(1턴)
+         tbf(all, "가뎀증", 60, "다들 함께 불러요~3", 1);
+         // 자신 공격 데미지의 257%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+         // 패시브 턴힐
+         me.turnHeal = true;
+         me.turnAtkBonus = true;
+         // 궁극기 발동 시, "자신의 공격 데미지의 15%만큼 매턴마다 자신을 제외한 아군의 공격 데미지 증가(1턴)" 효과 발동
+         for(let c of comp) if (c.id != me.id)
+            tbf(c, "공고증", myCurAtk+me.id+15, "팬들은 wow", 1);
       }
       me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         // 자신은 "공격 시, '자신의 공격 데미지의 15%만큼 자신을 제외한 아군의 공격 데미지 증가(1턴)' 효과 발동" 획득(5턴)
+         for(let c of comp) if (c.id != me.id) atbf(me, "평", c, "공고증", myCurAtk+me.id+15, "다들 함께 불러요~1", 1, 5);
+         for(let c of comp) if (c.id != me.id) atbf(me, "궁", c, "공고증", myCurAtk+me.id+15, "다들 함께 불러요~1", 1, 5);
+      };
+      me.atkbefore = function() { // 랩 타임!
+         // 자신 공격 데미지의 75%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+         // 패시브 턴힐
+         me.turnHeal = true; 
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 눈부신 빛 빛나는 가희
+         // 아군 전체의 최대 hp 35% 증가
+         hpUpAll(35);
+         // 자신이 궁극기 발동 시, "<슬픔을 몰아내는 빛>" 효과 발동
+         // <슬픔을 몰아내는 빛>
+         // 적 전체가 받는 데미지 30% 증가(1턴)
+         atbf(me, "궁", boss, "받뎀증", 30, "<슬픔을 몰아내는 빛>1", 1, always);
+         // 아군 딜러, 디스럽터는 "궁극기 발동 시, '자신의 공격 데미지의 80% 만큼 타깃에게 데미지' 추가(1턴)" 획득
+         for(let idx of getRoleIdx("딜", "디"))
+            atbf(me, "궁", comp[idx], "궁추가", 80, "<슬픔을 몰아내는 빛>2", 1, always);
+
+         // 아군 전체는 "아군에 4가지 속성의 동료가 있을 시, <아이돌 댄스팀> 발동" 획득
+         let a1 = getElementCnt("화") > 0 ? 1 : 0, a2 = getElementCnt("수") > 0 ? 1 : 0;
+         let a3 = getElementCnt("풍") > 0 ? 1 : 0, a4 = getElementCnt("광") > 0 ? 1 : 0;
+         let a5 = getElementCnt("암") > 0 ? 1 : 0;
+         if (a1+a2+a3+a4+a5 == 4) {
+            // <아이돌 댄스팀>
+            // 공격 데미지 125% 증가
+            tbf(all, "공퍼증", 125, "<아이돌 댄스팀>1", always);
+            // TODO: 받는 치유량 30% 증가
+         }
+      }
+      me.passive = function() {
+         // 입만 열면 터지는 flow
+         // 공격 데미지 35% 증가
+         tbf(me, "공퍼증", 35, "입만 열면 터지는 flow1", always);
+         // 궁극기 발동 시, "자신의 공격 데미지의 15%만큼 자신을 제외한 아군의 공격 데미지 증가(1턴)" 효과 발동
+         for(let c of comp) if (c.id != me.id)
+            atbf(me, "궁", c, "공고증", myCurAtk+me.id+15, "입만 열면 터지는 flow2", 1, always);
+
+         // 모든 문장이 막힘없이 => turnover로
+         // 일반 공격 시, "자신의 공격 데미지의 40% 만큼 매턴마다 아군 전체를 치유(1턴)" 효과 발동
+         // 궁극기 발동 시, "자신의 공격 데미지의 80% 만큼 매턴마다 아군 전체를 치유(1턴)" 효과 발동
+
+         // 팬들은 wow => turnstart로
+         // 궁극기 발동 시, "자신의 공격 데미지의 15%만큼 매턴마다 자신을 제외한 아군의 공격 데미지 증가(1턴)" 효과 발동
+         
+         // 치유 부여+
+         // TODO: 자신이 주는 치유량 15% 증가
+      }
+      me.defense = function() {me.act_defense();
+         // 패시브 턴힐
+         me.turnHeal = true; 
+      }
+      me.turnstart = function() {
+         if (me.isLeader) {}
+         // // 궁극기 발동 시, "자신의 공격 데미지의 15%만큼 매턴마다 자신을 제외한 아군의 공격 데미지 증가(1턴)" 효과 발동
+         // if (me.turnAtkBonus) for(let c of comp) if (c.id != me.id)
+         //    tbf(c, "공고증", myCurAtk+me.id+15, "팬들은 wow", 1);
+         me.turnAtkBonus = false;
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+         // 모든 문장이 막힘없이 : 매턴 힐(1턴)
+         if (me.turnHeal) for(let c of comp) c.heal();
+         me.turnHeal = false;
+      };
+      return me;
+   case 10139 : // 불타라     ok
+      me.ultbefore = function() { // 마법소녀 초건전 빔
+         // 타깃이 받는 광속성 데미지 20% 증가(최대 1중첩)
+         for(let idx of getElementIdx("광")) nbf(comp[idx], "받속뎀", 20, "마법소녀 초건전 빔1", 1, 1); 
+         // 타깃이 받는 데미지 10% 증가(최대 2중첩)
+         nbf(boss, "받뎀증", 10, "마법소녀 초건전 빔2", 1, 2);
+         // 아군 전체의 공격 데미지 10% 증가(최대 1중첩)
+         nbf(all, "공퍼증", 10, "마법소녀 초건전 빔3", 1, 1);
+      }
+      me.ultafter = function() {
+         // 서포트 변신
+         // 궁극기 발동 시 "자신의 현재 궁극기 CD 2턴 감소" 발동
+         cdChange(me, -2);
+      }
       me.ultimate = function() {ultLogic(me);};
       me.atkbefore = function() {}
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
-      me.leader = function() {
-         // 고품격 우아함! 이블리스의 초호화 리조트!
-         // 아군 전체의 공퍼증 100%
-         tbf(all, "공퍼증", 100, "이블리스의 초호화 리조트!", always);
-         // 자신이 공격 시 아군 전체가 최대hp 25% 아머 획득
+      me.leader = function() { // 이것이 바로 우정의 힘
+         let elCnt = getElementCnt("광", "화");
+         if (elCnt > 4) elCnt = 4;
+         // 자신의 <마법소녀의 힘> >= 2중첩일시 "공격 데미지 50% 증가, 가하는 데미지 20% 증가" 발동
+         if (elCnt >= 2) {
+            tbf(me, "공퍼증", 50, "이것이 바로 우정의 힘1", always);
+            tbf(me, "가뎀증", 20, "이것이 바로 우정의 힘2", always);
+         }
+         // 자신의 <마법소녀의 힘> >= 3중첩일시 "공격 시 '타깃이 받는 데미지 10% 증가(최대 4중첩)'발동" 발동
+         if (elCnt >= 3) anbf(me, "공격", boss, "받뎀증", 10, "이것이 바로 우정의 힘3", 1, 4, always);
+         // 자신의 <마법소녀의 힘> >= 4중첩일시 "궁극기 발동 시 '자신의 공격 데미지의 120%만큼 타깃에게 데미지'추가"발동
+         if (elCnt >= 4) tbf(me, "궁추가", 120, "이것이 바로 우정의 힘4", always);
+         nbf(me, "<마법소녀의 힘>", 0, "이것이 바로 우정의 힘", 4, 4);
 
-         // 아군 전체가 딜러이면 모두 여름 만끽 발동
-         if (getRoleCnt("딜") == 5) {
-            // 여름 만끽1 : 공격 시 아군 전체를 치유
-            atbf(all, "공격", all, "힐", 1, "여름 만끽 1", 1, always);
-            // 여름 만끽2 : 궁발동시 아군 전체 아머 부여(1턴)
-            // 여름 만끽3 : 공격시 아군 전체의 궁뎀증 5% (10중첩)
-            anbf(all, "공격", all, "궁뎀증", 5, "여름 만끽3", 1, 10, always);
-            // 여름 만끽4 : 공격시 수/화받속뎀 3% (10중첩)
-            for(let idx of getElementIdx("수", "화")) anbf(all, "공격", comp[idx], "받속뎀", 3, "여름 만끽4", 1, 10, always);
+         // 아군 광/화속성 캐릭터는 <마법소녀 집결> 획득
+         for(let idx of getElementIdx("광", "화")) {
+            // <마법소녀 집결>
+            // 최대 hp30% 증가
+            hpUpMe(comp[idx], 30);
+            // 공격 데미지 100% 증가
+            tbf(comp[idx], "공퍼증", 100, "<마법소녀 집결>1", always);
+            // 가하는 데미지 20% 증가
+            tbf(comp[idx], "가뎀증", 20, "<마법소녀 집결>2", always);
+            // 궁극기 데미지 40% 증가
+            tbf(comp[idx], "궁뎀증", 40, "<마법소녀 집결>3", always);
+            // 행동 시 "1번 자리 아군은 '마법소녀의 힘(최대 4중첩) 획득" 발동(행동 후 본 효과 제거) => leader 첫줄로
          }
       }
       me.passive = function() {
-         // 여름 해변의 꽃1 : 방어 시 수/화 아군이 받는 치유량 50% 증가
-         // 여름 해변의 꽃2 : 궁발동시 수/화 아군의 공퍼증 15% 증가 (2중첩)
-         for(let idx of getElementIdx("수", "화"))
-            anbf(me, "궁", comp[idx], "공퍼증", 15, "여름 해변의 꽃2", 1, 2, always);
-         // 나에게 굴복하라 : 가뎀증 25% 증가
-         tbf(me, "가뎀증", 25, "나에게 굴복하라!", always);
-         // 공격력 증가 : 자신의 공퍼증 10%
-         tbf(me, "공퍼증", 10, "공격력 증가", always);
-      }
-      me.defense = function() {
-         me.act_defense();
-      }
-      me.turnstart = function() {
-         // 패시브 오만하구나! : 4턴마다 타깃이 받는 수/화속뎀증 40% (1턴)
-         if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%4 == 0) {
-            for(let idx of getElementIdx("수", "화")) tbf(comp[idx], "받속뎀", 40, "오만하구나!", 1);
+         // 서포트 변신
+         // 자신 이외의 광속성 딜러는 궁극기 CD 변동 효과 면역
+         for(let idx of getElementIdx("광")) {
+            if (me.id == comp[idx].id) continue;
+            comp[idx].canCDChange = false;
          }
-      };
-      me.turnover = function() {};
-      return me;
+         // 궁극기 발동 시 "자신의 현재 궁극기 CD 2턴 감소" 발동 => ultafter로
 
-// 10141 10133 10088 10119 10123
-   case 10141 : // 관나나
+         // 블링블링 베개 분쇄기
+         // 궁극기 발동 시 "자신이 가하는 데미지 15% 증가(최대 2중첩)" 발동
+         anbf(me, "궁", me, "가뎀증", 15, "블링블링 베개 분쇄기", 1, 2, always);
+
+         // 어렴풋이 보여
+         // 첫 번째 턴 시작 시 "자신의 현재 궁극기 CD 2턴 감소" 발동 => turnstart로
+
+         // 궁극기 발동 시 "타깃이 받는 광속성 데미지 20% 증가(최대 1중첩)" 발동
+         for(let idx of getElementIdx("광"))
+            anbf(me, "궁", comp[idx], "받속뎀", 20, "어렴풋이 보여", 1, 1, always);
+
+         // 궁극기+
+         // 자신의 궁극기 데미지 10% 증가
+         tbf(me, "궁뎀증", 10, "궁극기+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {}
+         // 어렴풋이 보여
+         // 첫 번째 턴 시작 시 "자신의 현재 궁극기 CD 2턴 감소" 발동
+         if (GLOBAL_TURN == 1) cdChange(me, -2);
+      };
+      me.turnover = function() {
+         if (me.isLeader) {}
+      };
+      return me;
+   case 10141 : // 관나나     ok
       me.getSAN = function() {
          const li = [...me.nestBuff];
          const exist = li.filter(bf => bf.type == "<이성치>");
@@ -857,266 +1509,93 @@ function setDefault(me) {
          if (me.isLeader) {}
       };
       return me;
-   case 10133 : // 나나미
-      me.ultbefore = function() { // 이것이 바로 프로 아이돌의 매력
-         // 자신의 기본 공격 데미지의 70% 만큼 아군 전체의 공격 데미지 증가(4턴)
-         tbf(all, "공고증", 70*me.atk, "이것이 바로 프로 아이돌의 매력1", 4);
-         // 아군 전체의 궁극기 데미지 40% 증가(4턴)
-         tbf(all, "궁뎀증", 40, "이것이 바로 프로 아이돌의 매력2", 4);
-      }
-      me.ultafter = function() {}
-      me.ultimate = function() {ultLogic(me);};
-      me.atkbefore = function() { // 한눈 팔기 없기~
-         // 자신의 공격 데미지의 25%만큼 아군 전체에게 아머 강화(1턴)
-         tbf(all, "아머", 25*me.getCurAtk()*me.armorUp, "한눈 팔기 없기~1", 1);
-         // 자신의 최대 hp 30%만큼 아군 전체에게 아머 강화(1턴)
-         tbf(all, "아머", 30*me.hp*me.armorUp, "한눈 팔기 없기~2", 1);
-      }
-      me.atkafter = function() {
-         // <나나미의 형상으로 변한 것뿐> : 공격 시 '자신의 현재 아머량 100% 만큼 자신의 아머에 확정 데미지' 발동
-         if (me.isLeader) {
-            me.hit();
-            deleteBuffType(me, "아머");
-         }
-      }
-      me.attack = function() {atkLogic(me);};
-      me.leader = function() { // 악수회 시간이야~
-         // 아군 전체의 공격 데미지 50% 증가
-         tbf(all, "공퍼증", 50, "악수회 시간이야~1", always);
-         // 아군 전체의 가하는 발동형 스킬 효과 100% 증가
-         tbf(all, "발효증", 100, "악수회 시간이야~2", always);
-         // 아군 전체의 가하는 데미지 20% 증가
-         tbf(all, "가뎀증", 20, "악수회 시간이야~3", always);
-         // 자신은 팀에 서포터 캐릭터 2명 이상 있을 시 '받는 아머 효과 600% 감소' 발동
-         if (getRoleCnt("섶") >= 2) me.getArmor = function() {return 0;}
-         // 자신 이외의 아군은 <돈은 사라지지 않아> 획득
-         // <돈은 사라지지 않아> : 공격 시 '자신의 공격 데미지의 30%만큼 1번 자리 아군에게 아머 강화 부여(1턴)
-         for(let c of comp) if (c.id != me.id) atbf(c, "공격", comp[0], "아머", myCurAtk+c.id+30, 1, always);
-         // 자신은 <나나미의 형상으로 변한 것뿐> 획득
-         // <나나미의 형상으로 변한 것뿐>
-         // 일반 공격 시 '자신의 현재 아머량 55% 만큼 타깃에게 데미지' 발동
-         tbf(me, "평발동고", myCurShd+me.id+55, "나나미의 형상으로 변한 것뿐1", always);
-         // 궁극기 발동 시 '자신의 현재 아머량 60%만큼 타깃에게 데미지' 발동
-         tbf(me, "궁발동고", myCurShd+me.id+60, "나나미의 형상으로 변한 것뿐2", always);
-         // 공격 시 '자신의 현재 아머량 100% 만큼 자신의 아머에 확정 데미지' 발동 => atkafter로
-      }
-      me.passive = function() {
-         // 무대 준비
-         // 자신이 가하는 아머 강화 효과 15% 증가
-         me.armorUp += 0.15;
-         // 청순 아이돌
-         // 궁극기 발동 시 '자신의 공격 데미지의 25%만큼 아군 전체에게 아머 강화(1턴)' 추가 
-         atbf(me, "궁", all, "아머", myCurAtk+me.id+(25*me.armorUp), "청순 아이돌1", 1, always);
-         // 궁극기 발동 시 '자신의 최대 hp 30%만큼 아군 전체에게 아머 강화(1턴)' 추가
-         atbf(me, "궁", all, "아머", me.hp*30*me.armorUp, "청순 아이돌2", 1, always);
-
-         // OnlySex => turnstart로
-
-         // 공격+
-         // 자신의 공격 데미지 10% 증가
-         tbf(me, "공퍼증", 10, "공격+", always);
-      }
-      me.defense = function() {me.act_defense();}
-      me.turnstart = function() {
-         if (me.isLeader) {}
-         // OnlySex : 1턴마다 '자신의 공격 데미지의 25%만큼 아군 전체의 공격 데미지 증가(1턴)' 발동
-         if (GLOBAL_TURN > 1) for(let c of comp) tbf(c, "공고증", 25*me.getCurAtk(), "OnlySex", 1);
-      };
-      me.turnover = function() {
-         if (me.isLeader) {}
-      };
-      return me;
-   case 10088 : // 신빨강
-      me.ultbefore = function() {// 아나스티의 특제 칵테일
-         // 타깃이 받는 데미지 20% 증가(7턴)
-         tbf(boss, "받뎀증", 20, "아나스티의 특제 칵테일", 7);
+   case 10142 : // 수즈루     coding
+      me.ultbefore = function() { // 다 함께 수박 깨기~
+         // 자신의 일반 공격 데미지 130% 증가(4턴)
+         // 자신의 가하는 데미지 40% 증가(4턴)
+         // 아군 딜러는 일반 공격 시 자신의 공격 데미지의 60%만큼 타깃에게 데미지 추가(4턴)
+         // 아군 딜러는 일반 공격 시 아군 "여름날 치즈루"의 공격 데미지 30% 증가(1턴) 추가(4턴)
       }
       me.ultafter = function() {}
       me.ultimate = function() {ultLogic(me);};
       me.atkbefore = function() {}
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
-      me.leader = function() { // 열정적인 쌍성 점장
-         // 궁극기 발동 시, '아군 전체가 가하는 데미지 35% 증가(1턴)' 발동
-         atbf(me, "궁", all, "가뎀증", 35, "열정적인 쌍성 점장", 1, always);
-         // 아군 전체가 <술>, <미인>, <기도>, <예쁜 동생> 효과 획득
-         // <술>
-         // 팀원 중 최소 1/2/3 명의 딜러가 있을 시 각각 '공격 데미지 15/20/30% 증가' 발동
-         const dealCnt = getRoleCnt("딜");
-         if (dealCnt >= 1) tbf(all, "공퍼증", 15, "술1", always);
-         if (dealCnt >= 2) tbf(all, "공퍼증", 20, "술2", always);
-         if (dealCnt >= 3) tbf(all, "공퍼증", 30, "술3", always);
-         // <미인>
-         // 팀원 중 최소 1/2/3 명의 디스럽터가 있을 시 각각 '공격 데미지 15/20/30% 증가' 발동
-         const disrupterCnt = getRoleCnt("디");
-         if (disrupterCnt >= 1) tbf(all, "공퍼증", 15, "미인1", always);
-         if (disrupterCnt >= 2) tbf(all, "공퍼증", 20, "미인2", always);
-         if (disrupterCnt >= 3) tbf(all, "공퍼증", 30, "미인3", always);
-         // <기도>
-         // 팀원 중 최소 1명의 탱커가 있을 시 '궁극기 데미지 50% 증가' 발동
-         if (getRoleCnt("탱") >= 1) tbf(all, "궁뎀증", 50, "기도", always);
-         // <예쁜 동생>
-         // [푸른 은하 아나스나]가 아군 측에서 살아 있을 경우 '가하는 데미지 20% 증가' 발동
-         for (let c of comp) if (c.name == "신파랑") tbf(all, "가뎀증", 20, "예쁜 동생", always);
-      }
-      me.passive = function() {
-         // 기세등등
-         // 궁극기 발동 시 '아군 전체의 궁극기 데미지 25% 증가(1턴) 발동
-         atbf(me, "궁", all, "궁뎀증", 25, "기세등등", 1, always);
-         // 연애 충동 : 궁극기 발동 시 , <추가 주문> 효과 발동
-         // <추가 주문>
-         // 아군의 딜러와 디스럽터는 '궁극기 발동 시 "공격 데미지의 77%만큼 타깃에게 데미지" 효과 발동(1턴)' 획득
-         for(let idx of getRoleIdx("딜", "디")) {
-            if (comp[idx].id == me.id) continue;
-            atbf(me, "궁", comp[idx], "궁발동", 77, "추가 주문", 1, always);
-         }
-         // 칠석의 기원 => turnstart로
-
-         // 공격 데미지+
-         // 공격 데미지 10% 증가
-         tbf(me, "공퍼증", 10, "공격 데미지+", always);
-      }
-      me.defense = function() {me.act_defense();}
-      me.turnstart = function() {
-         if (me.isLeader) {}
-         // 칠석의 기원 : 일곱 번째 턴 시작시 '아군 전체가 가하는 데미지 30% 증가(최대1중첩)' 효과 발동
-         if (GLOBAL_TURN == 7) nbf(all, "가뎀증", 30, "칠석의 기원", 1, 1);
-      };
-      me.turnover = function() {
-         if (me.isLeader) {}
-      };
-      return me;
-   case 10119 : // 수이카
-      me.ultbefore = function() { // 아이카의 여름 칵테일
-         // 아군 전체의 발동형 스킬 효과 100% 증가(3턴)
-         tbf(all, "발효증", 100, "아이카의 여름 칵테일1", 3);
-         // 아군 전체가 가하는 데미지 30% 증가(3턴)
-         tbf(all, "가뎀증", 30, "아이카의 여름 칵테일2", 3);
-         // 아군 전체의 공격 데미지 50% 증가(3턴)
-         tbf(all, "공퍼증", 50, "아이카의 여름 칵테일3", 3);
-      }
-      me.ultafter = function() {}
-      me.ultimate = function() {ultLogic(me);}
-      me.healTurn = [];
-      me.atkbefore = function() {
-         // 자신의 공격 데미지의 50%만큼 매턴 아군 전체를 치유(3턴)
-         me.healTurn.push(GLOBAL_TURN, GLOBAL_TURN+1, GLOBAL_TURN+2);
-      }
-      me.atkafter = function() {}
-      me.attack = function() {atkLogic(me);};
-      me.leader = function() { // 시저 님은 신이야
+      me.leader = function() { // 발리볼 대회 스타트~
+         // 아군 전체의 hp40% 증가
          // 아군 전체의 공격 데미지 50% 증가
-         tbf(all, "공퍼증", 50, "시저 님은 신이야", always);
-         // 자신은 <전속 종업원> 획득
-         // <전속 종업원>
-         // 가하는 데미지 50% 증가
-         tbf(me, "가뎀증", 50, "전속 종업원1", always);
-         // 일반 공격 시 '자신의 공격 데미지의 100% 만큼 타깃에게 데미지' 발동
-         tbf(me, "평발동", 100, "전속 종업원2", always);
-         // 궁극기 발동 시 '자신의 공격 데미지의 250%만큼 타깃에게 데미지' 발동
-         tbf(me, "궁발동", 250, "전속 종업원3", always);
-         // 아군 탱커는 '팀에 최소 2명 이상의 탱커가 있을 시 <시저 님은 영원히 옳다> 발동' 획득
-         // <시저 님은 영원히 옳다>
-         if (getRoleCnt("탱") >= 2) for(let idx of getRoleIdx("탱")) {
-            // 가하는 데미지 50% 증가
-            tbf(comp[idx], "가뎀증", 50, "시저 님은 영원히 옳다1", always);
-            // 일반 공격 시 '자신의 공격 데미지의 100%만큼 자신의 최대 hp50% 만큼 타깃에게 데미지' 발동
-            tbf(comp[idx], "평발동", 100, "시저 님은 영원히 옳다2", always);
-            tbf(comp[idx], "평발동고", comp[idx].hp*50, "시저 님은 영원히 옳다2", always);
-            // 궁극기 발동 시 '자신의 공격 데미지의 250%만큼, 자신의 최대 hp125% 만큼 타깃에게 데미지' 발동
-            tbf(comp[idx], "궁발동", 250, "시저 님은 영원히 옳다3", always);
-            tbf(comp[idx], "궁발동고", comp[idx].hp*125, "시저 님은 영원히 옳다3", always);
-            // 공격 시 '자신에게 부여된 도발 효과 및 방어 상태 해제' 발동
-            // TODO
-         }
+
+         // 아군 딜러가 3명 이상 있을 시 <시합 참여> 발동
+         // <시합 참여>
+         // 자신의 궁극기 발동 시 "적 전체의 받는 데미지 20% 증가(4턴)" 발동
+         // 자신의 궁극기 발동 시 "아군 딜러가 가하는 데미지 20% 증가(4턴)" 발동
+         // 자신의 궁극기 발동 시 "아군 딜러의 일반 공격 데미지 110% 증가(4턴)" 발동
       }
       me.passive = function() {
-         // 메이드... 종업원 섹스 테크닉!
-         // 궁극기 발동 시 '자신의 공격 데미지의 150%만큼 아군 전체를 치유' 발동
-         atbf(me, "궁", all, "힐", 150, "메이드... 종업원 섹스 테크닉!1", always)
-         // 궁극기 발동 시 '자신의 공격 데미지의 250%만큼 타깃에게 데미지' 발동
-         tbf(me, "궁발동", 250, "메이드... 종업원 섹스 테크닉!2", always);
-         // 아름다운 맛~
-         // TODO: 아군 전체가 받는 지속형 치유향 20% 증가
-         // 공격 데미지 50% 증가
-         tbf(me, "공퍼증", 50, "아름다운 맛~", always);
-         // 꾸잉 꾸잉 뀨~
-         // 발동형 스킬이 가하는 데미지 75% 증가
-         tbf(me, "발효증", 75, "꾸잉 꾸잉 뀨~1", always);
-         // 궁극기 발동 시 '자신의 최대 hp15%만큼 아군 전체에게 실드 부여(1턴)' 발동
-         atbf(me, "궁", all, "아머", me.hp*15, "꾸잉 꾸잉 뀨~2", 1, always);
+         // 여름날 해변 가이드
+         // 아군 딜러는 <해설 타임> 획득
+         // <해설 타임>
+         // 1턴이 지날 때마다 "타깃이 받는 일반 공격 데미지 30% 증가(1턴)" 발동
+
+         // 꼬록꼬록꼬록~
+         // 아군 딜러는 <머리통 바로잡기> 획득
+         // <머리통 바로잡기>
+         // 궁극기 발동 시 "아군 '여름날 치즈루'의 공격 데미지 20% 증가(4턴)" 발동
+
+         // 웨딩드레스 병기 - 힘 강화
+         // 첫 번째 턴에서 "자신의 현재 궁극기 CD 4턴 감소" 발동
+         // 궁극기 발동 시 "타깃이 받는 데미지 20% 증가(최대 2중첩)" 발동
+
          // 공격+
          // 자신의 공격 데미지 10% 증가
-         tbf(me, "공퍼증", 10, "공격+", always);
       }
       me.defense = function() {me.act_defense();}
-      me.turnstart = function() {
-         if (me.isLeader) {}
-      };
-      me.turnover = function() {
-         if (me.isLeader) {}
-         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp) c.heal();
-         me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
-      };
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10123 : // 악미루
-      me.ultbefore = function() { // 안닌궁주 보너스!
-         // 아군 전체의 발동형 스킬 효과 100% 증가(4턴)
-         tbf(all, "발효증", 100, "안닌궁주 보너스!", 4);
-      }
+   case 10143 : // 수살루     coding
+      me.ultbefore = function() { // 여름날의 아름다운 풍경
+         // 아군 전체의 일반 공격 데미지 90% 증가(4턴)
+         // 아군 전체는 "일반 공격 시 '자신의 공격 데미지의 10%만큼 아군 전체를 치유' 추가(4턴)" 획득
+         // 자신은 일반 공격 시 "자신의 공격 데미지의 140%만큼 타깃에게 데미지" 추가(4턴) 획득
+         // 자신의 공격 데미지 90% 증가(4턴)
+       }
       me.ultafter = function() {}
-      me.ultimate = function() {
-         ultLogic(me);
-         // 아군 전체 딜러, 디스럽터가 공격 시 효과 '자신의 공격력의 59%만큼 타깃에게 데미지(3턴)' 획득
-         for(let idx of getRoleIdx("딜", "디")) {
-            tbf(comp[idx], "평발동", 59, "안닌궁주 보너스!2", 3);
-            tbf(comp[idx], "궁발동", 59, "안닌궁주 보너스!2", 3);
-         }
-      };
-      me.atkbefore = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() { // 워밍업
+         // 자신의 공격 데미지의 37.5%만큼 매턴 아군 전체를 치유(4턴)
+      }
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
-      me.leader = function() { // 다같이 먀먀먀
-         // 아군 전체의 최대 hp 20% 증가
-         hpUpAll(20);
-         // 아군 전체의 공격 데미지 70% 증가
-         tbf(all, "공퍼증", 70, "다같이 먀먀먀", always);
-         // 아군 전체가 '팀원 중 3명 이상의 딜러가 있으면 <같이 먀먀먀먀먀> 발동' 획득
-         // 아군 전체가 '팀원 중 2명 이상의 디스럽터가 있으면 <같이 먀먀먀먀먀> 발동' 획득
-         // <같이 먀먀먀먀먀>
-         if (getRoleCnt("딜") >= 3 || getRoleCnt("디") >= 2) {
-            // 발동형 스킬 효과 150% 증가
-            tbf(all, "발효증", 150, "같이 먀먀먀먀먀1", always);
-            // 가하는 데미지 30% 증가
-            tbf(all, "가뎀증", 30, "같이 먀먀먀먀먀2", always);
-            // 궁극기 발동 시 '타깃이 받는 화/수/풍/광/암 속성 데미지 5% 증가(2턴)
-            tbf(all, "궁", boss, "받속뎀", 5, "같이 먀먀먀먀먀3", 2, always);
-         }
+      me.leader = function() { // 천년만의 해변
+         // 아군 전체의 최대 hp 30% 증가
+
+         // 아군 전체는 "현재 아군 팀에 3종의 캐릭터 포지션이 있을 시, <엘프여왕의 여름 나기> 활성화" 획득
+         // <엘프 여왕의 여름 나기>
+         // 자신의 공격 데미지 100% 증가
+         // 자신의 일반 공격 데미지 110% 증가
+         // 자신의 가하는 데미지 20% 증가
+         // 자신은 일반 공격 시 "자신의 공격 데미지의 30% 만큼 타깃에게 데미지" 추가 획득
       }
       me.passive = function() {
-         // 18x18=88
-         // 궁극기 발동 시 '자신의 공격 데미지 40% 증가(최대 2중첩)' 발동
-         anbf(me, "궁", me, "공퍼증", 40, "18x18=88", 1, 2, always);
-         // 마음을 훔치는 소악마가 로그인했다고~
-         // 궁극기 발동 시 '타깃이 받는 궁극기 데미지 20% 증가(4턴) 발동
-         atbf(me, "궁", boss, "받궁뎀", 20, "마음을 훔치는 소악마가 로그인했다고~", 4, always);
-         // 오늘은 야한 미루 꿈 꿔
-         // 궁극기 발동 시 '타깃이 받는 데미지 20% 증가(4턴)' 발동
-         atbf(me, "궁", boss, "받뎀증", 20, "오늘은 야한 미루 꿈 꿔", 4, always);
-         // 궁극기+
-         // 자신의 궁극기 데미지 10% 증가
-         tbf(me, "궁뎀증", 10, "궁극기+", always);
+         // 우아한 발걸음
+         // 공격 데미지 30% 증가
+         // 공격 시 "아군 전체의 받는 치유량 30% 증가(1턴)" 발동
+
+         // 파라솔을 펴다
+         // 궁극기 발동 시, "자신의 최대 hp의 25%만큼 아군 전체에게 아머 강화(1턴)" 발동
+
+         // 웨딩드레스 병기 - 마력 강화
+         // 각 Wave의 9번째 턴에서 "적 전체의 받는 데미지 50% 증가(50턴)" 발동
+
+         // 공격+
+         // 자신의 공격 데미지 10% 증가
       }
       me.defense = function() {me.act_defense();}
-      me.turnstart = function() {
-         if (me.isLeader) {}
-      };
-      me.turnover = function() {
-         if (me.isLeader) {}
-      };
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
       return me;
-// 10144 10126 10134
-   case 10144 : // 수저
+   case 10144 : // 수저       ok
       me.ultbefore = function() {}
       me.ultafter = function() {}
       me.ultimate = function() {me.hpUltDmg = me.hp*161; ultLogic(me);};
@@ -1183,423 +1662,55 @@ function setDefault(me) {
          // 1턴이 지날 때마다 "자신의 공격 데미지 5% 증가(최대 20중첩)" 발동
          nbf(me, "공퍼증", 5, "웨딩드레스 병기 - 에너지 섭취1", 1, 20);
       };
-      return me;
-   case 10126 : // 할쿠
-      me.ultbefore = function() { // 사탕을 줘도 장난 칠거야!
-         // 타깃이 받는 데미지 45% 증가(4턴)
-         tbf(boss, "받뎀증", 45, "사탕을 줘도 장난 칠거야!1", 4);
-         // 타깃이 받는 데미지 20% 증가(최대 1중첩)
-         nbf(boss, "받뎀증", 20, "사탕을 줘도 장난 칠거야!2", 1, 1);
-         // 아군 전체의 궁극기 데미지 30% 증가(4턴)
-         tbf(all, "궁뎀증", 30, "사탕을 줘도 장난 칠거야!3", 4);
-      }
-      me.getTrapNest = function() {
-         const li = [...me.nestBuff]
-         const buf = li.filter(item => item.type == "<연쇄 트랩>");
-         if (buf.length == 0) return 0;
-         return buf[0].nest > buf[0].maxNest ? buf[0].maxNest : buf[0].nest;
+      return me; 
+   case 10145 : // 수사탄     coding
+      me.ultbefore = function() { // 피비린내
+         // 자신의 최대 hp10%만큼 아군 전체의 공격 데미지 증가(5턴)
+         tbf(all, "공고증", me.hp*10, "피비린내1", 5);
       }
       me.ultafter = function() {
-         // 할로윈 미궁 : 궁발동 시 "자신의 <연쇄 트랩> 중첩 수에 따라 '타깃이 받는 화/수속성 데미지 3% 증가(1턴)'"발동
-         for(let idx of getElementIdx("화", "수"))
-            tbf(comp[idx], "받속뎀", 3*me.getTrapNest(), "할로윈 미궁", 1);
-         if (!me.isLeader) return;
-         // 궁극기 발동 시 "자신의 <연쇄 트랩> 중첩 수에 따라 '타깃이 받는 광/암속성 데미지 6% 증가(1턴) 발동' 발동"
-         for(let idx of getElementIdx("광", "암"))
-            tbf(comp[idx], "받속뎀", 6*me.getTrapNest(), "참신한 말썽꾸러기2", 1);
-         // 궁극기 발동 시 "자신의 <연쇄 트랩> 중첩 수에 따라 "타깃이 받는 화/수속성 데미지 3% 증가(1턴) 발동' 발동"
-         for(let idx of getElementIdx("화", "수"))
-            tbf(comp[idx], "받속뎀", 3*me.getTrapNest(), "참신한 말썽꾸러기3", 1);
-      }
-      me.ultimate = function() {ultLogic(me);};
-      me.atkbefore = function() { // 찹쌀 끈적끈적탄
-         // 자신의 공격 데미지의 30% 만큼 아군 전체의 공격 데미지 증가(1턴)
-         for(let c of comp) tbf(c, "공고증", myCurAtk+me.id+30, "찹쌀 끈적끈적탄", 1);
-      }
-      me.atkafter = function() {}
-      me.attack = function() {atkLogic(me);};
-      me.leader = function() { // 참신한 말썽꾸러기
-         // 아군 전체의 최대 hp 30% 증가
-         hpUpAll(30);
-         // 궁극기 발동 시 "자신의 최대 hp 10% 만큼 아군 전체에게 실드 부여(1턴) 발동"
-         atbf(me, "궁", all, "아머", me.hp*10, "참신한 말썽꾸러기1", 1, always);
-         // 궁극기 발동 시 "자신의 <연쇄 트랩> 중첩 수에 따라 '타깃이 받는 광/암속성 데미지 6% 증가(1턴) 발동' 발동"
-         // => ultafter로
-         // 궁극기 발동 시 "자신의 <연쇄 트랩> 중첩 수에 따라 "타깃이 받는 화/수속성 데미지 3% 증가(1턴) 발동' 발동"
-         // => ultafter로
-
-         // 아군 전체는 "팀에 4종 위치의 캐릭터가 편성되어 있을 시 <할로윈 장난 파티!> 활성화" 획득
-         // <할로윈 장난 파티>
-         let a1 = getRoleCnt("딜") > 0 ? 1 : 0, a2 = getRoleCnt("힐") > 0 ? 1 : 0;
-         let a3 = getRoleCnt("탱") > 0 ? 1 : 0, a4 = getRoleCnt("섶") > 0 ? 1 : 0;
-         let a5 = getRoleCnt("디") > 0 ? 1 : 0;
-         if (a1+a2+a3+a4+a5 == 4) {
-            // 공격 데미지 120% 증가
-            tbf(all, "공퍼증", 120, "<할로윈 장난 파티>1", always);
-            // 가하는 데미지 50% 증가
-            tbf(all, "가뎀증", 50, "<할로윈 장난 파티>2", always);
-         }
-      }
-      me.passive = function() {
-         // 작은 몸과 큰 머리
-         // TODO: 현재 hp<=99% 일 시 "자신이 받는 데미지 10% 감소" 발동
-         // 1턴마다 "자신에게 <연쇄 트랩> 부여(최대 9중첩)" 발동 => turnover로
-
-         // 천방백계
-         // 궁극기 발동 시 "자신의 공격 데미지의 30%만큼 아군 전체의 공격 데미지 증가(1턴)" 발동
-         atbf(me, "궁", all, "공고증", myCurAtk+me.id+30, "천방백계1", 1, always);
-         // 현재 자신의 <연쇄 트랩> 중첩 수 > 3 일 시 "받는 실드 효과 20% 증가" 활성화 => turnstart로
-         // 현재 자신의 <연쇄 트랩> 중첩 수 > 6 일 시 "공격 데미지 20% 증가" 활성화 => turnstart로
-         // 현재 자신의 <연쇄 트랩> 중첩 수 = 9 일 시 "공격 데미지 20% 증가" 활성화 => turnstart로
-
-         // 할로윈 미궁 => ultafter로
-
-         // 데미지 감소+
-         // TODO: 자신이 받는 데미지 5% 감소
-      }
-      me.defense = function() {me.act_defense();}
-      me.turnstart = function() {
-         if (me.isLeader) {}
-         // TODO: 현재 자신의 <연쇄 트랩> 중첩 수 > 3 일 시 "받는 실드 효과 20% 증가" 활성화
-         // 현재 자신의 <연쇄 트랩> 중첩 수 > 6 일 시 "공격 데미지 20% 증가" 활성화
-         if (me.getTrapNest() > 6) tbf(me, "공퍼증", 20, "천방백계3", 1);
-         // 현재 자신의 <연쇄 트랩> 중첩 수 = 9 일 시 "공격 데미지 20% 증가" 활성화
-         if (me.getTrapNest() == 9) tbf(me, "공퍼증", 20, "천방백계4", 1);
-      };
-      me.turnover = function() {
-         if (me.isLeader) {}
-         // 1턴마다 "자신에게 <연쇄 트랩> 부여(최대 9중첩)" 발동
-         nbf(me, "<연쇄 트랩>", 0, "작은 몸과 큰 머리", 1, 9);
-      };
-      return me;
-   case 10134 : // 가엘리
-      me.turnHeal = false;
-      me.turnAtkBonus = false;
-      me.ultbefore = function() { // 다들 함께 불러요~
-         // 아군 딜러, 디스럽터는 "궁극기 발동 시 '자신의 공격 데미지의 75%만큼 타깃에게 데미지' 추가" 획득(1턴)
-         for(let idx of getRoleIdx("딜", "디"))
-            tbf(comp[idx], "궁추가", 75, "다들 함께 불러요~2", 1);
-         // 아군 전체가 가하는 데미지 60% 증가(1턴)
-         tbf(all, "가뎀증", 60, "다들 함께 불러요~3", 1);
-         // 자신 공격 데미지의 257%만큼 아군 전체를 치유
-         for(let c of comp) c.heal();
-         // 패시브 턴힐
-         me.turnHeal = true;
-         me.turnAtkBonus = true;
-         // 궁극기 발동 시, "자신의 공격 데미지의 15%만큼 매턴마다 자신을 제외한 아군의 공격 데미지 증가(1턴)" 효과 발동
-         for(let c of comp) if (c.id != me.id)
-            tbf(c, "공고증", myCurAtk+me.id+15, "팬들은 wow", 1);
-      }
-      me.ultafter = function() {}
-      me.ultimate = function() {ultLogic(me);
-         // 자신은 "공격 시, '자신의 공격 데미지의 15%만큼 자신을 제외한 아군의 공격 데미지 증가(1턴)' 효과 발동" 획득(5턴)
-         for(let c of comp) if (c.id != me.id) atbf(me, "평", c, "공고증", myCurAtk+me.id+15, "다들 함께 불러요~1", 1, 5);
-         for(let c of comp) if (c.id != me.id) atbf(me, "궁", c, "공고증", myCurAtk+me.id+15, "다들 함께 불러요~1", 1, 5);
-      };
-      me.atkbefore = function() { // 랩 타임!
-         // 자신 공격 데미지의 75%만큼 아군 전체를 치유
-         for(let c of comp) c.heal();
-         // 패시브 턴힐
-         me.turnHeal = true; 
-      }
-      me.atkafter = function() {}
-      me.attack = function() {atkLogic(me);};
-      me.leader = function() { // 눈부신 빛 빛나는 가희
-         // 아군 전체의 최대 hp 35% 증가
-         hpUpAll(35);
-         // 자신이 궁극기 발동 시, "<슬픔을 몰아내는 빛>" 효과 발동
-         // <슬픔을 몰아내는 빛>
-         // 적 전체가 받는 데미지 30% 증가(1턴)
-         atbf(me, "궁", boss, "받뎀증", 30, "<슬픔을 몰아내는 빛>1", 1, always);
-         // 아군 딜러, 디스럽터는 "궁극기 발동 시, '자신의 공격 데미지의 80% 만큼 타깃에게 데미지' 추가(1턴)" 획득
-         for(let idx of getRoleIdx("딜", "디"))
-            atbf(me, "궁", comp[idx], "궁추가", 80, "<슬픔을 몰아내는 빛>2", 1, always);
-
-         // 아군 전체는 "아군에 4가지 속성의 동료가 있을 시, <아이돌 댄스팀> 발동" 획득
-         let a1 = getElementCnt("화") > 0 ? 1 : 0, a2 = getElementCnt("수") > 0 ? 1 : 0;
-         let a3 = getElementCnt("풍") > 0 ? 1 : 0, a4 = getElementCnt("광") > 0 ? 1 : 0;
-         let a5 = getElementCnt("암") > 0 ? 1 : 0;
-         if (a1+a2+a3+a4+a5 == 4) {
-            // <아이돌 댄스팀>
-            // 공격 데미지 125% 증가
-            tbf(all, "공퍼증", 125, "<아이돌 댄스팀>1", always);
-            // TODO: 받는 치유량 30% 증가
-         }
-      }
-      me.passive = function() {
-         // 입만 열면 터지는 flow
-         // 공격 데미지 35% 증가
-         tbf(me, "공퍼증", 35, "입만 열면 터지는 flow1", always);
-         // 궁극기 발동 시, "자신의 공격 데미지의 15%만큼 자신을 제외한 아군의 공격 데미지 증가(1턴)" 효과 발동
-         for(let c of comp) if (c.id != me.id)
-            atbf(me, "궁", c, "공고증", myCurAtk+me.id+15, "입만 열면 터지는 flow2", 1, always);
-
-         // 모든 문장이 막힘없이 => turnover로
-         // 일반 공격 시, "자신의 공격 데미지의 40% 만큼 매턴마다 아군 전체를 치유(1턴)" 효과 발동
-         // 궁극기 발동 시, "자신의 공격 데미지의 80% 만큼 매턴마다 아군 전체를 치유(1턴)" 효과 발동
-
-         // 팬들은 wow => turnstart로
-         // 궁극기 발동 시, "자신의 공격 데미지의 15%만큼 매턴마다 자신을 제외한 아군의 공격 데미지 증가(1턴)" 효과 발동
-         
-         // 치유 부여+
-         // TODO: 자신이 주는 치유량 15% 증가
-      }
-      me.defense = function() {me.act_defense();
-         // 패시브 턴힐
-         me.turnHeal = true; 
-      }
-      me.turnstart = function() {
-         if (me.isLeader) {}
-         // // 궁극기 발동 시, "자신의 공격 데미지의 15%만큼 매턴마다 자신을 제외한 아군의 공격 데미지 증가(1턴)" 효과 발동
-         // if (me.turnAtkBonus) for(let c of comp) if (c.id != me.id)
-         //    tbf(c, "공고증", myCurAtk+me.id+15, "팬들은 wow", 1);
-         me.turnAtkBonus = false;
-      };
-      me.turnover = function() {
-         if (me.isLeader) {}
-         // 모든 문장이 막힘없이 : 매턴 힐(1턴)
-         if (me.turnHeal) for(let c of comp) c.heal();
-         me.turnHeal = false;
-      };
-      return me;
-// 10139 10108
-   case 10139 : // 불타라
-      me.ultbefore = function() { // 마법소녀 초건전 빔
-         // 타깃이 받는 광속성 데미지 20% 증가(최대 1중첩)
-         for(let idx of getElementIdx("광")) nbf(comp[idx], "받속뎀", 20, "마법소녀 초건전 빔1", 1, 1); 
-         // 타깃이 받는 데미지 10% 증가(최대 2중첩)
-         nbf(boss, "받뎀증", 10, "마법소녀 초건전 빔2", 1, 2);
-         // 아군 전체의 공격 데미지 10% 증가(최대 1중첩)
-         nbf(all, "공퍼증", 10, "마법소녀 초건전 빔3", 1, 1);
-      }
-      me.ultafter = function() {
-         // 서포트 변신
-         // 궁극기 발동 시 "자신의 현재 궁극기 CD 2턴 감소" 발동
-         cdChange(me, -2);
+         // 자신의 최대 hp25%만큼 아군 전체에게 아머 강화 부여(2턴)
+         tbf(all, "아머", me.hp*25, "피비린내2", 2);
       }
       me.ultimate = function() {ultLogic(me);};
       me.atkbefore = function() {}
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
-      me.leader = function() { // 이것이 바로 우정의 힘
-         let elCnt = getElementCnt("광", "화");
-         if (elCnt > 4) elCnt = 4;
-         // 자신의 <마법소녀의 힘> >= 2중첩일시 "공격 데미지 50% 증가, 가하는 데미지 20% 증가" 발동
-         if (elCnt >= 2) {
-            tbf(me, "공퍼증", 50, "이것이 바로 우정의 힘1", always);
-            tbf(me, "가뎀증", 20, "이것이 바로 우정의 힘2", always);
-         }
-         // 자신의 <마법소녀의 힘> >= 3중첩일시 "공격 시 '타깃이 받는 데미지 10% 증가(최대 4중첩)'발동" 발동
-         if (elCnt >= 3) anbf(me, "공격", boss, "받뎀증", 10, "이것이 바로 우정의 힘3", 1, 4, always);
-         // 자신의 <마법소녀의 힘> >= 4중첩일시 "궁극기 발동 시 '자신의 공격 데미지의 120%만큼 타깃에게 데미지'추가"발동
-         if (elCnt >= 4) tbf(me, "궁추가", 120, "이것이 바로 우정의 힘4", always);
-         nbf(me, "<마법소녀의 힘>", 0, "이것이 바로 우정의 힘", 4, 4);
-
-         // 아군 광/화속성 캐릭터는 <마법소녀 집결> 획득
-         for(let idx of getElementIdx("광", "화")) {
-            // <마법소녀 집결>
-            // 최대 hp30% 증가
-            hpUpMe(comp[idx], 30);
-            // 공격 데미지 100% 증가
-            tbf(comp[idx], "공퍼증", 100, "<마법소녀 집결>1", always);
-            // 가하는 데미지 20% 증가
-            tbf(comp[idx], "가뎀증", 20, "<마법소녀 집결>2", always);
-            // 궁극기 데미지 40% 증가
-            tbf(comp[idx], "궁뎀증", 40, "<마법소녀 집결>3", always);
-            // 행동 시 "1번 자리 아군은 '마법소녀의 힘(최대 4중첩) 획득" 발동(행동 후 본 효과 제거) => leader 첫줄로
-         }
+      me.leader = function() { // 마계의 낚시 마스터
+         // 아군 전체의 최대 hp40% 증가
+         hpUpAll(40);
+         // 아군 전체의 공격 데미지 70% 증가
+         tbf(all, "공퍼증", 70, "마계의 낚시 마스터1", always);
+         // 아군 전체의 일반 공격 데미지 60% 증가
+         // 아군 전체의 궁극기 데미지 20% 증가
+         // 공격 시 자신은 최대 hp5%만큼 아군 전체의 공격 데미지 증가(2턴) 발동
+         
+         // 피격 시 <걸려들었다> 발동
+         // 아군 전체의 가하는 데미지 1.33% 증가(최대 15중첩)
+         // 적전체의 받는 데미지 1.33% 증가(최대 15중첩)
       }
       me.passive = function() {
-         // 서포트 변신
-         // 자신 이외의 광속성 딜러는 궁극기 CD 변동 효과 면역
-         for(let idx of getElementIdx("광")) {
-            if (me.id == comp[idx].id) continue;
-            comp[idx].canCDChange = false;
-         }
-         // 궁극기 발동 시 "자신의 현재 궁극기 CD 2턴 감소" 발동 => ultafter로
+         // 피로 묻는 안부
+         // 일반 공격 시 자신의 현재 hp1%만큼 자신에게 확정 데미지 ("피격시" 발동 효과 발동)
+         // 일반 공격 시 아군 전체의 일반 공격 데미지 5% 증가(최대 10중첩) 추가
+         // 궁극기 발동 시 자신의 현재 hp1%만큼 자신에게 확정 데미지 ("피격시" 발동 효과 발동)
+         // 궁극기 발동 시 아군 전체의 궁극기 데미지 10% 증가 (최대 3중첩)
 
-         // 블링블링 베개 분쇄기
-         // 궁극기 발동 시 "자신이 가하는 데미지 15% 증가(최대 2중첩)" 발동
-         anbf(me, "궁", me, "가뎀증", 15, "블링블링 베개 분쇄기", 1, 2, always);
+         // 학살 욕망
+         // 피격 시 "아군 전체의 가하는 데미지 1.33% 증가(최대 15중첩)" 발동
 
-         // 어렴풋이 보여
-         // 첫 번째 턴 시작 시 "자신의 현재 궁극기 CD 2턴 감소" 발동 => turnstart로
+         // 웨딩드레스 병기 - 장애 식별
+         // 피격 시 적 전체의 받는 데미지 1.33% 증가 (최대 15중첩)
 
-         // 궁극기 발동 시 "타깃이 받는 광속성 데미지 20% 증가(최대 1중첩)" 발동
-         for(let idx of getElementIdx("광"))
-            anbf(me, "궁", comp[idx], "받속뎀", 20, "어렴풋이 보여", 1, 1, always);
-
-         // 궁극기+
-         // 자신의 궁극기 데미지 10% 증가
-         tbf(me, "궁뎀증", 10, "궁극기+", always);
+         // 데미지+
+         // 자신이 가하는 데미지 7.5% 증가
       }
       me.defense = function() {me.act_defense();}
-      me.turnstart = function() {
-         if (me.isLeader) {}
-         // 어렴풋이 보여
-         // 첫 번째 턴 시작 시 "자신의 현재 궁극기 CD 2턴 감소" 발동
-         if (GLOBAL_TURN == 1) cdChange(me, -2);
-      };
-      me.turnover = function() {
-         if (me.isLeader) {}
-      };
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10108 : // 코바알
-      me.healTurn = [];
-      me.ultbefore = function() { // 발렌타인 초콜릿 대방출~
-         // 자신의 공격 데미지의 20%만큼 동료 전체의 공격 데미지 증가(1턴)
-         for(let c of comp) if (c.id != me.id)
-            tbf(c, "공고증", myCurAtk+me.id+20, "발렌타인 초콜릿 대방출~1", 1);
-         // 타깃이 받는 데미지 30% 증가(최대 2중첩)
-         nbf(boss, "받뎀증", 30, "발렌타인 초콜릿 대방출~2", 1, 2);
-         // 자신의 공격 데미지의 150%만큼 매턴 아군 전체를 치유(3턴)
-         me.healTurn.push(GLOBAL_TURN, GLOBAL_TURN+1, GLOBAL_TURN+2);
-      }
-      me.ultafter = function() {}
-      me.ultimate = function() {ultLogic(me);};
-      me.atkbefore = function() { // 달콤한 맛
-         // 자신의 공격 데미지의 20%만큼 동료 전체의 공격 데미지 증가(1턴)
-         for(let c of comp) if (c.id != me.id)
-            tbf(c, "공고증", myCurAtk+me.id+20, "달콤한 맛", 1);
-         // 자신의 공격 데미지의 20%만큼 아군 전체를 치유
-         for(let c of comp) c.heal();
-         // 자신의 공격 데미지의 20%만큼 매턴 아군 전체를 치유(2턴)
-         me.healTurn.push(GLOBAL_TURN, GLOBAL_TURN+1);
-      }
-      me.atkafter = function() {}
-      me.attack = function() {atkLogic(me);};
-      me.leader = function() { // 연애하는 소녀의 기분이란
-         // 아군 전체의 최대 hp20% 증가
-         hpUpAll(20);
-         // 아군 전체의 공격 데미지 50% 증가
-         tbf(all, "공퍼증", 50, "연애하는 소녀의 기분이란", always);
-
-         // 아군 전체는 "팀에 화속성 동료가 최소 3명일 경우 <모두 함께 초콜릿을 만들어보자> 발동" 획득
-         if (getElementCnt("화") >= 3) {
-            // <모두 함께 초콜릿을 만들어보자>
-            // 궁극기 발동 시 "타깃이 받는 궁극기 데미지 15% 증가(2턴)" 발동
-            atbf(all, "궁", boss, "받궁뎀", 15, "<모두 함께 초콜릿을 만들어보자>1", 2, always);
-            // 궁극기 발동 시 "타깃이 받는 화속성 데미지 15% 증가(2턴)" 발동
-            for(let idx of getElementIdx("화"))
-               atbf(all, "궁", comp[idx], "받속뎀", 15, "<모두 함께 초콜릿을 만들어보자>2", 2, always);
-         }
-
-         // 3번 자리 동료는 <가장 사랑하는 그대에게> 획득
-         // <가장 사랑하는 그대에게>
-         // 공격 데미지 70% 증가
-         tbf(comp[2], "공퍼증", 70, "<가장 사랑하는 그대에게>1", always);
-         // 궁극기 발동 시 "자신이 가하는 데미지 20% 증가(최대 2중첩)" 발동
-         atbf(comp[2], "궁", comp[2], "가뎀증", 20, "<가장 사랑하는 그대에게>2", 1, 2, always);
-      }
-      me.passive = function() {
-         // 상인의 마케팅 전략
-         // TODO: 최대 hp가 가장 낮은 아군은 "받는 피해 15% 감소" 획득
-
-         // 사랑에 사랑을 더해줄게
-         // TODO: 아군 전체가 받는 궁극기 데미지 10% 감소
-         // TODO: 궁극기 발동 시 "아군 전체가 받는 치유 회복량 20% 증가(최대 2중첩)" 발동
-
-         // 초콜릿? 차? 아니면 나?
-         // 아군 힐러, 서포터는 <격정의 밤> 획득
-         for(let idx of getRoleIdx("힐", "섶")) {
-            // <격정의 밤>
-            // 공격 데미지 40% 증가
-            tbf(comp[idx], "공퍼증", 40, "<격정의 밤>", always);
-            // TODO: 방어 시 "아군 전체가 받는 지속형 치유 20% 증가(1턴)" 발동
-         }
-         // 공격 데미지+
-         // 자신의 공격 데미지 10% 증가
-         tbf(me, "공퍼증", 10, "공격 데미지+", always);
-      }
-      me.defense = function() {me.act_defense();}
-      me.turnstart = function() {
-         if (me.isLeader) {}
-      };
-      me.turnover = function() {
-         if (me.isLeader) {}
-         // 매턴 아군 전체를 치유
-         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp) c.heal();
-         me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
-      };
-      return me; 
-// 10072
-   case 10072 : // 신바알
-      me.ultbefore = function() { // 부케 임자는 이미 정해졌엉~
-         // 자신의 공격 데미지 50%만큼 자신의 공격 데미지 증가(1턴)
-         tbf(me, "공고증", myCurAtk+me.id+50, "부케 임자는 이미 정해졌엉~1", 1);
-         // 자신의 공격 데미지 75%만큼 2번 자리 아군의 공격 데미지 증가(1턴)
-         tbf(comp[1], "공고증", myCurAtk+me.id+75, "부케 임자는 이미 정해졌엉~2", 1);
-         // 아군 2번 자리의 일반 공격 데미지 100% 증가(2턴)
-         tbf(comp[1], "일뎀증", 100, "부케 임자는 이미 정해졌엉~3", 2);
-         // 아군 2번 자리의 궁극기 피해량 40% 증가(1턴)
-         tbf(comp[1], "궁뎀증", 40, "부케 임자는 이미 정해졌엉~4", 1);
-
-      }
-      me.ultafter = function() {}
-      me.ultimate = function() {ultLogic(me);};
-      me.atkbefore = function() { // 부케 던지기
-         // 자신의 공격 데미지 75%만큼 아군 2번 자리의 공격 데미지 증가(1턴)
-         tbf(comp[1], "공고증", myCurAtk+me.id+75, "부케 던지기", 1);
-      }
-      me.atkafter = function() {}
-      me.attack = function() {atkLogic(me);};
-      me.leader = function() { // 마왕의 연애 시뮬레이션
-         // 자신의 공격 데미지 80% 증가
-         tbf(me, "공퍼증", 80, "마왕의 연애 시뮬레이션1", always);
-         // 자신의 입히는 피해량(가뎀증) 30% 증가
-         tbf(me, "가뎀증", 30, "마왕의 연애 시뮬레이션2", always);
-         // 자신의 일반 공격 데미지 125% 증가
-         tbf(me, "일뎀증", 125, "마왕의 연애 시뮬레이션3", always);
-         // 자신의 궁극기 데미지 50% 증가
-         tbf(me, "궁뎀증", 50, "마왕의 연애 시뮬레이션4", always);
-
-         // <마왕 바알이 원하는 고백> 발동
-         // 자신은 "일반 공격 시 추가 스킬 '자신의 공격 데미지 125%만큼 타깃에게 데미지'(50턴) 추가" 효과 획득
-         tbf(me, "평추가", 125, "<마왕 바알이 원하는 고백>1", 50);
-         // 자신은 "궁극기 발동 시 추가 스킬 '자신의 공격 데미지 500%만큼 타깃에게 데미지'(50턴) 추가" 효과 획득 
-         tbf(me, "궁추가", 500, "<마왕 바알이 원하는 고백>2", 50);
-      }
-      me.passive = function() {
-         // 친구의 도움은 필수!
-         // 아군 2번 자리의 공격(가하는) 데미지 25% 증가(50턴) 발동
-         tbf(comp[1], "가뎀증", 25, "친구의 도움은 필수!", 50);
-         // TODO: 아군 4번 자리가 받는 데미지 20% 감소(50턴) 발동
-
-         // 첫 번째 턴에서 "자신의 궁극기 CD 4턴 감소" 발동
-         cdChange(me, -4);
-
-         // <밀당의 매력> => turnover로
-         // 1턴마다 "자신의 공격 데미지 15% 증가(최대 8중첩)" 발동
-
-         // 시크릿 연애 대작전
-         // 2턴마다 "<밀당의 매력>이 부여한 공격 데미지 증가 상태 1중첩" 효과 발동 => turnover로
-         // 1턴마다 "자신의 공격 데미지 35%만큼 자신의 공격 데미지 증가(1턴)" 효과 발동 => turnstart로
-
-         // 공격력 증가
-         // 자신의 공격 데미지 10% 증가
-         tbf(me, "공퍼증", 10, "공격력 증가", always);
-      }
-      me.defense = function() {me.act_defense();}
-      me.turnstart = function() {
-         if (me.isLeader) {}
-         // 시크릿 연애 대작전
-         // 1턴마다 "자신의 공격 데미지 35%만큼 자신의 공격 데미지 증가(1턴)" 효과 발동
-         if (GLOBAL_TURN > 1) tbf(me, "공고증", myCurAtk+me.id+35, "시크릿 연애 대작전", 1);
-      };
-      me.turnover = function() {
-         if (me.isLeader) {}
-         // <밀당의 매력>
-         // 1턴마다 "자신의 공격 데미지 15% 증가(최대 8중첩)" 발동
-         nbf(me, "공퍼증", 15, "<밀당의 매력>", 1, 8);
-         // 시크릿 연애 대작전
-         // 2턴마다 "<밀당의 매력>이 부여한 공격 데미지 증가 상태 1중첩" 효과 발동
-         if (GLOBAL_TURN % 2 == 0) nbf(me, "공퍼증", 15, "<밀당의 매력>", 1, 8);
-      };
-      return me;
-   default: return null;
-      
-   }
-}
+   
+default: return null;}}
 function ultLogic(me) {
    me.ultbefore();
    bossUltAttack(me);
