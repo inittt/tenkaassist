@@ -91,7 +91,6 @@ function start(compIds) {
    comp[0].leader();
    for(let i = 0; i < 5; i++) comp[i].passive();
    for(let i = 0; i < 5; i++) comp[i].turnstart();
-   setHpUp();
    updateAll();
 }
 

@@ -11,7 +11,7 @@ class Boss {
       this.turnBuff = []; this.nestBuff = []; this.actTurnBuff = []; this.actNestBuff = [];
       this.li = [];
    }
-   getCurAtk() {return 0};
+   getCurAtk() {return 0}
    getArmor() {return 0}
    hit() {
       const atbf = [...this.actTurnBuff], anbf = [...this.actNestBuff];
@@ -438,13 +438,15 @@ function getRoleIdx() {
    return res;
 }
 
-function hpUpAll(amount) {for(let c of comp) c.hpUp += amount;}
-function hpUpMe(me, amount) {me.hpUp += amount;}
-function setHpUp() {
+function hpUpAll(amount) {
    for(let c of comp) {
-      c.hp = Math.floor(c.hp * (1 + c.hpUp/100))
-      c.curHp = Math.floor(c.curHp * (1 + c.hpUp/100));
+      c.hp = Math.floor(c.hp*(1+amount/100));
+      c.curHp = Math.floor(c.curHp*(1+amount/100));
    }
+}
+function hpUpMe(me, amount) {
+   me.hp = Math.floor(me.hp*(1+amount/100));
+   me.curHp = Math.floor(me.curHp*(1+amount/100));
 }
 function cdChange(me, size) {
    if (!me.canCDChange) return;
@@ -1509,12 +1511,19 @@ function setDefault(me) {switch(me.id) {
          if (me.isLeader) {}
       };
       return me;
-   case 10142 : // 수즈루     coding
+   case 10142 : // 수즈루     codingOk
       me.ultbefore = function() { // 다 함께 수박 깨기~
          // 자신의 일반 공격 데미지 130% 증가(4턴)
+         tbf(me, "일뎀증", 130, "다 함께 수박 깨기~1", 4);
          // 자신의 가하는 데미지 40% 증가(4턴)
-         // 아군 딜러는 일반 공격 시 자신의 공격 데미지의 60%만큼 타깃에게 데미지 추가(4턴)
-         // 아군 딜러는 일반 공격 시 아군 "여름날 치즈루"의 공격 데미지 30% 증가(1턴) 추가(4턴)
+         tbf(me, "가뎀증", 40, "다 함께 수박 깨기~2", 4);
+
+         for(let idx of getRoleIdx("딜")) {
+            // 아군 딜러는 일반 공격 시 자신의 공격 데미지의 60%만큼 타깃에게 데미지 추가(4턴)
+            tbf(comp[idx], "평추가", 60, "다 함께 수박 깨기~3", 4);
+            // 아군 딜러는 일반 공격 시 아군 "여름날 치즈루"의 공격 데미지 30% 증가(1턴) 추가(4턴)
+            atbf(comp[idx], "평", me, "공퍼증", 30, "다 함께 수박 깨기~3", 1, 4);
+         } 
       }
       me.ultafter = function() {}
       me.ultimate = function() {ultLogic(me);};
@@ -1523,77 +1532,125 @@ function setDefault(me) {switch(me.id) {
       me.attack = function() {atkLogic(me);};
       me.leader = function() { // 발리볼 대회 스타트~
          // 아군 전체의 hp40% 증가
+         hpUpAll(40);
          // 아군 전체의 공격 데미지 50% 증가
+         tbf(all, "공퍼증", 50, "발리볼 대회 스타트~", always);
 
          // 아군 딜러가 3명 이상 있을 시 <시합 참여> 발동
-         // <시합 참여>
-         // 자신의 궁극기 발동 시 "적 전체의 받는 데미지 20% 증가(4턴)" 발동
-         // 자신의 궁극기 발동 시 "아군 딜러가 가하는 데미지 20% 증가(4턴)" 발동
-         // 자신의 궁극기 발동 시 "아군 딜러의 일반 공격 데미지 110% 증가(4턴)" 발동
+         if (getRoleCnt("딜") >= 3) {
+            // <시합 참여>
+            // 자신의 궁극기 발동 시 "적 전체의 받는 데미지 20% 증가(4턴)" 발동
+            atbf(me, "궁", boss, "받뎀증", 20, "<시합 참여>1", 4, always);
+            for(let idx of getRoleIdx("딜")) {
+               // 자신의 궁극기 발동 시 "아군 딜러가 가하는 데미지 20% 증가(4턴)" 발동
+               atbf(me, "궁", comp[idx], "가뎀증", 20, "<시합 참여>2", 4, always);
+               // 자신의 궁극기 발동 시 "아군 딜러의 일반 공격 데미지 110% 증가(4턴)" 발동
+               atbf(me, "궁", comp[idx], "일뎀증", 110, "<시합 참여>3", 4, always);
+            }
+         }
       }
       me.passive = function() {
          // 여름날 해변 가이드
          // 아군 딜러는 <해설 타임> 획득
-         // <해설 타임>
+         // <해설 타임> => turnstart로
          // 1턴이 지날 때마다 "타깃이 받는 일반 공격 데미지 30% 증가(1턴)" 발동
 
          // 꼬록꼬록꼬록~
          // 아군 딜러는 <머리통 바로잡기> 획득
          // <머리통 바로잡기>
          // 궁극기 발동 시 "아군 '여름날 치즈루'의 공격 데미지 20% 증가(4턴)" 발동
+         for(let idx of getRoleIdx("딜"))
+            atbf(comp[idx], "궁", me, "공퍼증", 20, "<머리통 바로잡기>", 4, always);
 
          // 웨딩드레스 병기 - 힘 강화
          // 첫 번째 턴에서 "자신의 현재 궁극기 CD 4턴 감소" 발동
+         cdChange(me, -4);
          // 궁극기 발동 시 "타깃이 받는 데미지 20% 증가(최대 2중첩)" 발동
+         anbf(me, "궁", boss, "받뎀증", 20, "웨딩드레스 병기 - 힘 강화", 1, 2, always);
 
          // 공격+
          // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격+", always);
       }
       me.defense = function() {me.act_defense();}
-      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnstart = function() {if (me.isLeader) {}
+         // 아군 딜러는 <해설 타임> 획득
+         // <해설 타임>
+         // 1턴이 지날 때마다 "타깃이 받는 일반 공격 데미지 30% 증가(1턴)" 발동
+         if (GLOBAL_TURN > 1) {
+            const dealerCnt = getRoleCnt("딜");
+            for(let i = 0; i < dealerCnt; i++) tbf(boss, "받일뎀", 30, "<해설 타임>", 1);
+         }
+      };
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10143 : // 수살루     coding
+   case 10143 : // 수살루     codingOk
+      me.healTurn = [];
       me.ultbefore = function() { // 여름날의 아름다운 풍경
          // 아군 전체의 일반 공격 데미지 90% 증가(4턴)
+         tbf(all, "일뎀증", 90, "여름날의 아름다운 풍경1", 4);
          // 아군 전체는 "일반 공격 시 '자신의 공격 데미지의 10%만큼 아군 전체를 치유' 추가(4턴)" 획득
+         for(let c of comp) atbf(c, "평", all, "힐", 10, "여름날의 아름다운 풍경2", 1, 4);
          // 자신은 일반 공격 시 "자신의 공격 데미지의 140%만큼 타깃에게 데미지" 추가(4턴) 획득
+         tbf(me, "평추가", 140, "여름날의 아름다운 풍경3", 4);
          // 자신의 공격 데미지 90% 증가(4턴)
-       }
+         tbf(me, "공퍼증", 90, "여름날의 아름다운 풍경4", 4);
+      }
       me.ultafter = function() {}
       me.ultimate = function() {ultLogic(me);};
       me.atkbefore = function() { // 워밍업
          // 자신의 공격 데미지의 37.5%만큼 매턴 아군 전체를 치유(4턴)
+         me.healTurn.push(GLOBAL_TURN, GLOBAL_TURN+1, GLOBAL_TURN+2, GLOBAL_TURN+3);
       }
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
       me.leader = function() { // 천년만의 해변
          // 아군 전체의 최대 hp 30% 증가
-
+         hpUpAll(30);
          // 아군 전체는 "현재 아군 팀에 3종의 캐릭터 포지션이 있을 시, <엘프여왕의 여름 나기> 활성화" 획득
-         // <엘프 여왕의 여름 나기>
-         // 자신의 공격 데미지 100% 증가
-         // 자신의 일반 공격 데미지 110% 증가
-         // 자신의 가하는 데미지 20% 증가
-         // 자신은 일반 공격 시 "자신의 공격 데미지의 30% 만큼 타깃에게 데미지" 추가 획득
+         let a1 = getRoleCnt("딜") > 0 ? 1 : 0, a2 = getRoleCnt("힐") > 0 ? 1 : 0;
+         let a3 = getRoleCnt("탱") > 0 ? 1 : 0, a4 = getRoleCnt("섶") > 0 ? 1 : 0;
+         let a5 = getRoleCnt("디") > 0 ? 1 : 0;
+         if (a1+a2+a3+a4+a5 == 3) {
+            // <엘프 여왕의 여름 나기>
+            // 자신의 공격 데미지 100% 증가
+            tbf(all, "공퍼증", 100, "<엘프 여왕의 여름 나기>1", always);
+            // 자신의 일반 공격 데미지 110% 증가
+            tbf(all, "일뎀증", 110, "<엘프 여왕의 여름 나기>2", always);
+            // 자신의 가하는 데미지 20% 증가
+            tbf(all, "가뎀증", 20, "<엘프 여왕의 여름 나기>3", always);
+            // 자신은 일반 공격 시 "자신의 공격 데미지의 30% 만큼 타깃에게 데미지" 추가 획득
+            tbf(all, "평추가", 30, "<엘프 여왕의 여름 나기>4", always);
+         }
       }
       me.passive = function() {
          // 우아한 발걸음
          // 공격 데미지 30% 증가
-         // 공격 시 "아군 전체의 받는 치유량 30% 증가(1턴)" 발동
+         tbf(me, "공퍼증", 30, "우아한 발걸음1", always);
+         // TODO: 공격 시 "아군 전체의 받는 치유량 30% 증가(1턴)" 발동
 
          // 파라솔을 펴다
          // 궁극기 발동 시, "자신의 최대 hp의 25%만큼 아군 전체에게 아머 강화(1턴)" 발동
+         atbf(me, "궁", all, "아머", me.hp*25, "파라솔을 펴다", 1, always);
 
-         // 웨딩드레스 병기 - 마력 강화
+         // 웨딩드레스 병기 - 마력 강화 => turnstart로
          // 각 Wave의 9번째 턴에서 "적 전체의 받는 데미지 50% 증가(50턴)" 발동
 
          // 공격+
          // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격+", always);
       }
       me.defense = function() {me.act_defense();}
-      me.turnstart = function() {if (me.isLeader) {}};
-      me.turnover = function() {if (me.isLeader) {}};
+      me.turnstart = function() {if (me.isLeader) {}
+         // 웨딩드레스 병기 - 마력 강화
+         // 각 Wave의 9번째 턴에서 "적 전체의 받는 데미지 50% 증가(50턴)" 발동
+         if (GLOBAL_TURN == 9) tbf(boss, "받뎀증", 50, "웨딩드레스 병기 - 마력 강화", 50);
+      };
+      me.turnover = function() {if (me.isLeader) {}
+         // 매턴 아군 전체를 치유
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp) c.heal();
+         me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
+      };
       return me;
    case 10144 : // 수저       ok
       me.ultbefore = function() {}
@@ -1663,7 +1720,7 @@ function setDefault(me) {switch(me.id) {
          nbf(me, "공퍼증", 5, "웨딩드레스 병기 - 에너지 섭취1", 1, 20);
       };
       return me; 
-   case 10145 : // 수사탄     coding
+   case 10145 : // 수사탄     ok
       me.ultbefore = function() { // 피비린내
          // 자신의 최대 hp10%만큼 아군 전체의 공격 데미지 증가(5턴)
          tbf(all, "공고증", me.hp*10, "피비린내1", 5);
@@ -1671,10 +1728,11 @@ function setDefault(me) {switch(me.id) {
       me.ultafter = function() {
          // 자신의 최대 hp25%만큼 아군 전체에게 아머 강화 부여(2턴)
          tbf(all, "아머", me.hp*25, "피비린내2", 2);
+         me.hit();
       }
       me.ultimate = function() {ultLogic(me);};
       me.atkbefore = function() {}
-      me.atkafter = function() {}
+      me.atkafter = function() {me.hit();}
       me.attack = function() {atkLogic(me);};
       me.leader = function() { // 마계의 낚시 마스터
          // 아군 전체의 최대 hp40% 증가
@@ -1682,28 +1740,38 @@ function setDefault(me) {switch(me.id) {
          // 아군 전체의 공격 데미지 70% 증가
          tbf(all, "공퍼증", 70, "마계의 낚시 마스터1", always);
          // 아군 전체의 일반 공격 데미지 60% 증가
+         tbf(all, "일뎀증", 60, "마계의 낚시 마스터2", always);
          // 아군 전체의 궁극기 데미지 20% 증가
+         tbf(all, "궁뎀증", 20, "마계의 낚시 마스터3", always);
          // 공격 시 자신은 최대 hp5%만큼 아군 전체의 공격 데미지 증가(2턴) 발동
+         atbf(me, "공격", all, "공고증", me.hp*5, "마계의 낚시 마스터4", 2, always);
          
          // 피격 시 <걸려들었다> 발동
          // 아군 전체의 가하는 데미지 1.33% 증가(최대 15중첩)
+         anbf(me, "피격", all, "가뎀증", 1.33, "<걸려들었다>1", 1, 15, always);
          // 적전체의 받는 데미지 1.33% 증가(최대 15중첩)
+         anbf(me, "피격", boss, "받뎀증", 1.33, "<걸려들었다>2", 1, 15, always);
       }
       me.passive = function() {
          // 피로 묻는 안부
-         // 일반 공격 시 자신의 현재 hp1%만큼 자신에게 확정 데미지 ("피격시" 발동 효과 발동)
+         // 일반 공격 시 자신의 현재 hp1%만큼 자신에게 확정 데미지 ("피격시" 발동 효과 발동) => atkafter로
          // 일반 공격 시 아군 전체의 일반 공격 데미지 5% 증가(최대 10중첩) 추가
-         // 궁극기 발동 시 자신의 현재 hp1%만큼 자신에게 확정 데미지 ("피격시" 발동 효과 발동)
+         anbf(me, "평", all, "일뎀증", 5, "피로 묻는 안부2", 1, 10, always);
+         // 궁극기 발동 시 자신의 현재 hp1%만큼 자신에게 확정 데미지 ("피격시" 발동 효과 발동) => ultafter로
          // 궁극기 발동 시 아군 전체의 궁극기 데미지 10% 증가 (최대 3중첩)
+         anbf(me, "궁", all, "궁뎀증", 10, "피로 묻는 안부4", 1, 3, always);
 
          // 학살 욕망
          // 피격 시 "아군 전체의 가하는 데미지 1.33% 증가(최대 15중첩)" 발동
+         anbf(me, "피격", all, "가뎀증", 1.33, "학살 욕망", 1, 15, always);
 
          // 웨딩드레스 병기 - 장애 식별
          // 피격 시 적 전체의 받는 데미지 1.33% 증가 (최대 15중첩)
+         anbf(me, "피격", boss, "받뎀증", 1.33, "웨딩드레스 병기 - 장애 식별", 1, 15, always);
 
          // 데미지+
          // 자신이 가하는 데미지 7.5% 증가
+         tbf(me, "가뎀증", 7.5, "데미지+", always);
       }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {if (me.isLeader) {}};
