@@ -21,7 +21,7 @@ const chJSON = { data : [
 {ok : false, id : 10020, rarity : 3, fullname : "미래의 용자 무엘라", name : "무엘라", element : 2, role : 4},
 {ok : false, id : 10021, rarity : 3, fullname : "현자 하쿠", name : "하쿠", element : 2, role : 1},
 {ok : true, id : 10022, rarity : 3, hp:922524, atk:292745, cd:4, atkMag:100, ultMag:514, fullname : "광견 놀라이티", name : "놀라이티", element : 0, role : 0},
-{ok : false, id : 10023, rarity : 3, hp:1220583, atk:221441, cd:4, atkMag:75, ultMag:0, fullname : "부사수 벨레트", name : "벨레트", element : 0, role : 2},
+{ok : false, id : 10023, rarity : 3, hp:1220583, atk:221441, cd:4, atkMag:75, ultMag:0.0000013895, fullname : "부사수 벨레트", name : "벨레트", element : 0, role : 2},
 {ok : false, id : 10024, rarity : 3, fullname : "네크로맨서 여왕 엘리자베스", name : "엘자", element : 4, role : 0},
 {ok : false, id : 10025, rarity : 3, fullname : "아이돌 이블리스", name : "아이블", element : 1, role : 4},
 {ok : false, id : 10026, rarity : 3, fullname : "아이돌 블랙앤화이트 노엘리", name : "노엘리", element : 0, role : 3},
