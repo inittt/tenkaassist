@@ -2,6 +2,7 @@ let params = new URLSearchParams(window.location.search);
 let compId = params.get('id');
 
 let curRecommend;
+const compIds_toTest = [];
 document.addEventListener("DOMContentLoaded", function() {
    // 조합 정보 세팅
    request(`${server}/comps/get/${compId}`, {
@@ -87,6 +88,7 @@ function makeCompBlock(comp) {
    const compbox = document.getElementById('comp-box-in');
    const stringArr = [];
    for(const cid of compstr.split(" ").map(Number)) {
+      compIds_toTest.push(cid);
       const ch = getCharacter(cid);
       stringArr.push(`
          <div class="character" style="margin:0.2rem;">
@@ -147,4 +149,8 @@ function deleteComp() {
    }).catch(e => {
       console.log("데이터 로드 실패", e);
    })
+}
+
+function goTest() {
+   location.href = `${address}/simulator/?list=${compIds_toTest}`
 }
