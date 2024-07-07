@@ -645,6 +645,56 @@ function setDefault(me) {switch(me.id) {
          if (GLOBAL_TURN % 2 == 0) nbf(me, "공퍼증", 15, "<밀당의 매력>", 1, 8);
       };
       return me;
+   case 10076 : // 앨루루     ok
+      me.ultbefore = function() {}
+      me.ultafter = function() { // 다과회 동맹 전원 돌격
+         // 아군 딜러 전체가 "일반 공격 시 '자신의 공격 데미지의 60%만큼 타깃에게 데미지' 스킬 추가(4턴)" 획득
+         for(let idx of getRoleIdx("딜"))
+            tbf(comp[idx], "평추가", 60, "다과회 동맹 전원 돌격", 4);
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 이상한 나라의 다과회 연맹
+         // 첫 번째 턴에서 "자신의 궁극기 CD 4턴 감소" 발동
+         cdChange(me, -4);
+         // 자신이 궁극기 발동 시 <Shuffling> 효과 발동
+         // <Shuffling>
+         // 아군 딜러 전체의 "일반 공격 시 '자신의 공격 데미지의 37.5%만큼 타깃에게 데미지' 스킬 추가(4턴)" 획득
+         for(let idx of getRoleIdx("딜"))
+            atbf(me, "궁", comp[idx], "평추가", 37.5, "<Shuffling>", 4, always);
+
+         // 아군 전체가 "팀원 중 최소 4명의 딜러가 있을 시, <Four of a Kind> 발동" 효과 획득
+         if (getRoleCnt("딜") >= 4) {
+            // 공격 데미지 70% 증가
+            tbf(all, "공퍼증", 70, "<Four of a Kind>1", always);
+            // 일반 공격 데미지 100% 증가
+            tbf(all, "일뎀증", 100, "<Four of a Kind>2", always);
+            // TODO: 받는 데미지 10% 감소
+         }
+      }
+      me.passive = function() {
+         // 아름다운 소망
+         // 궁극기 발동 시 "아군 전체의 일반 공격 데미지 30% 증가(최대 2중첩)" 발동
+         anbf(me, "궁", all, "일뎀증", 30, "아름다운 소망", 1, 2, always);
+
+         // 공주의 리더십(꿈)
+         // 첫 번째 턴 시작 시 "아군 전체의 일반 공격 데미지 30% 증가(50턴)" 발동
+         tbf(all, "일뎀증", 30, "공주의 리더십(꿈)", 50);
+
+         // 다과회 동맹의 야심
+         // 궁극기 발동 시 "아군 전체가 가하는 데미지 12.5% 증가(최대 2중첩)" 발동
+         anbf(me, "궁", all, "가뎀증", 12.5, "다과회 동맹의 야심", 1, 2, always);
+
+         // 일반 공격 데미지+
+         // 자신의 일반 공격 데미지 10% 증가
+         tbf(me, "일뎀증", 10, "일반 공격 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
    case 10088 : // 신빨강     ok
       me.ultbefore = function() {// 아나스티의 특제 칵테일
          // 타깃이 받는 데미지 20% 증가(7턴)
@@ -1584,7 +1634,7 @@ function setDefault(me) {switch(me.id) {
       };
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10143 : // 수살루     codingOk
+   case 10143 : // 수살루     ok
       me.healTurn = [];
       me.ultbefore = function() { // 여름날의 아름다운 풍경
          // 아군 전체의 일반 공격 데미지 90% 증가(4턴)
