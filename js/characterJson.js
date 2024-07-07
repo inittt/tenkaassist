@@ -120,7 +120,7 @@ const chJSON = { data : [
 {ok : true, id : 10134, rarity : 3, hp:933596, atk:289202, cd:4, atkMag:0, ultMag:0, fullname : "빛나는 가희 노엘리", name : "가엘리", element : 2, role : 1},
 {ok : false, id : 10135, rarity : 3, fullname : "아이돌 매니저 메스미나", name : "돌스미나", element : 2, role : 0},
 {ok : false, id : 10136, rarity : 3, fullname : "현상금 사냥꾼 안젤라", name : "안젤라", element : 1, role : 4},
-{ok : false, id : 10137, rarity : 3, fullname : "춘정의 토끼 스즈란", name : "춘즈란", element : 2, role : 0},
+{ok : true, id : 10137, rarity : 3, hp:1019515, atk:264843, cd:4, atkMag:70, ultMag:0, fullname : "춘정의 토끼 스즈란", name : "춘즈란", element : 2, role : 0},
 {ok : false, id : 10138, rarity : 3, fullname : "익애의 베일 루루", name : "익루루", element : 4, role : 1},
 {ok : true, id : 10139, rarity : 3, hp:918980, atk:294073, cd:5, atkMag:100, ultMag:640, fullname : "불건전한 사색 토타라", name : "불타라", element : 3, role : 0},
 {ok : false, id : 10140, rarity : 3, fullname : "최고신의 화신 라냐", name : "라냐", element : 4, role : 2},

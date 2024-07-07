@@ -63,7 +63,7 @@ class Champ {
    getCurAtk() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
-      return Math.floor(this.atk*(1+li[0])+li[1]);
+      return Math.round(this.atk*(1+li[0])+li[1]);
    }
    getAtkDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
@@ -440,13 +440,13 @@ function getRoleIdx() {
 
 function hpUpAll(amount) {
    for(let c of comp) {
-      c.hp = Math.floor(c.hp*(1+amount/100));
-      c.curHp = Math.floor(c.curHp*(1+amount/100));
+      c.hp = Math.round(c.hp*(1+amount/100));
+      c.curHp = Math.round(c.curHp*(1+amount/100));
    }
 }
 function hpUpMe(me, amount) {
-   me.hp = Math.floor(me.hp*(1+amount/100));
-   me.curHp = Math.floor(me.curHp*(1+amount/100));
+   me.hp = Math.round(me.hp*(1+amount/100));
+   me.curHp = Math.round(me.curHp*(1+amount/100));
 }
 function cdChange(me, size) {
    if (!me.canCDChange) return;
@@ -1369,6 +1369,64 @@ function setDefault(me) {switch(me.id) {
          me.turnHeal = false;
       };
       return me;
+   case 10137 : // 춘즈란     ok
+      me.ultbefore = function() { // 함께 시저 님을 섬겨요~
+         // 타깃이 받는 데미지 40% 증가(4턴)
+         tbf(boss, "받뎀증", 40, "함께 시저 님을 섬겨요~1", 4);
+         // 아군 딜/탱/디 는 "일반 공격 시 '자신의 공격 데미지의 30%만큼 타깃에게 데미지' 추가(4턴)" 발동
+         for(let idx of getRoleIdx("딜", "탱", "디"))
+            tbf(comp[idx], "평추가", 30, "함께 시저 님을 섬겨요~2", 4);
+         // 자신은 "일반 공격 시 '자신의 공격 데미지의 60%만큼 타깃에게 데미지' 추가(4턴)" 발동
+         tbf(me, "평추가", 60, "함께 시저 님을 섬겨요~3", 4);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() { // 버니 웨이브
+         // 자신의 공격 데미지가 50% 증가(1턴)
+         tbf(me, "공퍼증", 50, "버니 웨이브", 1);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 토끼 마을에서의 하룻밤
+         // 아군 전체의 최대 hp30% 증가
+         hpUpAll(30);
+         // 아군 풍속성 딜/탱/디 는 <정욕 페로몬> 획득
+         const windIdxList = getElementIdx("풍");
+         for(let idx of getRoleIdx("딜", "탱", "디")) {
+            if (!windIdxList.includes(idx)) continue;
+            // <정욕 페로몬>
+            // 일반 공격 시 "아군 전체의 공격 데미지 6% 증가(최대 18중첩)" 발동
+            nbf(comp[idx], "평", all, "공퍼증", 6, "<정욕 페로몬>1", 1, 18, always);
+            // 일반 공격 시 "아군 전체의 일반 공격 데미지 6% 증가(최대 18중첩)" 발동
+            nbf(comp[idx], "평", all, "일뎀증", 6, "<정욕 페로몬>2", 1, 18, always);
+            // 일반 공격 시 "아군 전체의 가하는 데미지 2% 증가(최대 18중첩)" 발동
+            nbf(comp[idx], "평", all, "가뎀증", 2, "<정욕 페로몬>3", 1, 18, always);
+         }
+      }
+      me.passive = function() {
+         // 샤랄라 쁘띠 원피스
+         // 일반 공격 시 "자신의 공격 데미지 15% 증가(최대 6중첩)" 발동
+         anbf(me, "평", me, "공퍼증", 15, "샤랄라 쁘띠 원피스", 1, 6, always);
+
+         // 큐티 썬캡
+         // 일반 공격 시 "타깃이 받는 일반 공격 데미지 15% 증가(최대 6중첩)" 발동
+         anbf(me, "평", boss, "받일뎀", 15, "큐티 썬캡", 1, 6, always);
+
+         // 쇼 로망스
+         // 가하는 데미지 20% 증가
+         tbf(me, "가뎀증", 20, "쇼 로망스1", always);
+         // 궁극기 발동 시 "타깃이 받는 풍속성 데미지 10% 증가(최대 3중첩)" 발동
+         for(let idx of getElementIdx("풍"))
+            anbf(me, "궁", comp[idx], "받속뎀", 10, "쇼 로망스2", 1, 3, always);
+
+         // 일반 공격+
+         // 자신의 일반 공격 데미지 10% 증가
+         tbf(me, "일뎀증", 10, "일반 공격+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
    case 10139 : // 불타라     ok
       me.ultbefore = function() { // 마법소녀 초건전 빔
          // 타깃이 받는 광속성 데미지 20% 증가(최대 1중첩)
@@ -1561,7 +1619,7 @@ function setDefault(me) {switch(me.id) {
          if (me.isLeader) {}
       };
       return me;
-   case 10142 : // 수즈루     codingOk
+   case 10142 : // 수즈루     ok
       me.ultbefore = function() { // 다 함께 수박 깨기~
          // 자신의 일반 공격 데미지 130% 증가(4턴)
          tbf(me, "일뎀증", 130, "다 함께 수박 깨기~1", 4);
