@@ -149,7 +149,6 @@ class Champ {
 
 
 function nextTurn() {
-   for(let c of comp) c.hit();
    GLOBAL_TURN += 1;
    for(let i = 0; i < comp.length; i++) {
       comp[i].curCd = comp[i].curCd <= 0 ? 0 : comp[i].curCd-1;
