@@ -125,6 +125,7 @@ class Champ {
       const atbf = [...this.actTurnBuff], anbf = [...this.actNestBuff];
       for(const a of atbf) if (a.act == "힐") to_tbf(this, a);
       for(const a of anbf) if (a.act == "힐") to_nbf(this, a);
+      this.curHp = this.hp;
    }
    hit() {
       const atbf = [...this.actTurnBuff], anbf = [...this.actNestBuff];
@@ -234,7 +235,7 @@ function anbf(me, act, who, ty, s, n, e, e2, trn) {
 
 
 // buff들을 리스트에 버프량만큼 담아 리턴
-const buff_ex = ["아머", "<이성치>", "<이성치>감소X", "<연쇄 트랩>", "<마법소녀의 힘>"];
+const buff_ex = ["아머", "<이성치>", "<이성치>감소X", "<연쇄 트랩>", "<마법소녀의 힘>", "<재편제>"];
 function getBuffSizeList(tbf, nbf) {
    const res = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
    for(const bf of tbf) {
@@ -399,6 +400,16 @@ function deleteBuff(me, name) {
       if (me.nestBuff[i].name === name) me.nestBuff.splice(i, 1);
    }
 }
+function deleteActBuff(me, name) {
+   // actTurnBuff 배열에서 name이 일치하는 요소 제거
+   for (let i = me.actTurnBuff.length - 1; i >= 0; i--) {
+      if (me.actTurnBuff[i].name === name) me.actTurnBuff.splice(i, 1);
+   }
+   // actNestBuff 배열에서 name이 일치하는 요소 제거
+   for (let i = me.actNestBuff.length - 1; i >= 0; i--) {
+      if (me.actNestBuff[i].name === name) me.actNestBuff.splice(i, 1);
+   }
+}
 function deleteBuffType(me, type) {
    // turnBuff 배열에서 name이 일치하는 요소 제거
    for (let i = me.turnBuff.length - 1; i >= 0; i--) {
@@ -521,6 +532,135 @@ function setDefault(me) {switch(me.id) {
          if (me.isLeader && GLOBAL_TURN > 1) for(let c of comp) c.heal();
       };
       me.turnover = function() {};
+      return me;
+   case 10023 : // 벨레트     codingOk
+      me.getBuffNest = function(type) {
+         const li = [...me.nestBuff];
+         const exist = li.filter(bf => bf.type == type);
+         return exist.length > 0 ? exist[0].nest : 0;
+      }
+      me.ultbefore = function() { // 광견의 충복
+         // 자신의 공격 데미지 100% 증가(1턴)
+         tbf(me, "공퍼증", 100, "광견의 충복1", 1);
+         // 자신의 공격 데미지의 25%만큼 아군 전체의 공격 데미지 증가(1턴)
+         for(let c of comp) tbf(c, "공고증", myCurAtk+me.id+25, "광견의 충복2", 1);
+         // 자신은 "방어 시 '자신의 최대 hp20%만큼 아군 전체에게 아머 부여(4턴)' 발동(4턴)"
+         // (발동 1회 후 해제 => me.defense로) 획득
+         atbf(me, "방", all, "아머", me.hp*20, "광견의 충복3", 4, 4);
+
+         if (me.getBuffNest("<역공 타이밍>") == 1) {
+            // <역습의 포화>
+            // 궁극기 발동 시 "자신의 공격 데미지의 75%만큼 타깃에게 2회 데미지" 추가
+            tbf(me, "궁추가", 150, "<역습의 포화>", 1);
+            // <역습의 총알 세례>
+            // 궁극기 발동 시 "자신의 공격 데미지의 45.5%만큼 타깃에게 8회 데미지" 추가
+            tbf(me, "궁추가", 364, "<역습의 총알 세례>", 1);
+         }
+      }
+      me.ultafter = function() {
+         // <역습의 포화>
+         // 궁극기 발동 시 "자신의 <역공 타이밍>의 모든 중첩수 제거" 발동 => ultafter로
+         deleteBuffType(me, "<역공 타이밍>");
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() { // 작전 지휘
+         // 아군 전체의 공격 데미지 25% 증가(1턴)
+         tbf(all, "공퍼증", 25, "작전 지휘", 1);
+      }
+      me.atkafter = function() {
+         // 리더효과 <반서의 포효> 제거
+         if (me.isLeader) deleteActBuff(me, "<반서의 포효>");
+      }
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 광견의 시야
+         // 아군 전체의 최대 hp 10% 증가
+         hpUpAll(10);
+         // 아군 전체의 공격 데미지 100% 증가
+         tbf(all, "공퍼증", 100, "광견의 시야1", always);
+         // 자신 이외의 아군 전체는 방어 시 "1번 자리 아군은 1중첩의 <재편제> 획득(최대 4중첩)" 발동(50턴)
+         for(let c of comp) if (c.id != me.id) {
+            anbf(c, "방", comp[0], "<재편제>", 0, "광견의 시야2", 1, 4, 50);
+         }
+         // 1턴마다 "자신의 <재편제>의 모든 중첩 수 제거" 발동 => turnstart로
+         // 자신의 <재편제> 중첩 수 == 4 일 시 "방어 시 '자신은 1중첩의 <방향 틀기> 획득(최대 1중첩)' 발동" 발동
+         // => me.defense 로
+
+         // 자신의 <방향 틀기> 중첩수 == 1일 시 <반서의 포효> 발동
+         
+         // <반서의 포효> => me.defense로
+      }
+      me.passive = function() {
+         // 전략적 후퇴
+         // 첫 번째 턴&궁극기 발동 시 "자신은 1중첩의 <나약한 허상> 획득(최대 1중첩)" 발동
+         nbf(me, "<나약한 허상>", 0, "전략적 후퇴1", 1, 1);
+         anbf(me, "궁", me, "<나약한 허상>", 0, "전략적 후퇴2", 1, 1, always);
+         // 자신의 <나약한 허상> 중첩수 == 1일 시 <수비> 발동
+
+         // <수비>
+         // TODO: 방어 시 자신은 도발을 획득(1턴)
+         // 방어 시 자신은 <반격> 효과 획득 => me.defense로
+
+         // <반격> => me.defense로
+         // 피격 시 "아군 전체의 가하는 데미지 35% 증가(4턴)"
+         // 피격 시 자신의 <나약한 허상> 의 모든 중첩 수 제거 발동
+         // 발동 1회 후 해제 => me.hit으로
+
+         // 자신감의 계략
+         // 방어 시 "자신은 1중첩의 <역공 타이밍> 획득(최대 1중첩)" 발동
+         atbf(me, "방", me, "<역공 타이밍>", 0, "자신감의 계략", 1, 1, always);
+         // 자신의 <역공 타이밍> 중첩수 == 1일 시 <역습의 포화> 발동
+
+         // <역습의 포화>
+         // 궁극기 발동 시 "자신의 공격 데미지의 75%만큼 타깃에게 2회 데미지" 추가 => ultbefore로
+         // 궁극기 발동 시 "자신의 <역공 타이밍>의 모든 중첩수 제거" 발동 => ultafter로
+
+         // 장기 휴가를 주지
+         // 자신의 <역공 타이밍> 중첩 수 == 1일 시 <역습의 총알 세례> 발동
+
+         // <역습의 총알 세례>
+         // 궁극기 발동 시 "자신의 공격 데미지의 45.5%만큼 타깃에게 8회 데미지" 추가 => ultbefore로
+
+         // 공격+
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격+", always);
+      }
+      me.hit = function() {
+         const atbf = [...this.actTurnBuff], anbf = [...this.actNestBuff];
+         for(const a of atbf) if (a.act == "피격") to_tbf(this, a);
+         for(const a of anbf) if (a.act == "피격") to_nbf(this, a);
+         
+         deleteActBuff(me, "<반격>");
+      }
+      me.defense = function() {
+         me.act_defense();
+
+         deleteBuff(me, "광견의 충복3");
+         if (me.getBuffNest("<재편제>") == 4) {
+            // <반서의 포효> => me.defense로
+            // 궁극기 발동 시 "자신의 공격 데미지의 25%만큼 자신 이외의 아군 전체의 공격 데미지 증가(1턴)" 추가
+            atbf(me, "궁", all, "공고증", myCurAtk+me.id+25, "<반서의 포효>", 1, always);
+            // 궁극기 발동 시 "아군 전체의 가하는 데미지 50% 증가(1턴)" 추가
+            atbf(me, "궁", all, "가뎀증", 50, "<반서의 포효>", 1, always);
+            // 궁극기 발동 시 "아군 전체의 궁극기 데미지 50% 증가(1턴)" 추가
+            atbf(me, "궁", all, "궁뎀증", 50, "<반서의 포효>", 1, always);
+            // 궁극기 발동 시 "타깃이 받는 데미지 50% 증가(1턴)" 추가
+            atbf(me, "궁", all, "받뎀증", 50, "<반서의 포효>", 1, always);
+            // 궁극기 발동 시 "자신의 <방향 틀기>의 모든 중첩 수 제거" 발동 => me.ultafter로
+         }
+         if (me.getBuffNest("<나약한 허상>") == 1) {
+            // <반격>
+            // 피격 시 "아군 전체의 가하는 데미지 35% 증가(4턴)"
+            atbf(me, "피격", all, "가뎀증", 35, "<반격>", 4, 1);
+            // 피격 시 자신의 <나약한 허상> 의 모든 중첩 수 제거 발동
+            atbf(me, "피격", me, "<나약한 허상>", 0, "<반격>", -1, 1, 1);
+         }
+      }
+      me.turnstart = function() {
+         if (me.isLeader) {
+            deleteBuffType(me, "<재편제>");
+         }
+      };
+      me.turnover = function() {if (me.isLeader) {}};
       return me;
    case 10042 : // 수이블     ok
       me.ultbefore = function() {
@@ -931,6 +1071,81 @@ function setDefault(me) {switch(me.id) {
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me; 
+   case 10114 : // 뷰지안     codingOk
+      me.ultbefore = function() { // 전력 해방! 별빛 분쇄 스매쉬!
+         // 5번 자리 아군의 궁극기 데미지 70% 증가(2턴)
+         tbf(comp[4], "궁뎀증", 70, "전력 해방! 별빛 분쇄 스매쉬!", 2);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 아름다운 감동 섹시한 마법소녀
+         // 아군 전체의 hp 30% 증가
+         hpUpAll(30);
+         // 아군 전체는 "팀에 암속성 캐릭터가 최소 3명 이상 있을 시 <원초의 마법소녀> 발동" 획득
+         if (getElementCnt("암") >= 3) {
+            // <원초의 마법소녀>
+            // 공격 데미지 40% 증가
+            tbf(all, "공퍼증", 40, "<원초의 마법소녀>1", always);
+            // 행동 시 "타깃이 받는 데미지 2.5% 증가(최대 12중첩)" 발동
+            anbf(all, "행동", boss, "받뎀증", 2.5, "<원초의 마법소녀>2", 1, 12, always);
+            // 행동 시 "타깃이 받는 발동형 스킬 데미지 5% 증가(최대 12중첩)" 발동
+            anbf(all, "행동", boss, "받발뎀", 5, "<원초의 마법소녀>3", 1, 12, always);
+         }
+
+         // 아군 전체는 "팀에 광속성 캐릭터가 최소 2명 이상 있을 시 <성월의 축복> 발동" 획득
+         if (getElementCnt("광") >= 2) {
+            // <성월의 축복>
+            // 가하는 피해 20% 증가
+            tbf(all, "가뎀증", 20, "<성월의 축복>1", always);
+            for(let idx of getElementIdx("암", "광")) {
+               // 궁극기 발동 시 "타깃이 받는 암속성 데미지 17.5% 증가(최대 2중첩)" 발동
+               // 궁극기 발동 시 "타깃이 받는 광속성 데미지 17.5% 증가(최대 2중첩)" 발동
+               anbf(all, "궁", comp[idx], "받속뎀", 17.5, "<성월의 축복>2", 1, 2, always);
+            }
+         }
+
+         // 1번 자리 아군은 <힘 증폭> 획득
+         // 공격 데미지 80% 증가
+         tbf(comp[0], "공퍼증", 80, "<힘 증폭>1", always);
+         // 일반 공격 데미지 60% 증가
+         tbf(comp[0], "일뎀증", 60, "<힘 증폭>2", always);
+         // 궁극기 데미지 40% 증가
+         tbf(comp[0], "궁뎀증", 40, "<힘 증폭>3", always);
+         // 궁극기 발동 시 "자신의 공격 데미지의 150%만큼 타깃에게 데미지" 발동
+         tbf(comp[0], "궁발동", 150, "<힘 증폭>4", always);
+      }
+      me.passive = function() {
+         // 다가오지 마!
+         // 공격 데미지 40% 증가
+         tbf(me, "공퍼증", 40, "다가오지 마!1", always);
+         // 궁극기 데미지 20% 증가
+         tbf(me, "궁뎀증", 20, "다가오지 마!2", always);
+
+         // 어둠을 내쫓는 빛
+         // 5번 자리 아군은 <다시 찾은 광명> 획득
+         // <다시 찾은 광명>
+         // 궁극기 데미지 40% 증가
+         tbf(comp[4], "궁뎀증", 40, "<다시 찾은 광명>1", always);
+         // 가하는 데미지 40% 증가
+         tbf(comp[4], "가뎀증", 40, "<다시 찾은 광명>2", always);
+
+         // 마법소녀의 힘의 근원
+         // 발동형 스킬 데미지 100% 증가
+         tbf(me, "발뎀증", 100, "마법소녀의 힘의 근원1", always);
+         // 궁극기 발동 시 "자신의 공격 데미지의 180%만큼 타깃에게 데미지" 발동
+         tbf(me, "궁발동", 180, "마법소녀의 힘의 근원2", always);
+
+         // 공격+
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
    case 10119 : // 수이카     ok
       me.ultbefore = function() { // 아이카의 여름 칵테일
          // 아군 전체의 발동형 스킬 효과 100% 증가(3턴)
