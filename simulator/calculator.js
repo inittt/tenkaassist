@@ -45,6 +45,7 @@ class Champ {
       this.canCDChange = true; this.isLeader = false; this.isActed = false;
       this.armor = 0; this.armorUp = 1;
       this.hpAtkDmg = 0; this.hpUltDmg = 0;
+      this.hpAddAtkDmg = 0; this.hpAddUltDmg = 0;
    }
    getAtvEff() {
       const tbf = [...this.turnBuff];
@@ -69,13 +70,25 @@ class Champ {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
       const hpDmg = this.hpAtkDmg/100*(1+li[2])*(1+li[3]+li[4]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
-      return hpDmg+this.getCurAtk()*(1+li[2])*(this.atkMag/100+li[14])*(1+li[3]+li[4]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
+      return hpDmg+this.getCurAtk()*(1+li[2])*(this.atkMag/100)*(1+li[3]+li[4]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
+   }
+   getAddAtkDmg() {
+      const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
+      const li = getBuffSizeList(tbf, nbf);
+      const hpDmg = this.hpAddAtkDmg/100*(1+li[2])*(1+li[3]+li[4]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
+      return hpDmg+this.getCurAtk()*(1+li[2])*(li[14])*(1+li[3]+li[4]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
    }
    getUltDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
       const hpDmg = this.hpUltDmg/100*(1+li[2])*(1+li[5]+li[6]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
-      return hpDmg+this.getCurAtk()*(1+li[2])*(this.ultMag/100+li[15])*(1+li[5]+li[6]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
+      return hpDmg+this.getCurAtk()*(1+li[2])*(this.ultMag/100)*(1+li[5]+li[6]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
+   }
+   getAddUltDmg() {
+      const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
+      const li = getBuffSizeList(tbf, nbf);
+      const hpDmg = this.hpAddUltDmg/100*(1+li[2])*(1+li[5]+li[6]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
+      return hpDmg+this.getCurAtk()*(1+li[2])*(li[15])*(1+li[5]+li[6]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
    }
    getAtkAtvDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
@@ -362,16 +375,30 @@ function getBossBuffSizeList(tbf, nbf) {
 
 function bossAttack(me) {
    const atkDmg = me.getAtkDmg();
-   boss.hp -= (lastDmg = atkDmg);
+   boss.hp -= atkDmg;
+   lastDmg = atkDmg;
    if (boss.hp < 0) boss.hp = 0; 
    if (atkDmg > 0) boss.hit(me);
 }
+function bossAddAttack(me) {
+   const atkDmg = me.getAddAtkDmg();
+   boss.hp -= atkDmg;
+   lastDmg += atkDmg;
+   if (boss.hp < 0) boss.hp = 0;
+}
 function bossUltAttack(me) {
    const ultDmg = me.getUltDmg();
-   boss.hp -= (lastDmg = ultDmg);
+   boss.hp -= ultDmg;
+   lastDmg = ultDmg;
    if (boss.hp < 0) boss.hp = 0; 
    if (ultDmg > 0) boss.hit(me);
    me.curCd = me.cd;
+}
+function bossAddUltAttack(me) {
+   const ultDmg = me.getAddUltDmg();
+   boss.hp -= ultDmg;
+   lastDmg += ultDmg;
+   if (boss.hp < 0) boss.hp = 0;
 }
 
 function bossAtkAtvAttack(me) {
@@ -482,20 +509,18 @@ function setDefault(me) {switch(me.id) {
       me.turnover = function() {if (me.isLeader) {}};
       return me;
    case 10022 : // 놀라이티   ok
-      me.ultbefore = function() {
-         // 궁사용시 타깃은 피격 시 놀라에게 받는 데미지 15% 증가 1중첩(추가타에 적용)
-         nbf(me, "받캐뎀", 15, "배 가르기1", 1, 8);
-      }
+      me.ultbefore = function() {}
       me.ultafter = function() {
-         deleteBuff(me, "배 가르기1"); // 패시브 극도의 흥분 : 궁 발동시 배가르기 제거
-         deleteBuff(me, "극도의 흥분"); // 패시브 : 궁 발동시 극도의 흥분 제거
-         
          // 타깃은 피격 시 놀라에게 받는 데미지 15% 증가 (8중첩) (4턴)
          anbf(boss, "피격", me, "받캐뎀", 15, "배 가르기1", 1, 8, 4);
          // 타깃은 받는 데미지 30% 증가 (1중첩)
          nbf(boss, "받뎀증", 30, "배 가르기2", 1, 1);
       }
-      me.ultimate = function() {ultLogic(me);};
+      me.ultimate = function() {
+         ultLogic(me);
+         deleteBuff(me, "배 가르기1"); // 패시브 극도의 흥분 : 궁 발동시 배가르기 제거
+         deleteBuff(me, "극도의 흥분"); // 패시브 : 궁 발동시 극도의 흥분 제거
+      };
       me.atkbefore = function() {}
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
@@ -1807,7 +1832,7 @@ function setDefault(me) {switch(me.id) {
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {
          // 심연 직시
-         // 자신의 <이성치> 중첩 수 < 1   일 시 <잃어버린 이성> 활성화
+         // 자신의 <이성치> 중첩 수 < 1 일 시 <잃어버린 이성> 활성화
          // <잃어버린 이성> : 1턴이 지날 때마다 <최고신의 그림자> 발동
          // <최고신의 그림자> : 자신은 50중첩의 <이성치> 획득(최대 50중첩)
          if (me.getSAN() < 1) nbf(me, "<이성치>", 0, "야옹이 요원 탐험 중", 50, 50);
@@ -2108,6 +2133,7 @@ function ultLogic(me) {
    me.ultbefore();
    bossUltAttack(me);
    me.ultafter();
+   bossAddUltAttack(me);
    me.act_ultimate();
    bossUltAtvAttack(me);
 }
@@ -2115,6 +2141,7 @@ function atkLogic(me) {
    me.atkbefore();
    bossAttack(me);
    me.atkafter();
+   bossAddAttack(me);
    me.act_attack();
    bossAtkAtvAttack(me);
 }
