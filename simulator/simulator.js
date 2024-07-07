@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
       } else {
          const character = ch[0];
          //TODO: 삭제?-----------
-         if (!character.ok) {alert("준비 중인 캐릭터가 포함되어 있습니다"); history.back();}
+         if (!character.ok) {alert("준비 중 캐릭터가 포함되어 있습니다"); history.back();}
          //---------------------
          chNameList.push(character.name);
       }
