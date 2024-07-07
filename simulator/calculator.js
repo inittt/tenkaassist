@@ -136,6 +136,7 @@ class Champ {
 
 
 function nextTurn() {
+   for(let c of comp) c.hit();
    GLOBAL_TURN += 1;
    for(let i = 0; i < comp.length; i++) {
       comp[i].curCd = comp[i].curCd <= 0 ? 0 : comp[i].curCd-1;
@@ -401,6 +402,7 @@ function deleteBuff(me, name) {
    }
 }
 function deleteActBuff(me, name) {
+   console.log(me.name + "의 " + name + " 버프 제거")
    // actTurnBuff 배열에서 name이 일치하는 요소 제거
    for (let i = me.actTurnBuff.length - 1; i >= 0; i--) {
       if (me.actTurnBuff[i].name === name) me.actTurnBuff.splice(i, 1);
@@ -542,35 +544,35 @@ function setDefault(me) {switch(me.id) {
       me.ultbefore = function() { // 광견의 충복
          // 자신의 공격 데미지 100% 증가(1턴)
          tbf(me, "공퍼증", 100, "광견의 충복1", 1);
-         // 자신의 공격 데미지의 25%만큼 아군 전체의 공격 데미지 증가(1턴)
-         for(let c of comp) tbf(c, "공고증", myCurAtk+me.id+25, "광견의 충복2", 1);
+         // 자신의 공격 데미지의 25%만큼 자신 이외의 아군 전체의 공격 데미지 증가(1턴)
+         for(let c of comp) if (c.id != me.id) tbf(c, "공고증", myCurAtk+me.id+25, "광견의 충복2", 1);
          // 자신은 "방어 시 '자신의 최대 hp20%만큼 아군 전체에게 아머 부여(4턴)' 발동(4턴)"
          // (발동 1회 후 해제 => me.defense로) 획득
          atbf(me, "방", all, "아머", me.hp*20, "광견의 충복3", 4, 4);
 
          if (me.getBuffNest("<역공 타이밍>") == 1) {
-            // <역습의 포화>
-            // 궁극기 발동 시 "자신의 공격 데미지의 75%만큼 타깃에게 2회 데미지" 추가
-            tbf(me, "궁추가", 150, "<역습의 포화>", 1);
             // <역습의 총알 세례>
             // 궁극기 발동 시 "자신의 공격 데미지의 45.5%만큼 타깃에게 8회 데미지" 추가
-            tbf(me, "궁추가", 364, "<역습의 총알 세례>", 1);
+            tbf(me, "궁발동", 364, "<역습의 총알 세례>", 1);
+            // <역습의 포화>
+            // 궁극기 발동 시 "자신의 공격 데미지의 75%만큼 타깃에게 2회 데미지" 추가
+            tbf(me, "궁발동", 150, "<역습의 포화>", 1);
+            // <역습의 포화>
+            // 궁극기 발동 시 "자신의 <역공 타이밍>의 모든 중첩수 제거" 발동
+            nbf(me, "<역공 타이밍>", 0, "자신감의 계략", -1, 1);
+            // <반서의 포효>
+            // 궁극기 발동 시 "자신의 <방향 틀기>의 모든 중첩 수 제거" 발동
+            if (me.isLeader) nbf(me, "<방향 틀기>", 0, "광견의 시야3", -1, 1);
          }
       }
       me.ultafter = function() {
-         // <역습의 포화>
-         // 궁극기 발동 시 "자신의 <역공 타이밍>의 모든 중첩수 제거" 발동 => ultafter로
-         deleteBuffType(me, "<역공 타이밍>");
       }
       me.ultimate = function() {ultLogic(me);};
       me.atkbefore = function() { // 작전 지휘
          // 아군 전체의 공격 데미지 25% 증가(1턴)
          tbf(all, "공퍼증", 25, "작전 지휘", 1);
       }
-      me.atkafter = function() {
-         // 리더효과 <반서의 포효> 제거
-         if (me.isLeader) deleteActBuff(me, "<반서의 포효>");
-      }
+      me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
       me.leader = function() { // 광견의 시야
          // 아군 전체의 최대 hp 10% 증가
@@ -578,22 +580,20 @@ function setDefault(me) {switch(me.id) {
          // 아군 전체의 공격 데미지 100% 증가
          tbf(all, "공퍼증", 100, "광견의 시야1", always);
          // 자신 이외의 아군 전체는 방어 시 "1번 자리 아군은 1중첩의 <재편제> 획득(최대 4중첩)" 발동(50턴)
-         for(let c of comp) if (c.id != me.id) {
-            anbf(c, "방", comp[0], "<재편제>", 0, "광견의 시야2", 1, 4, 50);
-         }
+         for(let c of comp) if (c.id != me.id) anbf(c, "방", comp[0], "<재편제>", 0, "광견의 시야2", 1, 4, 50);
          // 1턴마다 "자신의 <재편제>의 모든 중첩 수 제거" 발동 => turnstart로
          // 자신의 <재편제> 중첩 수 == 4 일 시 "방어 시 '자신은 1중첩의 <방향 틀기> 획득(최대 1중첩)' 발동" 발동
          // => me.defense 로
 
          // 자신의 <방향 틀기> 중첩수 == 1일 시 <반서의 포효> 발동
          
-         // <반서의 포효> => me.defense로
+         // <반서의 포효> => me.turnstart로
       }
       me.passive = function() {
          // 전략적 후퇴
          // 첫 번째 턴&궁극기 발동 시 "자신은 1중첩의 <나약한 허상> 획득(최대 1중첩)" 발동
          nbf(me, "<나약한 허상>", 0, "전략적 후퇴1", 1, 1);
-         anbf(me, "궁", me, "<나약한 허상>", 0, "전략적 후퇴2", 1, 1, always);
+         anbf(me, "궁", me, "<나약한 허상>", 0, "전략적 후퇴1", 1, 1, always);
          // 자신의 <나약한 허상> 중첩수 == 1일 시 <수비> 발동
 
          // <수비>
@@ -607,18 +607,18 @@ function setDefault(me) {switch(me.id) {
 
          // 자신감의 계략
          // 방어 시 "자신은 1중첩의 <역공 타이밍> 획득(최대 1중첩)" 발동
-         atbf(me, "방", me, "<역공 타이밍>", 0, "자신감의 계략", 1, 1, always);
+         anbf(me, "방", me, "<역공 타이밍>", 0, "자신감의 계략", 1, 1, always);
          // 자신의 <역공 타이밍> 중첩수 == 1일 시 <역습의 포화> 발동
 
-         // <역습의 포화>
-         // 궁극기 발동 시 "자신의 공격 데미지의 75%만큼 타깃에게 2회 데미지" 추가 => ultbefore로
-         // 궁극기 발동 시 "자신의 <역공 타이밍>의 모든 중첩수 제거" 발동 => ultafter로
+         // <역습의 포화> => ultbefore로
+         // 궁극기 발동 시 "자신의 공격 데미지의 75%만큼 타깃에게 2회 데미지" 추가
+         // 궁극기 발동 시 "자신의 <역공 타이밍>의 모든 중첩수 제거" 발동
 
          // 장기 휴가를 주지
          // 자신의 <역공 타이밍> 중첩 수 == 1일 시 <역습의 총알 세례> 발동
 
-         // <역습의 총알 세례>
-         // 궁극기 발동 시 "자신의 공격 데미지의 45.5%만큼 타깃에게 8회 데미지" 추가 => ultbefore로
+         // <역습의 총알 세례> => ultbefore로
+         // 궁극기 발동 시 "자신의 공격 데미지의 45.5%만큼 타깃에게 8회 데미지" 추가
 
          // 공격+
          // 자신의 공격 데미지 10% 증가
@@ -635,29 +635,32 @@ function setDefault(me) {switch(me.id) {
          me.act_defense();
 
          deleteBuff(me, "광견의 충복3");
-         if (me.getBuffNest("<재편제>") == 4) {
-            // <반서의 포효> => me.defense로
-            // 궁극기 발동 시 "자신의 공격 데미지의 25%만큼 자신 이외의 아군 전체의 공격 데미지 증가(1턴)" 추가
-            atbf(me, "궁", all, "공고증", myCurAtk+me.id+25, "<반서의 포효>", 1, always);
-            // 궁극기 발동 시 "아군 전체의 가하는 데미지 50% 증가(1턴)" 추가
-            atbf(me, "궁", all, "가뎀증", 50, "<반서의 포효>", 1, always);
-            // 궁극기 발동 시 "아군 전체의 궁극기 데미지 50% 증가(1턴)" 추가
-            atbf(me, "궁", all, "궁뎀증", 50, "<반서의 포효>", 1, always);
-            // 궁극기 발동 시 "타깃이 받는 데미지 50% 증가(1턴)" 추가
-            atbf(me, "궁", all, "받뎀증", 50, "<반서의 포효>", 1, always);
-            // 궁극기 발동 시 "자신의 <방향 틀기>의 모든 중첩 수 제거" 발동 => me.ultafter로
-         }
+         if (me.isLeader && me.getBuffNest("<재편제>") == 4) nbf(me, "<방향 틀기>", 0, "광견의 시야3", 1, 1);
          if (me.getBuffNest("<나약한 허상>") == 1) {
             // <반격>
             // 피격 시 "아군 전체의 가하는 데미지 35% 증가(4턴)"
-            atbf(me, "피격", all, "가뎀증", 35, "<반격>", 4, 1);
+            atbf(me, "피격", all, "가뎀증", 35, "<반격>", 5, 1);
             // 피격 시 자신의 <나약한 허상> 의 모든 중첩 수 제거 발동
             atbf(me, "피격", me, "<나약한 허상>", 0, "<반격>", -1, 1, 1);
          }
       }
       me.turnstart = function() {
          if (me.isLeader) {
-            deleteBuffType(me, "<재편제>");
+            if (GLOBAL_TURN > 1) nbf(me, "<재편제>", 0, "광견의 시야2", -4, 4);
+            
+            // <반서의 포효>
+            if (me.getBuffNest("<방향 틀기>") >= 1) {
+               // 궁극기 발동 시 "자신의 공격 데미지의 25%만큼 자신 이외의 아군 전체의 공격 데미지 증가(1턴)" 추가
+               for(let c of comp) if (c.id != me.id)
+                  atbf(me, "궁", c, "공고증", myCurAtk+me.id+25, "<반서의 포효>", 1, 1);
+               // 궁극기 발동 시 "아군 전체의 가하는 데미지 50% 증가(1턴)" 추가
+               atbf(me, "궁", all, "가뎀증", 50, "<반서의 포효>", 1, 1);
+               // 궁극기 발동 시 "아군 전체의 궁극기 데미지 50% 증가(1턴)" 추가
+               atbf(me, "궁", all, "궁뎀증", 50, "<반서의 포효>", 1, 1);
+               // 궁극기 발동 시 "타깃이 받는 데미지 50% 증가(1턴)" 추가
+               atbf(me, "궁", boss, "받뎀증", 50, "<반서의 포효>", 1, 1);
+               // 궁극기 발동 시 "자신의 <방향 틀기>의 모든 중첩 수 제거" 발동 => me.ultstart로
+            }
          }
       };
       me.turnover = function() {if (me.isLeader) {}};
