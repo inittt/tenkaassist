@@ -1,15 +1,15 @@
 const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const curHeader = 7;
+const idList = chIds.split(",").map(Number);
 
 document.addEventListener("DOMContentLoaded", function() {
    getdiv("bossBuffBtn").innerHTML = `
       <img class="circleImg" onclick="show_simple(-1)" src="${address}/images/icons/describe.png">
       <img class="circleImg" onclick="show_console(-1)" src="${address}/images/icons/star.png">
    `;
-   const chIdsNumber = chIds.split(",").map(Number);
    const chNameList = [];
-   for(let id of chIdsNumber) {
+   for(let id of idList) {
       const ch = chJSON.data.filter(item => item.id == id);
       if (ch == undefined || ch == null || ch.length == 0) {
          alert("캐릭터를 찾을 수 없음");
@@ -22,22 +22,18 @@ document.addEventListener("DOMContentLoaded", function() {
          chNameList.push(character.name);
       }
    }
-   getdiv("ch_input").value = chNameList.join(" ");
+   setComp();
 });
 
 function setComp() {
-   let strList = document.getElementById("ch_input").value.split(" ");
-   if (strList.length != 5) return alert("캐릭터의 수가 5개가 아닙니다");
-   const list = [];
-   for(const s of strList) {
-      let n = fixName(s);
-      let champ = chJSON.data.filter(obj => obj.name === n)[0];
+   if (idList.length != 5) return alert("캐릭터의 수가 5개가 아닙니다");
+   for(const id of idList) {
+      const champ = getCharacter(id);
       if (champ == undefined || champ == null) return alert("캐릭터명이 잘못되었습니다");
-      list.push(champ.id);
    }
    boss.maxHp = 10854389981;
-   makeComp(list);
-   start(list);
+   makeComp(idList);
+   start(idList);
 }
 
 function makeComp(list) {

@@ -1256,7 +1256,7 @@ function setDefault(me) {buff_ex.push("아머"); switch(me.id) {
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me;
-   case 10125 : // 할야네     codingOk
+   case 10125 : // 할야네     ok
       me.ultbefore = function() { // 장난은 안치지만 사탕 내 놔
          // 자신의 공격 데미지 300% 증가(1턴)
          tbf(me, "공퍼증", 300, "장난은 안치지만 사탕 내 놔1", 1);
