@@ -1627,7 +1627,10 @@ function setDefault(me) {buff_ex.push("아머"); switch(me.id) {
          if (getRoleCnt("섶") >= 2) me.getArmor = function() {return 0;}
          // 자신 이외의 아군은 <돈은 사라지지 않아> 획득
          // <돈은 사라지지 않아> : 공격 시 '자신의 공격 데미지의 30%만큼 1번 자리 아군에게 아머 강화 부여(1턴)
-         for(let c of comp) if (c.id != me.id) atbf(c, "공격", comp[0], "아머", myCurAtk+c.id+30, 1, always);
+         for(let c of comp) if (c.id != me.id) {
+            atbf(c, "평", comp[0], "아머", myCurAtk+c.id+30, 1, always);
+            atbf(c, "궁", comp[0], "아머", myCurAtk+c.id+30, 1, always);
+         }
          // 자신은 <나나미의 형상으로 변한 것뿐> 획득
          // <나나미의 형상으로 변한 것뿐>
          // 일반 공격 시 '자신의 현재 아머량 55% 만큼 타깃에게 데미지' 발동
