@@ -73,7 +73,7 @@ function makeComp(list) {
 
 function start(compIds) {
    document.getElementById("simulator").style.display = "flex";
-   GLOBAL_TURN = 1; comp = [];
+   GLOBAL_TURN = 1; comp = []; buff_ex.length = 0;
    lastDmg = 0; lastAtvDmg = 0;
    boss.hp = boss.maxHp;
    boss.turnBuff = [];
@@ -141,8 +141,9 @@ function updateAll() {
       }
    }
    getdiv("turn").innerHTML = `TURN ${GLOBAL_TURN}`;
-   getdiv("deal").innerHTML = `데미지 : ${Math.floor(lastDmg).toLocaleString()}`;
-   getdiv("deal_atv").innerHTML = `발동기 : ${Math.floor(lastAtvDmg).toLocaleString()}`;
+   getdiv("deal").innerHTML = `공격데미지 : ${Math.floor(lastDmg).toLocaleString()}`;
+   getdiv("deal_add").innerHTML = `추가데미지 : ${Math.floor(lastAtvDmg).toLocaleString()}`;
+   getdiv("deal_atv").innerHTML = `발동데미지 : ${Math.floor(lastAtvDmg).toLocaleString()}`;
    updateProgressBar(boss.hp, boss.maxHp);
 }
 function updateCdBar(i) {
@@ -154,13 +155,13 @@ function updateCdBar(i) {
 function updateShdBar(i) {
    const shdBar = getdiv(`shd${i}`);
    const percentage = (comp[i].getArmor() / comp[i].hp)*100;
-   shdBar.style.width = percentage + "%";
+   shdBar.style.width = percentage > 100 ? "100%" : `${percentage}%`;
 }
 function updateProgressBar(hp, maxhp) {
    const progressBar = document.getElementById("boss");
    const percentage = ((hp / maxhp) * 100);
    const bossHpText = document.getElementById("boss-hp");
-   progressBar.style.width = percentage + "%";
+   progressBar.style.width = percentage > 100 ? "100%" : `${percentage}%`;
    //progressBar.textContent = `${Math.floor(hp).toLocaleString()} (${Math.floor(percentage*100)/100}%)`;
    bossHpText.innerHTML = `${Math.floor(hp).toLocaleString()} (${Math.floor(percentage*100)/100}%)`;
 }
