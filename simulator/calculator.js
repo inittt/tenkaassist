@@ -25,7 +25,7 @@ class Boss {
 }
 
 const boss = new Boss();
-const priorityOrder = ["공고증", "아머"];
+const priorityOrder = ["공고증", "평발동고", "궁발동고", "아머"];
 function sortByPriority(a, b) {
    const aIndex = priorityOrder.indexOf(a.type);
    const bIndex = priorityOrder.indexOf(b.type);
@@ -78,6 +78,13 @@ class Champ {
       const hpDmg = this.hpAddAtkDmg/100*(1+li[2])*(1+li[3]+li[4]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
       return hpDmg+this.getCurAtk()*(1+li[2])*(li[14])*(1+li[3]+li[4]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
    }
+   getAtkAtvDmg() {
+      const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
+      const li = getBuffSizeList(tbf, nbf);
+      const fixAdd = li[19]*(1+li[2])*(1+li[16]+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
+      return fixAdd + this.getCurAtk()*(1+li[2])*(this.curAtkAtv/100+li[12])*(1+li[16]+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
+   }
+   
    getUltDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
       const li = getBuffSizeList(tbf, nbf);
@@ -89,12 +96,6 @@ class Champ {
       const li = getBuffSizeList(tbf, nbf);
       const hpDmg = this.hpAddUltDmg/100*(1+li[2])*(1+li[5]+li[6]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
       return hpDmg+this.getCurAtk()*(1+li[2])*(li[15])*(1+li[5]+li[6]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
-   }
-   getAtkAtvDmg() {
-      const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
-      const li = getBuffSizeList(tbf, nbf);
-      const fixAdd = li[19]*(1+li[2])*(1+li[16]+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
-      return fixAdd + this.getCurAtk()*(1+li[2])*(this.curAtkAtv/100+li[12])*(1+li[16]+li[5]+li[6]+li[7]+li[8]+li[17]+li[18])*(1+li[9])*(1+li[10]+li[11]);
    }
    getUltAtvDmg() {
       const tbf = [...this.turnBuff], nbf = [...this.nestBuff];
@@ -213,7 +214,18 @@ function nbf(me, ty, s, n, e, e2) {
 function to_tbf(me, tmp) {
    if (tmp.ex == GLOBAL_TURN) return;
    let size = tmp.size;
-   if (tmp.type == "힐") {
+   if (tmp.type == "아머") {
+      if (typeof size == 'string') {
+         let before = size.slice(0, 1), tmp2 = size.slice(1);
+         let thisId = tmp2.slice(0, 5), per = tmp2.slice(5);
+         if (tmp.act == "궁") size = before+thisId+(per*armorUp(me, "궁", "발동"));
+         else if (tmp.act == "평") size = before+thisId+(per*armorUp(me, "평", "발동"));
+      }
+      if (tmp.who == all) for(let c of comp) tbf(c, tmp.type, size, tmp.name, tmp.turn);
+      else if (tmp.who == allNotMe) {
+         for(let c of comp) if (c.id != me.id) tbf(c, tmp.type, size, tmp.name, tmp.turn);
+      } else tbf(tmp.who, tmp.type, size, tmp.name, tmp.turn);
+   } else if (tmp.type == "힐") {
       if (tmp.who == all) for(let c of comp) c.heal();
       else if (tmp.who == allNotMe) for(let c of comp) if (c.id != me.id) c.heal();
       else tmp.who.heal();
@@ -383,6 +395,12 @@ function bossAddAttack(me) {
    boss.hp -= (lastAddDmg = atkDmg);
    if (boss.hp < 0) boss.hp = 0;
 }
+function bossAtkAtvAttack(me) {
+   const atkAtvDmg = me.getAtkAtvDmg();
+   boss.hp -= (lastAtvDmg = atkAtvDmg);
+   if (boss.hp < 0) boss.hp = 0; 
+}
+
 function bossUltAttack(me) {
    const ultDmg = me.getUltDmg();
    boss.hp -= (lastDmg = ultDmg);
@@ -395,13 +413,6 @@ function bossAddUltAttack(me) {
    boss.hp -= (lastAddDmg = ultDmg);
    if (boss.hp < 0) boss.hp = 0;
 }
-
-function bossAtkAtvAttack(me) {
-   const atkAtvDmg = me.getAtkAtvDmg();
-   boss.hp -= (lastAtvDmg = atkAtvDmg);
-   if (boss.hp < 0) boss.hp = 0; 
-}
-
 function bossUltAtvAttack(me) {
    const ultAtvDmg = me.getUltAtvDmg();
    boss.hp -= (lastAtvDmg = ultAtvDmg);
@@ -501,6 +512,15 @@ function buffNestByType(me, str) {
    const nb = li2.filter(item => item.type == str);
    if (nb.length == 0) return 0;
    return nb[0].nest > nb[0].maxNest ? nb[0].maxNest : nb[0].nest < 0 ? 0 : nb[0].nest;
+}
+function armorUp(me, act, div) {
+   if (act == "궁") {
+      if (div == "추가") return me.armorUp*(1+buffSizeByType(me, "궁뎀증")+buffSizeByType(me, "아효증"));
+      if (div == "발동") return me.armorUp*(1+buffSizeByType(me, "궁뎀증")+buffSizeByType(me, "아효증")+buffSizeByType(me, "발효증"));
+   } else if (act == "평") {
+      if (div == "추가") return me.armorUp*(1+buffSizeByType(me, "일뎀증")+buffSizeByType(me, "아효증"));
+      if (div == "발동") return me.armorUp*(1+buffSizeByType(me, "일뎀증")+buffSizeByType(me, "아효증")+buffSizeByType(me, "발효증"));
+   } else return me.armorUp*(1+buffSizeByType(me, "아효증"));
 }
 
 /* -------------------------------------------------------------------------------------- */
@@ -1601,17 +1621,25 @@ function setDefault(me) {buff_ex.push("아머"); switch(me.id) {
       me.ultimate = function() {ultLogic(me);
          // 청순 아이돌
          // 궁극기 발동 시 '자신의 공격 데미지의 25%만큼 아군 전체에게 아머 강화(1턴)' 추가 
-         tbf(all, "아머", myCurAtk+me.id+(25*me.armorUp*2.1), "청순 아이돌1", 1);
+         tbf(all, "아머", me.getCurAtk()*25*armorUp(me, "궁", "추가"), "청순 아이돌1", 1);
          // 궁극기 발동 시 '자신의 최대 hp 30%만큼 아군 전체에게 아머 강화(1턴)' 추가
-         tbf(all, "아머", me.hp*30*me.armorUp*2.1, "청순 아이돌2", 1);
+         tbf(all, "아머", me.hp*30*armorUp(me, "궁", "추가"), "청순 아이돌2", 1);
+
+         // <나나미의 형상으로 변한 것뿐> : 궁극기 발동 시 '자신의 현재 아머량 60%만큼 타깃에게 데미지' 발동
+         tbf(me, "궁발동고", myCurShd+me.id+60, "나나미의 형상으로 변한 것뿐2", 1);
+
+         // <나나미의 형상으로 변한 것뿐> : 공격 시 '자신의 현재 아머량 100% 만큼 자신의 아머에 확정 데미지' 발동
+         if (me.isLeader) {me.hit(); deleteBuffType(me, "아머");}
       };
       me.atkbefore = function() { // 한눈 팔기 없기~
          // 자신의 공격 데미지의 25%만큼 아군 전체에게 아머 강화(1턴)
-         tbf(all, "아머", 25*me.getCurAtk()*me.armorUp, "한눈 팔기 없기~1", 1);
+         tbf(all, "아머", me.getCurAtk()*25*armorUp(me, "평", "추가"), "한눈 팔기 없기~1", 1);
          // 자신의 최대 hp 30%만큼 아군 전체에게 아머 강화(1턴)
-         tbf(all, "아머", 30*me.hp*me.armorUp, "한눈 팔기 없기~2", 1);
+         tbf(all, "아머", me.hp*30*armorUp(me, "평", "추가"), "한눈 팔기 없기~2", 1);
       }
       me.atkafter = function() {
+         // <나나미의 형상으로 변한 것뿐> : 일반 공격 시 '자신의 현재 아머량 55% 만큼 타깃에게 데미지' 발동
+         tbf(me, "평발동고", myCurShd+me.id+55, "나나미의 형상으로 변한 것뿐1", 1);
          // <나나미의 형상으로 변한 것뿐> : 공격 시 '자신의 현재 아머량 100% 만큼 자신의 아머에 확정 데미지' 발동
          if (me.isLeader) {me.hit(); deleteBuffType(me, "아머");}
       }
@@ -1628,15 +1656,13 @@ function setDefault(me) {buff_ex.push("아머"); switch(me.id) {
          // 자신 이외의 아군은 <돈은 사라지지 않아> 획득
          // <돈은 사라지지 않아> : 공격 시 '자신의 공격 데미지의 30%만큼 1번 자리 아군에게 아머 강화 부여(1턴)
          for(let c of comp) if (c.id != me.id) {
-            atbf(c, "평", comp[0], "아머", myCurAtk+c.id+30, 1, always);
-            atbf(c, "궁", comp[0], "아머", myCurAtk+c.id+30, 1, always);
+            atbf(c, "평", comp[0], "아머", myCurAtk+c.id+30, "<돈은 사라지지 않아>", 1, always);
+            atbf(c, "궁", comp[0], "아머", myCurAtk+c.id+30, "<돈은 사라지지 않아>", 1, always);
          }
          // 자신은 <나나미의 형상으로 변한 것뿐> 획득
          // <나나미의 형상으로 변한 것뿐>
          // 일반 공격 시 '자신의 현재 아머량 55% 만큼 타깃에게 데미지' 발동
-         tbf(me, "평발동고", myCurShd+me.id+55, "나나미의 형상으로 변한 것뿐1", always);
          // 궁극기 발동 시 '자신의 현재 아머량 60%만큼 타깃에게 데미지' 발동
-         tbf(me, "궁발동고", myCurShd+me.id+60, "나나미의 형상으로 변한 것뿐2", always);
          // 공격 시 '자신의 현재 아머량 100% 만큼 자신의 아머에 확정 데미지' 발동 => atkafter로
       }
       me.passive = function() {

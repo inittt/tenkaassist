@@ -121,7 +121,7 @@ function updateAll() {
    }
    getdiv("turn").innerHTML = `TURN ${GLOBAL_TURN}`;
    getdiv("deal").innerHTML = `공격데미지 : ${Math.floor(lastDmg).toLocaleString()}`;
-   getdiv("deal_add").innerHTML = `추가데미지 : ${Math.floor(lastAtvDmg).toLocaleString()}`;
+   getdiv("deal_add").innerHTML = `추가데미지 : ${Math.floor(lastAddDmg).toLocaleString()}`;
    getdiv("deal_atv").innerHTML = `발동데미지 : ${Math.floor(lastAtvDmg).toLocaleString()}`;
    updateProgressBar(boss.hp, boss.maxHp);
 }
