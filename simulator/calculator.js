@@ -2501,6 +2501,7 @@ function setDefault(me) {buff_ex.push("아머"); switch(me.id) {
          tbf(me, "가뎀증", 7.5, "데미지+", always);
       }
       me.defense = function() {me.act_defense();}
+      me.check = true;
       me.turnstart = function() {if (me.isLeader) {}
          // 자신의 '강림치' 중첩 수 == 10 일 경우 <최고 신 강림> 스킬 활성화
          if (buffNestByType(me, "강림치") >= 10) {
@@ -2509,6 +2510,7 @@ function setDefault(me) {buff_ex.push("아머"); switch(me.id) {
             anbf(me, "평", boss, "받뎀증", 5, "<최고 신 강림>1", 3, 9, 1);
             // 궁극기 발동 시 "자신의 최대 hp50%만큼 타깃에게 데미지" 발동
             tbf(me, "궁발동고", me.hp*50, "<최고 신 강림>2", 1);
+            me.check = false;
          }
       };
       me.turnover = function() {if (me.isLeader) {}};
