@@ -529,11 +529,11 @@ function buffNestByType(me, str) {
 }
 function armorUp(me, act, div) {
    if (act == "궁") {
-      if (div == "추가") return me.armorUp*(1+buffSizeByType(me, "궁뎀증")+buffSizeByType(me, "아효증"));
-      if (div == "발동") return me.armorUp*(1+buffSizeByType(me, "궁뎀증")+buffSizeByType(me, "아효증")+buffSizeByType(me, "발효증"));
+      if (div == "추가") return me.armorUp*(1+buffSizeByType(me, "궁뎀증"))*(1+buffSizeByType(me, "아효증"));
+      if (div == "발동") return me.armorUp*(1+buffSizeByType(me, "궁뎀증")+buffSizeByType(me, "발효증"))*(1+buffSizeByType(me, "아효증"));
    } else if (act == "평") {
-      if (div == "추가") return me.armorUp*(1+buffSizeByType(me, "일뎀증")+buffSizeByType(me, "아효증"));
-      if (div == "발동") return me.armorUp*(1+buffSizeByType(me, "일뎀증")+buffSizeByType(me, "아효증")+buffSizeByType(me, "발효증"));
+      if (div == "추가") return me.armorUp*(1+buffSizeByType(me, "일뎀증"))*(1+buffSizeByType(me, "아효증"));
+      if (div == "발동") return me.armorUp*(1+buffSizeByType(me, "궁뎀증")+buffSizeByType(me, "발효증"))*(1+buffSizeByType(me, "아효증"));
    } else return me.armorUp*(1+buffSizeByType(me, "아효증"));
 }
 
@@ -1639,21 +1639,20 @@ function setDefault(me) {buff_ex.push("아머"); switch(me.id) {
          // 자신의 실드 효과 30% 증가(3턴)
          tbf(me, "아효증", 30, "드리워진 밤의 장막2", 3);
       }
-      me.ultafter = function() {}
-      me.ultimate = function() {ultLogic(me);
+      me.ultafter = function() {
          // 희미한 규방
          // 궁극기 발동 시 "타깃의 받는 데미지 15% 증가(7턴)" 추가
          tbf(boss, "받뎀증", 15, "희미한 규방", 7);
 
          // 부슬비
          // 궁극기 발동 시 "자신의 최대 hp7%만큼 아군 전체에게 실드 부여(1턴)" 추가
-         const shdUp = buffSizeByType(me, "아효증");
          tbf(all, "아머", me.hp*7*armorUp(me, "궁", "추가"), "부슬비", 1);
 
          // 끝없이 흐르는 밤
          // 궁극기 발동 시 "타깃이 받는 궁극기 데미지 20% 증가(7턴)" 추가
          tbf(boss, "받궁뎀", 20, "끝없이 흐르는 밤", 7);
-      };
+      }
+      me.ultimate = function() {ultLogic(me);};
       me.atkbefore = function() {}
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
@@ -1720,7 +1719,7 @@ function setDefault(me) {buff_ex.push("아머"); switch(me.id) {
          tbf(all, "아머", me.hp*30*armorUp(me, "궁", "추가"), "청순 아이돌2", 1);
          
          // <나나미의 형상으로 변한 것뿐> : 궁극기 발동 시 '자신의 현재 아머량 60%만큼 타깃에게 데미지' 발동
-         tbf(me, "궁발동고", myCurShd+me.id+60, "나나미의 형상으로 변한 것뿐2", 1);
+         if (me.isLeader) tbf(me, "궁발동고", myCurShd+me.id+60, "나나미의 형상으로 변한 것뿐2", 1);
       }
       me.ultimate = function() {ultLogic(me);
 
@@ -1735,7 +1734,7 @@ function setDefault(me) {buff_ex.push("아머"); switch(me.id) {
       }
       me.atkafter = function() {
          // <나나미의 형상으로 변한 것뿐> : 일반 공격 시 '자신의 현재 아머량 55% 만큼 타깃에게 데미지' 발동
-         tbf(me, "평발동고", myCurShd+me.id+55, "나나미의 형상으로 변한 것뿐1", 1);
+         if (me.isLeader) tbf(me, "평발동고", myCurShd+me.id+55, "나나미의 형상으로 변한 것뿐1", 1);
          // <나나미의 형상으로 변한 것뿐> : 공격 시 '자신의 현재 아머량 100% 만큼 자신의 아머에 확정 데미지' 발동
          if (me.isLeader) {me.hit(); deleteBuffType(me, "아머");}
       }
