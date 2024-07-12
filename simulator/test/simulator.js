@@ -55,8 +55,7 @@ function start(compIds) {
    GLOBAL_TURN = 1; comp = []; buff_ex.length = 0;
    lastDmg = 0; lastAtvDmg = 0;
    boss.hp = boss.maxHp;
-   boss.turnBuff = [];
-   boss.nestBuff = [];
+   boss.buff = [];
    for(const id of compIds) {
       const tmp = chJSON.data.filter(ch => ch.id === id)[0];
       const ch = new Champ(tmp.id, tmp.name, tmp.hp*COEF, tmp.atk*COEF, tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag);
