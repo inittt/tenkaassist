@@ -100,7 +100,7 @@ const chJSON = { data : [
 {ok : true, id : 10114, rarity : 3, hp:1010657, atk:267058, cd:4, atkMag:100, ultMag:618, fullname : "마법소녀 쥬노안", name : "뷰지안", element : 4, role : 0},
 {ok : true, id : 10115, rarity : 3, hp:972569, atk:277687, cd:4, atkMag:0, ultMag:0, fullname : "마법소녀 브리트니", name : "마브리", element : 2, role : 1},
 {ok : false, id : 10116, rarity : 3, fullname : "여름날 칸다 아야네", name : "수야네", element : 0, role : 0},
-{ok : false, id : 10117, rarity : 3, hp:913223, atk:295845, cd:4, atkMag:100, ultMag:100, fullname : "여름날 바알", name : "수바알", element : 1, role : 0},
+{ok : true, id : 10117, rarity : 3, hp:913223, atk:295845, cd:4, atkMag:100, ultMag:100, fullname : "여름날 바알", name : "수바알", element : 1, role : 0},
 {ok : false, id : 10118, rarity : 3, fullname : "여름날 피오라", name : "수오라", element : 3, role : 1},
 {ok : true, id : 10119, rarity : 3, hp:996485, atk:271044, cd:3, atkMag:0, ultMag:0, fullname : "여름날 아이카", name : "수이카", element : 0, role : 1},
 {ok : false, id : 10120, rarity : 3, fullname : "바람과 파도를 타고 란", name : "해란", element : 2, role : 4},

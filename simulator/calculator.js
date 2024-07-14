@@ -2388,7 +2388,7 @@ function setDefault(me) {switch(me.id) {
       return me;
 
 // 10136 10115 10048 10078 10117
-   case 10136 : // 안젤라    codingOk
+   case 10136 : // 안젤라    ok
       me.ultbefore = function() { // 이제부터 돈 벌 시간!
          // 타깃이 받는 피해 50% 증가(4턴)
          tbf(boss, "받뎀증", 50, "이제부터 돈 벌 시간!1", 4);
@@ -2452,7 +2452,7 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10115 : // 마브리    codingOk
+   case 10115 : // 마브리    ok
       buff_ex.push("<정의의 이름으로 널 심판하겠다>");
       me.healTurn = [];
       me.ultbefore = function() { // 자동 가열 진동 모드?
@@ -2560,15 +2560,81 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10117 : // 수바알    coding
+   case 10117 : // 수바알    ok
       me.ultbefore = function() {}
-      me.ultafter = function() {}
+      me.ultafter = function() { // 돌진! 시저 호!
+         // 자신은 "일반 공격 시 '자신의 공격 데미지의 173%만큼 타깃에게 데미지' 추가 획득(4턴)"
+         tbf(me, "평추가*", 173, "돌진! 시저 호!", 4);
+      }
       me.ultimate = function() {ultLogic(me);};
       me.atkbefore = function() {}
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
-      me.leader = function() {}
-      me.passive = function() {}
+      me.leader = function() { // 여름 상품 전면 세일 중~
+         // 자신 및 화/광속성 동료의 최대 hp 20% 증가
+         hpUpMe(me, 20);
+         for(let idx of getElementIdx("화", "광")) hpUpMe(comp[idx], 20);
+         // 자신 및 화/광속성 동료의 가하는 데미지 20% 증가
+         tbf(me, "가뎀증", 20, "여름 상품 전면 세일 중~1", always);
+         for(let idx of getElementIdx("화", "광")) tbf(comp[idx], "가뎀증", 20, "여름 상품 전면 세일 중~1", always);
+         // 자신의 공격 데미지 50% 증가
+         tbf(me, "공퍼증", 50, "여름 상품 전면 세일 중~2", always);
+         // 자신의 일반 공격 데미지 20% 증가
+         tbf(me, "일뎀증", 20, "여름 상품 전면 세일 중~3", always);
+         // 화/광속성 동료의 공격 데미지 80% 증가
+         for(let idx of getElementIdx("화", "광")) tbf(comp[idx], "공퍼증", 80, "여름 상품 전면 세일 중~4", always);
+         // 화/광속성 동료의 일반 공격 데미지 50% 증가
+         for(let idx of getElementIdx("화", "광")) tbf(comp[idx], "일뎀증", 50, "여름 상품 전면 세일 중~5", always);
+         // 아군 딜/디는 "팀에 최소 2명 이상의 화속성 동료가 있을 시 <바알상회 특제 BBQ 그릴> 발동" 획득
+         if (getElementCnt("화") >= 2) for(let idx of getRoleIdx("딜", "디")) {
+            // <바알상회 특제 BBQ 그릴>
+            // 일반 공격 시 "자신의 공격 데미지의 40% 만큼 타깃에게 데미지" 추가
+            tbf(comp[idx], "평추가*", 40, "<바알상회 특제 BBQ 그릴>1", always);
+            // 일반 공격 시 "타깃이 받는 일반 공격 데미지 18% 증가(최대 5중첩)" 추가
+            pnbf(comp[idx], "평", boss, "받일뎀", 18, "<바알상회 특제 BBQ 그릴>2", 1, 5, always);
+         }
+         // 아군 딜/디는 "팀에 최소 2명 이상의 광속성 동료가 있을 시 <바알상회 특제 BBQ 그릴> 발동" 획득
+         if (getElementCnt("광") >= 2) for(let idx of getRoleIdx("딜", "디")) {
+            // <바알상회 특제 BBQ 그릴>
+            // 일반 공격 시 "자신의 공격 데미지의 40% 만큼 타깃에게 데미지" 추가
+            tbf(comp[idx], "평추가*", 40, "<바알상회 특제 BBQ 그릴>3", always);
+            // 일반 공격 시 "타깃이 받는 일반 공격 데미지 18% 증가(최대 5중첩)" 추가
+            pnbf(comp[idx], "평", boss, "받일뎀", 18, "<바알상회 특제 BBQ 그릴>4", 1, 5, always);
+         }
+      }
+      me.passive = function() {
+         // 수영복 모카 피부 마왕
+         // 수속성 아군의 공격 데미지 30% 증가
+         for(let idx of getElementIdx("수")) tbf(comp[idx], "공퍼증", 30, "수영복 모카 피부 마왕1", always);
+         // 수속성 아군의 일반 공격 데미지 20% 증가
+         for(let idx of getElementIdx("수")) tbf(comp[idx], "일뎀증", 20, "수영복 모카 피부 마왕2", always);
+
+         // 얼굴에 한 발~
+         // 아군 딜/디는 <바알상회 특제 물총> 획득
+         for(let idx of getRoleIdx("딜", "디")) {
+            let elCnt_tmp = getElementCnt("수");
+            // <바알상회 특제 물총>
+            // 팀에 최소 (4/5)명의 수속성 동료가 있을 시 "일반 공격 시 '자신의 공격 데미지의 (15/15)%만큼 타깃에게 데미지'추가" 발동
+            if (elCnt_tmp == 4) tbf(comp[idx], "평추가*", 15, "<바알상회 특제 물총>1", always);
+            else if (elCnt_tmp == 5) tbf(comp[idx], "평추가*", 30, "<바알상회 특제 물총>1", always);
+            // 팀에 최소 (4/5)명의 수속성 동료가 있을 시 "일반 공격 시 타깃이 받는 일반 공격 데미지(9/9)% 증가(최대 5중첩)'추가" 발동
+            if (elCnt_tmp == 4) pnbf(comp[idx], "평", boss, "받일뎀", 9, "<바알상회 특제 물총>2", 1, 5, always);
+            else if (elCnt_tmp == 5) pnbf(comp[idx], "평", boss, "받일뎀", 18, "<바알상회 특제 물총>2", 1, 5, always);
+         }
+         // 접대는 내게 맡겨~
+         // 아군 전체에게 <해변의 집 프리미엄 상품> 을 부여
+         if (getRoleCnt("딜") >= 2) {
+            // <해변의 집 프리미엄 상품>
+            // 팀에 최소 2명의 딜러가 있을 경우 "가하는 데미지 30% 증가" 획득
+            tbf(all, "가뎀증", 30, "<해변의 집 프리미엄 상품>1", always);
+            // 팀에 최소 2명의 딜러가 있을 경우 "일반 공격 데미지 30% 증가" 획득
+            tbf(all, "일뎀증", 30, "<해변의 집 프리미엄 상품>2", always);
+         }
+
+         // 일반 공격+
+         // 자신의 일반 공격 데미지 10% 증가
+         tbf(me, "일뎀증", 10, "일반 공격+", always);
+      }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
