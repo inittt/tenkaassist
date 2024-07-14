@@ -39,7 +39,7 @@ class Champ {
       return res;
    }
 // [0공퍼증, 1공고증, 2받뎀증, 3일뎀증, 4받일뎀, 5궁뎀증, 6받궁뎀, 7발뎀증, 8받발뎀, 9가뎀증, 10속뎀증, 11받속뎀,
-//  12발효증, 13받직뎀, 14받캐뎀, 15아머, 16아효증]
+//  12발효증, 13받직뎀, 14받캐뎀, 15아머, 16가아증, 17받아증]
    getCurAtk() {const li = getBuffSizeList(this); return Math.round(this.atk*(1+li[0])+li[1]);}
    getAtkDmg() {
       const li = getBuffSizeList(this);
@@ -180,11 +180,11 @@ function addBuff(me, act, div) {
       if (typeof size == 'string') size = getSize(size);
       size *= armorUp(me, act[0], div);
       if (b.who == all) for(let c of comp) {
-         if (b.nest == undefined) buff(c, b.type, size, b.name, b.turn, true);
-         else buff(c, b.type, size, b.name, b.nest, b.maxNest, true);
+         if (b.nest == undefined) buff(c, b.type, size*(1+buffSizeByType(c, "받아증")), b.name, b.turn, true);
+         else buff(c, b.type, size*(1+buffSizeByType(c, "받아증")), b.name, b.nest, b.maxNest, true);
       } else {
-         if (b.nest == undefined) buff(b.who, b.type, size, b.name, b.turn, true);
-         else buff(b.who, b.type, size, b.name, b.nest, b.maxNest, true);
+         if (b.nest == undefined) buff(b.who, b.type, size*(1+buffSizeByType(b.who, "받아증")), b.name, b.turn, true);
+         else buff(b.who, b.type, size*(1+buffSizeByType(b.who, "받아증")), b.name, b.nest, b.maxNest, true);
       }
    }
 }
@@ -199,7 +199,7 @@ function isActTurn(a) {return a.act != undefined && a.nest == undefined;}
 // buff들을 리스트에 버프량만큼 담아 리턴
 const buff_ex = [];
 const txts = ["공퍼증","공고증","받뎀증","일뎀증","받일뎀","궁뎀증","받궁뎀","발뎀증","받발뎀","가뎀증","속뎀증",
-   "받속뎀","발효증","받직뎀","받캐뎀", "아머", "아효증"];
+   "받속뎀","발효증","받직뎀","받캐뎀", "아머", "가아증", "받아증"];
 function getBuffSizeList(me) {
    const curBuff = me.buff.filter(i => i.div == "기본");
    const res = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -292,12 +292,12 @@ function buffNestByType(me, str) {
 }
 function armorUp(me, act, div) {
    if (act == "궁") {
-      if (div == "추가") return me.armorUp*(1+buffSizeByType(me, "궁뎀증"))*(1+buffSizeByType(me, "아효증"));
-      if (div == "발동") return me.armorUp*(1+buffSizeByType(me, "궁뎀증")+buffSizeByType(me, "발효증")+buffSizeByType(me, "발뎀증"))*(1+buffSizeByType(me, "아효증"));
+      if (div == "추가") return me.armorUp*(1+buffSizeByType(me, "궁뎀증"))*(1+buffSizeByType(me, "가아증"));
+      if (div == "발동") return me.armorUp*(1+buffSizeByType(me, "궁뎀증")+buffSizeByType(me, "발효증")+buffSizeByType(me, "발뎀증"))*(1+buffSizeByType(me, "가아증"));
    } else if (act == "평") {
-      if (div == "추가") return me.armorUp*(1+buffSizeByType(me, "일뎀증"))*(1+buffSizeByType(me, "아효증"));
-      if (div == "발동") return me.armorUp*(1+buffSizeByType(me, "궁뎀증")+buffSizeByType(me, "발효증")+buffSizeByType(me, "발뎀증"))*(1+buffSizeByType(me, "아효증"));
-   } else return me.armorUp*(1+buffSizeByType(me, "아효증"));
+      if (div == "추가") return me.armorUp*(1+buffSizeByType(me, "일뎀증"))*(1+buffSizeByType(me, "가아증"));
+      if (div == "발동") return me.armorUp*(1+buffSizeByType(me, "궁뎀증")+buffSizeByType(me, "발효증")+buffSizeByType(me, "발뎀증"))*(1+buffSizeByType(me, "가아증"));
+   } else return me.armorUp*(1+buffSizeByType(me, "가아증"));
 }
 /*--------------------------------------------------------------------------------------- */
 function tbf() {buff(...Array.from(arguments), true);}
@@ -852,13 +852,14 @@ function setDefault(me) {switch(me.id) {
          // 자신의 공격 데미지의 20%만큼 동료 전체의 공격 데미지 증가(1턴)
          for(let c of comp) if (c.id != me.id)
             tbf(c, "공고증", myCurAtk+me.id+20, "달콤한 맛", 1);
-         // 자신의 공격 데미지의 20%만큼 아군 전체를 치유
-         for(let c of comp) c.heal();
          // 자신의 공격 데미지의 20%만큼 매턴 아군 전체를 치유(2턴)
          me.healTurn.push(GLOBAL_TURN, GLOBAL_TURN+1);
       }
       me.atkafter = function() {}
-      me.attack = function() {atkLogic(me);};
+      me.attack = function() {atkLogic(me);
+         // 자신의 공격 데미지의 20%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+      };
       me.leader = function() { // 연애하는 소녀의 기분이란
          // 아군 전체의 최대 hp20% 증가
          hpUpAll(20);
@@ -1402,12 +1403,11 @@ function setDefault(me) {switch(me.id) {
       me.turnover = function() {};
       return me;
    case 10132 : // 카디아     ok
-      buff_ex.push("아효증")
       me.ultbefore = function() { // 드리워진 밤의 장막
          // 아군 전체가 가하는 궁극기 데미지 60% 증가(3턴)
          tbf(all, "궁뎀증", 60, "드리워진 밤의 장막1", 3);
          // 자신의 실드 효과 30% 증가(3턴)
-         tbf(me, "아효증", 30, "드리워진 밤의 장막2", 3);
+         tbf(me, "가아증", 30, "드리워진 밤의 장막2", 3);
       }
       me.ultafter = function() {
          // 희미한 규방
@@ -1563,8 +1563,6 @@ function setDefault(me) {switch(me.id) {
             tbf(comp[idx], "궁추가*", 75, "다들 함께 불러요~2", 1);
          // 아군 전체가 가하는 데미지 60% 증가(1턴)
          tbf(all, "가뎀증", 60, "다들 함께 불러요~3", 1);
-         // 자신 공격 데미지의 257%만큼 아군 전체를 치유
-         for(let c of comp) c.heal();
          // 패시브 턴힐
          me.turnHeal = true;
          me.turnAtkBonus = true;
@@ -1574,18 +1572,21 @@ function setDefault(me) {switch(me.id) {
       }
       me.ultafter = function() {}
       me.ultimate = function() {ultLogic(me);
+         // 자신 공격 데미지의 257%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
          // 자신은 "공격 시, '자신의 공격 데미지의 15%만큼 자신을 제외한 아군의 공격 데미지 증가(1턴)' 효과 발동" 획득(5턴)
          for(let c of comp) if (c.id != me.id) atbf(me, "평", c, "공고증", myCurAtk+me.id+15, "다들 함께 불러요~1", 1, 5);
          for(let c of comp) if (c.id != me.id) atbf(me, "궁", c, "공고증", myCurAtk+me.id+15, "다들 함께 불러요~1", 1, 5);
       };
       me.atkbefore = function() { // 랩 타임!
-         // 자신 공격 데미지의 75%만큼 아군 전체를 치유
-         for(let c of comp) c.heal();
          // 패시브 턴힐
          me.turnHeal = true; 
       }
       me.atkafter = function() {}
-      me.attack = function() {atkLogic(me);};
+      me.attack = function() {atkLogic(me);
+         // 자신 공격 데미지의 75%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+      };
       me.leader = function() { // 눈부신 빛 빛나는 가희
          // 아군 전체의 최대 hp 35% 증가
          hpUpAll(35);
@@ -1626,10 +1627,7 @@ function setDefault(me) {switch(me.id) {
          // 치유 부여+
          // TODO: 자신이 주는 치유량 15% 증가
       }
-      me.defense = function() {me.act_defense();
-         // 패시브 턴힐
-         me.turnHeal = true; 
-      }
+      me.defense = function() {me.act_defense();}
       me.turnstart = function() {
          if (me.isLeader) {}
          // // 궁극기 발동 시, "자신의 공격 데미지의 15%만큼 매턴마다 자신을 제외한 아군의 공격 데미지 증가(1턴)" 효과 발동
@@ -2466,7 +2464,7 @@ function setDefault(me) {switch(me.id) {
       me.ultafter = function() {}
       me.ultimate = function() {ultLogic(me);
          // 자신 이외의 <정의의 이름으로 널 심판하겠다> 활성화
-         for(let c of comp) if (c.id != me.id) {
+         if (me.isLeader) for(let c of comp) if (c.id != me.id) {
             setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>2", true);
             setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>3", true);
             setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>4", true);
@@ -2474,12 +2472,15 @@ function setDefault(me) {switch(me.id) {
       };
       me.atkbefore = function() { // 스마트빔~
          // 공격 데미지의 75%만큼 아군 전체를 치유
-         for(let c of comp) c.heal();
+         //for(let c of comp) c.heal();
       }
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);
+         // 공격 데미지의 75%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+
          // 자신 이외의 <정의의 이름으로 널 심판하겠다> 활성화
-         for(let c of comp) if (c.id != me.id) {
+         if (me.isLeader) for(let c of comp) if (c.id != me.id) {
             setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>2", true);
             setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>3", true);
             setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>4", true);
@@ -2512,7 +2513,7 @@ function setDefault(me) {switch(me.id) {
 
          // 노출광 모드
          // 아군 전체가 받는 아머 강화 효과 20% 증가
-         tbf(all, "아효증", 20, "노출광 모드", always);
+         tbf(all, "받아증", 20, "노출광 모드", always);
          // TODO: 아군 전체는 치유를 받을 시 hp회복량 20% 증가
 
          // 도피는 유용하지만 도피할 수 없어
@@ -2648,7 +2649,7 @@ function setDefault(me) {switch(me.id) {
          // 난 무척 귀여워, 그러니까 밥이나 줘
          // TODO: 공격 시 "타깃이 치유를 받을 시 회복량 50% 감소(1턴)" 발동
          // 일반 공격 시 "자신의 공격 데미지의 35%만큼 타깃에게 데미지" 발동
-         tbf(me, "평발동*", 35, "난 무척 귀여워, 그러니까 밥이나 줘", always);
+         tbf(me, "평추가*", 35, "난 무척 귀여워, 그러니까 밥이나 줘", always);
 
          // 꽃병 파괴자
          // 일반 공격 시 "타깃이 받는 수속성 데미지 2% 증가(최대 5중첩)" 발동
