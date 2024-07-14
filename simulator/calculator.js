@@ -2387,6 +2387,192 @@ function setDefault(me) {switch(me.id) {
       me.turnover = function() {if (me.isLeader) {}};
       return me;
 
+// 10136 10115 10048 10078 10117
+   case 10136 : // 안젤라    codingOk
+      me.ultbefore = function() { // 이제부터 돈 벌 시간!
+         // 타깃이 받는 피해 50% 증가(4턴)
+         tbf(boss, "받뎀증", 50, "이제부터 돈 벌 시간!1", 4);
+      }
+      me.ultafter = function() { // 이제부터 돈 벌 시간!
+         // 자신은 "일반 공격 시 '자신의 공격 데미지의 30%만큼 타깃에게 데미지' 추가(4턴)" 획득
+         tbf(me, "평추가*", 30, "이제부터 돈 벌 시간!2", 4);
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 수배령
+         // 아군 수/풍 캐릭터의 최대 hp 20% 증가
+         for(let idx of getElementIdx("수", "풍")) hpUpMe(comp[idx], 20);
+         // 아군 수/풍 캐릭터의 공격 데미지 100% 증가
+         for(let idx of getElementIdx("수", "풍")) tbf(comp[idx], "공퍼증", 100, "수배령1", always);
+         // 아군 수속성 캐릭터의 일반 공격 데미지 80% 증가
+         for(let idx of getElementIdx("수")) tbf(comp[idx], "일뎀증", 80, "수배령2", always);
+         // 아군 수속성 캐릭터가 가하는 데미지 50% 증가
+         for(let idx of getElementIdx("수")) tbf(comp[idx], "가뎀증", 50, "수배령3", always);
+         // 아군 풍속성의 힐러, 서포터는 <집단 사냥> 획득
+         for(let idx of getElementIdx("풍")) if (getRoleIdx("힐", "섶").includes(idx)) {
+            // <집단 사냥>
+            // 공격 시 "아군 수속성 캐릭터가 가하는 데미지 30% 증가(1턴)" 발동
+            for(let idx2 of getElementIdx("수")) atbf(comp[idx], "공격", comp[idx2], "가뎀증", 30, "<집단 사냥>", 1, always);
+         }
+      }
+      me.passive = function() {
+         // 사냥감 추적
+         // 일반 공격 데미지 70% 증가
+         tbf(me, "일뎀증", 70, "사냥감 추적", always);
+
+         // 비검 곡예
+         // 자신은 궁극기 발동 시 "아군 수속성의 딜/탱/디는 <비검 전달> 획득" 발동
+         for(let idx of getElementIdx("수")) if (getRoleIdx("딜", "탱", "디").includes(idx)) {
+            // <비검 전달>
+            // 일반 공격 시 "자신의 공격 데미지의 30%만큼 타깃에게 데미지" 추가(1턴)
+            atbf(me, "궁", comp[idx], "평추가*", 30, "<비검 전달>", 1, always);
+         }
+         // 자신 이외의 아군 수속성 딜/탱/디는 "궁극기 발동 시 '아군 안젤라가 <비검 전달>획득' 발동" 획득
+         let myIdx = comp.findIndex(o => o.id == me.id);
+         for(let idx of getElementIdx("수")) if (getRoleIdx("딜", "탱", "디").includes(idx)) {
+            if (idx == myIdx) continue;
+            // <비검 전달>
+            // 일반 공격 시 "자신의 공격 데미지의 30%만큼 타깃에게 데미지" 추가(1턴)
+            atbf(comp[idx], "궁", me, "평추가*", 30, "<비검 전달>", 1, always);
+         }
+
+         // 현상금 사냥꾼의 직감
+         // 첫 번째 턴에서 "자신의 현재 궁극기 cd 4턴 감소" 발동
+         cdChange(me, -4);
+         // 첫 번째 턴에서 "자신 이외의 아군 수속성 캐릭터의 현재 궁극기 cd 1턴 감소" 발동
+         for(let idx of getElementIdx("수")) if (idx != myIdx) cdChange(comp[idx], -1);
+
+         // 일반 공격+
+         // 자신의 일반 공격 데미지 10% 증가
+         tbf(me, "일뎀증", 10, "일반 공격+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10115 : // 마브리    codingOk
+      buff_ex.push("<정의의 이름으로 널 심판하겠다>");
+      me.healTurn = [];
+      me.ultbefore = function() { // 자동 가열 진동 모드?
+         // 자신의 공격 데미지의 100%만큼 매턴 아군 전체를 치유(4턴)
+         me.healTurn.push(GLOBAL_TURN, GLOBAL_TURN+1, GLOBAL_TURN+2, GLOBAL_TURN+3);
+         // 자신의 최대 hp 36% 만큼 아군 전체의 아머 강화(1턴)
+         tbf(all, "아머", me.hp*36*armorUp(me, "궁", "추가"), "자동 가열 진동 모드?1", 1);
+         // 타깃이 받는 데미지 20% 증가(4턴)
+         tbf(boss, "받뎀증", 20, "자동 가열 진동 모드?2", 4);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         // 자신 이외의 <정의의 이름으로 널 심판하겠다> 활성화
+         for(let c of comp) if (c.id != me.id) {
+            setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>2", true);
+            setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>3", true);
+            setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>4", true);
+         }
+      };
+      me.atkbefore = function() { // 스마트빔~
+         // 공격 데미지의 75%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);
+         // 자신 이외의 <정의의 이름으로 널 심판하겠다> 활성화
+         for(let c of comp) if (c.id != me.id) {
+            setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>2", true);
+            setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>3", true);
+            setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>4", true);
+         }
+      };
+      me.leader = function() { // 별이 반짝 천재 마법소녀
+         // 매 Wave의 첫 번째 턴 시작 시 "적 전체가 받는 풍속성 데미지 35% 증가(최대 1중첩)" 발동
+         for(let idx of getElementIdx("풍")) nbf(comp[idx], "받속뎀", 35, "별이 반짝 천재 마법소녀1", 1, 1);
+         // 자신이 가하는 데미지 50% 증가
+         tbf(me, "가뎀증", 50, "별이 반짝 천재 마법소녀2", always);
+         // 공격 시 "자신 이외의 아군 전체는 <정의의 이름으로 널 심판하겠다> 획득" 발동
+         for(let c of comp) if (c.id != me.id) {
+            // <정의의 이름으로 널 심판하겠다>
+            // 가하는 데미지 20% 증가(1턴)
+            atbf(me, "공격", c, "가뎀증", 20, "<정의의 이름으로 널 심판하겠다>1", 1, always);
+            // 공격 시 "1번 자리 아군은 <마력 응집> 획득" 발동(1턴)
+            // <마력 응집> => 공격 시 버프 on => me.ultimate, me.attack로
+            // 공격 데미지 50% 증가
+            buff(c, "공격", comp[0], "공퍼증", 50, "<정의의 이름으로 널 심판하겠다>2", 1, always, "발동", false);
+            // 일반 공격 시 "자신의 공격 데미지의 75%만큼 타깃에게 데미지" 추가(2턴)
+            buff(c, "공격", comp[0], "평추가*", 75, "<정의의 이름으로 널 심판하겠다>3", 2, always, "발동", false);
+            // 궁극기 발동 시 "자신의 공격 데미지의 125%만큼 타깃에게 데미지" 추가(2턴)
+            buff(c, "공격", comp[0], "궁추가*", 125, "<정의의 이름으로 널 심판하겠다>4", 2, always, "발동", false);
+         }
+      }
+      me.passive = function() {
+         // 분홍빛 최음 광선
+         // 공격 시 "자신의 공격 데미지의 20%만큼 아군 전체의 공격 데미지 증가(1턴)" 발동
+         atbf(me, "공격", all, "공고증", myCurAtk+me.id+20, "분홍빛 최음 광선", 1, always);
+
+         // 노출광 모드
+         // 아군 전체가 받는 아머 강화 효과 20% 증가
+         tbf(all, "아효증", 20, "노출광 모드", always);
+         // TODO: 아군 전체는 치유를 받을 시 hp회복량 20% 증가
+
+         // 도피는 유용하지만 도피할 수 없어
+         // 치유를 받을 시 "아군 전체의 공격 데미지 20% 증가(1턴)" 발동
+         atbf(me, "힐", all, "공퍼증", 20, "도피는 유용하지만 도피할 수 없어1", 1, always);
+         // 아군 전체에게 "현존 hp >= 95%일 경우 '가하는 데미지 15% 증가' 발동" 부여
+         tbf(all, "가뎀증", 15, "도피는 유용하지만 도피할 수 없어2", always);
+
+         // 공격력+
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격력+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {
+         if (me.isLeader) {}
+         // 매턴 아군 전체를 치유
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp) c.heal();
+         me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
+      };
+      return me;
+   case 10048 : // 모모      coding
+      me.ultbefore = function() {}
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {}
+      me.passive = function() {}
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10078 : // 냥루루    coding
+      me.ultbefore = function() {}
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {}
+      me.passive = function() {}
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10117 : // 수바알    coding
+      me.ultbefore = function() {}
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {}
+      me.passive = function() {}
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
 
 default: return null;}}
 function ultLogic(me) {
