@@ -2534,28 +2534,132 @@ function setDefault(me) {switch(me.id) {
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me;
-   case 10048 : // 모모      coding
-      me.ultbefore = function() {}
+   case 10048 : // 모모      ok
+      me.ultbefore = function() { // 독액 배출
+         // 자신은 "일반 공격 시 '자신의 공격 데미지의 314%만큼 타깃에게 데미지' 추가(2턴)" 획득
+         tbf(me, "평추가*", 314, "독액 배출1", 2);
+         // 아군 전체의 일반공격 데미지 40% 증가(4턴)
+         tbf(all, "일뎀증", 40, "독액 배출2", 4);
+         // 자신의 일반 공격 데미지 100% 증가(2턴)
+         tbf(me, "일뎀증", 100, "독액 배출3", 2);
+      }
       me.ultafter = function() {}
       me.ultimate = function() {ultLogic(me);};
       me.atkbefore = function() {}
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
-      me.leader = function() {}
-      me.passive = function() {}
+      me.leader = function() { // 치명적인 독
+         // 아군 전체의 최대hp 20% 증가
+         hpUpAll(20);
+         // 아군 전체의 공격 데미지 40% 증가
+         tbf(all, "공퍼증", 40, "치명적인 독", always);
+         // 아군 딜/디는 <무해지독> 획득
+         for(let idx of getRoleIdx("딜", "디")) {
+            // <무해지독>
+            // 일반 공격 데미지 50% 증가
+            tbf(comp[idx], "일뎀증", 50, "<무해지독>1", always);
+            // 가하는 데미지 20% 증가
+            tbf(comp[idx], "가뎀증", 20, "<무해지독>2", always);
+         }
+      }
+      me.passive = function() {
+         // 통제불능의 전주곡
+         // 궁극기 발동 시 "자신의 공격 데미지 80% 증가(2턴)" 발동
+         atbf(me, "궁", me, "공퍼증", 80, "통제불능의 전주곡", 2, always);
+
+         // 부식성 맹독
+         // 궁극기 발동 시 "타깃이 받는 일반 공격 데미지 60% 증가(2턴)" 발동
+         atbf(me, "궁", boss, "받일뎀", 60, "부식성 맹독", 2, always);
+
+         // 스칼렛 톡신
+         // 궁극기 발동 시 "타깃이 받는 수속성 데미지 30% 증가(2턴)" 발동
+         for(let idx of getElementIdx("수")) {
+            atbf(me, "궁", comp[idx], "받속뎀", 30, "스칼렛 톡신", 2, always);
+         }
+
+         // 일반 공격 데미지+
+         // 자신의 일반 공격 데미지 10% 증가
+         tbf(me, "일뎀증", 10, "일반 공격 데미지+", always);
+      }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10078 : // 냥루루    coding
-      me.ultbefore = function() {}
+   case 10078 : // 냥루루    ok
+      me.ultbefore = function() { // 루루는 잘못 없어!
+         // 타깃이 받는 데미지 15% 증가(최대 2중첩)
+         nbf(boss, "받뎀증", 15, "루루는 잘못 없어!1", 1, 2)
+         // 타깃이 받는 수속성 데미지 12.5% 증가(최대 2중첩)
+         for(let idx of getElementIdx("수")) nbf(comp[idx], "받속뎀", 12.5, "루루는 잘못 없어!2", 1, 2);
+      }
       me.ultafter = function() {}
       me.ultimate = function() {ultLogic(me);};
       me.atkbefore = function() {}
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
-      me.leader = function() {}
-      me.passive = function() {}
+      me.leader = function() { // 제어 불가능
+         // 아군 전체의 최대 hp 30% 증가
+         hpUpAll(30);
+         // 아군 전체의 공격 데미지 25% 증가
+         tbf(all, "공퍼증", 25, "제어 불가능1", always);
+         // 자신의 일반 공격 데미지 30% 증가
+         tbf(me, "일뎀증", 30, "제어 불가능2", always);
+
+         // 아군 수속성 동료는 <수인화> 획득
+         for(let idx of getElementIdx("수")) {
+            // <수인화>
+            // TODO: 공격 시 "타깃이 치유를 받을 시 회복량 20% 감소(1턴)" 발동
+            // 일반 공격 시 "타깃이 받는 일반 공격 데미지 15% 증가(최대 5중첩)" 발동
+            anbf(comp[idx], "평", boss, "받일뎀", 15, "<수인화>1", 1, 5, always);
+            // 일반 공격 시 "자신의 공격 데미지의 30%만큼 타깃에게 데미지" 추가
+            tbf(comp[idx], "평추가*", 30, "<수인화>2", always);
+         }
+
+         // 아군 전체는 "팀원에 최소 4명 이상의 수속성 동료가 편성될 시 <초위험 수인화!> 발동" 획득
+         if (getElementCnt("수") >= 4) {
+            // <초위험 수인화!>
+            // 일반 공격 데미지 50% 증가
+            tbf(all, "일뎀증", 50, "<초위험 수인화!>1", always);
+            // 공격 시 "아군 1번 자리 팀원이 가하는 데미지 5% 증가(1턴)" 발동
+            atbf(all, "공격", comp[0], "가뎀증", 5, "<초위험 수인화!>2", 1, always);
+            // 공격 시 "아군 1번 자리 팀원이 평/궁 발동 시 '자신의 공격 데미지의 10%만큼 타깃에게 데미지' 추가(1턴)" 발동
+            atbf(all, "공격", comp[0], "평추가*", 10, "<초위험 수인화!>3", 1, always);
+            atbf(all, "공격", comp[0], "궁추가*", 10, "<초위험 수인화!>3", 1, always);
+         }
+
+         // 아군 전체는 "팀원에 최소 5명 이상의 수속성 동료가 편성될 시 <진한 맛 치즈!> 발동" 획득
+         if (getElementCnt("수") >= 5) {
+            // <진한 맛 치즈!>
+            // 가하는 데미지 30% 증가
+            tbf(all, "가뎀증", 30, "<진한 맛 치즈!>1", always);
+            // 공격 시 "아군 1번 자리 팀원이 가하는 데미지 10% 증가(1턴)" 발동
+            atbf(all, "공격", comp[0], "가뎀증", 10, "<진한 맛 치즈!>2", 1, always);
+            // 공격 시 "아군 1번 자리 팀원이 평/궁 발동 시 '자신의 공격 데미지의 20%만큼 타깃에게 데미지' 추가(1턴)" 발동
+            atbf(all, "공격", comp[0], "평추가*", 20, "<진한 맛 치즈!>3", 1, always);
+            atbf(all, "공격", comp[0], "궁추가*", 20, "<진한 맛 치즈!>3", 1, always);
+         }
+
+      }
+      me.passive = function() {
+         // 파스제국 최강 고양이
+         // 공격 시 "자신의 공격 데미지 10% 증가(최대 5중첩)" 발동
+         anbf(me, "공격", me, "공퍼증", 10, "파스제국 최강 고양이", 1, 5, always);
+
+         // 난 무척 귀여워, 그러니까 밥이나 줘
+         // TODO: 공격 시 "타깃이 치유를 받을 시 회복량 50% 감소(1턴)" 발동
+         // 일반 공격 시 "자신의 공격 데미지의 35%만큼 타깃에게 데미지" 발동
+         tbf(me, "평발동*", 35, "난 무척 귀여워, 그러니까 밥이나 줘", always);
+
+         // 꽃병 파괴자
+         // 일반 공격 시 "타깃이 받는 수속성 데미지 2% 증가(최대 5중첩)" 발동
+         for(let idx of getElementIdx("수")) anbf(me, "평", comp[idx], "받속뎀", 2, "꽃병 파괴자1", 1, 5, always);
+         // 일반 공격 시 "타깃이 받는 일반 공격 데미지 15% 증가(최대 5중첩)" 발동
+         anbf(me, "평", boss, "받일뎀", 15, "꽃병 파괴자2", 1, 5, always);
+
+         // 데미지+
+         // 자신이 가하는 데미지 7.5% 증가
+         tbf(me, "가뎀증", 7.5, "데미지+", always);
+      }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
