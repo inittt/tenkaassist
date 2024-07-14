@@ -105,8 +105,6 @@ function isExpired(item) {
    return a || b;
 }
 function nextTurn() {
-   // 삭제할것
-   for(let c of comp) c.hit();
    GLOBAL_TURN += 1;
    for(let i = 0; i < comp.length; i++) {
       comp[i].curCd = comp[i].curCd <= 0 ? 0 : comp[i].curCd-1;
@@ -123,8 +121,8 @@ function getSize(str) {
    else if (str.charAt(0) == myCurShd) return Number(per) * target.getArmor();
    else return 0;
 }
-
 function buff() {
+   alwaysCheck();
    const a = Array.from(arguments);
    if (a[0] == all) {for(let c of comp) {a[0] = c; buff(...a);} return;}
    if (a.length == 6) {
@@ -152,6 +150,7 @@ function addBuff(me, act, div) {
    );
    const armorContainer = [];
    for(const b of actBuff) {
+      alwaysCheck();
       if (!b.on) continue;
       if ((b.div != "기본" && b.ex <= GLOBAL_TURN) || (b.div == "기본" && b.turn <= GLOBAL_TURN)) continue;
       if (b.type == "아머") {armorContainer.push(b); continue;}
@@ -491,7 +490,7 @@ function setDefault(me) {switch(me.id) {
          if (me.getNest("<나약한 허상>") == 1) {
             // <반격>
             // 피격 시 "아군 전체의 가하는 데미지 35% 증가(4턴)"
-            atbf(me, "피격", all, "가뎀증", 35, "<반격>", 5, 1);
+            atbf(me, "피격", all, "가뎀증", 35, "<반격>", 4, 1);
             // 피격 시 자신의 <나약한 허상> 의 모든 중첩 수 제거 발동
             atbf(me, "피격", me, "<나약한 허상>", 0, "<반격>", -1, 1, 1);
          }
@@ -2050,15 +2049,12 @@ function setDefault(me) {switch(me.id) {
          // 현재 hp <= 99% 시 <붕괴 직면> 발동
          // <붕괴 직면> : 피격 시 '자신의 <이성치> 모든 중첩 수 제거' 발동
          me.hit = function() {
-            if (!me.isSANFix()) {
-               const per = me.curHp / me.hp * 100;
-               if (per <= 99) {
-                  nbf(me, "<이성치>", 0, "야옹이 요원 탐험 중", -50, 50);
-                  deleteBuff(me, "기본", "심연 직시");
-               }
-            }
             addBuff(this, ["피격"], "추가");
             addBuff(this, ["피격"], "발동");
+            if (!me.isSANFix()) {
+               const per = me.curHp / me.hp * 100;
+               if (per <= 99) nbf(me, "<이성치>", 0, "야옹이 요원 탐험 중", -50, 50);
+            }
          }
          // 방어 시 '자신은 <붕괴 직면> 효과의 영향을 받지 않음(1턴)' 발동
       }
@@ -2067,8 +2063,33 @@ function setDefault(me) {switch(me.id) {
          // 첫 번째 턴에서 '자신은 50중첩의 <이성치> 획득(최대 50)' 발동
          nbf(me, "<이성치>", 0, "야옹이 요원 탐험 중", 50, 50);
          // 1턴이 지날 때마다 '자신의 <이성치> 중첩 수 10 감소' 발동 => turnover로
-         // 심연 직시 => turnstart로
-         
+         // 심연 직시
+         // 자신의 <이성치> 중첩 수 == 50 일 시 '발동형 스킬 효과 30% 증가' 활성화
+         buff(me, "발효증", 30, "심연 직시1", always, false);
+         // 자신의 <이성치> 중첩 수 >= 40 일 시 '가하는 데미지 20% 증가' 활성화
+         buff(me, "가뎀증", 20, "심연 직시2", always, false);
+         // 자신의 <이성치> 중첩 수 >= 30 일 시 '공격 시 "자신의 공격 데미지의 100%만큼 타깃에게 데미지" 발동' 활성화
+         buff(me, "평발동*", 100, "심연 직시3", always, false);
+         buff(me, "궁발동*", 100, "심연 직시4", always, false);
+         // 자신의 <이성치> 중첩 수 >= 20 일 시 '공격 데미지 65% 중가' 활성화
+         buff(me, "공퍼증", 65, "심연 직시5", always, false);
+         // 자신의 <이성치> 중첩 수 >= 10 일 시 '공격 데미지 65% 증가' 활성화
+         buff(me, "공퍼증", 65, "심연 직시6", always, false);
+         // 자신의 <이성치> 중첩 수 < 1   일 시 <잃어버린 이성> 활성화 => turnover로
+
+         // 심연 직시
+         // 자신의 <이성치> 중첩 수 == 50 일 시 '발동형 스킬 효과 30% 증가' 활성화
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "심연 직시1", me.getNest("<이성치>") == 50);})
+         // 자신의 <이성치> 중첩 수 >= 40 일 시 '가하는 데미지 20% 증가' 활성화
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "심연 직시2", me.getNest("<이성치>") >= 40);})
+         // 자신의 <이성치> 중첩 수 >= 30 일 시 '공격 시 "자신의 공격 데미지의 100%만큼 타깃에게 데미지" 발동' 활성화
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "심연 직시3", me.getNest("<이성치>") >= 30);})
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "심연 직시4", me.getNest("<이성치>") >= 30);})
+         // 자신의 <이성치> 중첩 수 >= 20 일 시 '공격 데미지 65% 중가' 활성화
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "심연 직시5", me.getNest("<이성치>") >= 20);})
+         // 자신의 <이성치> 중첩 수 >= 10 일 시 '공격 데미지 65% 증가' 활성화
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "심연 직시6", me.getNest("<이성치>") >= 10);})
+
          // 정보부대 수칙 제 1조
          // 첫 번째 턴에서 '자신의 현재 궁극기 cd 3턴 감소' 발동
          cdChange(me, -3);
@@ -2086,7 +2107,6 @@ function setDefault(me) {switch(me.id) {
       }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {
-         // 심연 직시
          // 자신의 <이성치> 중첩 수 < 1 일 시 <잃어버린 이성> 활성화
          // <잃어버린 이성> : 1턴이 지날 때마다 <최고신의 그림자> 발동
          // <최고신의 그림자> : 자신은 50중첩의 <이성치> 획득(최대 50중첩)
@@ -2095,21 +2115,6 @@ function setDefault(me) {switch(me.id) {
             // 패시브 : 야옹이 요원 탐험 중
             if (GLOBAL_TURN > 1 && !me.isSANFix()) nbf(me, "<이성치>", 0, "야옹이 요원 탐험 중", -10, 50);
          }
-         const san = me.getNest("<이성치>");
-         // 자신의 <이성치> 중첩 수 == 50 일 시 '발동형 스킬 효과 30% 증가' 활성화
-         if (san == 50) tbf(me, "발효증", 30, "심연 직시", 1);
-         // 자신의 <이성치> 중첩 수 >= 40 일 시 '가하는 데미지 20% 증가' 활성화
-         if (san >= 40) tbf(me, "가뎀증", 20, "심연 직시", 1);
-         // 자신의 <이성치> 중첩 수 >= 30 일 시 '공격 시 "자신의 공격 데미지의 100%만큼 타깃에게 데미지" 발동' 활성화
-         if (san >= 30) {
-            tbf(me, "평발동*", 100, "심연 직시", 1);
-            tbf(me, "궁발동*", 100, "심연 직시", 1);
-         }
-         // 자신의 <이성치> 중첩 수 >= 20 일 시 '공격 데미지 65% 중가' 활성화
-         if (san >= 20) tbf(me, "공퍼증", 65, "심연 직시", 1);
-         // 자신의 <이성치> 중첩 수 >= 10 일 시 '공격 데미지 65% 증가' 활성화
-         if (san >= 10) tbf(me, "공퍼증", 65, "심연 직시", 1);
-         // 자신의 <이성치> 중첩 수 < 1   일 시 <잃어버린 이성> 활성화 => turnover로
       };
       me.turnover = function() {
          if (me.isLeader) {}
@@ -2414,7 +2419,8 @@ function bossUltAttack(me) {
    me.curCd = me.cd;
 }
 
-
+const alltimeFunc = [];
+function alwaysCheck() {for(let c of alltimeFunc) c();}
 
 
 
