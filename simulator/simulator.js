@@ -67,7 +67,6 @@ function makeComp(list) {
    compDiv.innerHTML = stringArr.join("");
 }
 
-const liberationList = ["살루시아", "루루", "치즈루", "란", "이블리스", "바알", "사탄", "섹돌", "밀레"];
 function start(compIds) {
    document.getElementById("simulator").style.display = "flex";
    GLOBAL_TURN = 1; comp = []; buff_ex.length = 0;
