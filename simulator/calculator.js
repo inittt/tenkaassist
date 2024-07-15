@@ -1534,59 +1534,6 @@ function setDefault(me) {switch(me.id) {
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me;
-   case 10125 : // 할야네     ok
-      me.ultbefore = function() { // 장난은 안치지만 사탕 내 놔
-         // 자신의 공격 데미지 300% 증가(1턴)
-         tbf(me, "공퍼증", 300, "장난은 안치지만 사탕 내 놔1", 1);
-         // 자신의 공격 데미지 45%만큼 자신의 공격 데미지 증가(1턴)
-         tbf(me, "공고증", myCurAtk+me.id+45, "장난은 안치지만 사탕 내 놔2", 1);
-         // 자신의 공격 데미지의 25%만큼 아군 딜/디 의 공격 데미지 증가(1턴)
-         for(let idx of getRoleIdx("딜", "디"))
-            tbf(comp[idx], "공고증", myCurAtk+me.id+25, "장난은 안치지만 사탕 내 놔3", 1);
-         // 즉석 호박파이
-         // 3턴마다 "자신이 궁극기 획득 시 '자신의 공격 데미지의 25%만큼 아군 딜/디 의 공격 데미지 증가(1턴)' 발동(1턴)" 발동
-         if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%3 == 0)
-            for(let idx of getRoleIdx("딜", "디"))
-               tbf(comp[idx], "공고증", myCurAtk+me.id+25, "즉석 호박파이", 1);
-      }
-      me.ultafter = function() {}
-      me.ultimate = function() {ultLogic(me);};
-      me.atkbefore = function() { // 용기의 힘
-         // 아군 전체의 공격 데미지 50% 증가(1턴)
-         tbf(all, "공퍼증", 50, "용기의 힘", 1);
-      }
-      me.atkafter = function() {}
-      me.attack = function() {atkLogic(me);};
-      me.leader = function() { // 할로윈 코스프레 파티
-         // 아군 전체의 최대 hp 20% 증가
-         hpUpAll(20);
-         // 아군 전체의 공격 데미지 50% 증가
-         tbf(all, "공퍼증", 50, "할로윈 코스프레 파티1", always);
-         // 아군 전체의 가하는 데미지 50% 증가
-         tbf(all, "가뎀증", 50, "할로윈 코스프레 파티2", always);
-         // 아군 전체의 궁극기 데미지 70% 증가
-         tbf(all, "궁뎀증", 70, "할로윈 코스프레 파티3", always);
-      }
-      me.passive = function() {
-         // 호박을 자르는데 어찌 성검을 쓰겠는가
-         // 궁극기 발동 시 "자신의 공격 데미지의 250%만큼 타깃에게 데미지" 추가
-         tbf(me, "궁추가*", 250, "호박을 자르는데 어찌 성검을 쓰겠는가", always);
-         
-         // 즉석 호박파이 => ultbefore로
-         // 3턴마다 "자신이 궁극기 획득 시 '자신의 공격 데미지의 25%만큼 아군 딜/디 의 공격 데미지 증가(1턴)' 발동(1턴)" 발동
-         
-         // 할로윈에 입을 옷
-         // 아군 딜/디는 "궁극기 발동 시 '자신의 공격 데미지 100%만큼 타깃에게 데미지' 추가(50턴)" 획득
-         for(let idx of getRoleIdx("딜", "디")) tbf(comp[idx], "궁추가*", 100, "할로윈에 입을 옷", 50);
-
-         // 공격+
-         // 자신의 공격 데미지 10% 추가
-         tbf(me, "공퍼증", 10, "공격+", always);
-      }
-      me.defense = function() {me.act_defense();}
-      me.turnstart = function() {if (me.isLeader) {}};
-      me.turnover = function() {if (me.isLeader) {}};
-      return me;
    case 10122 : // 천사기     ok
       buff_ex.push("<시기의 화염>");
       me.ultbefore = function() { // 히메는, 모두를 사랑해~
@@ -1728,6 +1675,59 @@ function setDefault(me) {switch(me.id) {
       me.turnover = function() {
          if (me.isLeader) {}
       };
+      return me;
+   case 10125 : // 할야네     ok
+      me.ultbefore = function() { // 장난은 안치지만 사탕 내 놔
+         // 자신의 공격 데미지 300% 증가(1턴)
+         tbf(me, "공퍼증", 300, "장난은 안치지만 사탕 내 놔1", 1);
+         // 자신의 공격 데미지 45%만큼 자신의 공격 데미지 증가(1턴)
+         tbf(me, "공고증", myCurAtk+me.id+45, "장난은 안치지만 사탕 내 놔2", 1);
+         // 자신의 공격 데미지의 25%만큼 아군 딜/디 의 공격 데미지 증가(1턴)
+         for(let idx of getRoleIdx("딜", "디"))
+            tbf(comp[idx], "공고증", myCurAtk+me.id+25, "장난은 안치지만 사탕 내 놔3", 1);
+         // 즉석 호박파이
+         // 3턴마다 "자신이 궁극기 획득 시 '자신의 공격 데미지의 25%만큼 아군 딜/디 의 공격 데미지 증가(1턴)' 발동(1턴)" 발동
+         if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%3 == 0)
+            for(let idx of getRoleIdx("딜", "디"))
+               tbf(comp[idx], "공고증", myCurAtk+me.id+25, "즉석 호박파이", 1);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() { // 용기의 힘
+         // 아군 전체의 공격 데미지 50% 증가(1턴)
+         tbf(all, "공퍼증", 50, "용기의 힘", 1);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 할로윈 코스프레 파티
+         // 아군 전체의 최대 hp 20% 증가
+         hpUpAll(20);
+         // 아군 전체의 공격 데미지 50% 증가
+         tbf(all, "공퍼증", 50, "할로윈 코스프레 파티1", always);
+         // 아군 전체의 가하는 데미지 50% 증가
+         tbf(all, "가뎀증", 50, "할로윈 코스프레 파티2", always);
+         // 아군 전체의 궁극기 데미지 70% 증가
+         tbf(all, "궁뎀증", 70, "할로윈 코스프레 파티3", always);
+      }
+      me.passive = function() {
+         // 호박을 자르는데 어찌 성검을 쓰겠는가
+         // 궁극기 발동 시 "자신의 공격 데미지의 250%만큼 타깃에게 데미지" 추가
+         tbf(me, "궁추가*", 250, "호박을 자르는데 어찌 성검을 쓰겠는가", always);
+         
+         // 즉석 호박파이 => ultbefore로
+         // 3턴마다 "자신이 궁극기 획득 시 '자신의 공격 데미지의 25%만큼 아군 딜/디 의 공격 데미지 증가(1턴)' 발동(1턴)" 발동
+         
+         // 할로윈에 입을 옷
+         // 아군 딜/디는 "궁극기 발동 시 '자신의 공격 데미지 100%만큼 타깃에게 데미지' 추가(50턴)" 획득
+         for(let idx of getRoleIdx("딜", "디")) tbf(comp[idx], "궁추가*", 100, "할로윈에 입을 옷", 50);
+
+         // 공격+
+         // 자신의 공격 데미지 10% 추가
+         tbf(me, "공퍼증", 10, "공격+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
       return me;
    case 10126 : // 할쿠       ok
       buff_ex.push("<연쇄 트랩>");
@@ -1873,6 +1873,66 @@ function setDefault(me) {switch(me.id) {
       }
       me.turnstart = function() {};
       me.turnover = function() {};
+      return me;
+   case 10129 : // 신릴리     ok
+      me.ultbefore = function() { // 맹록 착지 포즈
+         // 아군 전체의 가하는 데미지 30% 증가(4턴)
+         tbf(all, "가뎀증", 30, "맹록 착지 포즈", 4);
+      }
+      me.ultafter = function() { // 맹록 착지 포즈
+         // TODO: 자신은 도발 효과 획득(2턴) 후 방어 상태로 전환
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() { // 엔진 가동
+         // TODO: 방어 상태로 전환
+      }
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 순결마성의 매력
+         // 자신의 최대 hp 30% 증가
+         hpUpMe(me, 30);
+         // 자신의 아머 효과 50% 증가
+         tbf(me, "가아증", 50, "순결마성의 매력1", always);
+         // 각 웨이브의 첫 번째 턴에서 "적 전체가 받는 데미지 50% 증가(최대 1중첩)" 효과 발동
+         nbf(boss, "받뎀증", 50, "순결마성의 매력2", 1, 1);
+         // 아군 전체는 "팀에 풍속성 캐릭터가 4명 이상일 시 <메리 섹스마스!> 발동" 획득
+         if (getElementCnt("풍") >= 4) {
+            // <메리 섹스마스!>
+            // 공격 데미지 130% 증가
+            tbf(all, "공퍼증", 130, "<메리 섹스마스!>1", always);
+            // 궁극기 데미지 50% 증가
+            tbf(all, "궁뎀증", 50, "<메리 섹스마스!>2", always);
+            // 가하는 데미지 20% 증가
+            tbf(all, "가뎀증", 20, "<메리 섹스마스!>3", always);
+         }
+      }
+      me.passive = function() {
+         // 브레이크를 위한 액셀
+         // 1턴이 지날 때마다 "아군 전체의 궁극기 데미지 3% 증가(최대 15중첩)" 발동 => turnover로
+         // 피격 시 "<브레이크를 위한 액셀>의 아군 전체의 궁극기 데미지 효과 1중첩 증가" 발동
+         anbf(me, "피격", all, "궁뎀증", 3, "브레이크를 위한 액셀", 1, 15, always);
+
+         // 함께 파티 시작!
+         // 공격 시 "자신의 최대 hp20%만큼 자신의 아머 강화(1턴)" 발동
+         atbf(me, "공격", me, "아머", me.hp*20, "함께 파티 시작!", 1, always);
+
+         // 이것이 바로 속박의 힘!
+         // 피격 시 "자신이 가하는 데미지 10% 증가(최대 4중첩)" 발동
+         anbf(me, "피격", me, "가뎀증", 10, "이것이 바로 속박의 힘!1", 1, 4, always);
+         // 피격 시 "자신의 최대 hp 23%만큼 자신의 아머 강화(1턴)" 발동
+         atbf(me, "피격", me, "아머", me.hp*23, "이것이 바로 속박의 힘!2", 1, always);
+
+         // 아머+
+         // 자신의 아머 강화 효과 10% 증가
+         tbf(me, "가아증", 10, "아머+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}
+         // 브레이크를 위한 액셀
+         // 1턴이 지날 때마다 "아군 전체의 궁극기 데미지 3% 증가(최대 15중첩)" 발동
+         nbf(all, "궁뎀증", 3, "브레이크를 위한 액셀", 1, 15);
+      };
       return me;
    case 10132 : // 카디아     ok
       me.ultbefore = function() { // 드리워진 밤의 장막
@@ -2113,6 +2173,68 @@ function setDefault(me) {switch(me.id) {
          if (me.turnHeal) for(let c of comp) c.heal();
          me.turnHeal = false;
       };
+      return me;
+   case 10135 : // 돌스미나   ok
+      buff_ex.push("<위대한 나가퀸>");
+      me.ultbefore = function() { // 돈이 곧 힘!
+         // 자신의 가하는 데미지 30% 증가(2턴)
+         tbf(me, "가뎀증", 30, "돈이 곧 힘!1", 2);
+      }
+      me.ultafter = function() { // 돈이 곧 힘!
+         // 자신은 일반 공격 시 "자신의 공격 데미지 160%만큼 타깃에게 데미지"(2턴) 추가
+         tbf(me, "평추가*", 160, "돈이 곧 힘!2", 2);
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 슈퍼 리치 메스미나 님
+         // 자신의 공격 데미지 50% 증가
+         tbf(me, "공퍼증", 50, "슈퍼 리치 메스미나 님1", always);
+         // 자신은 일반 공격 시 "자신의 공격 데미지의 50%만큼 적 전체에게 데미지" 추가
+         tbf(me, "평추가*", 50, "슈퍼 리치 메스미나 님2", always);
+         // 자신 이외의 아군 전체가 가하는 데미지 100% 감소(디버프)
+         for(let c of comp) if (c.id != me.id) tbf(c, "가뎀증", -100, "슈퍼 리치 메스미나 님3", always);
+         // 자신의 첫 번째 턴 시작 시 "자신은 4중첩의 <위대한 나가퀸> 획득(최대 4중첩)" 발동
+         nbf(me, "<위대한 나가퀸>", 0, "슈퍼 리치 메스미나 님4", 4, 4);
+      }
+      me.passive = function() {
+         // 아이돌 매니저의 상담 시간
+         // 아군 3번 자리 동료가 공격 시, "돌스미나가 1중첩의 <위대한 나가퀸> 획득(최대 4중첩)" 효과 발동
+         anbf(comp[2], "공격", me, "<위대한 나가퀸>", 0, "아이돌 매니저의 상담 시간1", 1, 4, always);
+         // 아군 3번 자리 동료가 공격 시, "자신의 공격 데미지의 10%만큼 돌스미나의 공격 데미지 증가(1턴)" 효과 발동
+         atbf(comp[2], "공격", me, "공고증", myCurAtk+comp[2].id+10, "아이돌 매니저의 상담 시간2", 1, always);
+         // 아군 3번 자리 동료가 가하는 데미지 100% 감소(디버프 효과)
+         tbf(comp[2], "가뎀증", -100, "아이돌 매니저의 상담 시간3", always);
+
+         // 아무것도 안 하는 게 최고야!
+         // X: 궁극기 발동 시 "자신의 <위대한 나가퀸>의 모든 중첩수 제거" 효과 발동
+         // <위대한 나가퀸> >= 1 일 시 "자신의 일반 공격 데미지 75% 증가" 발동
+         buff(me, "일뎀증", 75, "아무것도 안 하는 게 최고야!1", always, false);
+         // <위대한 나가퀸> >= 2 일 시 "자신의 공격 데미지 100% 증가" 발동
+         buff(me, "공퍼증", 100, "아무것도 안 하는 게 최고야!2", always, false);
+         // <위대한 나가퀸> >= 3 일 시 "자신의 공격 데미지 100% 증가" 발동
+         buff(me, "공퍼증", 100, "아무것도 안 하는 게 최고야!3", always, false);
+         // <위대한 나가퀸> == 4 일 시 "자신의 궁극기 데미지 60% 증가" 발동
+         buff(me, "궁뎀증", 60, "아무것도 안 하는 게 최고야!4", always, false);
+
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "아무것도 안 하는 게 최고야!1", me.getNest("<위대한 나가퀸>") >= 1);})
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "아무것도 안 하는 게 최고야!2", me.getNest("<위대한 나가퀸>") >= 2);})
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "아무것도 안 하는 게 최고야!3", me.getNest("<위대한 나가퀸>") >= 3);})
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "아무것도 안 하는 게 최고야!4", me.getNest("<위대한 나가퀸>") == 4);})
+
+         // 럭셔리의 기쁨
+         // 아군 3번 자리 동료가 궁극기 사용 시, "돌스미나가 가하는 데미지 40% 증가(2턴) 획득" 효과 발동
+         atbf(comp[2], "궁", me, "가뎀증", 40, "럭셔리의 기쁨", 2, always);
+         // X: 자신의 첫 번째 턴 시작 시, "자신이 궁극기 발동 시, 더 이상 <위대한 나가퀸>의 모든 중첩수가 제거되지 않음" 효과 발동
+
+         // 피해+
+         // 자신이 가하는 데미지 7.5% 증가
+         tbf(me, "가뎀증", 7.5, "피해+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
       return me;
    case 10136 : // 안젤라     ok
       me.ultbefore = function() { // 이제부터 돈 벌 시간!
