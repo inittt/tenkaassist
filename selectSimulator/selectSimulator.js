@@ -38,6 +38,7 @@ function getCharactersWithCondition(element, role, rarity, search) {
             <div style="margin:0.2rem;">
                <img id="img_${id}" src="${address}/images/characters/cs${id}_0_0.webp" class="img z-1" alt="">
                ${roleImg}
+               ${liberationList.includes(name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                <img id="chk_${id}" src="${address}/images/checkmark.png" class="chked z-3" style="display:${chk_option}">
                <div class="element${element} ch_img ch_border z-4"></div>
             </div>
@@ -70,6 +71,7 @@ function updateSelected() {
                <div style="margin:0.2rem;">
                   <img src="${address}/images/characters/cs${id}_0_0.webp" class="img z-1" alt="">
                   ${roleImg}
+                  ${liberationList.includes(name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                   <div class="element${element} ch_img ch_border z-4"></div>
                </div>
                <div class="text-mini">${name}</div>
