@@ -1,10 +1,11 @@
+const liberationList = ["살루시아", "루루", "치즈루", "란", "이블리스", "바알", "사탄", "섹돌", "밀레"];
 const chJSON = { data : [
 {ok : false, id : 10001, rarity : 3, hp:962383, atk:254657, cd:4, atkMag:100, ultMag:422, fullname : "마왕 바알", name : "바알", element : 0, role : 0},
 {ok : false, id : 10002, rarity : 3, hp:1384007, atk:177152, cd:3, atkMag:50, ultMag:0, fullname : "마왕 사탄", name : "사탄", element : 4, role : 2},
 {ok : false, id : 10003, rarity : 3, fullname : "마왕 이블리스", name : "이블리스", element : 3, role : 0},
-{ok : false, id : 10004, rarity : 3, fullname : "엘프의 왕 살루시아", name : "살루시아", element : 2, role : 3},
+{ok : true, id : 10004, rarity : 3, hp:1006228, atk:243585, cd:6, atkMag:100, ultMag:625, fullname : "엘프의 왕 살루시아", name : "살루시아", element : 2, role : 3},
 {ok : false, id : 10005, rarity : 3, fullname : "난쟁이의 왕 란", name : "란", element : 1, role : 0},
-{ok : false, id : 10006, rarity : 3, fullname : "파스제국의 공주 루루", name : "루루", element : 2, role : 1},
+{ok : true, id : 10006, rarity : 3, hp:984084, atk:248899, cd:4, atkMag:0, ultMag:0, fullname : "파스제국의 공주 루루", name : "루루", element : 2, role : 1},
 {ok : false, id : 10007, rarity : 3, fullname : "대천사 성녀 밀레", name : "밀레", element : 3, role : 0},
 {ok : false, id : 10008, rarity : 3, fullname : "마도인형 KS-Ⅷ", name : "섹돌", element : 4, role : 0},
       {ok : false, id : 10009, rarity : 2, fullname : "마도 메이드 아이카", name : "아이카", element : 4, role : 3},
@@ -26,7 +27,7 @@ const chJSON = { data : [
 {ok : false, id : 10025, rarity : 3, fullname : "아이돌 이블리스", name : "아이블", element : 1, role : 4},
 {ok : false, id : 10026, rarity : 3, fullname : "아이돌 블랙앤화이트 노엘리", name : "노엘리", element : 0, role : 3},
 {ok : false, id : 10027, rarity : 3, fullname : "부활한 바니걸 사탄", name : "바니사탄", element : 3, role : 2},
-{ok : false, id : 10028, rarity : 3, fullname : "다시 태어난 치즈루", name : "치즈루", element : 2, role : 0},
+{ok : true, id : 10028, rarity : 3, hp:954411, atk:256871, cd:4, atkMag:100, ultMag:514, fullname : "다시 태어난 치즈루", name : "치즈루", element : 2, role : 0},
 {ok : false, id : 10029, rarity : 3, fullname : "여름날 시즈카", name : "수즈카", element : 1, role : 0},
 {ok : false, id : 10030, rarity : 3, fullname : "여름날 루루", name : "수루루", element : 1, role : 3},
 {ok : false, id : 10031, rarity : 3, fullname : "여름날 KS-Ⅷ", name : "수섹돌", element : 3, role : 4},

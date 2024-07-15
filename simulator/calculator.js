@@ -235,7 +235,7 @@ function deleteBuff(me, div, name) {
       if (me.buff[i].name === name && me.buff[i].div == div) me.buff.splice(i, 1);
 }
 function deleteBuffType(me, div, type) {
-   // buff 배열에서 name이 일치하는 요소 제거
+   // buff 배열에서 type이 일치하는 요소 제거
    for (let i = me.buff.length - 1; i >= 0; i--)
       if (me.buff[i].type === type && me.buff[i].div == div) me.buff.splice(i, 1);
 }
@@ -326,6 +326,124 @@ function setDefault(me) {switch(me.id) {
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10004 : // 살루시아   ok
+      me.ultbefore = function() {}
+      me.ultafter = function() { // 유도 화살
+         // 아군 전체의 공격데미지 25% 증가(최대 2중첩)
+         nbf(all, "공퍼증", 25, "유도 화살", 1, 2);
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 엘프의 영역
+         // 아군 전체의 최대 hp20% 증가
+         hpUpAll(20);
+         // 아군 전체의 공격 데미지 50% 증가
+         tbf(all, "공퍼증", 50, "엘프의 영역1", always);
+         // 아군 전체의 일반 공격 데미지 50% 증가
+         tbf(all, "일뎀증", 50, "엘프의 영역2", always);
+         // 자신의 공격 데미지 50% 증가
+         tbf(me, "공퍼증", 50, "엘프의 영역3", always);
+      }
+      me.passive = function() {
+         // 인도자
+         // 공격 시 "아군 전체가 가하는 데미지 20% 증가(1턴)" 발동
+         atbf(me, "공격", all, "가뎀증", 20, "인도자1", 1, always);
+         // 공격 시 "아군 전체의 일반 공격 데미지 30% 증가(1턴)" 발동
+         atbf(me, "공격", all, "일뎀증", 30, "인도자2", 1, always);
+
+         // 파천일격
+         // 궁극기 발동 시 "적 전체가 받는 데미지 12.5% 증가(최대 2중첩)" 추가
+         pnbf(me, "궁", boss, "받뎀증", 12.5, "파천일격1", 1, 2, always);
+         // TODO: 궁극기 발동 시 "적 전체의 방어 상태 해제" 추가
+         // 궁극기 발동 시 "적 타깃이 받는 일반 공격 데미지 35% 증가(최대 2중첩)" 발동
+         anbf(me, "궁", boss, "받일뎀", 35, "파천일격3", 1, 2, always);
+
+         // 불어오는 승리의 바람
+         // 아군 전체의 공격 데미지 25% 증가
+         tbf(all, "공퍼증", 25, "불어오는 승리의 바람", always);
+         // 첫번째 턴에서 "자신의 궁극기 cd 6턴 감소" 발동
+         cdChange(me, -6);
+
+         // 일반 공격 데미지+
+         // 자신의 일반 공격 데미지 10% 증가
+         tbf(me, "일뎀증", 10, "일반 공격 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10006 : // 루루       ok
+      me.healTurn = [];
+      me.ultbefore = function() { // 모두 화이팅!
+         // 자신의 공격 데미지의 25%만큼 아군 서포터의 공격 데미지 증가(1턴)
+         for(let idx of getRoleIdx("섶"))
+            tbf(comp[idx], "공고증", myCurAtk+me.id+25, "모두 화이팅!", 1);
+         // 자신의 공격 데미지의 110%만큼 매턴 아군 전체를 치유(5턴)
+         me.healTurn.push(GLOBAL_TURN, GLOBAL_TURN+1, GLOBAL_TURN+2);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         // 공격 데미지의 200%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+      };
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me); // 격려
+         // 자신의 공격 데미지의 75%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+
+         // 추가 치료
+         // 일반 공격시 "공격데미지의 40%만큼 hp가 가장 낮은 아군을 치유" 발동
+         const lowCh = comp.reduce((low, cur) => {
+            return (cur.curHp < low.curHp) ? cur : low;
+         }, comp[0]);
+         lowCh.heal();
+      };
+      me.leader = function() { // 보호 욕구 자극
+         // 아군 전체의 최대 hp35% 증가
+         // 아군 탱커의 최대 hp15% 증가
+         for(let i = 0; i < 5; i++) {
+            if (getRoleIdx("탱").includes(i)) hpUpMe(comp[i], 50);
+            else hpUpMe(comp[i], 35);
+         }
+         // 아군 전체의 공격 데미지 40% 증가
+         tbf(all, "공퍼증", 40, "보호 욕구 자극1", always);
+         // 아군 전체의 궁극기 데미지 25% 증가
+         tbf(all, "궁뎀증", 25, "보호 욕구 자극2", always);
+         // 아군 전체가 가하는 데미지 20% 증가
+         tbf(all, "가뎀증", 20, "보호 욕구 자극3", always);
+         // TODO: 아군 전체는 치유를 받을 시 회복량 30% 증가
+      }
+      me.passive = function() {
+         // 추가 치료
+         // TODO: 일반 공격 시 "hp가 가장 낮은 아군이 받는 데미지 15% 감소(1턴)" 발동
+         // 일반 공격시 "공격데미지의 40%만큼 hp가 가장 낮은 아군을 치유" 발동 => attack로
+         
+         // 전격 지원
+         // 공격 시 "자신의 공격 데미지의 25%만큼 아군 전체의 공격 데미지 증가(1턴)" 발동
+         atbf(me, "공격", all, "공고증", myCurAtk+me.id+25, "전격 지원", 1, always);
+         
+         // 모두에게 노력의 성과를 보여주겠어!
+         // 아군 전체의 궁극기 데미지 30% 증가
+         tbf(all, "궁뎀증", 30, "모두에게 노력의 성과를 보여주겠어!1", always);
+         // 궁극기 발동 시 "타깃이 받는 풍속성 데미지 20% 증가(최대 2중첩)" 발동
+         for(let idx of getElementIdx("풍")) 
+            anbf(me, "궁", comp[idx], "받속뎀", 20, "모두에게 노력의 성과를 보여주겠어!2", 1, 2, always);
+
+         // 방어 데미지 감소+
+         // TODO: 방어 상태에서 받는 데미지 감소 효과 10% 증가
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {
+         if (me.isLeader) {}
+         // 매턴 아군 전체를 치유
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp) c.heal();
+         me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
+      };
       return me;
    case 10022 : // 놀라이티   ok
       me.ultbefore = function() {}
@@ -502,6 +620,66 @@ function setDefault(me) {switch(me.id) {
       };
       me.turnover = function() {if (me.isLeader) {}};
       return me;
+   case 10028 : // 치즈루     ok
+      me.ultbefore = function() { // 치즈루 전력의 일격!
+         // 타깃이 받는 풍속성 데미지 25% 증가(최대 2중첩)
+         for(let idx of getElementIdx("풍"))
+            nbf(comp[idx], "받속뎀", 25, "치즈루 전력의 일격!", 1, 2);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         // 방어 가속
+         // 궁극기 발동 시, "자신에게 부여된 <방어 가속>의 자신의 공격 데미지 증가 효과 해제" 발동
+         deleteBuff(me, "기본", "방어 가속");
+      };
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 각성 치즈루!
+         // 자신의 최대 hp 50% 증가
+         hpUpMe(me, 50);
+         // 자신의 공격 데미지 200% 증가
+         tbf(me, "공퍼증", 200, "각성 치즈루!1", always);
+         // 자신의 궁극기 데미지 100% 증가
+         tbf(me, "궁뎀증", 100, "각성 치즈루!2", always);
+         // 1턴 경과할 때마다 "자신의 최대 hp100%만큼 자신을 치유" 발동 => turnover로 
+      }
+      me.passive = function() {
+         // 불사의 육체
+         // TODO: 자신이 받는 치유 회복량 20% 증가
+         // TODO: 자신이 받는 데미지 15% 감소
+
+         // 방어 가속
+         // 방어 시, "자신의 공격 데미지 50% 증가(최대 1중첩)" 발동
+         anbf(me, "방", me, "공퍼증", 50, "방어 가속", 1, 1, always);
+         // 방어 시, "자신의 현재 궁극기 cd 1턴 감소" 발동 => defense로
+         // 궁극기 발동 시, "자신에게 부여된 <방어 가속>의 자신의 공격 데미지 증가 효과 해제" 발동 => ultimate로
+
+         // 열풍의 격려
+         // 궁극기 발동 시 "아군 전체의 가하는 데미지 20% 증가(4턴)" 발동
+         atbf(me, "궁", all, "가뎀증", 20, "열풍의 격려1", 4, always);
+         // 궁극기 발동 시 "풍속성 아군의 궁극기 데미지 20% 증가(최대 2중첩)" 발동
+         for(let idx of getElementIdx("풍"))
+            anbf(me, "궁", comp[idx], "궁뎀증", 20, "열풍의 격려2", 1, 2, always);
+
+         // 궁극기 데미지+
+         // 자신의 궁극기 데미지 10% 증가
+         tbf(me, "궁뎀증", 10, "궁극기 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();
+         // 방어 가속
+         // 방어 시, "자신의 현재 궁극기 cd 1턴 감소" 발동 => defense로
+         cdChange(me, -1);
+      }
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {
+         if (me.isLeader) {
+            // 각성 치즈루!
+            // 1턴 경과할 때마다 "자신의 최대 hp100%만큼 자신을 치유" 발동
+            me.heal();
+         }
+      };
+      return me;
    case 10042 : // 수이블     ok
       me.ultbefore = function() {
          // 소녀의 연심은 무적!1 : 아군 수, 화 공퍼증 40%(1턴)
@@ -553,6 +731,57 @@ function setDefault(me) {switch(me.id) {
          }
       };
       me.turnover = function() {};
+      return me;
+   case 10048 : // 모모       ok
+      me.ultbefore = function() { // 독액 배출
+         // 자신은 "일반 공격 시 '자신의 공격 데미지의 314%만큼 타깃에게 데미지' 추가(2턴)" 획득
+         tbf(me, "평추가*", 314, "독액 배출1", 2);
+         // 아군 전체의 일반공격 데미지 40% 증가(4턴)
+         tbf(all, "일뎀증", 40, "독액 배출2", 4);
+         // 자신의 일반 공격 데미지 100% 증가(2턴)
+         tbf(me, "일뎀증", 100, "독액 배출3", 2);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 치명적인 독
+         // 아군 전체의 최대hp 20% 증가
+         hpUpAll(20);
+         // 아군 전체의 공격 데미지 40% 증가
+         tbf(all, "공퍼증", 40, "치명적인 독", always);
+         // 아군 딜/디는 <무해지독> 획득
+         for(let idx of getRoleIdx("딜", "디")) {
+            // <무해지독>
+            // 일반 공격 데미지 50% 증가
+            tbf(comp[idx], "일뎀증", 50, "<무해지독>1", always);
+            // 가하는 데미지 20% 증가
+            tbf(comp[idx], "가뎀증", 20, "<무해지독>2", always);
+         }
+      }
+      me.passive = function() {
+         // 통제불능의 전주곡
+         // 궁극기 발동 시 "자신의 공격 데미지 80% 증가(2턴)" 발동
+         atbf(me, "궁", me, "공퍼증", 80, "통제불능의 전주곡", 2, always);
+
+         // 부식성 맹독
+         // 궁극기 발동 시 "타깃이 받는 일반 공격 데미지 60% 증가(2턴)" 발동
+         atbf(me, "궁", boss, "받일뎀", 60, "부식성 맹독", 2, always);
+
+         // 스칼렛 톡신
+         // 궁극기 발동 시 "타깃이 받는 수속성 데미지 30% 증가(2턴)" 발동
+         for(let idx of getElementIdx("수")) {
+            atbf(me, "궁", comp[idx], "받속뎀", 30, "스칼렛 톡신", 2, always);
+         }
+
+         // 일반 공격 데미지+
+         // 자신의 일반 공격 데미지 10% 증가
+         tbf(me, "일뎀증", 10, "일반 공격 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
       return me;
    case 10072 : // 신바알     ok
       me.ultbefore = function() { // 부케 임자는 이미 정해졌엉~
@@ -672,6 +901,85 @@ function setDefault(me) {switch(me.id) {
          // 일반 공격 데미지+
          // 자신의 일반 공격 데미지 10% 증가
          tbf(me, "일뎀증", 10, "일반 공격 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10078 : // 냥루루     ok
+      me.ultbefore = function() { // 루루는 잘못 없어!
+         // 타깃이 받는 데미지 15% 증가(최대 2중첩)
+         nbf(boss, "받뎀증", 15, "루루는 잘못 없어!1", 1, 2)
+         // 타깃이 받는 수속성 데미지 12.5% 증가(최대 2중첩)
+         for(let idx of getElementIdx("수")) nbf(comp[idx], "받속뎀", 12.5, "루루는 잘못 없어!2", 1, 2);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 제어 불가능
+         // 아군 전체의 최대 hp 30% 증가
+         hpUpAll(30);
+         // 아군 전체의 공격 데미지 25% 증가
+         tbf(all, "공퍼증", 25, "제어 불가능1", always);
+         // 자신의 일반 공격 데미지 30% 증가
+         tbf(me, "일뎀증", 30, "제어 불가능2", always);
+
+         // 아군 수속성 동료는 <수인화> 획득
+         for(let idx of getElementIdx("수")) {
+            // <수인화>
+            // TODO: 공격 시 "타깃이 치유를 받을 시 회복량 20% 감소(1턴)" 발동
+            // 일반 공격 시 "타깃이 받는 일반 공격 데미지 15% 증가(최대 5중첩)" 발동
+            anbf(comp[idx], "평", boss, "받일뎀", 15, "<수인화>1", 1, 5, always);
+            // 일반 공격 시 "자신의 공격 데미지의 30%만큼 타깃에게 데미지" 추가
+            tbf(comp[idx], "평추가*", 30, "<수인화>2", always);
+         }
+
+         // 아군 전체는 "팀원에 최소 4명 이상의 수속성 동료가 편성될 시 <초위험 수인화!> 발동" 획득
+         if (getElementCnt("수") >= 4) {
+            // <초위험 수인화!>
+            // 일반 공격 데미지 50% 증가
+            tbf(all, "일뎀증", 50, "<초위험 수인화!>1", always);
+            // 공격 시 "아군 1번 자리 팀원이 가하는 데미지 5% 증가(1턴)" 발동
+            atbf(all, "공격", comp[0], "가뎀증", 5, "<초위험 수인화!>2", 1, always);
+            // 공격 시 "아군 1번 자리 팀원이 평/궁 발동 시 '자신의 공격 데미지의 10%만큼 타깃에게 데미지' 추가(1턴)" 발동
+            atbf(all, "공격", comp[0], "평추가*", 10, "<초위험 수인화!>3", 1, always);
+            atbf(all, "공격", comp[0], "궁추가*", 10, "<초위험 수인화!>3", 1, always);
+         }
+
+         // 아군 전체는 "팀원에 최소 5명 이상의 수속성 동료가 편성될 시 <진한 맛 치즈!> 발동" 획득
+         if (getElementCnt("수") >= 5) {
+            // <진한 맛 치즈!>
+            // 가하는 데미지 30% 증가
+            tbf(all, "가뎀증", 30, "<진한 맛 치즈!>1", always);
+            // 공격 시 "아군 1번 자리 팀원이 가하는 데미지 10% 증가(1턴)" 발동
+            atbf(all, "공격", comp[0], "가뎀증", 10, "<진한 맛 치즈!>2", 1, always);
+            // 공격 시 "아군 1번 자리 팀원이 평/궁 발동 시 '자신의 공격 데미지의 20%만큼 타깃에게 데미지' 추가(1턴)" 발동
+            atbf(all, "공격", comp[0], "평추가*", 20, "<진한 맛 치즈!>3", 1, always);
+            atbf(all, "공격", comp[0], "궁추가*", 20, "<진한 맛 치즈!>3", 1, always);
+         }
+
+      }
+      me.passive = function() {
+         // 파스제국 최강 고양이
+         // 공격 시 "자신의 공격 데미지 10% 증가(최대 5중첩)" 발동
+         anbf(me, "공격", me, "공퍼증", 10, "파스제국 최강 고양이", 1, 5, always);
+
+         // 난 무척 귀여워, 그러니까 밥이나 줘
+         // TODO: 공격 시 "타깃이 치유를 받을 시 회복량 50% 감소(1턴)" 발동
+         // 일반 공격 시 "자신의 공격 데미지의 35%만큼 타깃에게 데미지" 발동
+         tbf(me, "평추가*", 35, "난 무척 귀여워, 그러니까 밥이나 줘", always);
+
+         // 꽃병 파괴자
+         // 일반 공격 시 "타깃이 받는 수속성 데미지 2% 증가(최대 5중첩)" 발동
+         for(let idx of getElementIdx("수")) anbf(me, "평", comp[idx], "받속뎀", 2, "꽃병 파괴자1", 1, 5, always);
+         // 일반 공격 시 "타깃이 받는 일반 공격 데미지 15% 증가(최대 5중첩)" 발동
+         anbf(me, "평", boss, "받일뎀", 15, "꽃병 파괴자2", 1, 5, always);
+
+         // 데미지+
+         // 자신이 가하는 데미지 7.5% 증가
+         tbf(me, "가뎀증", 7.5, "데미지+", always);
       }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {if (me.isLeader) {}};
@@ -984,6 +1292,170 @@ function setDefault(me) {switch(me.id) {
          // 공격+
          // 자신의 공격 데미지 10% 증가
          tbf(me, "공퍼증", 10, "공격+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10115 : // 마브리     ok
+      buff_ex.push("<정의의 이름으로 널 심판하겠다>");
+      me.healTurn = [];
+      me.ultbefore = function() { // 자동 가열 진동 모드?
+         // 자신의 공격 데미지의 100%만큼 매턴 아군 전체를 치유(4턴)
+         me.healTurn.push(GLOBAL_TURN, GLOBAL_TURN+1, GLOBAL_TURN+2, GLOBAL_TURN+3);
+         // 자신의 최대 hp 36% 만큼 아군 전체의 아머 강화(1턴)
+         tbf(all, "아머", me.hp*36*armorUp(me, "궁", "추가"), "자동 가열 진동 모드?1", 1);
+         // 타깃이 받는 데미지 20% 증가(4턴)
+         tbf(boss, "받뎀증", 20, "자동 가열 진동 모드?2", 4);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         // 자신 이외의 <정의의 이름으로 널 심판하겠다> 활성화
+         if (me.isLeader) for(let c of comp) if (c.id != me.id) {
+            setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>2", true);
+            setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>3", true);
+            setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>4", true);
+         }
+      };
+      me.atkbefore = function() { // 스마트빔~
+         // 공격 데미지의 75%만큼 아군 전체를 치유
+         //for(let c of comp) c.heal();
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);
+         // 공격 데미지의 75%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+
+         // 자신 이외의 <정의의 이름으로 널 심판하겠다> 활성화
+         if (me.isLeader) for(let c of comp) if (c.id != me.id) {
+            setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>2", true);
+            setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>3", true);
+            setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>4", true);
+         }
+      };
+      me.leader = function() { // 별이 반짝 천재 마법소녀
+         // 매 Wave의 첫 번째 턴 시작 시 "적 전체가 받는 풍속성 데미지 35% 증가(최대 1중첩)" 발동
+         for(let idx of getElementIdx("풍")) nbf(comp[idx], "받속뎀", 35, "별이 반짝 천재 마법소녀1", 1, 1);
+         // 자신이 가하는 데미지 50% 증가
+         tbf(me, "가뎀증", 50, "별이 반짝 천재 마법소녀2", always);
+         // 공격 시 "자신 이외의 아군 전체는 <정의의 이름으로 널 심판하겠다> 획득" 발동
+         for(let c of comp) if (c.id != me.id) {
+            // <정의의 이름으로 널 심판하겠다>
+            // 가하는 데미지 20% 증가(1턴)
+            atbf(me, "공격", c, "가뎀증", 20, "<정의의 이름으로 널 심판하겠다>1", 1, always);
+            // 공격 시 "1번 자리 아군은 <마력 응집> 획득" 발동(1턴)
+            // <마력 응집> => 공격 시 버프 on => me.ultimate, me.attack로
+            // 공격 데미지 50% 증가
+            buff(c, "공격", comp[0], "공퍼증", 50, "<정의의 이름으로 널 심판하겠다>2", 1, always, "발동", false);
+            // 일반 공격 시 "자신의 공격 데미지의 75%만큼 타깃에게 데미지" 추가(2턴)
+            buff(c, "공격", comp[0], "평추가*", 75, "<정의의 이름으로 널 심판하겠다>3", 2, always, "발동", false);
+            // 궁극기 발동 시 "자신의 공격 데미지의 125%만큼 타깃에게 데미지" 추가(2턴)
+            buff(c, "공격", comp[0], "궁추가*", 125, "<정의의 이름으로 널 심판하겠다>4", 2, always, "발동", false);
+         }
+      }
+      me.passive = function() {
+         // 분홍빛 최음 광선
+         // 공격 시 "자신의 공격 데미지의 20%만큼 아군 전체의 공격 데미지 증가(1턴)" 발동
+         atbf(me, "공격", all, "공고증", myCurAtk+me.id+20, "분홍빛 최음 광선", 1, always);
+
+         // 노출광 모드
+         // 아군 전체가 받는 아머 강화 효과 20% 증가
+         tbf(all, "받아증", 20, "노출광 모드", always);
+         // TODO: 아군 전체는 치유를 받을 시 hp회복량 20% 증가
+
+         // 도피는 유용하지만 도피할 수 없어
+         // 치유를 받을 시 "아군 전체의 공격 데미지 20% 증가(1턴)" 발동
+         atbf(me, "힐", all, "공퍼증", 20, "도피는 유용하지만 도피할 수 없어1", 1, always);
+         // 아군 전체에게 "현존 hp >= 95%일 경우 '가하는 데미지 15% 증가' 발동" 부여
+         tbf(all, "가뎀증", 15, "도피는 유용하지만 도피할 수 없어2", always);
+
+         // 공격력+
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격력+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {
+         if (me.isLeader) {}
+         // 매턴 아군 전체를 치유
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp) c.heal();
+         me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
+      };
+      return me;
+   case 10117 : // 수바알     ok
+      me.ultbefore = function() {}
+      me.ultafter = function() { // 돌진! 시저 호!
+         // 자신은 "일반 공격 시 '자신의 공격 데미지의 173%만큼 타깃에게 데미지' 추가 획득(4턴)"
+         tbf(me, "평추가*", 173, "돌진! 시저 호!", 4);
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 여름 상품 전면 세일 중~
+         // 자신 및 화/광속성 동료의 최대 hp 20% 증가
+         hpUpMe(me, 20);
+         for(let idx of getElementIdx("화", "광")) hpUpMe(comp[idx], 20);
+         // 자신 및 화/광속성 동료의 가하는 데미지 20% 증가
+         tbf(me, "가뎀증", 20, "여름 상품 전면 세일 중~1", always);
+         for(let idx of getElementIdx("화", "광")) tbf(comp[idx], "가뎀증", 20, "여름 상품 전면 세일 중~1", always);
+         // 자신의 공격 데미지 50% 증가
+         tbf(me, "공퍼증", 50, "여름 상품 전면 세일 중~2", always);
+         // 자신의 일반 공격 데미지 20% 증가
+         tbf(me, "일뎀증", 20, "여름 상품 전면 세일 중~3", always);
+         // 화/광속성 동료의 공격 데미지 80% 증가
+         for(let idx of getElementIdx("화", "광")) tbf(comp[idx], "공퍼증", 80, "여름 상품 전면 세일 중~4", always);
+         // 화/광속성 동료의 일반 공격 데미지 50% 증가
+         for(let idx of getElementIdx("화", "광")) tbf(comp[idx], "일뎀증", 50, "여름 상품 전면 세일 중~5", always);
+         // 아군 딜/디는 "팀에 최소 2명 이상의 화속성 동료가 있을 시 <바알상회 특제 BBQ 그릴> 발동" 획득
+         if (getElementCnt("화") >= 2) for(let idx of getRoleIdx("딜", "디")) {
+            // <바알상회 특제 BBQ 그릴>
+            // 일반 공격 시 "자신의 공격 데미지의 40% 만큼 타깃에게 데미지" 추가
+            tbf(comp[idx], "평추가*", 40, "<바알상회 특제 BBQ 그릴>1", always);
+            // 일반 공격 시 "타깃이 받는 일반 공격 데미지 18% 증가(최대 5중첩)" 추가
+            pnbf(comp[idx], "평", boss, "받일뎀", 18, "<바알상회 특제 BBQ 그릴>2", 1, 5, always);
+         }
+         // 아군 딜/디는 "팀에 최소 2명 이상의 광속성 동료가 있을 시 <바알상회 특제 BBQ 그릴> 발동" 획득
+         if (getElementCnt("광") >= 2) for(let idx of getRoleIdx("딜", "디")) {
+            // <바알상회 특제 BBQ 그릴>
+            // 일반 공격 시 "자신의 공격 데미지의 40% 만큼 타깃에게 데미지" 추가
+            tbf(comp[idx], "평추가*", 40, "<바알상회 특제 BBQ 그릴>3", always);
+            // 일반 공격 시 "타깃이 받는 일반 공격 데미지 18% 증가(최대 5중첩)" 추가
+            pnbf(comp[idx], "평", boss, "받일뎀", 18, "<바알상회 특제 BBQ 그릴>4", 1, 5, always);
+         }
+      }
+      me.passive = function() {
+         // 수영복 모카 피부 마왕
+         // 수속성 아군의 공격 데미지 30% 증가
+         for(let idx of getElementIdx("수")) tbf(comp[idx], "공퍼증", 30, "수영복 모카 피부 마왕1", always);
+         // 수속성 아군의 일반 공격 데미지 20% 증가
+         for(let idx of getElementIdx("수")) tbf(comp[idx], "일뎀증", 20, "수영복 모카 피부 마왕2", always);
+
+         // 얼굴에 한 발~
+         // 아군 딜/디는 <바알상회 특제 물총> 획득
+         for(let idx of getRoleIdx("딜", "디")) {
+            let elCnt_tmp = getElementCnt("수");
+            // <바알상회 특제 물총>
+            // 팀에 최소 (4/5)명의 수속성 동료가 있을 시 "일반 공격 시 '자신의 공격 데미지의 (15/15)%만큼 타깃에게 데미지'추가" 발동
+            if (elCnt_tmp == 4) tbf(comp[idx], "평추가*", 15, "<바알상회 특제 물총>1", always);
+            else if (elCnt_tmp == 5) tbf(comp[idx], "평추가*", 30, "<바알상회 특제 물총>1", always);
+            // 팀에 최소 (4/5)명의 수속성 동료가 있을 시 "일반 공격 시 타깃이 받는 일반 공격 데미지(9/9)% 증가(최대 5중첩)'추가" 발동
+            if (elCnt_tmp == 4) pnbf(comp[idx], "평", boss, "받일뎀", 9, "<바알상회 특제 물총>2", 1, 5, always);
+            else if (elCnt_tmp == 5) pnbf(comp[idx], "평", boss, "받일뎀", 18, "<바알상회 특제 물총>2", 1, 5, always);
+         }
+         // 접대는 내게 맡겨~
+         // 아군 전체에게 <해변의 집 프리미엄 상품> 을 부여
+         if (getRoleCnt("딜") >= 2) {
+            // <해변의 집 프리미엄 상품>
+            // 팀에 최소 2명의 딜러가 있을 경우 "가하는 데미지 30% 증가" 획득
+            tbf(all, "가뎀증", 30, "<해변의 집 프리미엄 상품>1", always);
+            // 팀에 최소 2명의 딜러가 있을 경우 "일반 공격 데미지 30% 증가" 획득
+            tbf(all, "일뎀증", 30, "<해변의 집 프리미엄 상품>2", always);
+         }
+
+         // 일반 공격+
+         // 자신의 일반 공격 데미지 10% 증가
+         tbf(me, "일뎀증", 10, "일반 공격+", always);
       }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {if (me.isLeader) {}};
@@ -1642,6 +2114,70 @@ function setDefault(me) {switch(me.id) {
          me.turnHeal = false;
       };
       return me;
+   case 10136 : // 안젤라     ok
+      me.ultbefore = function() { // 이제부터 돈 벌 시간!
+         // 타깃이 받는 피해 50% 증가(4턴)
+         tbf(boss, "받뎀증", 50, "이제부터 돈 벌 시간!1", 4);
+      }
+      me.ultafter = function() { // 이제부터 돈 벌 시간!
+         // 자신은 "일반 공격 시 '자신의 공격 데미지의 30%만큼 타깃에게 데미지' 추가(4턴)" 획득
+         tbf(me, "평추가*", 30, "이제부터 돈 벌 시간!2", 4);
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 수배령
+         // 아군 수/풍 캐릭터의 최대 hp 20% 증가
+         for(let idx of getElementIdx("수", "풍")) hpUpMe(comp[idx], 20);
+         // 아군 수/풍 캐릭터의 공격 데미지 100% 증가
+         for(let idx of getElementIdx("수", "풍")) tbf(comp[idx], "공퍼증", 100, "수배령1", always);
+         // 아군 수속성 캐릭터의 일반 공격 데미지 80% 증가
+         for(let idx of getElementIdx("수")) tbf(comp[idx], "일뎀증", 80, "수배령2", always);
+         // 아군 수속성 캐릭터가 가하는 데미지 50% 증가
+         for(let idx of getElementIdx("수")) tbf(comp[idx], "가뎀증", 50, "수배령3", always);
+         // 아군 풍속성의 힐러, 서포터는 <집단 사냥> 획득
+         for(let idx of getElementIdx("풍")) if (getRoleIdx("힐", "섶").includes(idx)) {
+            // <집단 사냥>
+            // 공격 시 "아군 수속성 캐릭터가 가하는 데미지 30% 증가(1턴)" 발동
+            for(let idx2 of getElementIdx("수")) atbf(comp[idx], "공격", comp[idx2], "가뎀증", 30, "<집단 사냥>", 1, always);
+         }
+      }
+      me.passive = function() {
+         // 사냥감 추적
+         // 일반 공격 데미지 70% 증가
+         tbf(me, "일뎀증", 70, "사냥감 추적", always);
+
+         // 비검 곡예
+         // 자신은 궁극기 발동 시 "아군 수속성의 딜/탱/디는 <비검 전달> 획득" 발동
+         for(let idx of getElementIdx("수")) if (getRoleIdx("딜", "탱", "디").includes(idx)) {
+            // <비검 전달>
+            // 일반 공격 시 "자신의 공격 데미지의 30%만큼 타깃에게 데미지" 추가(1턴)
+            atbf(me, "궁", comp[idx], "평추가*", 30, "<비검 전달>", 1, always);
+         }
+         // 자신 이외의 아군 수속성 딜/탱/디는 "궁극기 발동 시 '아군 안젤라가 <비검 전달>획득' 발동" 획득
+         let myIdx = comp.findIndex(o => o.id == me.id);
+         for(let idx of getElementIdx("수")) if (getRoleIdx("딜", "탱", "디").includes(idx)) {
+            if (idx == myIdx) continue;
+            // <비검 전달>
+            // 일반 공격 시 "자신의 공격 데미지의 30%만큼 타깃에게 데미지" 추가(1턴)
+            atbf(comp[idx], "궁", me, "평추가*", 30, "<비검 전달>", 1, always);
+         }
+
+         // 현상금 사냥꾼의 직감
+         // 첫 번째 턴에서 "자신의 현재 궁극기 cd 4턴 감소" 발동
+         cdChange(me, -4);
+         // 첫 번째 턴에서 "자신 이외의 아군 수속성 캐릭터의 현재 궁극기 cd 1턴 감소" 발동
+         for(let idx of getElementIdx("수")) if (idx != myIdx) cdChange(comp[idx], -1);
+
+         // 일반 공격+
+         // 자신의 일반 공격 데미지 10% 증가
+         tbf(me, "일뎀증", 10, "일반 공격+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
    case 10137 : // 춘즈란     ok
       me.ultbefore = function() { // 함께 시저 님을 섬겨요~
          // 타깃이 받는 데미지 40% 증가(4턴)
@@ -1669,11 +2205,11 @@ function setDefault(me) {switch(me.id) {
             if (!windIdxList.includes(idx)) continue;
             // <정욕 페로몬>
             // 일반 공격 시 "아군 전체의 공격 데미지 6% 증가(최대 18중첩)" 발동
-            nbf(comp[idx], "평", all, "공퍼증", 6, "<정욕 페로몬>1", 1, 18, always);
+            anbf(comp[idx], "평", all, "공퍼증", 6, "<정욕 페로몬>1", 1, 18, always);
             // 일반 공격 시 "아군 전체의 일반 공격 데미지 6% 증가(최대 18중첩)" 발동
-            nbf(comp[idx], "평", all, "일뎀증", 6, "<정욕 페로몬>2", 1, 18, always);
+            anbf(comp[idx], "평", all, "일뎀증", 6, "<정욕 페로몬>2", 1, 18, always);
             // 일반 공격 시 "아군 전체의 가하는 데미지 2% 증가(최대 18중첩)" 발동
-            nbf(comp[idx], "평", all, "가뎀증", 2, "<정욕 페로몬>3", 1, 18, always);
+            anbf(comp[idx], "평", all, "가뎀증", 2, "<정욕 페로몬>3", 1, 18, always);
          }
       }
       me.passive = function() {
@@ -2379,366 +2915,6 @@ function setDefault(me) {switch(me.id) {
          // 데미지+
          // 자신이 가하는 데미지 7.5% 증가
          tbf(me, "가뎀증", 7.5, "데미지+", always);
-      }
-      me.defense = function() {me.act_defense();}
-      me.turnstart = function() {if (me.isLeader) {}};
-      me.turnover = function() {if (me.isLeader) {}};
-      return me;
-
-// 10136 10115 10048 10078 10117
-   case 10136 : // 안젤라    ok
-      me.ultbefore = function() { // 이제부터 돈 벌 시간!
-         // 타깃이 받는 피해 50% 증가(4턴)
-         tbf(boss, "받뎀증", 50, "이제부터 돈 벌 시간!1", 4);
-      }
-      me.ultafter = function() { // 이제부터 돈 벌 시간!
-         // 자신은 "일반 공격 시 '자신의 공격 데미지의 30%만큼 타깃에게 데미지' 추가(4턴)" 획득
-         tbf(me, "평추가*", 30, "이제부터 돈 벌 시간!2", 4);
-      }
-      me.ultimate = function() {ultLogic(me);};
-      me.atkbefore = function() {}
-      me.atkafter = function() {}
-      me.attack = function() {atkLogic(me);};
-      me.leader = function() { // 수배령
-         // 아군 수/풍 캐릭터의 최대 hp 20% 증가
-         for(let idx of getElementIdx("수", "풍")) hpUpMe(comp[idx], 20);
-         // 아군 수/풍 캐릭터의 공격 데미지 100% 증가
-         for(let idx of getElementIdx("수", "풍")) tbf(comp[idx], "공퍼증", 100, "수배령1", always);
-         // 아군 수속성 캐릭터의 일반 공격 데미지 80% 증가
-         for(let idx of getElementIdx("수")) tbf(comp[idx], "일뎀증", 80, "수배령2", always);
-         // 아군 수속성 캐릭터가 가하는 데미지 50% 증가
-         for(let idx of getElementIdx("수")) tbf(comp[idx], "가뎀증", 50, "수배령3", always);
-         // 아군 풍속성의 힐러, 서포터는 <집단 사냥> 획득
-         for(let idx of getElementIdx("풍")) if (getRoleIdx("힐", "섶").includes(idx)) {
-            // <집단 사냥>
-            // 공격 시 "아군 수속성 캐릭터가 가하는 데미지 30% 증가(1턴)" 발동
-            for(let idx2 of getElementIdx("수")) atbf(comp[idx], "공격", comp[idx2], "가뎀증", 30, "<집단 사냥>", 1, always);
-         }
-      }
-      me.passive = function() {
-         // 사냥감 추적
-         // 일반 공격 데미지 70% 증가
-         tbf(me, "일뎀증", 70, "사냥감 추적", always);
-
-         // 비검 곡예
-         // 자신은 궁극기 발동 시 "아군 수속성의 딜/탱/디는 <비검 전달> 획득" 발동
-         for(let idx of getElementIdx("수")) if (getRoleIdx("딜", "탱", "디").includes(idx)) {
-            // <비검 전달>
-            // 일반 공격 시 "자신의 공격 데미지의 30%만큼 타깃에게 데미지" 추가(1턴)
-            atbf(me, "궁", comp[idx], "평추가*", 30, "<비검 전달>", 1, always);
-         }
-         // 자신 이외의 아군 수속성 딜/탱/디는 "궁극기 발동 시 '아군 안젤라가 <비검 전달>획득' 발동" 획득
-         let myIdx = comp.findIndex(o => o.id == me.id);
-         for(let idx of getElementIdx("수")) if (getRoleIdx("딜", "탱", "디").includes(idx)) {
-            if (idx == myIdx) continue;
-            // <비검 전달>
-            // 일반 공격 시 "자신의 공격 데미지의 30%만큼 타깃에게 데미지" 추가(1턴)
-            atbf(comp[idx], "궁", me, "평추가*", 30, "<비검 전달>", 1, always);
-         }
-
-         // 현상금 사냥꾼의 직감
-         // 첫 번째 턴에서 "자신의 현재 궁극기 cd 4턴 감소" 발동
-         cdChange(me, -4);
-         // 첫 번째 턴에서 "자신 이외의 아군 수속성 캐릭터의 현재 궁극기 cd 1턴 감소" 발동
-         for(let idx of getElementIdx("수")) if (idx != myIdx) cdChange(comp[idx], -1);
-
-         // 일반 공격+
-         // 자신의 일반 공격 데미지 10% 증가
-         tbf(me, "일뎀증", 10, "일반 공격+", always);
-      }
-      me.defense = function() {me.act_defense();}
-      me.turnstart = function() {if (me.isLeader) {}};
-      me.turnover = function() {if (me.isLeader) {}};
-      return me;
-   case 10115 : // 마브리    ok
-      buff_ex.push("<정의의 이름으로 널 심판하겠다>");
-      me.healTurn = [];
-      me.ultbefore = function() { // 자동 가열 진동 모드?
-         // 자신의 공격 데미지의 100%만큼 매턴 아군 전체를 치유(4턴)
-         me.healTurn.push(GLOBAL_TURN, GLOBAL_TURN+1, GLOBAL_TURN+2, GLOBAL_TURN+3);
-         // 자신의 최대 hp 36% 만큼 아군 전체의 아머 강화(1턴)
-         tbf(all, "아머", me.hp*36*armorUp(me, "궁", "추가"), "자동 가열 진동 모드?1", 1);
-         // 타깃이 받는 데미지 20% 증가(4턴)
-         tbf(boss, "받뎀증", 20, "자동 가열 진동 모드?2", 4);
-      }
-      me.ultafter = function() {}
-      me.ultimate = function() {ultLogic(me);
-         // 자신 이외의 <정의의 이름으로 널 심판하겠다> 활성화
-         if (me.isLeader) for(let c of comp) if (c.id != me.id) {
-            setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>2", true);
-            setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>3", true);
-            setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>4", true);
-         }
-      };
-      me.atkbefore = function() { // 스마트빔~
-         // 공격 데미지의 75%만큼 아군 전체를 치유
-         //for(let c of comp) c.heal();
-      }
-      me.atkafter = function() {}
-      me.attack = function() {atkLogic(me);
-         // 공격 데미지의 75%만큼 아군 전체를 치유
-         for(let c of comp) c.heal();
-
-         // 자신 이외의 <정의의 이름으로 널 심판하겠다> 활성화
-         if (me.isLeader) for(let c of comp) if (c.id != me.id) {
-            setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>2", true);
-            setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>3", true);
-            setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>4", true);
-         }
-      };
-      me.leader = function() { // 별이 반짝 천재 마법소녀
-         // 매 Wave의 첫 번째 턴 시작 시 "적 전체가 받는 풍속성 데미지 35% 증가(최대 1중첩)" 발동
-         for(let idx of getElementIdx("풍")) nbf(comp[idx], "받속뎀", 35, "별이 반짝 천재 마법소녀1", 1, 1);
-         // 자신이 가하는 데미지 50% 증가
-         tbf(me, "가뎀증", 50, "별이 반짝 천재 마법소녀2", always);
-         // 공격 시 "자신 이외의 아군 전체는 <정의의 이름으로 널 심판하겠다> 획득" 발동
-         for(let c of comp) if (c.id != me.id) {
-            // <정의의 이름으로 널 심판하겠다>
-            // 가하는 데미지 20% 증가(1턴)
-            atbf(me, "공격", c, "가뎀증", 20, "<정의의 이름으로 널 심판하겠다>1", 1, always);
-            // 공격 시 "1번 자리 아군은 <마력 응집> 획득" 발동(1턴)
-            // <마력 응집> => 공격 시 버프 on => me.ultimate, me.attack로
-            // 공격 데미지 50% 증가
-            buff(c, "공격", comp[0], "공퍼증", 50, "<정의의 이름으로 널 심판하겠다>2", 1, always, "발동", false);
-            // 일반 공격 시 "자신의 공격 데미지의 75%만큼 타깃에게 데미지" 추가(2턴)
-            buff(c, "공격", comp[0], "평추가*", 75, "<정의의 이름으로 널 심판하겠다>3", 2, always, "발동", false);
-            // 궁극기 발동 시 "자신의 공격 데미지의 125%만큼 타깃에게 데미지" 추가(2턴)
-            buff(c, "공격", comp[0], "궁추가*", 125, "<정의의 이름으로 널 심판하겠다>4", 2, always, "발동", false);
-         }
-      }
-      me.passive = function() {
-         // 분홍빛 최음 광선
-         // 공격 시 "자신의 공격 데미지의 20%만큼 아군 전체의 공격 데미지 증가(1턴)" 발동
-         atbf(me, "공격", all, "공고증", myCurAtk+me.id+20, "분홍빛 최음 광선", 1, always);
-
-         // 노출광 모드
-         // 아군 전체가 받는 아머 강화 효과 20% 증가
-         tbf(all, "받아증", 20, "노출광 모드", always);
-         // TODO: 아군 전체는 치유를 받을 시 hp회복량 20% 증가
-
-         // 도피는 유용하지만 도피할 수 없어
-         // 치유를 받을 시 "아군 전체의 공격 데미지 20% 증가(1턴)" 발동
-         atbf(me, "힐", all, "공퍼증", 20, "도피는 유용하지만 도피할 수 없어1", 1, always);
-         // 아군 전체에게 "현존 hp >= 95%일 경우 '가하는 데미지 15% 증가' 발동" 부여
-         tbf(all, "가뎀증", 15, "도피는 유용하지만 도피할 수 없어2", always);
-
-         // 공격력+
-         // 자신의 공격 데미지 10% 증가
-         tbf(me, "공퍼증", 10, "공격력+", always);
-      }
-      me.defense = function() {me.act_defense();}
-      me.turnstart = function() {if (me.isLeader) {}};
-      me.turnover = function() {
-         if (me.isLeader) {}
-         // 매턴 아군 전체를 치유
-         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp) c.heal();
-         me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
-      };
-      return me;
-   case 10048 : // 모모      ok
-      me.ultbefore = function() { // 독액 배출
-         // 자신은 "일반 공격 시 '자신의 공격 데미지의 314%만큼 타깃에게 데미지' 추가(2턴)" 획득
-         tbf(me, "평추가*", 314, "독액 배출1", 2);
-         // 아군 전체의 일반공격 데미지 40% 증가(4턴)
-         tbf(all, "일뎀증", 40, "독액 배출2", 4);
-         // 자신의 일반 공격 데미지 100% 증가(2턴)
-         tbf(me, "일뎀증", 100, "독액 배출3", 2);
-      }
-      me.ultafter = function() {}
-      me.ultimate = function() {ultLogic(me);};
-      me.atkbefore = function() {}
-      me.atkafter = function() {}
-      me.attack = function() {atkLogic(me);};
-      me.leader = function() { // 치명적인 독
-         // 아군 전체의 최대hp 20% 증가
-         hpUpAll(20);
-         // 아군 전체의 공격 데미지 40% 증가
-         tbf(all, "공퍼증", 40, "치명적인 독", always);
-         // 아군 딜/디는 <무해지독> 획득
-         for(let idx of getRoleIdx("딜", "디")) {
-            // <무해지독>
-            // 일반 공격 데미지 50% 증가
-            tbf(comp[idx], "일뎀증", 50, "<무해지독>1", always);
-            // 가하는 데미지 20% 증가
-            tbf(comp[idx], "가뎀증", 20, "<무해지독>2", always);
-         }
-      }
-      me.passive = function() {
-         // 통제불능의 전주곡
-         // 궁극기 발동 시 "자신의 공격 데미지 80% 증가(2턴)" 발동
-         atbf(me, "궁", me, "공퍼증", 80, "통제불능의 전주곡", 2, always);
-
-         // 부식성 맹독
-         // 궁극기 발동 시 "타깃이 받는 일반 공격 데미지 60% 증가(2턴)" 발동
-         atbf(me, "궁", boss, "받일뎀", 60, "부식성 맹독", 2, always);
-
-         // 스칼렛 톡신
-         // 궁극기 발동 시 "타깃이 받는 수속성 데미지 30% 증가(2턴)" 발동
-         for(let idx of getElementIdx("수")) {
-            atbf(me, "궁", comp[idx], "받속뎀", 30, "스칼렛 톡신", 2, always);
-         }
-
-         // 일반 공격 데미지+
-         // 자신의 일반 공격 데미지 10% 증가
-         tbf(me, "일뎀증", 10, "일반 공격 데미지+", always);
-      }
-      me.defense = function() {me.act_defense();}
-      me.turnstart = function() {if (me.isLeader) {}};
-      me.turnover = function() {if (me.isLeader) {}};
-      return me;
-   case 10078 : // 냥루루    ok
-      me.ultbefore = function() { // 루루는 잘못 없어!
-         // 타깃이 받는 데미지 15% 증가(최대 2중첩)
-         nbf(boss, "받뎀증", 15, "루루는 잘못 없어!1", 1, 2)
-         // 타깃이 받는 수속성 데미지 12.5% 증가(최대 2중첩)
-         for(let idx of getElementIdx("수")) nbf(comp[idx], "받속뎀", 12.5, "루루는 잘못 없어!2", 1, 2);
-      }
-      me.ultafter = function() {}
-      me.ultimate = function() {ultLogic(me);};
-      me.atkbefore = function() {}
-      me.atkafter = function() {}
-      me.attack = function() {atkLogic(me);};
-      me.leader = function() { // 제어 불가능
-         // 아군 전체의 최대 hp 30% 증가
-         hpUpAll(30);
-         // 아군 전체의 공격 데미지 25% 증가
-         tbf(all, "공퍼증", 25, "제어 불가능1", always);
-         // 자신의 일반 공격 데미지 30% 증가
-         tbf(me, "일뎀증", 30, "제어 불가능2", always);
-
-         // 아군 수속성 동료는 <수인화> 획득
-         for(let idx of getElementIdx("수")) {
-            // <수인화>
-            // TODO: 공격 시 "타깃이 치유를 받을 시 회복량 20% 감소(1턴)" 발동
-            // 일반 공격 시 "타깃이 받는 일반 공격 데미지 15% 증가(최대 5중첩)" 발동
-            anbf(comp[idx], "평", boss, "받일뎀", 15, "<수인화>1", 1, 5, always);
-            // 일반 공격 시 "자신의 공격 데미지의 30%만큼 타깃에게 데미지" 추가
-            tbf(comp[idx], "평추가*", 30, "<수인화>2", always);
-         }
-
-         // 아군 전체는 "팀원에 최소 4명 이상의 수속성 동료가 편성될 시 <초위험 수인화!> 발동" 획득
-         if (getElementCnt("수") >= 4) {
-            // <초위험 수인화!>
-            // 일반 공격 데미지 50% 증가
-            tbf(all, "일뎀증", 50, "<초위험 수인화!>1", always);
-            // 공격 시 "아군 1번 자리 팀원이 가하는 데미지 5% 증가(1턴)" 발동
-            atbf(all, "공격", comp[0], "가뎀증", 5, "<초위험 수인화!>2", 1, always);
-            // 공격 시 "아군 1번 자리 팀원이 평/궁 발동 시 '자신의 공격 데미지의 10%만큼 타깃에게 데미지' 추가(1턴)" 발동
-            atbf(all, "공격", comp[0], "평추가*", 10, "<초위험 수인화!>3", 1, always);
-            atbf(all, "공격", comp[0], "궁추가*", 10, "<초위험 수인화!>3", 1, always);
-         }
-
-         // 아군 전체는 "팀원에 최소 5명 이상의 수속성 동료가 편성될 시 <진한 맛 치즈!> 발동" 획득
-         if (getElementCnt("수") >= 5) {
-            // <진한 맛 치즈!>
-            // 가하는 데미지 30% 증가
-            tbf(all, "가뎀증", 30, "<진한 맛 치즈!>1", always);
-            // 공격 시 "아군 1번 자리 팀원이 가하는 데미지 10% 증가(1턴)" 발동
-            atbf(all, "공격", comp[0], "가뎀증", 10, "<진한 맛 치즈!>2", 1, always);
-            // 공격 시 "아군 1번 자리 팀원이 평/궁 발동 시 '자신의 공격 데미지의 20%만큼 타깃에게 데미지' 추가(1턴)" 발동
-            atbf(all, "공격", comp[0], "평추가*", 20, "<진한 맛 치즈!>3", 1, always);
-            atbf(all, "공격", comp[0], "궁추가*", 20, "<진한 맛 치즈!>3", 1, always);
-         }
-
-      }
-      me.passive = function() {
-         // 파스제국 최강 고양이
-         // 공격 시 "자신의 공격 데미지 10% 증가(최대 5중첩)" 발동
-         anbf(me, "공격", me, "공퍼증", 10, "파스제국 최강 고양이", 1, 5, always);
-
-         // 난 무척 귀여워, 그러니까 밥이나 줘
-         // TODO: 공격 시 "타깃이 치유를 받을 시 회복량 50% 감소(1턴)" 발동
-         // 일반 공격 시 "자신의 공격 데미지의 35%만큼 타깃에게 데미지" 발동
-         tbf(me, "평추가*", 35, "난 무척 귀여워, 그러니까 밥이나 줘", always);
-
-         // 꽃병 파괴자
-         // 일반 공격 시 "타깃이 받는 수속성 데미지 2% 증가(최대 5중첩)" 발동
-         for(let idx of getElementIdx("수")) anbf(me, "평", comp[idx], "받속뎀", 2, "꽃병 파괴자1", 1, 5, always);
-         // 일반 공격 시 "타깃이 받는 일반 공격 데미지 15% 증가(최대 5중첩)" 발동
-         anbf(me, "평", boss, "받일뎀", 15, "꽃병 파괴자2", 1, 5, always);
-
-         // 데미지+
-         // 자신이 가하는 데미지 7.5% 증가
-         tbf(me, "가뎀증", 7.5, "데미지+", always);
-      }
-      me.defense = function() {me.act_defense();}
-      me.turnstart = function() {if (me.isLeader) {}};
-      me.turnover = function() {if (me.isLeader) {}};
-      return me;
-   case 10117 : // 수바알    ok
-      me.ultbefore = function() {}
-      me.ultafter = function() { // 돌진! 시저 호!
-         // 자신은 "일반 공격 시 '자신의 공격 데미지의 173%만큼 타깃에게 데미지' 추가 획득(4턴)"
-         tbf(me, "평추가*", 173, "돌진! 시저 호!", 4);
-      }
-      me.ultimate = function() {ultLogic(me);};
-      me.atkbefore = function() {}
-      me.atkafter = function() {}
-      me.attack = function() {atkLogic(me);};
-      me.leader = function() { // 여름 상품 전면 세일 중~
-         // 자신 및 화/광속성 동료의 최대 hp 20% 증가
-         hpUpMe(me, 20);
-         for(let idx of getElementIdx("화", "광")) hpUpMe(comp[idx], 20);
-         // 자신 및 화/광속성 동료의 가하는 데미지 20% 증가
-         tbf(me, "가뎀증", 20, "여름 상품 전면 세일 중~1", always);
-         for(let idx of getElementIdx("화", "광")) tbf(comp[idx], "가뎀증", 20, "여름 상품 전면 세일 중~1", always);
-         // 자신의 공격 데미지 50% 증가
-         tbf(me, "공퍼증", 50, "여름 상품 전면 세일 중~2", always);
-         // 자신의 일반 공격 데미지 20% 증가
-         tbf(me, "일뎀증", 20, "여름 상품 전면 세일 중~3", always);
-         // 화/광속성 동료의 공격 데미지 80% 증가
-         for(let idx of getElementIdx("화", "광")) tbf(comp[idx], "공퍼증", 80, "여름 상품 전면 세일 중~4", always);
-         // 화/광속성 동료의 일반 공격 데미지 50% 증가
-         for(let idx of getElementIdx("화", "광")) tbf(comp[idx], "일뎀증", 50, "여름 상품 전면 세일 중~5", always);
-         // 아군 딜/디는 "팀에 최소 2명 이상의 화속성 동료가 있을 시 <바알상회 특제 BBQ 그릴> 발동" 획득
-         if (getElementCnt("화") >= 2) for(let idx of getRoleIdx("딜", "디")) {
-            // <바알상회 특제 BBQ 그릴>
-            // 일반 공격 시 "자신의 공격 데미지의 40% 만큼 타깃에게 데미지" 추가
-            tbf(comp[idx], "평추가*", 40, "<바알상회 특제 BBQ 그릴>1", always);
-            // 일반 공격 시 "타깃이 받는 일반 공격 데미지 18% 증가(최대 5중첩)" 추가
-            pnbf(comp[idx], "평", boss, "받일뎀", 18, "<바알상회 특제 BBQ 그릴>2", 1, 5, always);
-         }
-         // 아군 딜/디는 "팀에 최소 2명 이상의 광속성 동료가 있을 시 <바알상회 특제 BBQ 그릴> 발동" 획득
-         if (getElementCnt("광") >= 2) for(let idx of getRoleIdx("딜", "디")) {
-            // <바알상회 특제 BBQ 그릴>
-            // 일반 공격 시 "자신의 공격 데미지의 40% 만큼 타깃에게 데미지" 추가
-            tbf(comp[idx], "평추가*", 40, "<바알상회 특제 BBQ 그릴>3", always);
-            // 일반 공격 시 "타깃이 받는 일반 공격 데미지 18% 증가(최대 5중첩)" 추가
-            pnbf(comp[idx], "평", boss, "받일뎀", 18, "<바알상회 특제 BBQ 그릴>4", 1, 5, always);
-         }
-      }
-      me.passive = function() {
-         // 수영복 모카 피부 마왕
-         // 수속성 아군의 공격 데미지 30% 증가
-         for(let idx of getElementIdx("수")) tbf(comp[idx], "공퍼증", 30, "수영복 모카 피부 마왕1", always);
-         // 수속성 아군의 일반 공격 데미지 20% 증가
-         for(let idx of getElementIdx("수")) tbf(comp[idx], "일뎀증", 20, "수영복 모카 피부 마왕2", always);
-
-         // 얼굴에 한 발~
-         // 아군 딜/디는 <바알상회 특제 물총> 획득
-         for(let idx of getRoleIdx("딜", "디")) {
-            let elCnt_tmp = getElementCnt("수");
-            // <바알상회 특제 물총>
-            // 팀에 최소 (4/5)명의 수속성 동료가 있을 시 "일반 공격 시 '자신의 공격 데미지의 (15/15)%만큼 타깃에게 데미지'추가" 발동
-            if (elCnt_tmp == 4) tbf(comp[idx], "평추가*", 15, "<바알상회 특제 물총>1", always);
-            else if (elCnt_tmp == 5) tbf(comp[idx], "평추가*", 30, "<바알상회 특제 물총>1", always);
-            // 팀에 최소 (4/5)명의 수속성 동료가 있을 시 "일반 공격 시 타깃이 받는 일반 공격 데미지(9/9)% 증가(최대 5중첩)'추가" 발동
-            if (elCnt_tmp == 4) pnbf(comp[idx], "평", boss, "받일뎀", 9, "<바알상회 특제 물총>2", 1, 5, always);
-            else if (elCnt_tmp == 5) pnbf(comp[idx], "평", boss, "받일뎀", 18, "<바알상회 특제 물총>2", 1, 5, always);
-         }
-         // 접대는 내게 맡겨~
-         // 아군 전체에게 <해변의 집 프리미엄 상품> 을 부여
-         if (getRoleCnt("딜") >= 2) {
-            // <해변의 집 프리미엄 상품>
-            // 팀에 최소 2명의 딜러가 있을 경우 "가하는 데미지 30% 증가" 획득
-            tbf(all, "가뎀증", 30, "<해변의 집 프리미엄 상품>1", always);
-            // 팀에 최소 2명의 딜러가 있을 경우 "일반 공격 데미지 30% 증가" 획득
-            tbf(all, "일뎀증", 30, "<해변의 집 프리미엄 상품>2", always);
-         }
-
-         // 일반 공격+
-         // 자신의 일반 공격 데미지 10% 증가
-         tbf(me, "일뎀증", 10, "일반 공격+", always);
       }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {if (me.isLeader) {}};

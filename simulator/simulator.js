@@ -67,6 +67,7 @@ function makeComp(list) {
    compDiv.innerHTML = stringArr.join("");
 }
 
+const liberationList = ["살루시아", "루루", "치즈루", "란", "이블리스", "바알", "사탄", "섹돌", "밀레"];
 function start(compIds) {
    document.getElementById("simulator").style.display = "flex";
    GLOBAL_TURN = 1; comp = []; buff_ex.length = 0;
@@ -75,8 +76,10 @@ function start(compIds) {
    boss.buff = []; alltimeFunc.length = 0;
    for(const id of compIds) {
       const tmp = chJSON.data.filter(ch => ch.id === id)[0];
-      const ch = new Champ(tmp.id, tmp.name, tmp.hp*COEF, tmp.atk*COEF, tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag);
-      comp.push(ch);
+      if (liberationList.includes(tmp.name))
+         comp.push(new Champ(tmp.id, tmp.name, Math.ceil(tmp.hp*COEF), Math.ceil(tmp.atk*COEF*1.1), tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
+      else
+         comp.push(new Champ(tmp.id, tmp.name, Math.ceil(tmp.hp*COEF), Math.ceil(tmp.atk*COEF), tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
    }
    comp[0].isLeader = true;
    for(let i = 0; i < 5; i++) {
@@ -136,9 +139,9 @@ function updateAll() {
       }
    }
    getdiv("turn").innerHTML = `TURN ${GLOBAL_TURN}`;
-   getdiv("deal").innerHTML = `공격데미지 : ${Math.floor(lastDmg).toLocaleString()}`;
-   getdiv("deal_add").innerHTML = `추가데미지 : ${Math.floor(lastAddDmg).toLocaleString()}`;
-   getdiv("deal_atv").innerHTML = `발동데미지 : ${Math.floor(lastAtvDmg).toLocaleString()}`;
+   getdiv("deal").innerHTML = `공격데미지 : ${Math.ceil(lastDmg).toLocaleString()}`;
+   getdiv("deal_add").innerHTML = `추가데미지 : ${Math.ceil(lastAddDmg).toLocaleString()}`;
+   getdiv("deal_atv").innerHTML = `발동데미지 : ${Math.ceil(lastAtvDmg).toLocaleString()}`;
    updateProgressBar(boss.hp, boss.maxHp);
 }
 function updateCdBar(i) {
@@ -158,7 +161,7 @@ function updateProgressBar(hp, maxhp) {
    const bossHpText = document.getElementById("boss-hp");
    progressBar.style.width = percentage > 100 ? "100%" : `${percentage}%`;
    //progressBar.textContent = `${Math.floor(hp).toLocaleString()} (${Math.floor(percentage*100)/100}%)`;
-   bossHpText.innerHTML = `${Math.floor(hp).toLocaleString()} (${Math.floor(percentage*100)/100}%)`;
+   bossHpText.innerHTML = `${Math.ceil(hp).toLocaleString()} (${Math.ceil(percentage*100)/100}%)`;
 }
 
 function getdiv(id) {return document.getElementById(id);}
