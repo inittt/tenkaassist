@@ -333,7 +333,7 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10004 : // 살루시아   ok
+   case 10004 : // 살루시아
       me.ultbefore = function() {}
       me.ultafter = function() { // 유도 화살
          // 아군 전체의 공격데미지 25% 증가(최대 2중첩)
@@ -381,7 +381,7 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10006 : // 루루       ok
+   case 10006 : // 루루
       me.healTurn = [];
       me.ultbefore = function() { // 모두 화이팅!
          // 자신의 공격 데미지의 25%만큼 아군 서포터의 공격 데미지 증가(1턴)
@@ -451,7 +451,7 @@ function setDefault(me) {switch(me.id) {
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me;
-   case 10022 : // 놀라이티   ok
+   case 10022 : // 놀라이티
       me.ultbefore = function() {}
       me.ultafter = function() {
          // 타깃은 피격 시 놀라에게 받는 데미지 15% 증가 (8중첩) (4턴)
@@ -502,7 +502,7 @@ function setDefault(me) {switch(me.id) {
       };
       me.turnover = function() {};
       return me;
-   case 10023 : // 벨레트     ok
+   case 10023 : // 벨레트
       buff_ex.push("<재편제>", "<역공 타이밍>", "<나약한 허상>", "<방향 틀기>");
       me.ultbefore = function() { // 광견의 충복
          // 자신의 공격 데미지 100% 증가(1턴)
@@ -626,7 +626,7 @@ function setDefault(me) {switch(me.id) {
       };
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10028 : // 치즈루     ok
+   case 10028 : // 치즈루
       me.ultbefore = function() { // 치즈루 전력의 일격!
          // 타깃이 받는 풍속성 데미지 25% 증가(최대 2중첩)
          for(let idx of getElementIdx("풍"))
@@ -686,7 +686,7 @@ function setDefault(me) {switch(me.id) {
          }
       };
       return me;
-   case 10042 : // 수이블     ok
+   case 10042 : // 수이블
       me.ultbefore = function() {
          // 소녀의 연심은 무적!1 : 아군 수, 화 공퍼증 40%(1턴)
          for(let idx of getElementIdx("화", "수")) tbf(comp[idx], "공퍼증", 40, "소녀의 연심은 무적!1", 1);
@@ -738,7 +738,7 @@ function setDefault(me) {switch(me.id) {
       };
       me.turnover = function() {};
       return me;
-   case 10048 : // 모모       ok
+   case 10048 : // 모모
       me.ultbefore = function() { // 독액 배출
          // 자신은 "일반 공격 시 '자신의 공격 데미지의 314%만큼 타깃에게 데미지' 추가(2턴)" 획득
          tbf(me, "평추가*", 314, "독액 배출1", 2);
@@ -789,7 +789,7 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10072 : // 신바알     ok
+   case 10072 : // 신바알
       me.ultbefore = function() { // 부케 임자는 이미 정해졌엉~
          // 자신의 공격 데미지 50%만큼 자신의 공격 데미지 증가(1턴)
          tbf(me, "공고증", myCurAtk+me.id+50, "부케 임자는 이미 정해졌엉~1", 1);
@@ -862,7 +862,7 @@ function setDefault(me) {switch(me.id) {
          if (GLOBAL_TURN % 2 == 0) nbf(me, "공퍼증", 15, "<밀당의 매력>", 1, 8);
       };
       return me;
-   case 10076 : // 앨루루     ok
+   case 10076 : // 앨루루
       me.ultbefore = function() {}
       me.ultafter = function() { // 다과회 동맹 전원 돌격
          // 아군 딜러 전체가 "일반 공격 시 '자신의 공격 데미지의 60%만큼 타깃에게 데미지' 스킬 추가(4턴)" 획득
@@ -912,7 +912,7 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10078 : // 냥루루     ok
+   case 10078 : // 냥루루
       me.ultbefore = function() { // 루루는 잘못 없어!
          // 타깃이 받는 데미지 15% 증가(최대 2중첩)
          nbf(boss, "받뎀증", 15, "루루는 잘못 없어!1", 1, 2)
@@ -991,7 +991,7 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10088 : // 신빨강     ok
+   case 10088 : // 신빨강
       me.ultbefore = function() {// 아나스티의 특제 칵테일
          // 타깃이 받는 데미지 20% 증가(7턴)
          tbf(boss, "받뎀증", 20, "아나스티의 특제 칵테일", 7);
@@ -1051,7 +1051,7 @@ function setDefault(me) {switch(me.id) {
          if (me.isLeader) {}
       };
       return me;
-   case 10096 : // 로티아     ok
+   case 10096 : // 로티아
       me.ultbefore = function() {
          // 아군 전체는 자신의 현재 공40%만큼 공격력 증가 (1턴)
          for(let c of comp) tbf(c, "공고증", 40*me.getCurAtk(), "피로 물든 밤의 광기1", 1);
@@ -1101,7 +1101,7 @@ function setDefault(me) {switch(me.id) {
       };
       me.turnover = function() {};
       return me;
-   case 10098 : // 크즈카     ok
+   case 10098 : // 크즈카
       me.ultbefore = function() {
          // 연쇄 트랩 : 타깃이 받는 궁극기 데미지 22.5%증가 (2중첩)
          nbf(boss, "받궁뎀", 22.5, "연쇄 트랩!", 1, 2);
@@ -1149,7 +1149,7 @@ function setDefault(me) {switch(me.id) {
          nbf(boss, "받뎀증", 5, "다방구 시작~", 1, 11);
       };
       return me;
-   case 10108 : // 코바알     ok
+   case 10108 : // 코바알
       me.healTurn = [];
       me.ultbefore = function() { // 발렌타인 초콜릿 대방출~
          // 자신의 공격 데미지의 20%만큼 동료 전체의 공격 데미지 증가(1턴)
@@ -1228,7 +1228,7 @@ function setDefault(me) {switch(me.id) {
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me; 
-   case 10114 : // 뷰지안     ok
+   case 10114 : // 뷰지안
       me.ultbefore = function() { // 전력 해방! 별빛 분쇄 스매쉬!
          // 5번 자리 아군의 궁극기 데미지 70% 증가(2턴)
          tbf(comp[4], "궁뎀증", 70, "전력 해방! 별빛 분쇄 스매쉬!", 2);
@@ -1303,7 +1303,7 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10115 : // 마브리     ok
+   case 10115 : // 마브리
       buff_ex.push("<정의의 이름으로 널 심판하겠다>");
       me.healTurn = [];
       me.ultbefore = function() { // 자동 가열 진동 모드?
@@ -1388,7 +1388,7 @@ function setDefault(me) {switch(me.id) {
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me;
-   case 10117 : // 수바알     ok
+   case 10117 : // 수바알
       me.ultbefore = function() {}
       me.ultafter = function() { // 돌진! 시저 호!
          // 자신은 "일반 공격 시 '자신의 공격 데미지의 173%만큼 타깃에게 데미지' 추가 획득(4턴)"
@@ -1467,7 +1467,7 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10119 : // 수이카     ok
+   case 10119 : // 수이카
       me.ultbefore = function() { // 아이카의 여름 칵테일
          // 아군 전체의 발동형 스킬 효과 100% 증가(3턴)
          tbf(all, "발효증", 100, "아이카의 여름 칵테일1", 3);
@@ -1540,7 +1540,143 @@ function setDefault(me) {switch(me.id) {
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me;
-   case 10122 : // 천사기     ok
+   case 10120 : // 해란
+      me.ultbefore = function() { // 심해의 파인애플!
+         // 자신의 발동형 스킬 효과 100% 증가(3턴)
+         tbf(me, "발효증", 100, "심해의 파인애플!1", 3);
+         // 자신의 궁극기 데미지 45% 증가(1턴)
+         tbf(me, "궁뎀증", 45, "심해의 파인애플!2", 1);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         // 패시브 스킬 1 : 화약 장전
+         // 1턴마다 「자신은 궁극기 발동 시 『자신에게 부여된 《화약 장전》의 공격 데미지 증가 효과 해제』 발동(1턴)」 발동
+         deleteBuff(me, "기본", "<화약 장전>");
+
+         // 패시브 스킬 2 : 애들아! 준비됐지?
+         // 1턴마다 「자신은 궁극기 발동 시 『자신에게 부여된 《네, 선장님!》 효과 해제』(1턴)」 발동
+         deleteBuff(me, "기본", "<네, 선장님!>");
+
+         // 패시브 스킬 3 : 목소리가 작다!
+         // 1턴마다 「자신은 궁극기 발동 시 『자신에게 부여된 《목소리가 작다!》의 데미지 증가 효과 해제』 발동(1턴)」 획득
+         deleteBuff(me, "기본", "<목소리가 작다!>");
+      };
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 난쟁이 선장과 함께!
+         // 아군 전체의 최대 HP 20% 증가
+         hpUpAll(20);
+         // 아군 전체의 공격 데미지 50% 증가
+         tbf(all, "공퍼증", 50, "난쟁이 선장과 함께!1", always);
+         // 아군 딜러, 디스럽터는 「팀에 풍속성 캐릭터가 최소 3명 이상 있을 시 《바람을 타고》 획득」 발동
+         if (getElementCnt("풍") >= 3) {
+            for(let idx of getRoleIdx("딜", "디")) {
+               // 《바람을 타고》
+               // 자신의 공격 데미지 80% 증가
+               tbf(comp[idx], "공퍼증", 80, "<바람을 타고>1", always);
+               // 자신이 가하는 데미지 40% 증가
+               tbf(comp[idx], "가뎀증", 40, "<바람을 타고>2", always);
+               // 자신이 공격을 가할 시 「《참파도랑》」 발동
+               // 《참파도랑》 : 1번 자리 아군은 「 일반 공격 시 『자신의 공격 데미지의 65%만큼 타깃에게 데미지』 발동(1턴)」 획득
+               atbf(comp[idx], "공격", comp[0], "평발동*", 65, "<참파도랑>", 1, always);
+            }
+         }
+
+         // 매 Wave의 첫 번째 턴에서 「적 전체가 받는 풍속성 데미지 25% 증가(50턴)」 발동
+         for(let idx of getElementIdx("풍")) tbf(comp[idx], "받속뎀", 25, "난쟁이 선장과 함께!2", 50);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 화약 장전
+         // 일반 공격 시 「자신의 공격 데미지 50% 증가(3턴)」 발동
+         atbf(me, "평", me, "공퍼증", 50, "<화약 장전>", 3, always);
+         // => ultimate로
+         // 1턴마다 「자신은 궁극기 발동 시 『자신에게 부여된 《화약 장전》의 공격 데미지 증가 효과 해제』 발동(1턴)」 발동
+         
+         // 패시브 스킬 2 : 애들아! 준비됐지?
+         // 일반 공격 시 「《네, 선장님!》」 발동
+         // 《네, 선장님!》 : 자신은 궁극기 발동 시 「자신의 공격 데미지의 80%만큼 타깃에게 데미지」 발동(3턴)
+         atbf(me, "평", me, "궁발동*", 80, "<네, 선장님!>", 3, always);
+         // => ultimate로
+         // 1턴마다 「자신은 궁극기 발동 시 『자신에게 부여된 《네, 선장님!》 효과 해제』(1턴)」 발동
+         
+         // 패시브 스킬 3 : 목소리가 작다!
+         // 궁극기 최대 CD 1턴 감소
+         me.cd -= 1; me.curCd -= 1;
+         // 일반 공격 시 「자신이 가하는 데미지 20% 증가(3턴)」 발동
+         atbf(me, "평", me, "가뎀증", 20, "<목소리가 작다!>", 3, always);
+         // => ultimate로
+         // 1턴마다 「자신은 궁극기 발동 시 『자신에게 부여된 《목소리가 작다!》의 데미지 증가 효과 해제』 발동(1턴)」 획득
+         
+         // 패시브 스킬 4 : 데미지+
+         // 자신이 가하는 데미지 7.5% 증가
+         tbf(me, "가뎀증", 7.5, "데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10121 : // 해나나
+      me.ultbefore = function() { // 회기 백화투영
+         // 자신의 일반 공격 데미지 120%증가(4턴)
+         tbf(me, "일뎀증", 120, "회기 백화투영1", 4);
+         // 타깃이 받는 일반 공격 데미지 90% 증가(8턴)
+         tbf(boss, "받일뎀", 90, "회기 백화투영2", 8);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() { // 후방 보급이다냥
+         // 아군 전체의 일반 공격 데미지 40% 증가(2턴)
+         tbf(all, "일뎀증", 40, "후방 보급이다냥", 2);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me); deleteBuff(me, "추가", "폭풍우 감행1");};
+      me.leader = function() {
+         // 리더 스킬 : 노예 선원
+         // 팀에 풍속성 캐릭터가 최소 3명 있을 시 아군 전체는 《갈매기 도적단》 획득
+         if (getElementCnt("풍") >= 3) {
+            // 《갈매기 도적단》
+            // 공격 데미지 40% 증가
+            tbf(all, "공퍼증", 40, "<갈매기 도적단>1", always);
+            // 일반 공격 데미지 100% 증가
+            tbf(all, "일뎀증", 100, "<갈매기 도적단>2", always);
+            // 일반 공격 시 「자신의 공격 데미지의 65%만큼 타깃에게 데미지」 추가
+            tbf(all, "평추가*", 65, "<갈매기 도적단>3", always);
+         }
+
+         // 팀에 딜러가 최소 2명 있을 시 자신은 《대해를 향하여!》 획득
+         if (getRoleCnt("딜") >= 2) {
+            // 《대해를 향하여!》
+            // 일반 공격 시 「타깃이 받는 데미지 5% 증가(최대 10중첩)」 발동
+            anbf(me, "평", boss, "받뎀증", 5, "<대해를 향하여!>", 1, 10, always);
+         }
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 폭풍우 감행
+         // 일반 공격 시 「자신의 최대 HP의 5%만큼 아군 전체의 아머 강화(1회)」 추가
+         ptbf(me, "평", all, "아머", me.hp*5, "폭풍우 감행1", 50, always);
+         // 궁극기 발동 시 「자신이 일반 공격을 가할 시 『자신의 공격 데미지의 100%만큼 타깃에게 데미지』 추가(2턴)」 발동
+         atbf(me, "궁", me, "평추가*", 100, "폭풍우 감행2", 2, always);
+         
+         // 패시브 스킬 2 : 프로젝터 캐논
+         // 일반 공격 시 「자신의 공격 데미지의 50%만큼 타깃에게 데미지」 추가
+         tbf(me, "평추가*", 50, "프로젝터 캐논", always);
+         
+         // 패시브 스킬 3 : 오랜 추억
+         // 아군 전체가 가하는 데미지 10% 증가
+         tbf(all, "가뎀증", 10, "오랜 추억1", always);
+         // 일반 공격 시 「아군 전체의 공격 데미지 10% 증가(최대 4중첩)」 발동
+         anbf(me, "평", all, "공퍼증", 10, "오랜 추억2", 1, 4, always);
+         
+         // 패시브 스킬 4 : 피해 감소+
+         // TODO: 자신이 받는 데미지 5% 감소
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10122 : // 천사기
       buff_ex.push("<시기의 화염>");
       me.ultbefore = function() { // 히메는, 모두를 사랑해~
          // 아군 전체가 가하는 데미지 35% 증가(1턴)
@@ -1626,7 +1762,7 @@ function setDefault(me) {switch(me.id) {
       };
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10123 : // 악미루     ok
+   case 10123 : // 악미루
       me.ultbefore = function() { // 안닌궁주 보너스!
          // 아군 전체의 발동형 스킬 효과 100% 증가(4턴)
          tbf(all, "발효증", 100, "안닌궁주 보너스!", 4);
@@ -1682,7 +1818,83 @@ function setDefault(me) {switch(me.id) {
          if (me.isLeader) {}
       };
       return me;
-   case 10125 : // 할야네     ok
+   case 10124 : // 뇨로
+      buff_ex.push("<애교 시간>")
+      me.ultbefore = function() { // 네 마음을 NyoroNyoro하게
+         // 「스며드는 핑크빛 바닐라 뇨로」가 타깃에게 가하는 데미지 40% 증가(최대 2중첩)
+         nbf(me, "가뎀증", 40, "네 마음을 NyoroNyoro하게", 1, 2);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         // 자신의 《애교 시간》이 2중첩 미만일 경우, 《얼른 예뻐해줘!》 발동
+         // 《얼른 예뻐해줘!》 : 궁극기 발동 시 「자신의 궁극기 최대 CD 1 감소 (50턴)」 발동 => ultimate로
+         if (me.isLeader) {
+            if (buffNestByType(me, "<애교 시간>") < 2) {
+               me.cd -= 1;
+               me.curCd -= 1;
+               nbf(me, "<애교 시간>", 0, "애교계 청순한 여친", 1, 2);
+            } else {
+               me.cd = 3;
+               me.curCd = 3;
+               deleteBuffType(me, "기본", "<애교 시간>");
+            }
+         }
+      };
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 애교계 청순한 여친
+         // 아군 전체의 최대 HP 20% 증가
+         hpUpAll(20);
+         // 아군 전체가 「팀원 중 최소 1명의 광속성 캐릭터가 있을 경우, 《우사기 히메 부비부비~》 발동」 획득
+         // 《우사기 히메 부비부비~》 : 공격 데미지 80% 증가
+         if (getElementCnt("광") >= 1) tbf(all, "공퍼증", 80, "<우사기 히메 부비부비~>", always);
+
+         // 자신은 「팀원 중 최소 1명의 암속성 캐릭터가 있을 경우, 《미루 부비부비~》 발동」 획득
+         if (getElementCnt("암") >= 1) {
+            // 《미루 부비부비~》
+            // 공격 데미지 60% 증가
+            tbf(me, "공퍼증", 60, "<미루 부비부비~>1");
+            // 궁극기 발동 시 「타깃이 받는 화속성 데미지 25% 증가(최대 2중첩)」 발동
+            for(let idx of getElementIdx("화"))
+               anbf(me, "궁", comp[idx], "받속뎀", 25, "<미루 부비부비~>2", 1, 2, always);
+            // 궁극기 발동 시 「자신의 공격 데미지의 160%만큼 타깃에게 데미지」 추가
+            tbf(me, "궁추가*", 160, "<미루 부비부비~>3", always);
+         }
+
+         // 자신이 궁극기 발동 시 「자신이 《애교 시간》 1중첩 획득(최대 2중첩)」 => ultimate로
+
+         // 자신의 《애교 시간》이 2중첩 미만일 경우, 《얼른 예뻐해줘!》 발동
+         // 《얼른 예뻐해줘!》 : 궁극기 발동 시 「자신의 궁극기 최대 CD 1 감소 (50턴)」 발동 => ultimate로 
+
+         // 자신의 《애교 시간》이 2중첩일 경우, 《얼른 와서 안아줘~》 발동
+         // 《얼른 와서 안아줘~》 => ultimate로
+         // 궁극기 발동 시 「뇨로가 당신을 꽉 끌어안아, 말랑말랑해졌다(50턴)
+         // 궁극기 발동 시 자신의 《애교 시간》 및 최대 궁극기 CD 감소 효과 제거」 발동
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 꼬리달린 소형 양생동물
+         // 공격 시 「자신의 공격 데미지 20% 증가(최대 4중첩)」 발동
+         anbf(me, "공격", me, "공퍼증", 20, "꼬리달린 소형 양생동물", 1, 4, always);
+         
+         // 패시브 스킬 2 : 핑크빛 유혹
+         // 궁극기 발동 시 「자신의 공격 데미지의 66%만큼 타깃에게 데미지」 추가
+         tbf(me, "궁추가*", 66, "핑크빛 유혹", always);
+         
+         // 패시브 스킬 3 : 뇨로는 모두를 좋아해~
+         // 자신이 가하는 데미지 40% 증가
+         tbf(me, "가뎀증", 40, "뇨로는 모두를 좋아해~", always);
+         
+         // 패시브 스킬 4 : 피해+
+         // 자신이 가하는 데미지 7.5% 증가
+         tbf(me, "가뎀증", 7.5, "피해+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10125 : // 할야네
       me.ultbefore = function() { // 장난은 안치지만 사탕 내 놔
          // 자신의 공격 데미지 300% 증가(1턴)
          tbf(me, "공퍼증", 300, "장난은 안치지만 사탕 내 놔1", 1);
@@ -1735,7 +1947,7 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10126 : // 할쿠       ok
+   case 10126 : // 할쿠
       buff_ex.push("<연쇄 트랩>");
       me.ultbefore = function() { // 사탕을 줘도 장난 칠거야!
          // 타깃이 받는 데미지 45% 증가(4턴)
@@ -1818,7 +2030,7 @@ function setDefault(me) {switch(me.id) {
          nbf(me, "<연쇄 트랩>", 0, "작은 몸과 큰 머리", 1, 9);
       };
       return me;
-   case 10127 : // 크르티아   ok
+   case 10127 : // 크르티아
       me.ultbefore = function() { // 꿈나라의 왕
          // 아군 전체의 궁극기 데미지 30% 증가(15턴)
          tbf(all, "궁뎀증", 30, "꿈나라의 왕1", 15);
@@ -1885,7 +2097,7 @@ function setDefault(me) {switch(me.id) {
       };
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10128 : // 크이블     ok
+   case 10128 : // 크이블
       me.ultbefore = function() {
          // 흔들리는 와인잔1 : 타깃이 받는 딜러의 데미지 50% 증가 (2중첩)
          // 받는 딜러 데미지가 ->  궁/평뎀증 판정
@@ -1947,7 +2159,7 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {};
       me.turnover = function() {};
       return me;
-   case 10129 : // 신릴리     ok
+   case 10129 : // 신릴리
       me.ultbefore = function() { // 맹록 착지 포즈
          // 아군 전체의 가하는 데미지 30% 증가(4턴)
          tbf(all, "가뎀증", 30, "맹록 착지 포즈", 4);
@@ -2007,7 +2219,8 @@ function setDefault(me) {switch(me.id) {
          nbf(all, "궁뎀증", 3, "브레이크를 위한 액셀", 1, 15);
       };
       return me;
-   case 10130 : // 셀리나     ok
+   case 10130 : // 셀리나
+      buff_ex.push("<싸움상등!>");
       me.hit = function() {
          addBuff(me, ["피격"], "추가"); addBuff(me, ["피격"], "발동");
          deleteBuff(me, "기본", "이 일격으로 머리를 뚫어버린다!2");
@@ -2109,7 +2322,7 @@ function setDefault(me) {switch(me.id) {
       };
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10131 : // 이나스     ok
+   case 10131 : // 이나스
          me.ultbefore = function() { // 시간을 초월한 희망
             // 타깃이 받는 시간을 다스리는 자 이나스의 데미지 100% 증가(3턴)
             tbf(me, "받캐뎀", 100, "시간을 초월한 희망", 3);
@@ -2163,7 +2376,7 @@ function setDefault(me) {switch(me.id) {
          };
          me.turnover = function() {if (me.isLeader) {}};
          return me;      
-   case 10132 : // 카디아     ok
+   case 10132 : // 카디아
       me.ultbefore = function() { // 드리워진 밤의 장막
          // 아군 전체가 가하는 궁극기 데미지 60% 증가(3턴)
          tbf(all, "궁뎀증", 60, "드리워진 밤의 장막1", 3);
@@ -2235,7 +2448,7 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10133 : // 나나미     ok
+   case 10133 : // 나나미
       me.ultbefore = function() { // 이것이 바로 프로 아이돌의 매력
          // 자신의 기본 공격 데미지의 70% 만큼 아군 전체의 공격 데미지 증가(4턴)
          tbf(all, "공고증", 70*me.atk, "이것이 바로 프로 아이돌의 매력1", 4);
@@ -2315,7 +2528,7 @@ function setDefault(me) {switch(me.id) {
          if (me.isLeader) {}
       };
       return me;
-   case 10134 : // 가엘리     ok
+   case 10134 : // 가엘리
       me.turnHeal = false;
       me.turnAtkBonus = false;
       me.ultbefore = function() { // 다들 함께 불러요~
@@ -2403,7 +2616,7 @@ function setDefault(me) {switch(me.id) {
          me.turnHeal = false;
       };
       return me;
-   case 10135 : // 돌스미나   ok
+   case 10135 : // 돌스미나
       buff_ex.push("<위대한 나가퀸>");
       me.ultbefore = function() { // 돈이 곧 힘!
          // 자신의 가하는 데미지 30% 증가(2턴)
@@ -2465,7 +2678,7 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10136 : // 안젤라     ok
+   case 10136 : // 안젤라
       me.ultbefore = function() { // 이제부터 돈 벌 시간!
          // 타깃이 받는 피해 50% 증가(4턴)
          tbf(boss, "받뎀증", 50, "이제부터 돈 벌 시간!1", 4);
@@ -2529,7 +2742,7 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10137 : // 춘즈란     ok
+   case 10137 : // 춘즈란
       me.ultbefore = function() { // 함께 시저 님을 섬겨요~
          // 타깃이 받는 데미지 40% 증가(4턴)
          tbf(boss, "받뎀증", 40, "함께 시저 님을 섬겨요~1", 4);
@@ -2587,7 +2800,7 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10138 : // 익루루     ok
+   case 10138 : // 익루루
       buff_ex.push("<파티 사회자>", "<파티 참가자>");
       me.usedUlt = false;
       me.healTurn = [];
@@ -2689,7 +2902,7 @@ function setDefault(me) {switch(me.id) {
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me;
-   case 10139 : // 불타라     ok
+   case 10139 : // 불타라
       buff_ex.push("<마법소녀의 힘>");
       me.ultbefore = function() { // 마법소녀 초건전 빔
          // 타깃이 받는 광속성 데미지 20% 증가(최대 1중첩)
@@ -2771,7 +2984,7 @@ function setDefault(me) {switch(me.id) {
          if (me.isLeader) {}
       };
       return me;
-   case 10140 : // 라냐       ok
+   case 10140 : // 라냐
       buff_ex.push("<강림치>");
       me.ultbefore = function() {}
       me.ultafter = function() { // 별의 귀환
@@ -2895,7 +3108,7 @@ function setDefault(me) {switch(me.id) {
       };
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10141 : // 관나나     ok
+   case 10141 : // 관나나
       buff_ex.push("<이성치>", "<이성치>감소X");
       me.isSANFix = function() {
          const exist = me.buff.filter(i => isTurn(i) && i.type == "<이성치>감소X");
@@ -3005,7 +3218,7 @@ function setDefault(me) {switch(me.id) {
          if (me.isLeader) {}
       };
       return me;
-   case 10142 : // 수즈루     ok
+   case 10142 : // 수즈루
       me.ultbefore = function() { // 다 함께 수박 깨기~
          // 자신의 일반 공격 데미지 130% 증가(4턴)
          tbf(me, "일뎀증", 130, "다 함께 수박 깨기~1", 4);
@@ -3078,7 +3291,7 @@ function setDefault(me) {switch(me.id) {
       };
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10143 : // 수살루     ok
+   case 10143 : // 수살루
       me.healTurn = [];
       me.ultbefore = function() { // 여름날의 아름다운 풍경
          // 아군 전체의 일반 공격 데미지 90% 증가(4턴)
@@ -3146,7 +3359,7 @@ function setDefault(me) {switch(me.id) {
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me;
-   case 10144 : // 수저       ok
+   case 10144 : // 수저
       me.ultbefore = function() {}
       me.ultafter = function() {}
       me.ultimate = function() {me.hpUltDmg = me.hp*161; ultLogic(me);};
@@ -3214,7 +3427,7 @@ function setDefault(me) {switch(me.id) {
          nbf(me, "공퍼증", 5, "웨딩드레스 병기 - 에너지 섭취1", 1, 20);
       };
       return me; 
-   case 10145 : // 수사탄     ok
+   case 10145 : // 수사탄
       me.ultbefore = function() { // 피비린내
          // 자신의 최대 hp10%만큼 아군 전체의 공격 데미지 증가(5턴)
          tbf(all, "공고증", me.hp*10, "피비린내1", 5);
