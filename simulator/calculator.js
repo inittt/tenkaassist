@@ -82,10 +82,10 @@ class Champ {
       this.isActed = true;
    }
    act_defense() {
+      lastDmg = 0; lastAddDmg = 0; lastAtvDmg = 0;
       addBuff(this, ["방", "행동", "공격"], "추가");
       addBuff(this, ["방", "행동", "공격"], "발동");
       this.isActed = true;
-      lastDmg = 0; lastAddDmg = 0; lastAtvDmg = 0;
    }
    heal() {
       addBuff(this, ["힐"], "추가");
@@ -192,7 +192,7 @@ function addBuff(me, act, div) {
    }
 }
 function applyAddDmg(dmg) {if (dmg <= 0) dmg = 0; lastAddDmg += dmg; boss.hp -= dmg;}
-function applyAtvDmg(dmg) {if (dmg <= 0) dmg = 0; lastAddDmg += dmg; boss.hp -= dmg;}
+function applyAtvDmg(dmg) {if (dmg <= 0) dmg = 0; lastAtvDmg += dmg; boss.hp -= dmg;}
 
 function isNest(a) {return a.act == undefined && a.nest != undefined;}
 function isTurn(a) {return a.act == undefined && a.nest == undefined;}
