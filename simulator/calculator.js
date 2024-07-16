@@ -1149,6 +1149,195 @@ function setDefault(me) {switch(me.id) {
          nbf(boss, "받뎀증", 5, "다방구 시작~", 1, 11);
       };
       return me;
+   case 10100 : // 우사기
+      me.ultbefore = function() { // 우사기 히메데스!
+         // 자신이 가하는 데미지 20%증가(4턴)
+         tbf(me, "가뎀증", 20, "우사기 히메데스!", 4);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 고유 결계 · 악토끼 왕국!
+         // 아군 전체의 공격 데미지 30% 증가
+         tbf(all, "공퍼증", 30, "고유 결계 - 악토끼 왕국!1", always);
+         // 궁극기 발동 시, 자신의 공격 데미지 50% 증가 (최대 4중첩) 효과 발동
+         anbf(me, "궁", me, "공퍼증", 50, "고유 결계 - 악토끼 왕국!2", 1, 4, always);
+         // 첫 번째 턴 시작 시 아군 전체의 현재 궁극기 CD 2턴 감소
+         for(let c of comp) cdChange(c, -2);
+
+         // 첫 번째 턴 시작 시 아군의 딜러, 탱커, 디스럽터가 <무다 무다 무다!> 획득
+         for(let idx of getRoleIdx("딜", "탱", "디")) {
+            // <무다 무다 무다!>
+            // 일반 공격 시, "자신의 공격 데미지의 20%만큼 타깃에게 3회 데미지" 스킬 추가.
+            tbf(comp[idx], "평추가*", 60, "<무다 무다 무다!>1", always);
+            // 일반 공격 데미지 60% 증가
+            tbf(comp[idx], "일뎀증", 60, "<무다 무다 무다!>2", always);
+         }
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 무한 찌찌!
+         // 일반 공격 시 "자신의 공격 데미지의 10%만큼 타깃에게 6회 데미지" 추가
+         tbf(me, "평추가*", 60, "무한 찌찌!1", always);
+         // 일반 공격 시 "아군 전체의 일반 공격 데미지 15% 증가 (최대 3중첩)" 발동
+         anbf(me, "평", all, "일뎀증", 15, "무한 찌찌!2", 1, 3, always);
+         
+         // 패시브 스킬 2 : 사양할게!
+         // TODO: 일반 공격 시, "타깃이 받는 치유 효과 50% 감소 (2턴)" 발동
+         
+         // 패시브 스킬 3 : 가라! 악토끼 삼전사! => turnover로
+         // 1턴마다 "적 전체가 받는 일반 공격 데미지 20% 증가 (최대 5중첩)" 발동
+         
+         // 패시브 스킬 4 : 공격력 증가
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격력 증가", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}
+         // 패시브 스킬 3 : 가라! 악토끼 삼전사!
+         // 1턴마다 "적 전체가 받는 일반 공격 데미지 20% 증가 (최대 5중첩)" 발동
+         nbf(boss, "받일뎀", 20, "가라! 악토끼 삼전사!", 1, 5, always);
+      };
+      return me;
+   case 10106 : // 절살루
+      me.ultbefore = function() { // 엘프궁술 - 연격의 화살
+         // 자신이 가하는 데미지 20% 증가(3턴)
+         tbf(me, "가뎀증", 20, "엘프궁술 - 연격의 화살1", 3);
+      }
+      me.ultafter = function() { // 엘프궁술 - 연격의 화살
+         // 자신은「공격 시『자신의 공격 데미지의 110%만큼 타깃에게 데미지』(3턴)」발동
+         tbf(me, "평발동*", 110, "엘프궁술 - 연격의 화살2", 3);
+         tbf(me, "궁발동*", 110, "엘프궁술 - 연격의 화살3", 3);
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 숨길 수 없는 승부욕
+         // 아군 전체 HP 20% 증가
+         hpUpAll(20);
+
+         // 아군 딜러, 디스럽터는 「팀에 풍속성 캐릭터가 최소 3명 이상 있을 시 <<엘프 대장>> 발동」흭득
+         if (getElementCnt("풍") >= 3) for(let idx of getRoleIdx("딜", "디")) {
+            // <<엘프 대장>>
+            // 공격 데미지 25% 증가
+            tbf(comp[idx], "공퍼증", 25, "<엘프 대장>1", always);
+            // 발동형 스킬 데미지 175% 증가
+            tbf(comp[idx], "발뎀증", 175, "<엘프 대장>2", always);
+            // 일반 공격 시 「자신의 공격 데미지의 40%만큼 타깃에게 데미지」발동
+            tbf(comp[idx], "평발동*", 40 , "<엘프 대장>3", always);
+            // 궁극기 발동 시 「자신의 공격 데미지의 100%만큼 타깃에게 데미지」발동
+            tbf(comp[idx], "궁발동*", 100 , "<엘프 대장>4", always);
+         }
+         
+         // 아군 전체는 「팀에 화속성 캐릭터가 최소 2명 이상 있을 시, <<저격 포메이션>> 발동」흭득
+         if (getElementCnt("화") >= 2) {
+            // <<저격 포메이션>>
+            // 공격 데미지 100% 증가
+            tbf(all, "공퍼증", 100, "<저격 포메이션>", always);
+            // TODO: 부여하는 치유량 25% 증가
+         }
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 추풍의 맹격
+         // TODO: 궁극기 발동 시 「타깃의 궁극기 데미지 15% 감소(2턴)」발동
+         // 궁극기 발동 시 「자신의 공격 데미지의 80%만큼 타깃에게 데미지」발동
+         tbf(me, "궁발동*", 80, "추풍의 맹격", always);
+         
+         // 패시브 스킬 2 : 부식 화살통
+         // 일반 공격 시 「타깃이 받는 발동형 스킬 데미지 20% 증가(최대 5중첩)」발동
+         anbf(me, "평", boss, "받발뎀", 20, "부식 화살통1", 1, 5, always);
+         // 일반 공격 시 「자신의 공격 데미지의 35%만큼 타깃에게 데미지」발동
+         tbf(me, "평발동*", 35, "부식 화살통2", always);
+         
+         // 패시브 스킬 3 : 영기의 강격
+         // 일반 공격 시 「아군 전체의 궁극기 데미지 6% 증가(최대 5중첩)」발동
+         anbf(me, "평", all, "궁뎀증", 6, "영기의 강격1", 1, 5, always);
+         // 궁극기 발동 시 「타깃이 받는 궁극기 데미지 15% 증가(최대 2중첩)」발동
+         anbf(me, "궁", boss, "받궁뎀", 15, "영기의 강격2", 1, 2, always);
+         
+         // 패시브 스킬 4 : 궁극기+
+         // 자신의 궁극기 데미지 10% 증가
+         tbf(me, "궁뎀증", 10, "궁극기+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10107 : // 용란
+      me.ultbefore = function() { // 회전 회오리 슛!
+         // 4중첩의 공격 데미지 33.75% 증가(최대 4중첩)
+         nbf(me, "공퍼증", 33.75, "회전 회오리 슛!", 4, 4);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         // 궁극기 발동 후 「자신에게 부여된 <<큰거 한방!>>의 자신의 공격 데미지 증가 효과 해제」발동
+         deleteBuff(me, "기본", "큰거 한방!")
+         // 궁극기 발동 후 「자신에게 부여된 <<공수전환!!>>의 자신이 가하는 데미지 증가 효과 해제」발동 => ultimate로
+         deleteBuff(me, "기본", "공수전환!!")
+      };
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);
+         // 일반 공격 시 「자신에게 부여된 <<회전 회오리 슛!>>의 자신 공격 데미지 증가 효과 1중첩 감소」발동 => attack로
+         nbf(me, "공퍼증", 33.75, "회전 회오리 슛!", -1, 4);
+      };
+      me.leader = function() {
+         // 리더 스킬 : 악수는 승패가 난 후에!
+         // 아군 전체 HP 20% 증가
+         hpUpAll(20);
+         // 아군 전체의 공격 데미지 40% 증가
+         tbf(all, "공퍼증", 40, "악수는 승패가 난 후에!1", always);
+         // 자신이 일반 공격 시 「자신의 공격 데미지의 40%만큼 아군 딜러의 공격 데미지 증가(1턴)」발동
+         for(let idx of getRoleIdx("딜"))
+            atbf(me, "평", comp[idx], "공고증", myCurAtk+me.id+40, "악수는 승패가 난 후에!2", 1, always);
+         
+         // 아군 딜러는 「팀에 최소 4명 이상의 딜러가 있을 시 <<일파만파!>> 발동」흭득
+         if (getRoleCnt("딜") >= 4) for(let idx of getRoleIdx("딜")) {
+            // <<일파만파!>>
+            // 공격 데미지 110% 증가
+            tbf(comp[idx], "공퍼증", 100, "<일파만파!>1", always);
+            // 궁극기 발동 시 「자신의 공격 데미지의 60%만큼 1번 자리 아군의 공격 데미지 증가(1턴)」발동
+            atbf(comp[idx], "궁", comp[0], "공고증", myCurAtk+comp[idx].id+60, "<일파만파!>2", 1, always);
+         }
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 파워 차징!
+         // 일반 공격 시 「자신의 공격 데미지 12.5% 증가(최대 4중첩)」발동
+         anbf(me, "평", me, "공퍼증", 12.5, "파워 차징!", 1, 4, always);
+         
+         // 패시브 스킬 2 : 큰거 한방!
+         // 4턴마다 「자신의 공격 데미지 75% 증가(최대 1중첩)」발동 => turnstart로
+         // 궁극기 발동 후 「자신에게 부여된 <<큰거 한방!>>의 자신의 공격 데미지 증가 효과 해제」발동 => ultimate로
+         // 일반 공격 시 「자신에게 부여된 <<회전 회오리 슛!>>의 자신 공격 데미지 증가 효과 1중첩 감소」발동 => attack로
+         
+         // 패시브 스킬 3 : 공수 전환!!
+         // 4턴이 지날 때마다 「자신이 가하는 데미지 40% 증가(최대 1중첩)」발동 => turnstart로
+         // 궁극기 발동 후 「자신에게 부여된 <<공수전환!!>>의 자신이 가하는 데미지 증가 효과 해제」발동 => ultimate로
+         // 아군 전체의 가하는 데미지 10% 증가
+         tbf(all, "가뎀증", 10, "공수 전환!!1", always);
+         
+         // 패시브 스킬 4 : 궁극기+
+         // 자신의 궁극기 데미지 10% 증가
+         tbf(me, "궁뎀증", 10, "궁극기+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}
+         if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%4 == 0) {
+            // 패시브 스킬 2 : 큰거 한방!
+            // 4턴마다 「자신의 공격 데미지 75% 증가(최대 1중첩)」발동
+            nbf(me, "공퍼증", 75, "큰거 한방!", 1, 1);
+            // 패시브 스킬 3 : 공수 전환!!
+            // 4턴이 지날 때마다 「자신이 가하는 데미지 40% 증가(최대 1중첩)」발동
+            nbf(me, "가뎀증", 40, "공수 전환!!", 1, 1);
+         }
+      };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
    case 10108 : // 코바알
       me.healTurn = [];
       me.ultbefore = function() { // 발렌타인 초콜릿 대방출~
@@ -1228,6 +1417,162 @@ function setDefault(me) {switch(me.id) {
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me; 
+   case 10109 : // 코이블
+      me.ultbefore = function() { // 설탕처럼 진한 달콤함
+         // 자신의 공격 데미지의 40%만큼 아군 광속성 캐릭터의 공격 데미지 증가(1턴)
+         for(let idx of getElementIdx("광")) tbf(comp[idx], "공고증", myCurAtk+me.id+40, "설탕처럼 진한 달콤함1", 1);
+         // 자신의 공격 데미지의 40%만큼 5번 자리 동료의 공격 데미지 증가(1턴)
+         tbf(comp[4], "공고증", myCurAtk+me.id+40, "설탕처럼 진한 달콤함2", 1);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() { // 네게만 줄게
+         // 자신의 공격 데미지의 10%만큼 아군 광속성 캐릭터의 공격 데미지 증가(1턴)
+         for(let idx of getElementIdx("광")) tbf(comp[idx], "공고증", myCurAtk+me.id+10, "네게만 줄게1", 1);
+         // 자신의 공격 데미지의 20%만큼 5번 자리 동료의 공격 데미지 증가(1턴)
+         tbf(comp[4], "공고증", myCurAtk+me.id+20, "네게만 줄게2", 1);
+         // 5번 자리 동료의 일반 공격 데미지 35% 증가(1턴)
+         tbf(comp[4], "일뎀증", 35, "네게만 줄게3", 1);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 달콤한 날
+         // 아군의 최대 HP 30% 증가
+         hpUpAll(30);
+         // 아군의 공격 데미지 40% 증가
+         tbf(all, "공퍼증", 40, "달콤한 날", always);
+
+         // 아군 힐러, 서포터는 《가장 사랑하는 그대에게》 획득
+         for(let idx of getRoleIdx("힐", "섶")) {
+            // 《가장 사랑하는 그대에게》
+            // 궁극기 발동 시 「5번 자리 동료의 가하는 데미지 15% 증가(1턴)」 발동
+            atbf(comp[idx], "궁", comp[4], "가뎀증", 15, "<가장 사랑하는 그대에게>1", 1, always);
+            // 궁극기 발동 시 「5번 자리 동료는 『궁극기 발동 시 「자신의 공격 데미지의 50%만큼 타깃에게 데미지」 발동(1턴)』 획득」 발동
+            atbf(comp[idx], "궁", comp[4], "궁발동*", 50, "<가장 사랑하는 그대에게>2", 1, always);
+         }
+
+         // 5번 자리 동료는 《정이 담긴 초콜릿》 획득
+         // 《정이 담긴 초콜릿》
+         // 궁극기 발동 시 「자신 이외의 아군의 공격 데미지 50% 증가(최대 1중첩)」 발동
+         for(let i = 0; i < 4; i++) anbf(comp[4], "궁", comp[i], "공퍼증", 40, "<정이 담긴 초콜릿>", 1, 1, always);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 달콤한 선물
+         // 첫 번째 턴 시작 시, 「5번 자리 동료의 일반 공격 데미지 50% 증가(최대 1중첩)」 발동
+         nbf(comp[4], "일뎀증", 50, "달콤한 선물", 1, 1);
+         
+         // 패시브 스킬 2 : 정성 가득 초콜릿 => turnstart로
+         // 4턴마다 「5번 자리 동료의 궁극기 데미지 40% 증가(1턴)」발동
+         
+         // 패시브 스킬 3 : 연애, 마왕, 초콜릿
+         // 궁극기 발동 시 「5번 자리 동료의 궁극기 데미지 30% 증가(1턴)」발동
+         atbf(me, "궁", comp[4], "궁뎀증", 30, "연애, 마왕, 초콜릿1", 1, always);
+         // 궁극기 발동 시 「아군 딜러의 궁극기 데미지 20% 증가(1턴)」발동
+         for(let idx of getRoleIdx("딜")) atbf(me, "궁", comp[idx], "궁뎀증", 20, "연애, 마왕, 초콜릿2", 1, always);
+         
+         // 패시브 스킬 4 : 공격 +
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}
+         // 패시브 스킬 2 : 정성 가득 초콜릿
+         // 4턴마다 「5번 자리 동료의 궁극기 데미지 40% 증가(1턴)」발동
+         if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%4 == 0) tbf(comp[4], "궁뎀증", 40, "정성 가득 초콜릿", 1);
+      };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10110 : // 코사탄
+      buff_ex.push("<치명적인 향기>", "<달콤한 살기>", "<마조 엑스터시>")
+      me.ultbefore = function() { // 메이드 비기 - 모조리 사형(?)
+         // 타깃이 받는 데미지 15% 증가(최대 2중첩)
+         nbf(boss, "받뎀증", 15, "메이드 비기 - 모조리 사형(?)1", 1, 2);
+         // 자신은 1중첩의 『치명적인 향기』 획득(최대 9중첩)
+         nbf(me, "<치명적인 향기>", 0, "달콤한 죽음을", 1, 9);
+         // 자신은 「일반 공격 시 『자신의 공격 데미지의 110%만큼 타깃에게 데미지』추가 획득(4턴)」
+         tbf(me, "평추가*", 110, "메이드 비기 - 모조리 사형(?)2", 4);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 피로 얼룩진 사랑
+         // 아군 전체의 최대 HP 20% 증가
+         hpUpAll(20);
+         // 아군 전체의 공격 데미지 50% 증가
+         tbf(all, "공퍼증", 50, "피로 얼룩진 사랑1", always);
+         // 아군 전체의 일반 공격 데미지 30% 증가
+         tbf(all, "일뎀증", 30, "피로 얼룩진 사랑2", always);
+         // 아군 딜러, 디스럽터는 「공격 시 『아군 전체는 1중첩의 『달콤한 살기』 발동(최대 30중첩)』」 획득
+         for(let idx of getRoleIdx("딜", "디"))
+            anbf(comp[idx], "공격", all, "<달콤한 살기>", 0, "피로 얼룩진 사랑", 1, 30, always);
+         // 아군 딜러, 디스럽터는 자신에게 부여된 「달콤한 살기」 중첩수에 따라 다른 효과를 획득.
+         for(let idx of getRoleIdx("딜", "디")) {
+            // 10 이상 : 「일반 공격 시 『자신의 공격 데미지의 50%만큼 타깃에게 데미지』추가 활성화」 획득
+            buff(comp[idx], "평추가*", 50, "피로 얼룩진 사랑3", always, false);
+            alltimeFunc.push(function() {setBuffOn(me, "기본", "피로 얼룩진 사랑3", me.getNest("<달콤한 살기>") >= 10);});
+            // 20 이상 : 「공격 데미지 50% 증가 활성화」 획득
+            buff(comp[idx], "공퍼증", 50, "피로 얼룩진 사랑4", always, false);
+            alltimeFunc.push(function() {setBuffOn(me, "기본", "피로 얼룩진 사랑4", me.getNest("<달콤한 살기>") >= 20);});
+            // 30 이상 : 「가하는 데미지 25% 증가 활성화」 획득
+            buff(comp[idx], "가뎀증", 25, "피로 얼룩진 사랑5", always, false);
+            alltimeFunc.push(function() {setBuffOn(me, "기본", "피로 얼룩진 사랑5", me.getNest("<달콤한 살기>") >= 30);});
+         }
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 달콤한 죽음을
+         // 일반 공격 시 「자신은 1중첩의 『치명적인 향기』획득(최대 9중첩)」발동
+         anbf(me, "평", me, "<치명적인 향기>", 0, "달콤한 죽음을", 1, 9, always);
+         // 자신에게 부여된 「치명적인 향기」 중첩수에 따라 다른 효과를 획득
+         
+         // 3 이상 : 「일반 공격 시 『자신의 공격 데미지의 40%만큼 타깃에게 데미지』추가」
+         buff(me, "평추가*", 40, "달콤한 죽음을1", always, false);
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "달콤한 죽음을1", me.getNest("<치명적인 향기>") >= 3);});
+         // 9 이상 : 「공격 데미지 50% 증가」
+         buff(me, "공퍼증", 50, "달콤한 죽음을2", always, false);
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "달콤한 죽음을2", me.getNest("<치명적인 향기>") >= 9);});
+         
+         // 패시브 스킬 2 : 부족해 부족해 부족하다고!
+         // 1턴마다 「자신은 1중첩의 『마조 엑스터시』 획득(최대 10중첩)」 발동 => turnover로
+         // 피격 시 「자신은 1중첩의 『마조 엑스터시』 획득(최대 10중첩)」 발동
+         anbf(me, "피격", me, "<마조 엑스터시>", 0, "부족해 부족해 부족하다고!", 1, 10, always);
+         // 자신에게 부여된 「마조 엑스터시」 중첩수에 따라 다른 효과를 획득
+         
+         // 5 이상 : 「공격 데미지 20% 증가」
+         buff(me, "공퍼증", 20, "부족해 부족해 부족하다고!1", always, false);
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "부족해 부족해 부족하다고!1", me.getNest("<마조 엑스터시>") >= 5);});
+         // 10 이상 : 「공격 데미지 40% 증가」
+         buff(me, "공퍼증", 40, "부족해 부족해 부족하다고!2", always, false);
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "부족해 부족해 부족하다고!2", me.getNest("<마조 엑스터시>") >= 10);});
+         
+         // 패시브 스킬 3 : 한번 죽어보도록~
+         // 자신에게 부여된 「치명적인 향기」 중첩수에 따라 서로 다른 효과를 획득
+         // 3 이상 :「자신이 가하는 데미지 20% 증가」
+         buff(me, "가뎀증", 20, "한번 죽어보도록~1", always, false);
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "한번 죽어보도록~1", me.getNest("<치명적인 향기>") >= 3);});
+         // 6 이상 :「일반 공격 시 『자신의 일반 공격 데미지의 10% 증가(최대 3중첩)』발동」
+         buff(me, "평", me, "일뎀증", 10, "한번 죽어보도록~2", 1, 3, always, "발동", false);
+         alltimeFunc.push(function() {setBuffOn(me, "발동", "한번 죽어보도록~2", me.getNest("<치명적인 향기>") >= 6);});
+         // 9 이상 :「공격 시 『타깃이 받는 데미지 15% 증가(최대 1중첩)』발동」
+         buff(me, "공격", boss, "받뎀증", 15, "한번 죽어보도록~3", 1, 1, always, "발동", false);
+         alltimeFunc.push(function() {setBuffOn(me, "발동", "한번 죽어보도록~3", me.getNest("<치명적인 향기>") >= 9);});
+         
+         
+         // 패시브 스킬 4 : 공격 데미지 +
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}
+         // 패시브 스킬 2 : 부족해 부족해 부족하다고!
+         // 1턴마다 「자신은 1중첩의 『마조 엑스터시』 획득(최대 10중첩)」 발동
+         nbf(me, "<마조 엑스터시>", 0, "부족해 부족해 부족하다고!", 1, 10);
+      };
+      return me;
    case 10111 : // 배이린
       me.healTurn = [];
       me.ultbefore = function() { // 시저 님의 냄새
@@ -3834,7 +4179,12 @@ function allBuffToString(me) {
    for(const b of buf_list) {
       let size;
       if (fixList.includes(b.type) && typeof b.size != "string") size = ` ${Math.floor(b.size/100)}`;
-      else size = b.size == 0 ? "" : ` ${b.size}%`;
+      else if (typeof b.size == "string") {
+         let tmp = b.size.slice(1), thisId = tmp.slice(0, 5), per = tmp.slice(5);
+         let target = comp.filter(i => i.id == Number(thisId))[0];
+         const curName = target.name, curStandard = b.size.charAt(0) == myCurAtk ? "공" : "아머", curPer = per;
+         size = ` '${curName}의 ${curStandard} ${per}%만큼'`
+      } else size = b.size == 0 ? "" : ` ${b.size}%`;
       if (isNest(b)) {
          res.push(`${b.type}${size} ${b.nest}중첩 (최대 ${b.maxNest}중첩)${b.on ? "" : " (미발동)"} : ${b.name}`);
       } else if (isTurn(b)) {
