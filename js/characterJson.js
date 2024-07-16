@@ -73,7 +73,7 @@ const chJSON = { data : [
 {ok : true, id : 10076, rarity : 3, hp:993385, atk:271929, cd:4, atkMag:100, ultMag:514, fullname : "이상한 나라의 루루", name : "앨루루", element : 2, role : 0},
 {ok : false, id : 10077, rarity : 3, fullname : "블랙호크 베리스", name : "베리스", element : 1, role : 1},
 {ok : true, id : 10078, rarity : 3, hp:900822, atk:299831, cd:4, atkMag:100, ultMag:514, fullname : "나른한 고양이 루루", name : "냥루루", element : 1, role : 4},
-{ok : false, id : 10079, rarity : 3, fullname : "신춘 리츠키", name : "신츠키", element : 0, role : 0},
+{ok : true, id : 10079, rarity : 3, hp:962383, atk:280344, cd:4, atkMag:125, ultMag:200, fullname : "신춘 리츠키", name : "신츠키", element : 0, role : 0},
 {ok : false, id : 10081, rarity : 3, fullname : "새신부 이블리스", name : "신이블", element : 3, role : 0},
 {ok : false, id : 10082, rarity : 3, fullname : "새신부 사탄", name : "신사탄", element : 4, role : 0},
 {ok : false, id : 10083, rarity : 3, fullname : "DP-TOY 점장 사쿠야 유메", name : "유메", element : 4, role : 3},

@@ -27,7 +27,8 @@ class Champ {
       this.buff = [];
       this.curAtkAtv = 0; this.curUltAtv = 0;
       this.atkMag = atkMag; this.ultMag = ultMag;
-      this.canCDChange = true; this.isLeader = false; this.isActed = false;
+      this.stopCd = false; this.canCDChange = true;
+      this.isLeader = false; this.isActed = false;
       this.armor = 0; this.armorUp = 1;
       this.hpAtkDmg = 0; this.hpUltDmg = 0;
       this.hpAddAtkDmg = 0; this.hpAddUltDmg = 0;
@@ -107,7 +108,7 @@ function isExpired(item) {
 function nextTurn() {
    GLOBAL_TURN += 1;
    for(let i = 0; i < comp.length; i++) {
-      comp[i].curCd = comp[i].curCd <= 0 ? 0 : comp[i].curCd-1;
+      if (!comp[i].stopCd) comp[i].curCd = comp[i].curCd <= 0 ? 0 : comp[i].curCd-1;
       comp[i].buff = comp[i].buff.filter(item => !isExpired(item));
       comp[i].isActed = false;
    }
@@ -986,6 +987,59 @@ function setDefault(me) {switch(me.id) {
          // 데미지+
          // 자신이 가하는 데미지 7.5% 증가
          tbf(me, "가뎀증", 7.5, "데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10079 : // 신츠키
+      me.ultbefore = function() { // 정월인법 - 근하신년
+         // 자신의 공격 데미지 110% 증가(4턴)
+         tbf(me, "공퍼증", 110, "정월인법 - 근하신년1", 4);
+      }
+      me.ultafter = function() { // 정월인법 - 근하신년
+         // 자신의 데미지 20% 증가 (1중첩)
+         nbf(me, "가뎀증", 20, "정월인법 - 근하신년2", 1, 1);
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 축제 거행 전문가
+         // 아군 전체의 공격 데미지 50% 증가
+         tbf(all, "공퍼증", 50, "축제 거행 전문가1", always);
+         // 아군 전체의 일반 공격 데미지 30% 증가.
+         tbf(all, "일뎀증", 30, "축제 거행 전문가2", always);
+         // TODO: 첫 번째 턴 시작 시, 최대 HP가 가장 적은 아군이 받는 데미지 20% 감소(최대 1중첩) 효과 발동
+         // 첫 번째 턴 시작 시, 자신의 현재 궁극기 CD 4턴 감소 효과 발동
+         cdChange(me, -4);
+
+         // 첫 번째 턴 시작 시, "자신이 궁극기 발동 시 <새해의 축복> 효과(1턴)" 효과 발동
+         // <새해의 축복>
+         // 자신의 공격 데미지 100%만큼 자신의 공격 데미지 증가(50턴)
+         atbf(me, "궁", me, "공고증", myCurAtk+me.id+100, "<새해의 축복>1", 50, 1);
+         // 자신의 궁극기 CD 카운트 정지(50턴), 궁극기의 CD 변동 효과 면역(50턴)
+         me.stopCd = true, me.canCDChange = false;
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 닌닌 - 전과 확대술
+         // 일반 공격 시, 타깃이 받는 일반 공격 데미지 20% 증가 (최대 4중첩) 효과 발동
+         anbf(me, "평", boss, "받일뎀", 20, "닌닌 - 전과 확대술", 1, 4, always);
+         
+         // 패시브 스킬 2 : 닌닌 - 암암리 지원술
+         // 아군 전체의 일반 공격 효과 30% 증가(50턴) 효과 발동
+         tbf(all, "일뎀증", 30, "닌닌 - 암암리 지원술", 50);
+         
+         // 패시브 스킬 3 : 닌닌 - 분위기 띄운술
+         // 자신의 가하는 데미지 10% 증가
+         tbf(me, "가뎀증", 10, "닌닌 - 분위기 띄운술1", always);
+         // 공격 시 타깃이 받는 데미지 5% 증가 (최대 5중첩) 효과 발동
+         anbf(me, "공격", boss, "받뎀증", 5, "닌닌 - 분위기 띄운술2", 1, 5, always);
+         
+         // 패시브 스킬 4 : 공격력 증가
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격력 증가", always);
       }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {if (me.isLeader) {}};
