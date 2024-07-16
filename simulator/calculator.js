@@ -142,7 +142,7 @@ function buff() {
       a[0].buff.push({div:a[9], act:a[1], who:a[2], type:a[3], size:a[4], name:a[5], nest:a[6], maxNest:a[7], ex:a[8]+GLOBAL_TURN, on:a[10]})
 }
 
-const actList = ["평추가*", "평발동*", "궁추가*", "궁발동*", "평추가+", "평발동+", "궁추가+", "궁발동+"];
+const actList = ["평추가*","평발동*","궁추가*","궁발동*","평추가+","평발동+","궁추가+","궁발동+","반격*","반격+"];
 function addBuff(me, act, div) {
    const actBuff = me.buff.filter(i => 
       (i.div == div && act.includes(i.act)) || 
@@ -165,6 +165,8 @@ function addBuff(me, act, div) {
          if (act.includes("궁") && div == "추가" && b.type == "궁추가*") applyAddDmg(size/100*me.getCurAtk()*me.ultAddCoef());
          if (act.includes("궁") && div == "발동" && b.type == "궁발동+") applyAtvDmg(size/100*me.ultAtvCoef());
          if (act.includes("궁") && div == "발동" && b.type == "궁발동*") applyAtvDmg(size/100*me.getCurAtk()*me.ultAtvCoef());
+         if (act.includes("피격") && div == "발동" && b.type == "반격+") applyAtvDmg(size/100*me.ultAtvCoef());
+         if (act.includes("피격") && div == "발동" && b.type == "반격*") applyAtvDmg(size/100*me.getCurAtk()*me.ultAtvCoef());
       } else {
          if (b.who == all) for(let c of comp) {
             if (b.nest == undefined) buff(c, b.type, size, b.name, b.turn, true);
@@ -310,6 +312,10 @@ function anbf() {buff(...Array.from(arguments), "발동", true);}
 function setBuffOn(me, div, name, bool) {
    const exist = me.buff.find(i => i.div == div && i.name == name);
    if (exist) exist.on = bool;
+}
+function setBuffSizeUp(me, div, name, size) {
+   const exist = me.buff.find(i => i.div == div && i.name == name);
+   if (exist) exist.size += size;
 }
 
 /* -------------------------------------------------------------------------------------- */
@@ -1812,6 +1818,73 @@ function setDefault(me) {switch(me.id) {
          nbf(me, "<연쇄 트랩>", 0, "작은 몸과 큰 머리", 1, 9);
       };
       return me;
+   case 10127 : // 크르티아   ok
+      me.ultbefore = function() { // 꿈나라의 왕
+         // 아군 전체의 궁극기 데미지 30% 증가(15턴)
+         tbf(all, "궁뎀증", 30, "꿈나라의 왕1", 15);
+         // 자신은 「공격 시 『자신의 공격 데미지의 30%만큼 아군 전체의 공격 데미지 증가(1턴)』 발동(15턴)」 획득
+         atbf(me, "공격", all, "공고증", myCurAtk+me.id+30, "꿈나라의 왕2", 1, 15);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me); cdChange(me, -1);};
+      me.atkbefore = function() { // 꿈의 거품
+         // 아군 수속성 캐릭터의 공격 데미지 40% 증가(1턴)
+         for(let idx of getElementIdx("수")) tbf(comp[idx], "공퍼증", 40, "꿈의 거품", 1);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me); cdChange(me, -1);};
+      me.leader = function() {
+         // 리더 스킬 : 전설의 환수
+         // 아군 전체의 최대 HP 20% 증가
+         hpUpAll(20);
+         // 아군 전체의 공격 데미지 40% 증가
+         tbf(all, "공퍼증", 40, "전설의 환수1", always);
+         // 10번째 턴에서 「아군 전체의 궁극기 데미지 150% 증가(40턴)」 발동 => turnstart로
+         // 아군 전체는 「팀에 수속성 캐릭터가 4명 이상 있을 시, 『《영원한 꿈》』 발동」 획득
+         if (getElementCnt("수") >= 4) {
+            // 《영원한 꿈》
+            // 공격 데미지 80% 증가
+            tbf(all, "공퍼증", 80, "<영원한 꿈>1", always);
+            // 궁극기 발동 시 「아군 전체가 가하는 데미지 50% 증가(최대 1중첩)」 발동
+            anbf(all, "궁", all, "가뎀증", 50, "<영원한 꿈>2", 1, 1, always);
+         }
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 몽붕 내습
+         // 첫 번째 턴에서 「자신의 궁극기 현재 CD 30턴 감소」 발동
+         cdChange(me, -30);
+         // 행동 시 「자신의 궁극기 현재 CD 1턴 감소」 발동 => attack, ultimate, defense로
+
+         // 패시브 스킬 2 : 전부 기절시킬 거야
+         // 일반 공격 시 「《강제 수면》」 발동
+         // 《강제 수면》 : 자신 이외의 아군은 공격 시 「자신의 공격 데미지의 25%만큼 타깃에게 데미지」 발동(1턴)
+         for(let c of comp) if (c.id != me.id) atbf(me, "평", c, "평발동*", 25, "<강제 수면>", 1, always);
+
+         // 패시브 스킬 3 : 분노한 드림이터
+         // 4번째 턴에서 「아군 전체의 궁극기 데미지 30% 증가(16턴)」 발동 => turnstart로
+         // 7번째 턴에서 「아군 전체의 궁극기 데미지 30% 증가(13턴)」 발동 => turnstart로
+         // 10번째 턴에서 「아군 전체의 궁극기 데미지 40% 증가(10턴)」 발동 => turnstart로
+
+         // 패시브 스킬 4 : 공격+
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격+", always);
+      }
+      me.defense = function() {me.act_defense(); cdChange(me, -1);}
+      me.turnstart = function() {
+         if (me.isLeader) {
+            // 10번째 턴에서 「아군 전체의 궁극기 데미지 150% 증가(40턴)」 발동
+            if (GLOBAL_TURN == 10) tbf(all, "궁뎀증", 150, "전설의 환수2", 40);
+         }
+         // 패시브 스킬 3 : 분노한 드림이터
+         // 4번째 턴에서 「아군 전체의 궁극기 데미지 30% 증가(16턴)」 발동
+         if (GLOBAL_TURN == 4) tbf(all, "궁뎀증", 30, "분노한 드림이터1", 16);
+         // 7번째 턴에서 「아군 전체의 궁극기 데미지 30% 증가(13턴)」 발동
+         if (GLOBAL_TURN == 7) tbf(all, "궁뎀증", 30, "분노한 드림이터2", 13);
+         // 10번째 턴에서 「아군 전체의 궁극기 데미지 40% 증가(10턴)」 발동
+         if (GLOBAL_TURN == 10) tbf(all, "궁뎀증", 40, "분노한 드림이터3", 10);
+      };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
    case 10128 : // 크이블     ok
       me.ultbefore = function() {
          // 흔들리는 와인잔1 : 타깃이 받는 딜러의 데미지 50% 증가 (2중첩)
@@ -1934,6 +2007,162 @@ function setDefault(me) {switch(me.id) {
          nbf(all, "궁뎀증", 3, "브레이크를 위한 액셀", 1, 15);
       };
       return me;
+   case 10130 : // 셀리나     ok
+      me.hit = function() {
+         addBuff(me, ["피격"], "추가"); addBuff(me, ["피격"], "발동");
+         deleteBuff(me, "기본", "이 일격으로 머리를 뚫어버린다!2");
+         deleteBuff(me, "기본", "<빠가야로!>");
+      }
+      me.ultbefore = function() { // 이 일격으로 머리를 뚫어버린다!
+         // 타깃이 받는 데미지 25% 증가(3턴)
+         tbf(boss, "받뎀증", 25, "이 일격으로 머리를 뚫어버린다!1", 3);
+      }
+      me.ultafter = function() { // 이 일격으로 머리를 뚫어버린다!
+         // 자신은 「피격 시 『자신의 공격 데미지의 200%만큼 타깃에게 반격(1회 발동 후 해제)』 발동(3턴)」 획득
+         tbf(me, "반격*", 200, "이 일격으로 머리를 뚫어버린다!2", 3);
+         // TODO: 자신은 도발 효과 획득(3턴)(1회 피격 후 해제), 자신을 방어 상태로 전환
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() { // 뭘 봐!
+         // TODO: 자신이 받는 데미지 17% 감소(1턴)
+      }
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 크리스마스 계승자
+         // 아군 전체의 최대 HP 20% 증가
+         hpUpAll(20);
+         // TODO: 아군 전체에게 도발 면역 효과 부여
+         // 아군 전체는 「팀에 최소 3명 이상의 탱커가 있을 시
+         if (getRoleCnt("탱") >= 3) {
+            // 『공격 데미지 140% 증가』 발동」 획득
+            tbf(all, "공퍼증", 140, "크리스마스 계승자1", always);
+            // 『가하는 데미지 100% 증가』 발동」 획득
+            tbf(all, "가뎀증", 100, "크리스마스 계승자2", always);
+            // 『《빠따는 훌륭한 대화 수단!》』 발동」 획득
+            // 《빠따는 훌륭한 대화 수단!》
+            // 피격 시 「타깃이 받는 발동형 스킬 데미지 20% 증가(최대 10중첩)」 발동
+            anbf(all, "피격", boss, "받발뎀", 20, "<빠따는 훌륭한 대화 수단!>", 1, 10, always);
+
+            // 『《난 별볼 일 없어》』 발동」 획득
+            // 《난 별볼 일 없어》 : 궁극기 발동 시 「자신은 《그래도 넌 내가 이김!》 획득」 발동
+            // 《그래도 넌 내가 이김!》 : 피격 시 「자신의 공격 데미지의 250%만큼 타깃에게 반격(1회 발동 후 해제)」 발동(3턴)
+            for(let c of comp) {
+               const original = c.ultimate;
+               c.ultimate = function(...args) {
+                  original.apply(this, args);
+                  tbf(c, "반격*", 250, "<그래도 넌 내가 이김!>", 3);
+               }
+               const original2 = c.hit;
+               c.hit = function(...args) {
+                  original2.apply(this, args);
+                  deleteBuff(c, "기본", "<그래도 넌 내가 이김!>");
+               }
+            }
+         }
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 늑대가 뒤를 돌아본 것은!
+         // 궁극기 CD 변동 효과 면역
+         me.canCDChange = false;
+         // 첫 번째 턴 「자신은 2중첩의 《싸움상등!》 획득」 발동
+         nbf(me, "<싸움상등!>", 0, "늑대가 뒤를 돌아본 것은!", 2, 10);
+         // 3턴마다 「자신은 2중첩의 《싸움상등!》 획득」 발동 => turnstart로
+         // 피격 시 「자신은 1중첩의 《싸움상등!》 획득」 발동
+         anbf(me, "피격", me, "<싸움상등!>", 0, "늑대가 뒤를 돌아본 것은!", 1, 10, always);
+         anbf(me, "피격", me, "공퍼증", 5, "<싸움상등!>", 1, 10, always);
+
+         // 《싸움상등!》 : 자신은 《싸움상등!》 획득(최대 10중첩)
+         // 자신의 공격 데미지 5% 증가(최대 10중첩)
+         nbf(me, "공퍼증", 5, "<싸움상등!>", 2, 10);
+
+         // 패시브 스킬 2 : 보은 때문이 아닌!
+         // 자신의 《싸움상등!》 중첩수 ≥ 3중첩일 시, 「가하는 데미지 5% 증가」 발동
+         buff(me, "가뎀증", 5, "보은 때문이 아닌!1", always, false);
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "보은 때문이 아닌!1", me.getNest("<싸움상등!>") >= 3);})
+         // 자신의 《싸움상등!》 중첩수 ≥ 6중첩일 시, 「가하는 데미지 10% 증가」 발동
+         buff(me, "가뎀증", 10, "보은 때문이 아닌!2", always, false);
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "보은 때문이 아닌!2", me.getNest("<싸움상등!>") >= 6);})
+         // 자신의 《싸움상등!》 중첩수 ≥ 9중첩일 시, 「가하는 데미지 15% 증가」 발동
+         buff(me, "가뎀증", 15, "보은 때문이 아닌!3", always, false);
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "보은 때문이 아닌!3", me.getNest("<싸움상등!>") >= 9);})
+
+         // 패시브 스킬 3 : 복수를 위해서다!
+         // 자신의 《싸움상등!》 중첩수=10중첩일 시 「《요로시꾸!》」
+         // 《요로시꾸!》 : 행동 시 「자신은 《빠가야로!》 획득」 발동
+         // 《빠가야로!》
+         // 피격 시 「자신의 공격 데미지의 100%만큼 타깃에게 반격(1회 피격 후 해제)」 발동(1턴)
+         buff(me, "행동", me, "반격*", 100, "<빠가야로!>", 1, always, "발동", false);
+         alltimeFunc.push(function() {setBuffOn(me, "발동", "<빠가야로!>", me.getNest("<싸움상등!>") == 10);})
+
+         // 패시브 스킬 4 : 데미지+
+         // 자신이 가하는 데미지 7.5% 증가
+         tbf(me, "가뎀증", 7.5, "데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}
+         // 3턴마다 「자신은 2중첩의 《싸움상등!》 획득」 발동 => turnstart로
+         if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%3 == 0) {
+            nbf(me, "<싸움상등!>", 0, "늑대가 뒤를 돌아본 것은!", 2, 10);
+            nbf(me, "공퍼증", 5, "<싸움상등!>", 1, 10);
+         }
+      };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10131 : // 이나스     ok
+         me.ultbefore = function() { // 시간을 초월한 희망
+            // 타깃이 받는 시간을 다스리는 자 이나스의 데미지 100% 증가(3턴)
+            tbf(me, "받캐뎀", 100, "시간을 초월한 희망", 3);
+         }
+         me.ultafter = function() {}
+         me.ultimate = function() {ultLogic(me);};
+         me.atkbefore = function() {}
+         me.atkafter = function() {}
+         me.attack = function() {atkLogic(me);};
+         me.leader = function() { // 시간을 다스리는 자
+            // 아군 전체의 최대 HP 25% 증가
+            hpUpAll(25);
+            // 아군 전체의 공격 데미지 90% 증가
+            tbf(all, "공퍼증", 90, "시간을 다스리는 자1", always);
+            // 아군 딜러, 디스럽터가 가하는 데미지 40% 증가
+            for(let idx of getRoleIdx("딜", "디")) tbf(comp[idx], "가뎀증", 40, "시간을 다스리는 자2", always);
+            // 자신의 공격 데미지 90% 증가
+            tbf(me, "공퍼증", 90, "시간을 다스리는 자3", always);
+         }
+         me.passive = function() {
+            // 부서진 창공
+            // 첫째 턴 시작 시 「자신이 가하는 데미지 4% 증가(최대 5중첩)」 발동
+            nbf(me, "가뎀증", 4, "부서진 창공", 1, 5);
+            // 3턴마다 「자신의 《부서진 창공》의 가하는 데미지 효과 2중첩」 발동 => turnstart로
+
+            // 시공간 지배
+            // 가하는 데미지 20% 증가
+            tbf(me, "가뎀증", 20, "시공간 지배1", always);
+            /* 궁극기 발동 시 자신의 《부서진 창공》의 가하는 데미지 효과 중첩 수에 따라
+            「타깃이 받는 시간을 다스리는 자 이나스의 데미지 10% 증가(4턴)」 발동*/
+            atbf(me, "궁", me, "받캐뎀", 10, "시공간 지배2", 4, always);
+
+            // 찬란한 세월
+            // 일반 공격 시 「자신의 공격 데미지의 70%만큼 타깃에게 데미지」 발동
+            tbf(me, "평발동*", 70, "찬란한 세월1", always);
+            // 궁극기 발동 시 「자신의 공격 데미지의 70%만큼 타깃에게 데미지」 발동
+            tbf(me, "궁발동*", 70, "찬란한 세월2", always);
+
+            // 공격 데미지+
+            // 자신의 공격 데미지 10% 증가
+            tbf(me, "공퍼증", 10, "공격 데미지+", always);
+         }
+         me.defense = function() {me.act_defense();}
+         me.turnstart = function() {if (me.isLeader) {}
+            // 부서진 창공
+            // 3턴마다 「자신의 《부서진 창공》의 가하는 데미지 효과 2중첩」 발동
+            if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%3 == 0) {
+               nbf(me, "가뎀증", 4, "부서진 창공", 2, 5);
+               setBuffSizeUp(me, "발동", "시공간 지배2", 20);
+            }
+         };
+         me.turnover = function() {if (me.isLeader) {}};
+         return me;      
    case 10132 : // 카디아     ok
       me.ultbefore = function() { // 드리워진 밤의 장막
          // 아군 전체가 가하는 궁극기 데미지 60% 증가(3턴)
