@@ -447,7 +447,7 @@ function setDefault(me) {switch(me.id) {
       me.turnover = function() {
          if (me.isLeader) {}
          // 매턴 아군 전체를 치유
-         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp) c.heal();
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp); // c.heal();
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me;
@@ -498,7 +498,7 @@ function setDefault(me) {switch(me.id) {
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {
          // 리더효과 매턴 아군 전체 힐(50턴)
-         if (me.isLeader && GLOBAL_TURN > 1) for(let c of comp) c.heal();
+         if (me.isLeader && GLOBAL_TURN > 1) for(let c of comp); // c.heal();
       };
       me.turnover = function() {};
       return me;
@@ -1224,10 +1224,155 @@ function setDefault(me) {switch(me.id) {
       me.turnover = function() {
          if (me.isLeader) {}
          // 매턴 아군 전체를 치유
-         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp) c.heal();
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp); // c.heal();
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me; 
+   case 10111 : // 배이린
+      me.healTurn = [];
+      me.ultbefore = function() { // 시저 님의 냄새
+         // 자신의 공격 데미지의 123%만큼 매턴 아군 전체를 치유(4턴)
+         me.healTurn.push(GLOBAL_TURN, GLOBAL_TURN+1, GLOBAL_TURN+2, GLOBAL_TURN+3);
+         // 자신의 공격 데미지의 30%만큼 아군 전체의 공격 데미지 증가(1턴)
+         tbf(all, "공고증", myCurAtk+me.id+30, "시저 님의 냄새1", 1);
+         // 아군 전체의 공격력 20% 증가(4턴)
+         tbf(all, "공퍼증", 20, "시저 님의 냄새2", 4);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         // 공격 데미지의 100%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+      };
+      me.atkbefore = function() { // 섹스요법
+         // 자신의 공격 데미지의 30%만큼 매턴 아군 전체를 치유(2턴)
+         me.healTurn.push(GLOBAL_TURN, GLOBAL_TURN+1);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);
+         // 자신의 공격 데미지의 40%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+      };
+      me.leader = function() {
+         // 리더 스킬 : 수치성 열치료실
+         // 아군 전체의 공격 데미지 40% 증가
+         tbf(all, "공퍼증", 40, "수치성 열치료실", always);
+
+         // 공격 데미지가 가장 높은 아군 딜러는 《성욕 팽창》 획득
+         const dealerList = comp.filter(c => c.role == 0);
+         let highAtkCh = dealerList.reduce((highest, c) => {
+            return (c.atk > highest.atk) ? c : highest;
+         }, dealerList[0]);
+         // 《성욕 팽창》
+         // 공격 데미지 60% 증가
+         tbf(highAtkCh, "공퍼증", 60, "<성욕 팽창>1", always);
+         // 가하는 데미지 35% 증가
+         tbf(highAtkCh, "가뎀증", 35, "<성욕 팽창>2", always);
+         // 궁극기 데미지 40% 증가
+         tbf(highAtkCh, "궁뎀증", 40, "<성욕 팽창>3", always);
+         // 궁극기 발동 시 「자신의 공격 데미지의 275%만큼 타깃에게 데미지」 발동
+         tbf(highAtkCh, "궁발동*", 275, "<성욕 팽창>4", always);
+        
+         // 첫 번째 턴 시작 시, 《자극적인 배덕감》 발동
+         // 《자극적인 배덕감》
+         // TODO: 공격 데미지가 가장 낮은 아군은 자신이 치유를 받을 시 회복량 40% 증가(50턴)
+         // 공격 데미지가 가장 낮은 아군은 자신이 받는 아머 강화 효과 30% 증가(50턴)
+         let lowAtkCh = comp.reduce((lowest, c) => {
+            return (c.atk < lowest.atk) ? c : lowest;
+         }, comp[0]);
+         tbf(lowAtkCh, "받아증", 30, "<자극적인 배덕감>", 50);
+         // TODO: 공격 데미지가 가장 낮은 아군은 자신의 최대 HP의 15%만큼 매턴 회복(50턴)
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 정액이 너무 농후해서~
+         // TODO: 치유량 30% 증가
+         // TODO: 궁극기 발동 시 「아군 전체가 받는 치유량 15% 증가(3턴)」 발동
+         
+         // 패시브 스킬 2 : 약 복용과 섹스는 적당하게
+         // 아군 전체가 받는 아머 강화 효과 30% 증가
+         tbf(all, "받아증", 30, "약 복용과 섹스는 적당하게1", always);
+         // 방어 시 「자신의 공격 데미지의 25%만큼 아군 전체에게 아머 강화(1턴)」 발동
+         atbf(me, "방", all, "아머", myCurAtk+me.id+25, "약 복용과 섹스는 적당하게2", 1, always);
+         
+         // 패시브 스킬 3 : 말 안들으면 벌 줄거에요
+         // 최대 HP 10% 증가
+         hpUpMe(me, 10);
+         // 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "말 안들으면 벌 줄거에요1", always);
+         // TODO: 궁극기 발동 시 「아군 전체가 받는 치유량 15% 증가(3턴)」 발동
+         // 궁극기 발동 시 「적 전체가 받는 궁극기 데미지 20% 증가(최대 2중첩)」 발동
+         anbf(me, "궁", boss, "받궁뎀", 20, "말 안들으면 벌 줄거에요2", 1, 2, always);
+         
+         // 패시브 스킬 4 : 공격+
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}
+         // 매턴 아군 전체를 치유
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp); // c.heal();
+         me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
+      };
+      return me;
+   case 10113 : // 간뷰
+      me.ultbefore = function() {}
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 내 전문적인 의료행위에 딴지 걸지 마!
+         // 팀에 최소 (1/2)명의 서포터가 있을 경우, 「궁극기 데미지 (35/35)% 증가」 발동
+         if (getRoleCnt("섶") >= 1) tbf(me, "궁뎀증", 35, "내 전문적인 의료행위에 딴지 걸지 마!1", always);
+         if (getRoleCnt("섶") >= 2) tbf(me, "궁뎀증", 35, "내 전문적인 의료행위에 딴지 걸지 마!2", always);
+         // 팀에 최소 (1/2)명의 힐러가 있을 경우, 「궁극기 데미지 (35/35)% 증가」 발동
+         if (getRoleCnt("힐") >= 1) tbf(me, "궁뎀증", 35, "내 전문적인 의료행위에 딴지 걸지 마!3", always);
+         if (getRoleCnt("힐") >= 2) tbf(me, "궁뎀증", 35, "내 전문적인 의료행위에 딴지 걸지 마!4", always);
+         // 아군 전체는「 팀에 최소 3명의 암속성 아군이 있을 경우, 『《암흑요법》』 발동」
+         if (getElementCnt("암") >= 3) {
+            // 《암흑요법》
+            // 최대 HP 20% 증가
+            hpUpAll(20);
+            // 공격 데미지 50% 증가
+            tbf(all, "공퍼증", 50, "<암흑요법>1", always);
+            // 궁극기 발동 시 『타깃이 받는 데미지 8% 증가 (최대 5중첩)』 발동
+            anbf(all, "궁", boss, "받뎀증", 8, "<암흑요법>2", 1, 5, always);
+            // 궁극기 발동 시 『타깃이 받는 암속성 데미지 8% 증가 (최대 5중첩)』 발동
+            for(let idx of getElementIdx("암")) 
+               anbf(all, "궁", comp[idx], "받속뎀", 8, "<암흑요법>3", 1, 5, always);
+         }
+
+         // TODO: 자신의 궁극기 발동 시 「《적절한 처방》」 발동
+         // 《적절한 처방》 : 타깃은 「피격 시 『적 전체가 받는 치유량 5% 증가 (최대 6중첩)』 발동 (4턴)」 획득
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 일침견혈(?)
+         // 팀에 최소 (1/2)명의 딜러가 있을 경우, 「궁극기 발동 시 『자신의 공격 데미지의 (100/100)%만큼 타깃에게 데미지』 추가」 발동
+         if (getRoleCnt("딜") >= 1) tbf(me, "궁추가*", 100, "일침견혈(?)1", always);
+         if (getRoleCnt("딜") >= 2) tbf(me, "궁추가*", 100, "일침견혈(?)2", always);
+
+         // 패시브 스킬 2 : 혼돈 요법
+         // 팀에 최소 (2/3)명의 암속성 아군이 있을 경우 「공격 데미지 (50/50)% 증가」 발동
+         if (getElementCnt("암") >= 2) tbf(me, "공퍼증", 50, "혼돈 요법1", always);
+         if (getElementCnt("암") >= 3) tbf(me, "공퍼증", 50, "혼돈 요법2", always);
+         
+         // 패시브 스킬 3 : 투여량 대폭 증가
+         // 팀에 최소 (1/2)명의 서포터가 있을 경우, 「가하는 데미지 (15/15)% 증가」 발동
+         if (getRoleCnt("섶") >= 1) tbf(me, "가뎀증", 15, "투여량 대폭 증가1", always);
+         if (getRoleCnt("섶") >= 2) tbf(me, "가뎀증", 15, "투여량 대폭 증가2", always);
+         // 팀에 최소 (1/2)명의 힐러가 있을 경우, 「가하는 데미지 (15/15)% 증가」 발동
+         if (getRoleCnt("힐") >= 1) tbf(me, "가뎀증", 15, "투여량 대폭 증가1", always);
+         if (getRoleCnt("힐") >= 2) tbf(me, "가뎀증", 15, "투여량 대폭 증가2", always);
+         
+         // 패시브 스킬 4 : 공격+
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
    case 10114 : // 뷰지안
       me.ultbefore = function() { // 전력 해방! 별빛 분쇄 스매쉬!
          // 5번 자리 아군의 궁극기 데미지 70% 증가(2턴)
@@ -1323,12 +1468,10 @@ function setDefault(me) {switch(me.id) {
             setBuffOn(c, "발동", "<정의의 이름으로 널 심판하겠다>4", true);
          }
       };
-      me.atkbefore = function() { // 스마트빔~
-         // 공격 데미지의 75%만큼 아군 전체를 치유
-         //for(let c of comp) c.heal();
-      }
+      me.atkbefore = function() {}
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);
+         // 스마트빔~
          // 공격 데미지의 75%만큼 아군 전체를 치유
          for(let c of comp) c.heal();
 
@@ -1384,9 +1527,80 @@ function setDefault(me) {switch(me.id) {
       me.turnover = function() {
          if (me.isLeader) {}
          // 매턴 아군 전체를 치유
-         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp) c.heal();
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp); // c.heal();
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
+      return me;
+   case 10116 : // 수야네
+      me.ultbefore = function() { // 포효하라 칼리버!
+         // 자신의 공격 데미지 100% 증가(4턴)
+         tbf(me, "공퍼증", 100, "포효하라 칼리버!", 4);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 여름 용자의 바캉스 타임
+         // 아군 전체의 최대 HP 25% 증가
+         hpUpAll(25);
+         // 아군 전체의 일반 공격 데미지 50% 증가
+         tbf(all, "일뎀증", 50, "여름 용자의 바캉스 타임1", always);
+         // 1번 자리 아군은 「팀에 최소 3명 이상의 딜러가 있을 시 《나는 먹는다. 고로 존재한다》 발동」 획득
+         if (getRoleCnt("딜") >= 3) {
+            // 《나는 먹는다. 고로 존재한다》
+            // 공격 데미지 40% 증가
+            tbf(comp[0], "공퍼증", 40, "<나는 먹는다. 고로 존재한다>1", always);
+            // 일반 공격 시 「자신의 공격 데미지의 50%만큼 타깃에게 데미지」 추가
+            tbf(comp[0], "평추가*", 50, "<나는 먹는다. 고로 존재한다>2", always);
+            // 궁극기 발동 시 「타깃이 받는 화속성 데미지 20% 증가(최대 2중첩)」 발동
+            for(let idx of getElementIdx("화"))
+               anbf(comp[0], "궁", comp[idx], "받속뎀", 20, "<나는 먹는다. 고로 존재한다>3", 1, 2, always);
+            // 궁극기 발동 시 「타깃이 받는 일반 공격 데미지 40% 증가(최대 2중첩)」 발동
+            anbf(me, "궁", boss, "받일뎀", 40, "<나는 먹는다. 고로 존재한다>4", 1, 2, always);
+         }
+         
+         // 아군 전체는 「팀에 최소 3명 이상의 화속성 캐릭터가 있을 시 《라이딩 모드 ON》 발동」 획득
+         if (getElementCnt("화") >= 3) {
+            // 《라이딩 모드 ON》
+            // 공격 데미지 40% 증가
+            tbf(all, "공퍼증", 40, "<라이딩 모드 ON>1", always);
+            // 행동 시 「자신이 가하는 데미지 7% 증가(최대 5중첩)」 발동
+            for(let c of comp) anbf(c, "행동", c, "가뎀증", 7, "<라이딩 모드 ON>2", 1, 5, always);
+            // 행동 시 「자신의 일반 공격 데미지 15% 증가(최대 5중첩)」 발동
+            for(let c of comp) anbf(c, "행동", c, "일뎀증", 15, "<라이딩 모드 ON>3", 1, 5, always);
+         }
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 디저트 금단 현상
+         // 일반 공격 데미지 30% 증가
+         tbf(me, "일뎀증", 30, "디저트 금단 현상1", always);
+         // 궁극기 데미지 20% 증가
+         tbf(me, "궁뎀증", 20, "디저트 금단 현상2", always);
+         
+         // 패시브 스킬 2 : 우리 엄마가 하와이에서 가르쳐주셨어
+         // 첫째 턴에서, 「적 전체가 받는 데미지 15% 증가(50턴)」 발동
+         tbf(boss, "받뎀증", 15, "우리 엄마가 하와이에서 가르쳐주셨어1", 50);
+         // 8번째 턴에서 「자신의 궁극기 데미지 40% 증가(50턴)」 발동 => turnstart로
+         
+         // 패시브 스킬 3 : 셀프 BGM의 용자
+         // 일반 공격 시 「자신의 공격 데미지의 25%만큼 타깃에게 데미지」 추가
+         tbf(me, "평추가*", 25, "셀프 BGM의 용자1", always);
+         // 일반 공격 시 「자신이 가하는 데미지 10% 증가(최대 3중첩)」 발동
+         anbf(me, "평", me, "가뎀증", 10, "셀프 BGM의 용자2", 1, 3, always);
+         
+         // 패시브 스킬 4 : 궁극기+
+         // 자신의 궁극기 데미지 10% 증가
+         tbf(me, "궁뎀증", 10, "궁극기+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}
+         // 패시브 스킬 2 : 우리 엄마가 하와이에서 가르쳐주셨어
+         // 8번째 턴에서 「자신의 궁극기 데미지 40% 증가(50턴)」 발동
+         if (GLOBAL_TURN == 8) tbf(me, "궁뎀증", 40, "우리 엄마가 하와이에서 가르쳐주셨어2", 50);
+      };
+      me.turnover = function() {if (me.isLeader) {}};
       return me;
    case 10117 : // 수바알
       me.ultbefore = function() {}
@@ -1467,6 +1681,67 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
+   case 10118 : // 수오라
+      me.ultbefore = function() { // 지상신국이 도래한다~
+         // TODO: 자신이 부여하는 치유량 50% 증가(4턴)
+         // 타깃이 받는 광속성 데미지 25% 증가(1턴)
+         for(let idx of getElementIdx("광")) tbf(comp[idx], "받속뎀", 25, "지상신국이 도래한다~", 1);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         // 지상신국이 도래한다~ : 자신의 공격 데미지의 257%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);
+         // 섹스 성가 : 자신의 공격 데미지의 75%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+      };
+      me.leader = function() {
+         // 리더 스킬 : 섹스의 복음 전파자
+         // 아군 전체의 최대 HP 20% 증가
+         hpUpAll(20);
+         // 아군 전체는 「팀에 최소 4명 이상의 광속성 동료가 있을 시 『아군 전체의 공격 데미지 100% 증가』 발동」 획득
+         if (getElementCnt("광") >= 4) tbf(all, "공퍼증", 100, "섹스의 복음 전파자1", always);
+         // 광속성 동료의 궁극기 데미지 50% 증가
+         for(let idx of getElementIdx("광")) tbf(comp[idx], "궁뎀증", 50, "섹스의 복음 전파자2", always);
+         // 4턴마다 「타깃이 받는 데미지 50% 증가(1턴)」 발동 => turnstart로
+         // 치유를 받을 시 「아군 전체가 가하는 데미지 15% 증가(1턴)」 발동
+         atbf(me, "힐", all, "가뎀증", 15, "섹스의 복음 전파자4", 1, always);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 절정으로 사랑이 널리 퍼지기를
+         // 궁극기 발동 시 「아군 전체의 공격 데미지 40% 증가(최대 1중첩)」 발동
+         anbf(me, "궁", all, "공퍼증", 40, "절정으로 사랑이 널리 퍼지기를1", 1, 1, always);
+         // 치유를 받을 시 「아군 전체의 공격 데미지 10% 증가(1턴)」 발동
+         atbf(me, "힐", all, "공퍼증", 10, "절정으로 사랑이 널리 퍼지기를2", 1, always);
+         
+         // 패시브 스킬 2 : 함께 절정을 느껴봐요~
+         // 궁극기 발동 시 「아군 전체의 궁극기 데미지 30% 증가(최대 1중첩)」 발동
+         anbf(me, "궁", all, "궁뎀증", 30, "함께 절정을 느껴봐요~1", 1, 1, always);
+         // 치유를 받을 시 「아군 전체의 궁극기 데미지 10% 증가(1턴)」 발동
+         atbf(me, "힐", all, "궁뎀증", 10, "함께 절정을 느껴봐요~2", 1, always);
+         
+         // 패시브 스킬 3 : 섹스의 진리
+         // 궁극기 발동 시 「아군 전체가 가하는 데미지 20% 증가(최대 1중첩)」 발동
+         anbf(me, "궁", all, "가뎀증", 20, "섹스의 진리1", 1, 1, always);
+         // 치유를 받을 시 「아군 전체가 가하는 데미지 5% 증가(1턴)」 발동
+         atbf(me, "힐", all, "가뎀증", 5, "섹스의 진리2", 1, always);
+         
+         // 패시브 스킬 4 : 일반 공격 데미지+
+         // 자신의 일반 공격 데미지 10% 증가
+         tbf(me, "일뎀증", 10, "일반 공격 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {
+            // 섹스의 복음 전파자
+            // 4턴마다 「타깃이 받는 데미지 50% 증가(1턴)」 발동
+            if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%4 == 0) tbf(boss, "받뎀증", 50, "섹스의 복음 전파자3", 1);
+         }
+      };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
    case 10119 : // 수이카
       me.ultbefore = function() { // 아이카의 여름 칵테일
          // 아군 전체의 발동형 스킬 효과 100% 증가(3턴)
@@ -1536,7 +1811,7 @@ function setDefault(me) {switch(me.id) {
       };
       me.turnover = function() {
          if (me.isLeader) {}
-         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp) c.heal();
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp); // c.heal();
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me;
@@ -2612,7 +2887,7 @@ function setDefault(me) {switch(me.id) {
       me.turnover = function() {
          if (me.isLeader) {}
          // 모든 문장이 막힘없이 : 매턴 힐(1턴)
-         if (me.turnHeal) for(let c of comp) c.heal();
+         if (me.turnHeal) for(let c of comp); // c.heal();
          me.turnHeal = false;
       };
       return me;
@@ -2893,12 +3168,12 @@ function setDefault(me) {switch(me.id) {
          // TODO: 자신이 가하는 지속형 치유 10% 증가
       }
       me.defense = function() {me.act_defense();
-         for(let c of comp) c.heal();
+         for(let c of comp); // c.heal();
       }
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}
          // 매턴 아군 전체를 치유
-         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp) c.heal();
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp); // c.heal();
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me;
@@ -3355,7 +3630,7 @@ function setDefault(me) {switch(me.id) {
       };
       me.turnover = function() {if (me.isLeader) {}
          // 매턴 아군 전체를 치유
-         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp) c.heal();
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp); // c.heal();
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me;
