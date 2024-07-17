@@ -811,13 +811,13 @@ function setDefault(me) {switch(me.id) {
          tbf(all, "공고증", myCurAtk+me.id+30, "메이드 분신술1", 1);
          // 다시 5번 자리 아군의 공격 데미지 60% 증가
          tbf(comp[4], "공퍼증", 60, "메이드 분신술2", 1);
-         // 5번 자리 아군의 현재 궁극기 CD 4턴 감소
-         cdChange(comp[4], -4);
       }
       me.ultafter = function() {}
       me.ultimate = function() {ultLogic(me);
          // 공격 데미지의 100%만큼 아군 전체를 치유
          for(let c of comp) c.heal();
+         // 5번 자리 아군의 현재 궁극기 CD 4턴 감소
+         cdChange(comp[4], -4);
       };
       me.atkbefore = function() { // 엄격한 지도
          //자신의 공격 데미지의 30%만큼 아군 전체의 공격 데미지 증가(1턴)
