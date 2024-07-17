@@ -154,7 +154,11 @@ function addBuff(me, act, div) {
       alwaysCheck();
       if (!b.on) continue;
       if ((b.div != "기본" && b.ex <= GLOBAL_TURN) || (b.div == "기본" && b.turn <= GLOBAL_TURN)) continue;
-      if (b.type == "제거") {deleteBuff(b.who, b.size, b.name); continue;}
+      if (b.type == "제거") {
+         if (b.who == all) for(let c of comp) deleteBuff(c, b.size, b.name); 
+         else deleteBuff(b.who, b.size, b.name);
+         continue;
+      }
 
       if (b.type == "아머") {armorContainer.push(b); continue;}
       let size = b.size;
@@ -4479,7 +4483,7 @@ function setDefault(me) {switch(me.id) {
          for(let idx of getRoleIdx("딜", "디")) {
             // <궁극의 무도>
             // 첫 번째 턴에서 "자신의 기본 공격 데미지의 10%만큼 아군 전체의 공격 데미지 증가(50턴)" 발동
-            tbf(all, "공고증", myCurAtk+me.id+10, "<궁극의 무도>1", 50);
+            tbf(all, "공고증", comp[idx].atk*10, "<궁극의 무도>1", 50);
             // 다섯 번째 턴에서 "자신의 궁극기 데미지 50% 증가(최대 1중첩)" 발동 => turnstart로
             // 아홉 번째 턴에서 "적 전체의 받는 데미지 33% 증가(최대 3중첩)" 발동 => turnstart로
          }
@@ -4488,7 +4492,8 @@ function setDefault(me) {switch(me.id) {
          // 정신통일
          // 일반 공격 시, "자신의 공격 데미지 40% 증가(최대 2중첩)" 발동
          anbf(me, "평", me, "공퍼증", 40, "<정신통일>", 1, 2, always);
-         // 궁극기 발동 시, "자신의 <정신통일>의 공격 데미지 증가 효과 제거" 발동 => ultimate로
+         // 궁극기 발동 시, "자신의 <정신통일>의 공격 데미지 증가 효과 제거" 발동
+         atbf(me, "궁", me, "제거", "기본", "<정신통일>", 1, always);
 
          // 침착한 마음
          // 자신의 가하는 데미지 15% 증가
@@ -4542,7 +4547,7 @@ function setDefault(me) {switch(me.id) {
                   atbf(c, "행동", c2, "제거", "기본", "<특제-마물요리>", 1, 2);
                }
             }
-            for(let c of comp) for(let c2 of comp) atbf(c, "행동", c2, "제거", "발동", "<특제-마물요리>", 1, 2);
+            for(let c of comp) if (c.id != me.id) atbf(c, "행동", all, "제거", "발동", "<특제-마물요리>", 1, 2);
          }
          
          // 궁극기 발동 시, "자신 이외의 아군 전체는 <즐거운 만찬> 획득" 발동
@@ -4697,12 +4702,16 @@ function allBuffToString(me) {
    for(const b of buf_list) {
       let size;
       if (fixList.includes(b.type) && typeof b.size != "string") size = ` ${Math.floor(b.size/100)}`;
-      else if (typeof b.size == "string" && (b.size == myCurAtk || b.size == myCurShd)) {
+      else if (typeof b.size == "string" && (b.size.charAt(0) == myCurAtk || b.size.charAt(0) == myCurShd)) {
          let tmp = b.size.slice(1), thisId = tmp.slice(0, 5), per = tmp.slice(5);
          let target = comp.filter(i => i.id == Number(thisId))[0];
-         const curName = target.name, curStandard = b.size.charAt(0) == myCurAtk ? "공" : "아머", curPer = per;
-         size = ` '${curName}의 ${curStandard} ${per}%만큼'`
+         const curName = target.name, curStandard = b.size.charAt(0) == myCurAtk ? "공" : "아머";
+         size = ` '${curName}의 ${curStandard} ${per}%만큼'`;
+      } else if (b.type == "제거") {
+         res.push(`${b.act}시 ${b.who == all ? "모두" : b.who.name}의 ${b.name} ${b.size}버프 제거 (${b.ex}턴)`);
+         continue;
       } else size = b.size == 0 ? "" : ` ${b.size}%`;
+
       if (isNest(b)) {
          res.push(`${b.type}${size} ${b.nest}중첩 (최대 ${b.maxNest}중첩)${b.on ? "" : " (미발동)"} : ${b.name}`);
       } else if (isTurn(b)) {
