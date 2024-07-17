@@ -1172,6 +1172,134 @@ function setDefault(me) {switch(me.id) {
          if (me.isLeader) {}
       };
       return me;
+   case 10092 : // 수르티아
+      me.ultbefore = function() { // 거대한 파도 크레이지 빅독
+         // 자신의 궁극기 데미지 15% 증가 (12턴)
+         tbf(me, "궁뎀증", 15, "거대한 파도 크레이지 빅독", 12);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 레전더리 서퍼 전승자
+         // 아군 전체의 공격 데미지 50% 증가
+         tbf(all, "공퍼증", 50, "레전더리 서퍼 전승자1", always);
+         // TODO: 아군 전체의 받는 데미지 15% 감소
+
+         // 자신은 <파도 추격>, <파도 탑승> 획득
+         // <파도 추격>
+         // 3턴마다 "자신이 가하는 데미지 125% 증가 (1턴)" 발동 => turnstart로
+         // 3턴마다 "적 전체가 받는 데미지 50% 증가(1턴)" 발동 => turnstart로
+
+         // <파도 탑승>
+         // 6턴마다 자신이 가하는 궁극기 데미지 125% 증가 (1턴) 발동 => turnstart로
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 숨만 쉬면 돼...
+         // 자신의 HP가 75%보다 높을 시 공격 데미지 50% 증가
+         buff(me, "공퍼증", 50, "숨만 쉬면 돼...", always, false);
+         alltimeFunc.push(function() {
+            let per = Math.ceil((me.curHp/me.hp)*100);
+            setBuffOn(me, "기본", "숨만 쉬면 돼...", per >= 75);
+         })
+         
+         // 패시브 스킬 2 : 출렁이는 여파
+         // 궁극기 발동 시 '공격 데미지의 30%만큼 2, 3, 4번 적에게 데미지' 발동
+         tbf(me, "궁발동*", 90, "출렁이는 여파", always);
+         
+         // 패시브 스킬 3 : 수면 부족의 분노
+         // 4번째 턴에서 자신의 공격 데미지 40% 증가 (50턴) 발동 => turnstart로
+         // 7번째 턴에서 자신의 공격 데미지 80% 증가 (50턴) 발동 => turnstart로
+         
+         // 패시브 스킬 4 : 공격력 증가
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격력 증가", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {
+            // 자신은 <파도 추격>, <파도 탑승> 획득
+            // <파도 추격>
+            // 3턴마다 "자신이 가하는 데미지 125% 증가 (1턴)" 발동 => turnstart로
+            if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%3 == 0) tbf(me, "가뎀증", 125, "<파도 추격>1", 1);
+            // 3턴마다 "적 전체가 받는 데미지 50% 증가(1턴)" 발동 => turnstart로
+            if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%3 == 0) tbf(boss, "받뎀증", 50, "<파도 추격>2", 1);
+
+            // <파도 탑승>
+            // 6턴마다 자신이 가하는 궁극기 데미지 125% 증가 (1턴) 발동 => turnstart로
+            if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%6 == 0) tbf(me, "궁뎀증", 125, "<파도 탑승>", 1);
+         }
+         // 패시브 스킬 3 : 수면 부족의 분노
+         // 4번째 턴에서 자신의 공격 데미지 40% 증가 (50턴) 발동
+         if (GLOBAL_TURN == 4) tbf(me, "공퍼증", 40, "수면 부족의 분노1", 50);
+         // 7번째 턴에서 자신의 공격 데미지 80% 증가 (50턴) 발동
+         if (GLOBAL_TURN == 7) tbf(me, "공퍼증", 80, "수면 부족의 분노2", 50);
+      };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10093 : // 적나나
+      me.ultbefore = function() { // 과로의 냥이 빔!
+         // 자신의 공격 데미지 30% 증가 (최대 3중첩)
+         nbf(me, "공퍼증", 30, "과로의 냥이 빔!", 1, 3);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 별의 공진
+         // 자신의 공격 데미지 75% 증가.
+         tbf(me, "공퍼증", 75, "별의 공진", always);
+         // 첫 번째 턴 시작 시, <에너지 집중> 효과 발동
+         // - 에너지 집중
+         // 자신 이외의 동료가 "공격 시 자신의 공격 데미지의 20%만큼 적격자 나나의 공격 데미지 증가 (1턴)"(50턴) 획득
+         for(let c of comp) if (c.id != me.id)
+            atbf(c, "공격", me, "공고증", myCurAtk+me.id+20, "<에너지 집중>1", 1, 50);
+         // 아군 전체가 "일반 공격 시, 타깃이 받는 광/암속성 데미지 4% 증가 (최대 15중첩)"(50턴) 획득
+         for(let idx of getElementIdx("광", "암"))
+            anbf(all, "평", comp[idx], "받속뎀", 4, "<에너지 집중>2", 1, 15, 50);
+         
+         // 아군 전체는 <별의 조각> 획득
+         // <별의 조각>
+         // 팀원 중 최소 1/2/3명의 광속성 동료가 있을 시, 공격 데미지 5/10/15% 증가
+         if (getElementCnt("광") >= 1) tbf(all, "공퍼증", 5, "<별의 조각>1", always);
+         if (getElementCnt("광") >= 2) tbf(all, "공퍼증", 5, "<별의 조각>1", always);
+         if (getElementCnt("광") >= 3) tbf(all, "공퍼증", 5, "<별의 조각>1", always);
+         // 팀원 중 최소 1/2/3명의 암속성 동료가 있을 시, 공격 데미지 5/10/15% 증가
+         if (getElementCnt("암") >= 1) tbf(all, "공퍼증", 5, "<별의 조각>2", always);
+         if (getElementCnt("암") >= 2) tbf(all, "공퍼증", 5, "<별의 조각>2", always);
+         if (getElementCnt("암") >= 3) tbf(all, "공퍼증", 5, "<별의 조각>2", always);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 과로사할 운명
+         // 일반 공격 시, 자신의 일반 공격 데미지 6% 증가 (최대 5중첩) 효과 발동
+         anbf(me, "평", me, "일뎀증", 6, "과로사할 운명1", 1, 5, always);
+         // 궁극기 발동 시, 자신의 궁극기 데미지 10% 증가 (최대 3중첩) 효과 발동
+         anbf(me, "궁", me, "궁뎀증", 10, "과로사할 운명2", 1, 3, always);
+         
+         // 패시브 스킬 2 : 출출하다냥!
+         // TODO: 치유를 받을 시, 자신이 받는 데미지 3% 감소(최대 5중첩) 효과 발동
+         // 치유를 받을 시, 자신의 공격 데미지 8% 증가 (최대 5중첩) 효과 발동
+         anbf(me, "힐", me, "공퍼증", 8, "출출하다냥!", 1, 5, always);
+         
+         // 패시브 스킬 3 : 슈퍼 야근 모드!
+         // 치유를 받을 시, 자신이 가하는 데미지 4% 증가 (최대 5중첩) 효과 발동
+         anbf(me, "힐", me, "가뎀증", 4, "슈퍼 야근 모드!", 1, 5, always);
+         // 궁극기 발동 시, <초과 근무의 죽빵> 효과 발동
+         // <초과 근무의 죽빵> : 일반 공격 시, "자신의 공격 데미지의 45%만큼 타깃에게 데미지 효과" 발동 (12턴)
+         atbf(me, "궁", me, "평추가*", 45, "<초과 근무의 죽빵>", 12, always);
+
+         // 패시브 스킬 4 : 공격+
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
    case 10094 : // 키베루
       me.ultbefore = function() {}
       me.ultafter = function() {}
