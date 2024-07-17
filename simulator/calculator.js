@@ -154,6 +154,8 @@ function addBuff(me, act, div) {
       alwaysCheck();
       if (!b.on) continue;
       if ((b.div != "기본" && b.ex <= GLOBAL_TURN) || (b.div == "기본" && b.turn <= GLOBAL_TURN)) continue;
+      if (b.type == "제거") {deleteBuff(b.who, b.size, b.name); continue;}
+
       if (b.type == "아머") {armorContainer.push(b); continue;}
       let size = b.size;
       if (b.type == "힐") {if (b.who == all) for(let c of comp) c.heal(); else b.who.heal();}
@@ -202,7 +204,7 @@ function isActTurn(a) {return a.act != undefined && a.nest == undefined;}
 // buff들을 리스트에 버프량만큼 담아 리턴
 const buff_ex = [];
 const txts = ["공퍼증","공고증","받뎀증","일뎀증","받일뎀","궁뎀증","받궁뎀","발뎀증","받발뎀","가뎀증","속뎀증",
-   "받속뎀","발효증","받직뎀","받캐뎀", "아머", "가아증", "받아증"];
+   "받속뎀","발효증","받직뎀","받캐뎀", "아머", "가아증", "받아증", "제거"];
 function getBuffSizeList(me) {
    const curBuff = me.buff.filter(i => i.div == "기본");
    const res = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -4448,7 +4450,179 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
+   case 10146 : // 헌미나
+      buff_ex.push("<잡념 떨치기>");
+      me.ultbefore = function() { // 이도류 오의 - 절멸참
+         // 자신의 일반 공격 데미지 150% 감소(최대 1중첩)
+         nbf(me, "일뎀증", -150, "이도류 오의 - 절멸참1", 1, 1);
+         // 자신의 궁극기 데미지 100% 증가(최대 1중첩)
+         nbf(me, "궁뎀증", 100, "이도류 오의 - 절멸참2", 1, 1);
+         // 타깃이 받는 암속성 데미지 40% 증가(최대 1중첩)
+         for(let idx of getElementIdx("암")) nbf(comp[idx], "받속뎀", 40, "이도류 오의 - 절멸참3", 1, 1);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         // 궁극기 발동 시, "자신의 <정신통일>의 공격 데미지 증가 효과 제거" 발동
+         deleteBuff(me, "기본", "<정신통일>");
+      };
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 편집광
+         // 아군 전체의 최대 hp 30% 증가
+         hpUpAll(30);
+         // 아군 전체의 공격 데미지 50% 증가
+         tbf(all, "공퍼증", 50, "편집광1", always);
+         // 궁극기 발동 시 "자신의 공격 데미지의 80%만큼 타깃에게 데미지" 추가
+         tbf(me, "궁추가*", 80, "편집광2", always);
+         // 아군 딜/디는 <궁극의 무도> 획득
+         for(let idx of getRoleIdx("딜", "디")) {
+            // <궁극의 무도>
+            // 첫 번째 턴에서 "자신의 기본 공격 데미지의 10%만큼 아군 전체의 공격 데미지 증가(50턴)" 발동
+            tbf(all, "공고증", myCurAtk+me.id+10, "<궁극의 무도>1", 50);
+            // 다섯 번째 턴에서 "자신의 궁극기 데미지 50% 증가(최대 1중첩)" 발동 => turnstart로
+            // 아홉 번째 턴에서 "적 전체의 받는 데미지 33% 증가(최대 3중첩)" 발동 => turnstart로
+         }
+      }
+      me.passive = function() {
+         // 정신통일
+         // 일반 공격 시, "자신의 공격 데미지 40% 증가(최대 2중첩)" 발동
+         anbf(me, "평", me, "공퍼증", 40, "<정신통일>", 1, 2, always);
+         // 궁극기 발동 시, "자신의 <정신통일>의 공격 데미지 증가 효과 제거" 발동 => ultimate로
 
+         // 침착한 마음
+         // 자신의 가하는 데미지 15% 증가
+         tbf(me, "가뎀증", 15, "침착한 마음1", always);
+         // 자신 이외의 아군 딜/디는 첫 번째 턴에서 "자신 및 헌미나의 가하는 데미지 15% 증가(50턴)" 발동
+         for(let idx of getRoleIdx("딜", "디")) if (comp[idx].id != me.id) {
+            tbf(comp[idx], "가뎀증", 15, "침착한 마음2", 50);
+            tbf(me, "가뎀증", 15, "침착한 마음2", 50);
+         }
+
+         // 공명정대
+         // 매턴마다 "자신은 '잡념 떨치기(최대 8중첩)' 획득" 발동 => turnstart로
+         // 자신의 '잡념 떨치기' 중첩 수 == 8일 시 "궁극기 발동 시 '자신의 공격 데미지의 220%만큼 타깃에게 데미지' 추가" 활성화
+         buff(me, "궁추가*", 220, "공명정대2", always, false);
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "공명정대2", me.getNest("<잡념 떨치기>") == 8);});
+
+         // 공격+
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {
+            // 아군 딜/디는 <궁극의 무도> 획득
+            for(let idx of getRoleIdx("딜", "디")) {
+               // 다섯 번째 턴에서 "자신의 궁극기 데미지 50% 증가(최대 1중첩)" 발동
+               if (GLOBAL_TURN == 5)  nbf(comp[idx], "궁뎀증", 50, "<궁극의 무도>2", 1, 1);
+               // 아홉 번째 턴에서 "적 전체의 받는 데미지 33% 증가(최대 3중첩)" 발동
+               if (GLOBAL_TURN == 9)  nbf(boss, "받뎀증", 33, "<궁극의 무도>3", 1, 3);
+            }
+         }
+         // 공명정대
+         // 매턴마다 "자신은 '잡념 떨치기(최대 8중첩)' 획득" 발동
+         if (GLOBAL_TURN > 1) nbf(me, "<잡념 떨치기>", 0, "공명정대1", 1, 8);
+      };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10147 : // 요이키
+      me.ultbefore = function() { // 널 요리해 버리는 수밖에!
+         // 타깃이 받는 풍/광 데미지 50% 증가(2턴)
+         for(let idx of getElementIdx("풍", "광")) tbf(comp[idx], "받속뎀", 50, "널 요리해 버리는 수밖에!1", 2);
+         // 타깃이 받는 데미지 15% 증가(2턴)
+         tbf(boss, "받뎀증", 15, "널 요리해 버리는 수밖에!2", 2);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         if (me.isLeader) {
+            // 자신 이외의 아군 전체는 행동 후 "자신 이외의 아군 전체의 <특제-마물요리>의 모든 효과 제거" 발동(2턴)(1회 발동 후 해제)
+            for(let c of comp) if (c.id != me.id) {
+               for(let c2 of comp) if (c2.id != c.id) {
+                  atbf(c, "행동", c2, "제거", "기본", "<특제-마물요리>", 1, 2);
+               }
+            }
+            for(let c of comp) for(let c2 of comp) atbf(c, "행동", c2, "제거", "발동", "<특제-마물요리>", 1, 2);
+         }
+         
+         // 궁극기 발동 시, "자신 이외의 아군 전체는 <즐거운 만찬> 획득" 발동
+         // 행동 후 "자신 이외의 아군 전체의 <즐거운 만찬>의 모든 효과 제거" 발동(2턴)(1회 발동 후 해제)
+         for(let c of comp) if (c.id != me.id) {
+            for(let c2 of comp) if (c2.id != c.id) {
+               atbf(c, "행동", c2, "제거", "기본", "<즐거운 만찬>", 1, 2);
+            }
+         }
+         for(let c of comp) for(let c2 of comp) atbf(c, "행동", c2, "제거", "발동", "<즐거운 만찬>", 1, 2);
+      };
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() { // 마물 요리 셰프
+         // 아군 전체의 최대 hp 40% 증가
+         hpUpAll(40);
+         // 아군 전체의 공격 데미지 50% 증가
+         tbf(all, "공퍼증", "마물 요리 셰프", always);
+         // 자신은 <모두 어서 먹어보라니까!> 획득
+
+         // <모두 어서 먹어보라니까!>
+         // 공격 데미지 100% 증가
+         tbf(me, "공퍼증", 100, "<모두 어서 먹어보라니까!>1", always);
+         // 가하는 데미지 50% 증가
+         tbf(me, "가뎀증", 50, "<모두 어서 먹어보라니까!>2", always);
+         // 궁극기 데미지 100% 증가
+         tbf(me, "궁뎀증", 100, "<모두 어서 먹어보라니까!>3", always);
+         // 일반 공격 데미지 100% 증가
+         tbf(me, "일뎀증", 100, "<모두 어서 먹어보라니까!>4", always);
+         // 자신의 궁극기 발동 시 "자신 이외의 아군 전체는 <특제-마물요리> 획득" 발동
+         for(let c of comp) if (c.id != me.id) {
+            // <특제-마물요리>
+            // 공격 데미지 100% 증가(2턴)
+            atbf(me, "궁", c, "공퍼증", 100, "<특제-마물요리>", 2, always);
+            // 가하는 데미지 30% 증가(2턴)
+            atbf(me, "궁", c, "가뎀증", 30, "<특제-마물요리>", 2, always);
+            // 궁극기 데미지 50% 증가(1턴)
+            atbf(me, "궁", c, "궁뎀증", 50, "<특제-마물요리>", 1, always);
+            // 일반 공격 데미지 100% 증가(2턴)
+            atbf(me, "궁", c, "일뎀증", 100, "<특제-마물요리>", 2, always);
+            // => ultimate로
+            // 행동 후 "자신 이외의 아군 전체의 <특제-마물요리>의 모든 효과 제거" 발동(2턴)(1회 발동 후 해제)
+         }
+      }
+      me.passive = function() {
+         // 신중한 작업
+         // 궁극기 발동 시, "자신 이외의 아군 전체는 <즐거운 만찬> 획득" 발동
+         for(let c of comp) if (c.id != me.id) {
+            // <즐거운 만찬>
+            // 공격 데미지 100% 증가(2턴)
+            atbf(me, "궁", c, "공퍼증", 100, "<즐거운 만찬>", 2, always);
+            // 일반 공격 데미지 100% 증가(2턴)
+            atbf(me, "궁", c, "일뎀증", 100, "<즐거운 만찬>", 2, always);
+            // => ultimate로
+            // 행동 후 "자신 이외의 아군 전체의 <즐거운 만찬>의 모든 효과 제거" 발동(2턴)(1회 발동 후 해제)
+         }
+
+         // TODO: 비상용 만찬
+         // 방어 시 "자신 이외의 아군 전체는 <말린 내장 요리> 획득" 발동
+         // <말린 내장 요리>
+         // 행동 후 "자신의 받는 데미지 20% 감소(1턴)" 발동(1턴)(1회 발동 후 해제)
+         // 행동 후 "자신 이외의 아군 전체의 <말린 내장 요리>의 효과 제거" 발동(1턴)(1회 발동 후 해제)
+
+         // 칼질 지도
+         // 2번 자리 아군은 "궁극기 발동 시 <마물 해체> 발동" 획득
+         // <마물 해체>
+         // 타깃이 받는 궁극기 데미지 100% 증가(1턴)
+         atbf(comp[1], "궁", boss, "받궁뎀", 100, "칼질 지도1", 1, always);
+         // TODO: 타깃이 치유를 받을 시 회복량 20% 감소(4턴)
+
+         // 공격+
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+         
 default: return null;}}
 function ultLogic(me) {
    lastDmg = 0; lastAddDmg = 0; lastAtvDmg = 0;
@@ -4523,7 +4697,7 @@ function allBuffToString(me) {
    for(const b of buf_list) {
       let size;
       if (fixList.includes(b.type) && typeof b.size != "string") size = ` ${Math.floor(b.size/100)}`;
-      else if (typeof b.size == "string") {
+      else if (typeof b.size == "string" && (b.size == myCurAtk || b.size == myCurShd)) {
          let tmp = b.size.slice(1), thisId = tmp.slice(0, 5), per = tmp.slice(5);
          let target = comp.filter(i => i.id == Number(thisId))[0];
          const curName = target.name, curStandard = b.size.charAt(0) == myCurAtk ? "공" : "아머", curPer = per;

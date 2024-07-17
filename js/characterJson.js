@@ -130,6 +130,8 @@ const chJSON = { data : [
 {ok : true, id : 10143, rarity : 3, hp:1001799, atk:269715, cd:4, atkMag:0, ultMag:0, fullname : "여름날 살루시아", name : "수살루", element : 1, role : 1},
 {ok : true, id : 10144, rarity : 3, hp:992056, atk:272372, cd:4, atkMag:100, ultMag:571, fullname : "여름날 시저", name : "수저", element : 1, role : 0},
 {ok : true, id : 10145, rarity : 3, hp:1453097, atk:186010, cd:4, atkMag:100, ultMag:514, fullname : "여름날 사탄", name : "수사탄", element : 3, role : 3},
+{ok : false, id : 10146, rarity : 3, hp:1066460, atk:253328, cd:4, atkMag:100, ultMag:514, fullname : "몬스터헌터 미나요미", name : "헌미나", element : 4, role : 0},
+{ok : false, id : 10147, rarity : 3, hp:1054060, atk:255986, cd:0, atkMag:100, ultMag:514, fullname : "마물 종결자 오니요이키", name : "요이키", element : 2, role : 4},
       {ok : false, id : 10801, rarity : 1, fullname : "카두케우스 군단 간호사장 아이린", name : "아이린", element : 3, role : 1},
       {ok : false, id : 10802, rarity : 1, fullname : "바케네코 나나", name : "나나", element : 2, role : 0},
       {ok : false, id : 10803, rarity : 1, fullname : "드래곤 레이디 아이리스", name : "아이리스", element : 0, role : 0},
@@ -207,6 +209,7 @@ function fixName(txt) {
          case "엘루루": return "앨루루";
          case "엘즈루": return "앨즈루";
          case "엘리자베스": return "엘자";
+         case "몬미나": return "헌미나";
          default: return txt;
       }
 }
