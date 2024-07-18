@@ -5749,7 +5749,11 @@ function setDefault(me) {switch(me.id) {
                   atbf(c, "행동", c2, "제거", "기본", "<특제-마물요리>", 1, 2);
                }
             }
-            for(let c of comp) if (c.id != me.id) atbf(c, "행동", all, "제거", "발동", "<특제-마물요리>", 1, 2);
+            for(let c of comp) if (c.id != me.id) {
+               for(let c2 of comp) if (c2.id != me.id) {
+                  atbf(c, "행동", c2, "제거", "발동", "<특제-마물요리>", 1, 2);
+               }
+            }
          }
          
          // 궁극기 발동 시, "자신 이외의 아군 전체는 <즐거운 만찬> 획득" 발동
@@ -5759,8 +5763,11 @@ function setDefault(me) {switch(me.id) {
                atbf(c, "행동", c2, "제거", "기본", "<즐거운 만찬>", 1, 2);
             }
          }
-         for(let c of comp) for(let c2 of comp)
-            if (c2.id != me.id) atbf(c, "행동", c2, "제거", "발동", "<즐거운 만찬>", 1, 2);
+         for(let c of comp) if (c.id != me.id) {
+            for(let c2 of comp) if (c2.id != me.id) {
+               atbf(c, "행동", c2, "제거", "발동", "<즐거운 만찬>", 1, 2);
+            }
+         }
       };
       me.atkbefore = function() {}
       me.atkafter = function() {}
