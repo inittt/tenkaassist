@@ -107,6 +107,7 @@ function isExpired(item) {
 }
 function nextTurn() {
    GLOBAL_TURN += 1;
+   for(let c of comp) c.hit();
    for(let i = 0; i < comp.length; i++) {
       if (!comp[i].stopCd) comp[i].curCd = comp[i].curCd <= 0 ? 0 : comp[i].curCd-1;
       comp[i].buff = comp[i].buff.filter(item => !isExpired(item));
@@ -153,7 +154,7 @@ function addBuff(me, act, div) {
    for(const b of actBuff) {
       alwaysCheck();
       if (!b.on) continue;
-      if ((b.div != "기본" && b.ex <= GLOBAL_TURN) || (b.div == "기본" && b.turn <= GLOBAL_TURN)) continue;
+      // if ((b.div != "기본" && b.ex <= GLOBAL_TURN) || (b.div == "기본" && b.turn <= GLOBAL_TURN)) continue;
       if (b.type == "제거") {
          if (b.who == all) for(let c of comp) deleteBuff(c, b.size, b.name); 
          else deleteBuff(b.who, b.size, b.name);
@@ -1239,6 +1240,118 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
+   case 10081 : // 신이블
+      me.ultbefore = function() {}
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 진정한 후궁 최강자
+         // 일반 공격 시 "자신의 공격 데미지 50%만큼 전체 적에게 추가 공격" 발동
+         tbf(me, "평발동*", 50, "진정한 후궁 최강자", always);
+         // 아군 수/광속성 멤버가 1턴 동안 <고귀한 웨딩> 발동
+         for(let idx of getElementIdx("수", "광")) {
+            // <고귀한 웨딩>
+            // 자신의 공격 데미지 70% 증가(50턴)
+            tbf(comp[idx], "공퍼증", 70, "<고귀한 웨딩>1", 50);
+            // 궁극기 발동 시 "타깃이 받는 발동기 데미지 20% 증가 (최대 5중첩)" 효과 발동(50턴)
+            anbf(comp[idx], "궁", boss, "받발뎀", 20, "<고귀한 웨딩>2", 1, 5, 50);
+            // 일반 공격 시 "타깃이 받는 궁극기 데미지 2% 증가 (최대 25중첩)" 효과 발동(50턴)
+            anbf(comp[idx], "평", boss, "궁뎀증", 2, "<고귀한 웨딩>3", 1, 25, 50);
+            // 일반 공격 시 "타깃이 받는 수, 광속성 데미지 5% 증가 (최대 4중첩)" 효과 발동(50턴)
+            for(let idx2 of getElementIdx("수", "광"))
+               anbf(comp[idx], "평", comp[idx2], "받속뎀", 5, "<고귀한 웨딩>4", 1, 4, 50);
+         }
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 웨딩 암즈 서포트 AI
+         // 궁극기 발동 시 "자신의 공격 데미지 120%만큼 타깃에게 추가 공격" 발동
+         tbf(me, "궁발동*", 120, "웨딩 암즈 서포트 AI", always);
+         
+         // 패시브 스킬 2 : 암즈 공명 - 소녀의 마음 => turnover로
+         // 매 턴 종료 시 "자신의 궁극기 데미지 3% 증가 (최대 33중첩)" 효과 발동
+         
+         // 패시브 스킬 3 : 프로토타입 Z
+         // 일반 공격 시 "타깃이 받는 수/광속성 데미지 5% 증가 (최대 3중첩)" 발동
+         for(let idx of getElementIdx("수", "광"))
+            anbf(me, "평", comp[idx], "받속뎀", 5, "프로토타입 Z1", 1, 3, always);
+         // 궁극기 발동 시 "자신의 공격 데미지의 150%만큼 타깃에게 추가 공격" 발동
+         tbf(me, "궁발동*", 150, "프로토타입 Z2", always);
+
+         // 패시브 스킬 4 : 공격력 증가
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격력 증가", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}
+         // 패시브 스킬 2 : 암즈 공명 - 소녀의 마음
+         // 매 턴 종료 시 "자신의 궁극기 데미지 3% 증가 (최대 33중첩)" 효과 발동
+         nbf(me, "궁뎀증", 3, "암즈 공명 - 소녀의 마음", 1, 33);
+      };
+      return me;
+   case 10082 : // 신사탄
+      me.ultbefore = function() { // 지옥의 꽃
+         // 자신의 궁극기 데미지 50% 증가 (최대 1중첩)
+         nbf(me, "궁뎀증", 50, "지옥의 꽃1", 1, 1);
+         // 일반 공격 데미지 100% 증가 (최대 1중첩)
+         nbf(me, "일뎀증", 100, "지옥의 꽃2", 1, 1);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 청순의 힘
+         // 아군 전체의 HP 최대치 20% 증가
+         hpUpAll(20);
+         // 자신의 공격 데미지 100% 증가
+         tbf(me, "공퍼증", 100, "청순의 힘1", always);
+         // 아군 전체의 공격 데미지 25% 증가
+         tbf(all, "공퍼증", 25, "청순의 힘2", always);
+         // 5턴마다 "아군 전체의 공격 데미지 50% 증가 (3턴)" 발동 => turnstart로
+
+         // 첫 번째 턴에서 자신 이외의 아군 캐릭터가 "<절대 복종> 획득" 발동
+         for(let c of comp) if (c.id != me.id) {
+            // <절대 복종>
+            // 공격 시 "타깃이 받는 암속성 데미지 1% 증가 (최대 20중첩)" 발동(50턴)
+            for(let idx of getElementIdx("암"))
+               anbf(c, "공격", comp[idx], "받속뎀", 1, "<절대 복종>1", 1, 20, 50);
+            // 공격 시 "자신의 공격 데미지 15%만큼 아군 1번 자리 캐릭터의 공격력 증가 (1턴)" 발동(50턴)
+            atbf(c, "공격", comp[0], "공고증", myCurAtk+c.id+15, "<절대 복종>2", 1, 50);
+         }
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 무구한 의복
+         // 공격 시 "타깃이 받는 암속성 데미지 4% 증가 (최대 5중첩)" 발동
+         for(let idx of getElementIdx("암"))
+            anbf(me, "공격", comp[idx], "받속뎀", 4, "무구한 의복", 1, 5, always);
+         
+         // 패시브 스킬 2 : 고통의 쾌락
+         // 방어 시 "자신의 공격 데미지 100% 증가(2턴)" 발동
+         atbf(me, "방", me, "공퍼증", 100, "고통의 쾌락", 2, always);
+         
+         // 패시브 스킬 3 : 진정한 힘
+         // 공격 시 "아군 전체의 공격 데미지 3% 증가 (최대 10중첩)" 효과 발동
+         anbf(me, "공격", all, "공퍼증", 3, "진정한 힘", 1, 10, always);
+         
+         // 패시브 스킬 4 : 궁극기 데미지 +
+         // 자신의 궁극기 데미지 10% 증가
+         tbf(me, "궁뎀증", 10, "궁극기 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {
+            // 청순의 힘3
+            // 5턴마다 "아군 전체의 공격 데미지 50% 증가 (3턴)" 발동
+            if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%5 == 0) tbf(all, "공퍼증", 50, "청순의 힘3", 3);
+         }
+      };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
    case 10083 : // 유메
       me.ultbefore = function() { // 함께 가버리는 거야~
          // 자신의 공격 데미지의 50%만큼 아군의 공격 데미지 증가 (1턴)
@@ -1246,7 +1359,13 @@ function setDefault(me) {switch(me.id) {
          // 아군 전체의 공격 데미지 20% 증가 (4턴)
          tbf(all, "공퍼증", 20, "함께 가버리는 거야~2", 4);
       }
-      me.ultafter = function() {}
+      me.ultafter = function() {
+         // 궁극기 발동 시 "나도 기분좋게 해줘~" 효과 발동
+         // 나도 기분 좋게 해줘~
+         // 자신 이외의 동료가 궁극기 발동 시, 공격 데미지의 50%만큼 사쿠야 유메의 공격 데미지 증가 (2턴) 효과 발동(1턴)
+         for(let c of comp) if (c.id != me.id)
+            atbf(c, "궁", me, "공고증", myCurAtk+c.id+50, "나도 기분 좋게 해줘~", 2, 1);
+      }
       me.ultimate = function() {ultLogic(me);
          // 자신의 공격 데미지의 200%만큼 아군 전체를 치유
          for(let c of comp) c.heal();
@@ -1264,34 +1383,40 @@ function setDefault(me) {switch(me.id) {
          tbf(all, "공퍼증", 30, "누구나 환영~", always);
 
          // 궁극기 발동 시, "크레이지 츄르릅" 효과 발동
-         // 크레이지 츄르릅 : 일반 공격 시, 50% 데미지로 3회 추가 공격 (2턴)
+         // 크레이지 츄르릅 : 일반 공격 시, 50% 데미지로 3회 추가 공격 (2턴) 효과 발동
          atbf(me, "궁", me, "평발동*", 150, "크레이지 츄르릅", 2, always);
 
-         // 궁극기 발동 시 "나도 기분좋게 해줘~" 효과 발동
+         // 궁극기 발동 시 "나도 기분좋게 해줘~" 효과 발동 => ultimate로
          // 나도 기분 좋게 해줘~ : 자신 이외의 동료가 궁극기 발동 시, 공격 데미지의 50%만큼 사쿠야 유메의 공격 데미지 증가 (2턴)
-         for(let c of comp) if (c.id != me.id)
-            atbf(c, "궁", me, "공고증", myCurAtk+c.id+50, "나도 기분 좋게 해줘~", 2, always);
 
-         // 자신이 "절정으로 Fly" 효과 발동
-         // 절정으로 Fly : 일반 공격 시, 자신의 공격 데미지 증가 (최대 7중첩), 궁극기 사용 시 중첩 제거
+         // 자신이 <절정으로 Fly> 효과 발동
+         // <절정으로 Fly> : 일반 공격 시, 자신의 공격 데미지 10% 증가 (최대 7중첩)효과 발동
+         anbf(me, "평", me, "공퍼증", 10, "<절정으로 Fly>", 1, 7, always);
+         // 궁극기 발동 시 "<절정으로 Fly>로 부여된 공격 데미지 증가 상태 해제" 효과 발동
+         atbf(me, "궁", me, "제거", "기본", "<절정으로 Fly>", 1, always);
          
       }
       me.passive = function() {
          // 패시브 스킬 1 : 고속 츄르릅
-         // 궁극기 발동 시, "멈출수 없는 츄르릅" 효과 발동
-         
-         // 멈출수 없는 츄르릅 : 일반 공격 시, 50% 데미지로 3회 추가 공격 (2턴)
+         // 궁극기 발동 시, <멈출수 없는 츄르릅> 효과 발동
+         // 멈출수 없는 츄르릅 : 일반 공격 시, 자신 공격 데미지의 50% 데미지로 3회 추가 공격 (2턴) 효과 발동
+         atbf(me, "궁", me, "평발동*", 150, "<멈출수 없는 츄르릅>", 2, always);
          
          // 패시브 스킬 2 : 갈수록 짜릿짜릿
-         // 일반 공격 시, 자신의 공격 데미지 증가 (최대 7중첩), 궁극기 발동 시 중첩 제거
+         // 일반 공격 시, 자신의 공격 데미지 10% 증가 (최대 7중첩) 효과 발동
+         anbf(me, "평", me, "공퍼증", 10, "<갈수록 짜릿짜릿>", 1, 7, always);
+         // 궁극기 발동 시, "<갈수록 짜릿짜릿>으로 부여된 공격 데미지 증가 상태 해제" 효과 발동
+         atbf(me, "궁", me, "제거", "기본", "<갈수록 짜릿짜릿>", 1, always);
          
          // 패시브 스킬 3 : 멈출수 없는 손
-         // 조건 : 5성 진화 후 해금
-         // 방어 시 "자신의 공격 데미지의 50%만큼 아군 전체를 치유, '갈수록 짜릿짜릿'과 '절정으로 Fly' 3중첩 증가"
+         // TODO: 방어 시 "자신의 공격 데미지의 50%만큼 아군 전체를 치유" 효과 발동
+         // 방어 시 "'갈수록 짜릿짜릿'과 '절정으로 Fly' 3중첩 증가" 효과 발동
+         anbf(me, "방", me, "공퍼증", 10, "<갈수록 짜릿짜릿>", 3, 7, always);
+         if (me.isLeader) anbf(me, "방", me, "공퍼증", 10, "<절정으로 Fly>", 3, 7, always);
          
          // 패시브 스킬 4 : 공격력 증가
-         // 조건 : 잠재 능력 6 달성 이후 스킬 해금
          // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격력 증가", always);
       }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {if (me.isLeader) {}};
@@ -1550,7 +1675,7 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case 10090 : // 수밀레 <= 3패시브 데미지에 대한 정확한 툴팁 필요
+   case 10090 : // 수밀레
       me.ultbefore = function() {}
       me.ultafter = function() {
          // 궁극기 : 넘치는 신의 사랑
@@ -1587,7 +1712,7 @@ function setDefault(me) {switch(me.id) {
          anbf(me, "평", boss, "받발뎀", 20, "실신의 파도", 1, 5, always);
          
          // 패시브 스킬 3 : 신의 애무
-         // 자신의 데미지 20% 증가 => 데미지수정할것
+         // 자신의 데미지? 20% 증가
          tbf(me, "가뎀증", 20, "신의 애무1", always);
          // 자신의 궁극기 데미지 40% 증가
          tbf(me, "궁뎀증", 40, "신의 애무2", always);
@@ -4580,7 +4705,7 @@ function setDefault(me) {switch(me.id) {
       buff_ex.push("<강림치>");
       me.ultbefore = function() {}
       me.ultafter = function() { // 별의 귀환
-         // 아군 1, 2, 3번자리 캐릭터의 받는 데미지 20% 감소
+         // TODO: 아군 1, 2, 3번자리 캐릭터의 받는 데미지 20% 감소
       }
       me.ultimate = function() {ultLogic(me);};
       me.atkbefore = function() {}
