@@ -4564,19 +4564,7 @@ function setDefault(me) {switch(me.id) {
          // 자신의 실드 효과 30% 증가(3턴)
          tbf(me, "가아증", 30, "드리워진 밤의 장막2", 3);
       }
-      me.ultafter = function() {
-         // 희미한 규방
-         // 궁극기 발동 시 "타깃의 받는 데미지 15% 증가(7턴)" 추가
-         tbf(boss, "받뎀증", 15, "희미한 규방", 7);
-
-         // 부슬비
-         // 궁극기 발동 시 "자신의 최대 hp7%만큼 아군 전체에게 실드 부여(1턴)" 추가
-         tbf(all, "아머", me.hp*7*armorUp(me, "궁", "추가"), "부슬비", 1);
-
-         // 끝없이 흐르는 밤
-         // 궁극기 발동 시 "타깃이 받는 궁극기 데미지 20% 증가(7턴)" 추가
-         tbf(boss, "받궁뎀", 20, "끝없이 흐르는 밤", 7);
-      }
+      me.ultafter = function() {}
       me.ultimate = function() {ultLogic(me);};
       me.atkbefore = function() {}
       me.atkafter = function() {}
@@ -4612,14 +4600,17 @@ function setDefault(me) {switch(me.id) {
          }
       }
       me.passive = function() {
-         // 희미한 규방 => ultafter로
+         // 희미한 규방
          // 궁극기 발동 시 "타깃의 받는 데미지 15% 증가(7턴)" 추가
+         ptbf(me, "궁", boss, "받뎀증", 15, "희미한 규방", 7, always);
 
-         // 부슬비 => ultafter로
+         // 부슬비
          // 궁극기 발동 시 "자신의 최대 hp7%만큼 아군 전체에게 실드 부여(1턴)" 추가
+         ptbf(me, "궁", all, "아머", me.hp*7, "부슬비", 1, always);
 
-         // 끝없이 흐르는 밤 => ultafter로
+         // 끝없이 흐르는 밤
          // 궁극기 발동 시 "타깃이 받는 궁극기 데미지 20% 증가(7턴)" 추가
+         ptbf(me, "궁", boss, "받궁뎀", 20, "끝없이 흐르는 밤", 7, always);
 
          // 공격+
          // 자신의 공격 데미지 10% 증가
