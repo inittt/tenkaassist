@@ -1239,6 +1239,118 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
+   case 10083 : // 유메
+      me.ultbefore = function() { // 함께 가버리는 거야~
+         // 자신의 공격 데미지의 50%만큼 아군의 공격 데미지 증가 (1턴)
+         tbf(all, "공고증", myCurAtk+me.id+50, "함께 가버리는 거야~1", 1);
+         // 아군 전체의 공격 데미지 20% 증가 (4턴)
+         tbf(all, "공퍼증", 20, "함께 가버리는 거야~2", 4);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         // 자신의 공격 데미지의 200%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+      };
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);
+         // 일반 공격 : 모두를 기분 좋게 해줄게~
+         // 자신의 공격 데미지의 50%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+      };
+      me.leader = function() {
+         // 리더 스킬 : 누구나 환영~
+         // 아군 전체의 공격 데미지 30% 증가
+         tbf(all, "공퍼증", 30, "누구나 환영~", always);
+
+         // 궁극기 발동 시, "크레이지 츄르릅" 효과 발동
+         // 크레이지 츄르릅 : 일반 공격 시, 50% 데미지로 3회 추가 공격 (2턴)
+         atbf(me, "궁", me, "평발동*", 150, "크레이지 츄르릅", 2, always);
+
+         // 궁극기 발동 시 "나도 기분좋게 해줘~" 효과 발동
+         // 나도 기분 좋게 해줘~ : 자신 이외의 동료가 궁극기 발동 시, 공격 데미지의 50%만큼 사쿠야 유메의 공격 데미지 증가 (2턴)
+         for(let c of comp) if (c.id != me.id)
+            atbf(c, "궁", me, "공고증", myCurAtk+c.id+50, "나도 기분 좋게 해줘~", 2, always);
+
+         // 자신이 "절정으로 Fly" 효과 발동
+         // 절정으로 Fly : 일반 공격 시, 자신의 공격 데미지 증가 (최대 7중첩), 궁극기 사용 시 중첩 제거
+         
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 고속 츄르릅
+         // 궁극기 발동 시, "멈출수 없는 츄르릅" 효과 발동
+         
+         // 멈출수 없는 츄르릅 : 일반 공격 시, 50% 데미지로 3회 추가 공격 (2턴)
+         
+         // 패시브 스킬 2 : 갈수록 짜릿짜릿
+         // 일반 공격 시, 자신의 공격 데미지 증가 (최대 7중첩), 궁극기 발동 시 중첩 제거
+         
+         // 패시브 스킬 3 : 멈출수 없는 손
+         // 조건 : 5성 진화 후 해금
+         // 방어 시 "자신의 공격 데미지의 50%만큼 아군 전체를 치유, '갈수록 짜릿짜릿'과 '절정으로 Fly' 3중첩 증가"
+         
+         // 패시브 스킬 4 : 공격력 증가
+         // 조건 : 잠재 능력 6 달성 이후 스킬 해금
+         // 자신의 공격 데미지 10% 증가
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10084 : // 미루
+      me.ultbefore = function() {
+         // 궁극기 : 빈틈 발견!
+         // 타깃이 받는 궁극기 데미지 45% 증가(1턴)
+         tbf(boss, "받궁뎀", 45, "빈틈 발견!", 1);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 죽었지만 죽지 않았어.
+         // 아군 전체의 최대 HP 40% 증가
+         hpUpAll(40);
+         // TODO: 아군 전체가 받는 치유량 80% 증가
+         // 아군 전체의 공격 데미지 40% 증가
+         tbf(all, "공퍼증", 40, "죽었지만 죽지 않았어", always);
+         // 자신의 궁극기 최대 CD 1턴 감소
+         me.cd -= 1; me.curCd -= 1;
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 구르기 스텟 올인
+         // TODO: 방어 시 받는 데미지 감소 효과 10% 증가
+         // TODO: 공격을 받을 시 「자신이 받는 데미지 10% 감소(1턴)」발동
+         
+         // 패시브 스킬 2 : 슈퍼챗
+         // 공격 시, 자신의 공격 데미지 20% 증가 (3턴) 효과 발동
+         atbf(me, "공격", me, "공퍼증", 20, "슈퍼챗", 3, always);
+         
+         // 궁극기 발동 시 자신이 《신나게 라이브를!》 획득하는 효과 발동
+         // <신나게 라이브를!>
+         // [시청자수 : 1000] (최대 20중첩)
+         // [Donate $ 100000] (20턴)
+         // 가하는 데미지 7% 증가 (최대 5중첩)
+         anbf(me, "궁", me, "가뎀증", 7, "<신나게 라이브를!>1", 1, 5, always);
+         // 자신은「공격 시 [자신의 공격 데미지의 50%만큼 타깃에게 데미지]발동」흭득(3턴)
+         atbf(me, "궁", me, "평발동*", 50, "<신나게 라이브를!>2", 3, always);
+         atbf(me, "궁", me, "궁발동*", 50, "<신나게 라이브를!>3", 3, always);
+         
+         // 패시브 스킬 3 : 이방인의 전법
+         // 궁극기 발동 시, 자신의 공격 데미지의 99.9%만큼 타깃에게 데미지 효과 발동
+         tbf(me, "궁발동*", 99.9, "이방인의 전법1", always);
+         // 공격 시, 「자신의 궁극기 데미지 10% 증가(5턴)」 효과 발동
+         atbf(me, "공격", me, "궁뎀증", 10, "이방인의 전법2", 5, always);
+         
+         // 패시브 스킬 4 : 필살+
+         // 자신의 궁극기 데미지 10% 증가
+         tbf(me, "궁뎀증", 10, "필살+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
    case 10085 : // 카나
       me.ultbefore = function() { // 애무의 손길
          // TODO: 자신이 받는 데미지 17.5% 감소(2턴)
@@ -1362,6 +1474,140 @@ function setDefault(me) {switch(me.id) {
       me.turnover = function() {
          if (me.isLeader) {}
       };
+      return me;
+   case 10089 : // 신파랑
+      me.ultbefore = function() {
+         // 궁극기 : 언니는 내가 지켜!
+         // 자신의 최대 HP의 60%만큼 자신의 아머 강화(1턴)
+         tbf(me, "아머", me.hp*60*armorUp(me, "궁", "추가")*(1+buffSizeByType(c, "받아증")), "언니는 내가 지켜!1", 1);
+         // TODO: 도발 효과 획득(1턴)
+         // 타깃이 받는 화속성, 수속성 데미지 30% 증가(2턴)
+         for(let idx of getElementIdx("화", "수")) tbf(comp[idx], "받속뎀", 30, "언니는 내가 지켜!2", 2);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);
+         // 일반 공격 : 감언이설
+         // 자신의 공격 데미지의 50%만큼 자신과 [붉은 쌍성 아나스티]를 치유
+         me.heal();
+         for(let c of comp) if (c.id == 10088) c.heal();
+      };
+      me.leader = function() {
+         // 리더 스킬 : 최고급 클럽 매니저
+         // 아군 전체의 최대 HP 30% 증가
+         for(let c of comp) if (c.id != me.id) hpUpMe(c, 30);
+         // 자신의 최대 HP 40% 증가
+         hpUpMe(me, 70);
+
+         // 아군 전체의 공격 데미지 40% 증가
+         tbf(all, "공퍼증", 40, "최고급 클럽 매니저1", always);
+
+         // TODO: 자신과 [붉은 쌍성 아나스티]가 받는 데미지 20% 감소
+         // 자신과 [붉은 쌍성 아나스티]가 받는 아머 강화 효과 30% 증가
+         tbf(me, "받아증", 30, "최고급 클럽 매니저2", always);
+         for(let c of comp) if (c.id == 10088) tbf(c, "받아증", 30, "최고급 클럽 매니저3", always);
+         // TODO: 자신과 [붉은 쌍성 아나스티]가 받는 치유 효과 30% 증가
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 꿈의 직장
+         // 일반 공격 시, 자신의 최대 HP의 10% 만큼 아군 전체의 아머 강화(1턴) 효과 발동
+         atbf(me, "평", all, "아머", me.hp*10, "꿈의 직장1", 1, always);
+         // 일반 공격 시, 자신의 최대 HP의 10% 만큼 [붉은 쌍성 아나스티]의 아머 강화(1턴) 효과 발동
+         for(let c of comp) if (c.id == 10088)
+            atbf(me, "평", c, "아머", me.hp*10, "꿈의 직장2", 1, always);
+
+         // 패시브 스킬 2 : 하늘의 회오리
+         // TODO: 궁극기 발동 시, 자신이 받는 데미지 30% 감소(2턴) 효과 발동
+         // TODO: 궁극기 발동 시, [붉은 쌍성 아나스티]가 받는 데미지 30% 감소(2턴) 효과 발동
+
+         // 패시브 스킬 3 : 은하로 갈라놓인 쌍둥이
+         // 아군 화속성과 수속성 동료가 <<뒤엉킨 운명>> 효과 획득
+         for(let idx of getElementIdx("화", "수")) {
+            // <<뒤엉킨 운명>>
+            // 공격 시, 타깃이 받는 화속성과 수속성 데미지 1.5% 증가(최대 7중첩) 효과 발동
+            for(let idx2 of getElementIdx("화", "수"))
+               anbf(comp[idx], "공격", comp[idx2], "받속뎀", 1.5, "<뒤엉킨 운명>1", 1, 7, always);
+            // 공격 시, 자신이 가하는 데미지 1.5% 증가(최대 7중첩) 효과 발동
+            anbf(comp[idx], "공격", comp[idx], "가뎀증", 1.5, "<뒤엉킨 운명>2", 1, 7, always);
+            // 공격 시, 자신의 궁극기 데미지 1.5% 증가(최대 7중첩) 효과 발동
+            anbf(comp[idx], "공격", comp[idx], "궁뎀증", 1.5, "<뒤엉킨 운명>3", 1, 7, always);
+         }
+         // 아군 화속성과 수속성 동료가 [붉은 쌍성 아나스티]가 아군 측에 살아 있을 경우, <<뒤엉킨 운명 · 구속>> 발동 획득
+         for(let idx of getElementIdx("화", "수")) if (comp.find(i => i.id == 10088)) {
+            // <<뒤엉킨 운명 · 구속>>
+            // 공격 시, 자신이 가하는 데미지 1.5% 증가(최대 7중첩) 효과 발동
+            anbf(comp[idx], "공격", comp[idx], "가뎀증", 1.5, "<뒤엉킨 운명-구속>1", 1, 7, always);
+            // 공격 시, 자신의 궁극기 데미지 1.5% 증가(최대 7중첩) 효과 발동
+            anbf(comp[idx], "공격", comp[idx], "궁뎀증", 1.5, "<뒤엉킨 운명-구속>2", 1, 7, always);
+         }
+
+         // 패시브 스킬 4 : 받는 데미지 감소+
+         // TODO: 자신이 받는 데미지 5% 감소
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10090 : // 수밀레 <= 3패시브 데미지에 대한 정확한 툴팁 필요
+      me.ultbefore = function() {}
+      me.ultafter = function() {
+         // 궁극기 : 넘치는 신의 사랑
+         // 아군 전체에게 "일반 공격 시 자신의 공격 데미지의 25%만큼 타깃에게 데미지 (4턴) 발동" 효과 부여
+         tbf(all, "평발동*", 25, "넘치는 신의 사랑", 4);
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 천사의 헌팅 구역
+         // 아군 전체의 공격 데미지 50% 증가
+         tbf(all, "공퍼증", 50, "천사의 헌팅 구역1", always);
+         // 1턴마다 "아군 전체의 발동 스킬 효과 20% 증가 (최대 10중첩)" 발동 => turnstart로
+
+         // 아군 딜러, 탱커, 디스럽터가 <섹스 신의 부름> 획득
+         for(let idx of getRoleIdx("딜", "탱", "디")) {
+            // <섹스 신의 부름>
+            // 궁극기 데미지 40% 증가
+            tbf(comp[idx], "공퍼증", 40, "<섹스 신의 부름>1", always);
+            // 궁극기 발동 시, '자신의 공격 데미지의 80%만큼 타깃에게 데미지' 발동
+            tbf(comp[idx], "궁발동*", 80, "<섹스 신의 부름>2", always);
+         }
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 낙원의 인
+         // 1턴마다 "자신의 공격 데미지 10% 증가(최대 10중첩)" 발동 => turnstart로
+         // 궁극기 발동 시, "자신의 공격 데미지 80%만큼 타깃에게 데미지" 발동
+         tbf(me, "궁발동*", 80, "낙원의 인2", always);
+         
+         // 패시브 스킬 2 : 실신의 파도
+         // 일반 공격 시 "타깃이 받는 발동 스킬 데미지 20% 증가 (최대 5중첩)" 발동
+         anbf(me, "평", boss, "받발뎀", 20, "실신의 파도", 1, 5, always);
+         
+         // 패시브 스킬 3 : 신의 애무
+         // 자신의 데미지 20% 증가 => 데미지수정할것
+         tbf(me, "가뎀증", 20, "신의 애무1", always);
+         // 자신의 궁극기 데미지 40% 증가
+         tbf(me, "궁뎀증", 40, "신의 애무2", always);
+         
+         // 패시브 스킬 4 : 필살+
+         // 자신의 궁극기 데미지 10% 증가
+         tbf(me, "궁뎀증", 10, "필살+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {
+            // 리더 스킬 : 천사의 헌팅 구역
+            // 1턴마다 "아군 전체의 발동 스킬 효과 20% 증가 (최대 10중첩)" 발동
+            if (GLOBAL_TURN > 1) nbf(all, "발효증", 20, "천사의 헌팅 구역2", 1, 10);
+         }
+         // 패시브 스킬 1 : 낙원의 인
+         // 1턴마다 "자신의 공격 데미지 10% 증가(최대 10중첩)" 발동
+         if (GLOBAL_TURN > 1) nbf(me, "공퍼증", 10, "낙원의 인1", 1, 10);
+      };
+      me.turnover = function() {if (me.isLeader) {}};
       return me;
    case 10091 : // 수엘리
       me.ultbefore = function() { // 블링블링 노엘리빔
