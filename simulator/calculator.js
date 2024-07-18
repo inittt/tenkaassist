@@ -334,6 +334,10 @@ function setBuffNest(me, div, name, nest) {
    const exist = me.buff.find(i => i.div == div && i.name == name);
    if (exist) exist.nest = nest;
 }
+function setBuffWho(me, div, name, who) {
+   const exist = me.buff.find(i => i.div == div && i.name == name);
+   if (exist) exist.who = who;
+}
 
 /* -------------------------------------------------------------------------------------- */
 function setDefault(me) {switch(me.id) {
@@ -805,6 +809,93 @@ function setDefault(me) {switch(me.id) {
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10062 : // 세라프
+      me.healTurn = [];
+      me.ultbefore = function() {
+         // 궁극기 : 특선 상품 2.3% 할인
+         // 자신의 공격 데미지의 88%만큼 매턴 아군 전체를 치유(4턴)
+         me.healTurn.push(GLOBAL_TURN, GLOBAL_TURN+1, GLOBAL_TURN+2, GLOBAL_TURN+3);
+         // 아군 전체의 궁극기 데미지 30% 증가(1턴)
+         tbf(all, "궁뎀증", 30, "특선 상품 2.3% 할인", 1);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         // 궁극기 : 특선 상품 2.3% 할인
+         // 자신의 공격 데미지의 257%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+      };
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);
+         // 일반 공격 : 정밀 계산
+         // 자신의 공격 데미지의 75%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+      };
+      me.leader = function() {
+         // 리더 스킬 : 상인본색
+         // 아군 전체의 최대 HP 30% 증가
+         hpUpAll(30);
+         // 아군 전체의 공격 데미지 30% 증가
+         tbf(all, "공퍼증", 30, "상인본색1", always);
+         // 궁극기 발동 시 「자신의 공격 데미지의 30%만큼 아군 전체의 공격 데미지 증가(1턴)」 발동
+         atbf(me, "궁", all, "공고증", myCurAtk+me.id+30, "상인본색2", 1, always);
+
+         // 첫째 턴 시작 시 「저가 매입」
+         for(let c of comp) if (c.id != me.id) {
+            // 「저가 매입」
+            // 자신 이외의 아군은 「공격 시 『이국 상인 세라프의 공격 데미지 3% 증가(최대 15중첩)』(50턴)발동」흭득
+            anbf(c, "공격", me, "공퍼증", 3, "<저가 매입>", 1, 15, 50);
+            // 자신 이외의 아군은 「공격 시 『이국 상인 세라프가 부여하는 치유량 2% 증가(최대 15중첩)』(50턴)발동」흭득
+         }
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 정보의 중요성
+         // 공격 시 자신의 공격 데미지의 25%만큼 아군 딜러의 데미지 증가 (1턴) 발동
+         for(let idx of getRoleIdx("딜"))
+            atbf(me, "공격", comp[idx], "공고증", myCurAtk+me.id+25, "정보의 중요성", 1, always);
+         
+         // 패시브 스킬 2 : 최신 상품 => atkafter로
+         // 일반 공격 시 현재 최저 HP의 아군에게 대상의 최대 HP의 20%만큼 아머 부여 (1턴) 발동
+         let lowHpCh = comp.reduce((lowest, c) => {
+            return (c.curHp < lowest.curHp) ? c : lowest;
+         }, comp[0]);
+         atbf(me, "평", lowHpCh, "아머", lowHpCh.hp*20, "최신 상품1", 1, always);
+         alltimeFunc.push(function() {
+            let lowHpChTmp = comp.reduce((lowest, c) => {
+               return (c.curHp < lowest.curHp) ? c : lowest;
+            }, comp[0]);
+            setBuffWho(me, "발동", "최신 상품1", lowHpChTmp);
+         })
+         // TODO: 일반 공격 시 "자신의 공격 데미지의 40%만큼 현재 최저 HP의 아군을 치유" 발동
+         
+         // 패시브 스킬 3 : VIP 골드 멤버십 카드
+         // 첫째 턴 시작 시 자신 이외의 아군에게 <선착순 1명> 발동
+         for(let c of comp) if (c.id != me.id) {
+            // <선착순 1명>
+            // 방어 시 "자신의 궁극기 데미지 15% 증가(최대 1중첩)" (1턴) 발동
+            atbf(c, "방", c, "궁뎀증", 15, "<선착순 1명>", always, 1);
+            // 방어 시 "자신이 가하는 데미지 15% 증가(최대 1중첩)" (1턴) 발동
+            atbf(c, "방", c, "가뎀증", 15, "<선착순 1명>", always, 1);
+            // 방어 시 "자신의 공격 데미지 30% 증가(최대 1중첩)" (1턴) 발동
+            atbf(c, "방", c, "공퍼증", 30, "<선착순 1명>", always, 1);
+            // 방어 시 "<세라프 상회 VIP 멤버십 카드> (1턴)" 발동
+            // 방어 시 자신 이외의 아군의 <선착순 1명>가 부여한 모든 효과 제거 (1턴) 발동
+            for(let c2 of comp) if (c2.id != c.id) {
+               atbf(c, "방", c2, "제거", "발동", "<선착순 1명>", 1, 1);
+            }
+         }
+         
+         // 패시브 스킬 4 : 피해 감소
+         // TODO: 자신이 받는 데미지 5% 감소
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}
+         // 매턴 아군 전체를 치유
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp); // c.heal();
+         me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
+      };
       return me;
    case 10063 : // 에밀리
       me.ultbefore = function() { // 메이드 분신술
