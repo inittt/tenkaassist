@@ -858,6 +858,62 @@ function setDefault(me) {switch(me.id) {
       };
       me.turnover = function() {if (me.isLeader) {}};
       return me;
+   case 10066 : // 안젤리카
+      me.ultbefore = function() {
+         // 궁극기 : 마술회로 · 저주전개
+         // 자신의 공격 데미지 50% 증가(4턴)
+         tbf(me, "공퍼증", 50, "마술회로-저주전개", 4);
+         // TODO: 자신이 받는 데미지 20% 감소(4턴)
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 마도 현자
+         // TODO: 아군 전체의 속성 상성 효과 100% 감소
+         // 아군 전체의 공격 데미지 30% 증가
+         tbf(all, "공퍼증", 30, "마도 현자1", always);
+         // 아군 전체의 최대 HP 15% 증가
+         hpUpAll(15);
+         // 자신은 1턴마다 「아군 전체의 공격 데미지 5% 증가(최대 25중첩)」 발동 흭득 => turnstart로
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 천주
+         // 자신의 궁극기 데미지 25% 증가
+         tbf(me, "궁뎀증", 25, "천주1", always);
+         // 공격 시 「자신의 궁극기 데미지 2% 증가(최대 25중첩)」 발동
+         anbf(me, "공격", me, "궁뎀증", 2, "천주2", 1, 25, always);
+
+         // 패시브 스킬 2 : 구조 해석
+         // 자신이 가하는 데미지 10% 증가
+         tbf(me, "가뎀증", 10, "구조 해석1", always);
+         // 궁극기 발동 시 「자신이 가하는 데미지 6% 증가(최대 5중첩)」발동
+         anbf(me, "궁", me, "가뎀증", 6, "구조 해석2", 1, 5, always);
+
+         // 패시브 스킬 3 : 편집광
+         // 1턴마다 「자신의 공격 데미지 4% 증가(최대 50중첩)」발동 => turnstart로
+         // 공격 시 「자신의 공격 데미지 2% 증가(최대 50중첩)」발동
+         anbf(me, "공격", me, "공퍼증", 2, "편집광2", 1, 50, always);
+
+         // 패시브 스킬 4 : 궁극기+
+         // 자신의 궁극기 데미지 10% 증가
+         tbf(me, "궁뎀증", 10, "궁극기+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {
+            // 마도 현자2
+            // 자신은 1턴마다 「아군 전체의 공격 데미지 5% 증가(최대 25중첩)」 발동 흭득
+            if (GLOBAL_TURN > 1) nbf(all, "공퍼증", 5, "마도 현자2", 1, 25);
+         }
+         // 패시브 스킬 3 : 편집광
+         // 1턴마다 「자신의 공격 데미지 4% 증가(최대 50중첩)」발동
+         if (GLOBAL_TURN > 1) nbf(me, "공퍼증", 4, "편집광1", 1, 50);
+      };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
    case 10067 : // 신미나
       me.ultbefore = function() {}
       me.ultafter = function() {
@@ -913,6 +969,196 @@ function setDefault(me) {switch(me.id) {
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {if (me.isLeader) {}
          if (GLOBAL_TURN > 1) nbf(me, "발효증", 10, "<명경지수>", 1, 10);
+      };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10068 : // 렌
+      me.ultbefore = function() {
+         // 궁극기 : 주문하신 승룡교자 나왔습니다!
+         // TODO: 아군 전체가 받는 치유량 45% 증가(해당 효과는 3턴 내 점차 감소)
+         // 아군 전체의 궁극기 데미지 12.5% 증가 (최대 3중첩) [CD : 3]
+         nbf(all, "궁뎀증", 12.5, "주문하신 승룡교자 나왔습니다!", 1, 3);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         // 궁극기 : 주문하신 승룡교자 나왔습니다!
+         // 공격 데미지의 198%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+      };
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);
+         // 일반 공격 : 식사하세요~
+         // 공격 데미지의 75%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+      };
+      me.leader = function() {
+         // 리더 스킬 : 배고픔을 느껴라!
+         // 아군 전체의 공격 데미지 30% 증가
+         tbf(all, "공퍼증", 30, "배고픔을 느껴라!", always);
+         // 최대 HP 30% 증가
+         hpUpAll(30);
+         // 모든 동료가 <꼬르륵꼬르륵> 효과 획득
+         // <꼬르륵꼬르륵>
+         // TODO: 자신의 현재 HP가 50% 이하일 시, 받는 치유량 100% 증가 효과 발동
+         
+         // 모든 동료가 <더는... 못먹겠어...>효과 획득
+         // <더는... 못먹겠어...>
+         // 자신의 현재 HP가 99% 이상일 시, 공격 데미지 40% 증가 효과 발동
+         buff(all, "공퍼증", 40, "더는... 못먹겠어...", always, false);
+         alltimeFunc.push(function() {for(let c of comp)
+            setBuffOn(c, "기본", "더는... 못먹겠어...", Math.ceil(c.curHp/c.hp*100) >= 99);});
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 주문하신 전복만두 나왔습니다!
+         // TODO: 3턴마다 아군 전체가 받는 치유량 35% 증가 (3턴) 효과 발동
+         
+         // 패시브 스킬 2 : 주문하신 크림스튜 나왔습니다! => turnstart로
+         // 3턴마다 '자신의 최대 HP의 10%만큼 아군 전체의 아머 강화'(1턴) 효과 발동
+         // 3턴마다 '아군 전체의 공격 데미지 20% 증가' (1턴) 효과 발동
+            
+         // 패시브 스킬 3 : 주문하신 최상급 시저 스테이크 나왔습니다! => turnstart로
+         // 3턴마다 '아군 전체의 궁극기 데미지 30% 증가'(1턴) 효과 발동
+         // 3턴마다 '자신의 공격 데미지의 20% 만큼 아군 전체의 공격 데미지 증가' (1턴) 효과 발동
+
+         // 패시브 스킬 4 : 받는 데미지 감소+
+         // TODO: 자신이 받는 데미지 5% 감소
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}
+         if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%3 == 0) {
+            // 패시브 스킬 2 : 주문하신 크림스튜 나왔습니다!
+            // 3턴마다 '자신의 최대 HP의 10%만큼 아군 전체의 아머 강화'(1턴) 효과 발동
+            tbf(all, "아머", me.hp*10, "주문하신 크림스튜 나왔습니다!1", 1);
+            // 3턴마다 '아군 전체의 공격 데미지 20% 증가' (1턴) 효과 발동
+            tbf(all, "공퍼증", 20, "주문하신 크림스튜 나왔습니다!2", 1);
+
+            // 패시브 스킬 3 : 주문하신 최상급 시저 스테이크 나왔습니다!
+            // 3턴마다 '아군 전체의 궁극기 데미지 30% 증가'(1턴) 효과 발동
+            tbf(all, "궁뎀증", 30, "주문하신 최상급 시저 스테이크 나왔습니다!1", 1);
+            // 3턴마다 '자신의 공격 데미지의 20% 만큼 아군 전체의 공격 데미지 증가' (1턴) 효과 발동
+            tbf(all, "공고증", myCurAtk+me.id+20, "주문하신 최상급 시저 스테이크 나왔습니다!2", 1);
+         }
+      };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10069 : // 스즈란
+      me.ultbefore = function() { // 너무 하고 싶지만 안 돼!
+         // 아군 딜러, 디스럽터의 궁극기 데미지 30% 증가(2턴)
+         for(let idx of getRoleIdx("딜", "디"))
+            tbf(comp[idx], "궁뎀증", 30, "너무 하고 싶지만 안 돼!1", 2);
+         // 자신 이외의 아군 전체는 「공격 시『자신의 공격 데미지의 65%만큼 타깃에게 데미지』발동(4턴)」획득
+         for(let c of comp) if (c.id != me.id) {
+            tbf(c, "평발동*", 65, "너무 하고 싶지만 안 돼!2", 4);
+            tbf(c, "궁발동*", 65, "너무 하고 싶지만 안 돼!3", 4);
+         }
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {
+         // 일반 공격 : 토끼의 서포트
+         // 아군 전체의 공격 데미지 50% 증가(1턴)
+         tbf(all, "공퍼증", 50, "토끼의 서포트", 1);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 토끼 공격술
+         // 아군 전체의 HP 20% 증가
+         hpUpAll(20);
+         // 아군 전체의 공격 데미지 50% 증가
+         tbf(all, "공퍼증", 50, "토끼 공격술1", always);
+         // 아군 딜러, 디스럽터는 <<성욕 토끼발>> 획득
+         for(let idx of getRoleIdx("딜", "디")) {
+            // <<성욕 토끼발>>
+            // 공격 시 「자신의 공격 데미지 20% 증가(최대 5중첩)」 발동
+            atbf(comp[idx], "공격", comp[idx], "공퍼증", 20, "<성욕 토끼발>1", 1, 5, always);
+            // 공격 시 「타깃이 받는 발동형 스킬 데미지 20% 증가(최대 5중첩)」 발동
+            atbf(comp[idx], "공격", boss, "받발뎀", 20, "<성욕 토끼발>2", 1, 5, always);
+            // 궁극기 발동 시 「자신의 공격 데미지의 150%만큼 타깃에게 데미지」 발동
+            tbf(comp[idx], "궁발동*", 150, "<성욕 토끼발>3", always);
+         }
+         // 4턴마다 「아군 전체의 궁극기 데미지 35% 증가(2턴)」 발동 => turnstart로
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 모두 파이팅!
+         // 궁극기 발동 시 「아군 전체의 공격 데미지 50% 증가(1턴)」 발동
+         atbf(me, "궁", all, "공퍼증", 50, "모두 파이팅!", 1, always);
+         
+         // 패시브 스킬 2 : 야아아아아아!
+         // 궁극기 발동 시 「자신의 최대 HP 15%만큼 자신에게 아머 강화 부여(1턴)」 발동
+         atbf(me, "궁", all, "아머", me.hp*15, "야아아아아아!", 1, always);
+         
+         // 패시브 스킬 3 : 로맨틱한 연애!
+         // 아군 전체의 가하는 데미지 20% 증가
+         tbf(all, "가뎀증", 20, "로맨틱한 연애!", always);
+         
+         // 패시브 스킬 4 : 공격 데미지+
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {
+            // 토끼 공격술2
+            // 4턴마다 「아군 전체의 궁극기 데미지 35% 증가(2턴)」 발동
+            if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%4 == 0) tbf(all, "궁뎀증", 35, "토끼 공격술2", 2);
+         }
+      };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10071 : // 스타샤
+      me.ultbefore = function() { // 저주 멸살의 눈
+         // 자신의 공격 데미지 240% 증가(2턴)
+         tbf(me, "공퍼증", 240, "저주 멸살의 눈1", 2);
+         // 일반 공격 데미지 100% 증가(2턴)
+         tbf(me, "일뎀증", 100, "저주 멸살의 눈2", 2);
+         // 타깃이 받는 화속성 데미지 5% 증가(최대 2중첩)
+         for(let idx of getElementIdx("화")) nbf(comp[idx], "받속뎀", 5, "저주 멸살의 눈3", 1, 2);
+         // 자신은 일반 공격 시 「자신의 공격 데미지의 130%만큼 타깃에게 데미지」 추가(4턴)
+         tbf(me, "평추가*", 130, "저주 멸살의 눈4", 4);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 금지구역의 수호자
+         // 아군 전체의 최대 HP 20% 증가
+         hpUpAll(20);
+         // 아군 전체의 공격 데미지 60% 증가
+         tbf(all, "공퍼증", 60, "금지구역의 수호자1", always);
+         // 아군 전체의 일반 공격 데미지 60% 증가
+         tbf(all, "일뎀증", 60, "금지구역의 수호자2", always);
+         // 자신이 가하는 데미지 50% 증가
+         tbf(me, "가뎀증", 50, "금지구역의 수호자3", always);
+         // 자신은 일반 공격 시 「타깃이 받는 데미지 5% 증가(최대 8중첩) 」 발동
+         anbf(me, "평", boss, "받뎀증", 5, "금지구역의 수호자4", 1, 8, always);
+         // 궁극기 발동 시 「일반 공격 시 『자신의 공격 데미지의 150%만큼 타깃에게 데미지』 추가(2턴)」 발동
+         atbf(me, "궁", me, "평추가*", 150, "금지구역의 수호자5", 2, always);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 전율의 사냥
+         // 공격 데미지 50% 증가
+         tbf(me, "공퍼증", 50, "전율의 사냥", always);
+         
+         // 패시브 스킬 2 : 2연발
+         // 궁극기 발동 시 「일반 공격 시 『자신의 공격 데미지의 70%만큼 타깃에게 데미지』 추가(2턴)」 발동
+         atbf(me, "궁", me, "평추가*", 70, "2연발", 2, always);
+         
+         // 패시브 스킬 3 : 쇠약의 저주 => turnstart로
+         // 6번째 턴에서 「적 전체가 받는 일반 공격 데미지 100% 증가(50턴)」 발동
+         
+         // 패시브 스킬 4 : 데미지+
+         // 자신이 가하는 데미지 7.5% 증가
+         tbf(me, "가뎀증", 7.5, "데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}
+         // 패시브 스킬 3 : 쇠약의 저주
+         // 6번째 턴에서 「적 전체가 받는 일반 공격 데미지 100% 증가(50턴)」 발동
+         if (GLOBAL_TURN == 6) tbf(boss, "받일뎀", 100, "쇠약의 저주", 50);
       };
       me.turnover = function() {if (me.isLeader) {}};
       return me;
@@ -987,6 +1233,133 @@ function setDefault(me) {switch(me.id) {
          // 시크릿 연애 대작전
          // 2턴마다 "<밀당의 매력>이 부여한 공격 데미지 증가 상태 1중첩" 효과 발동
          if (GLOBAL_TURN % 2 == 0) nbf(me, "공퍼증", 15, "<밀당의 매력>", 1, 8);
+      };
+      return me;
+   case 10074 : // 이치카
+      me.ultbefore = function() { // 피어나는 눈꽃
+         // 2,3,4번 자리 적이 받는 궁극기 데미지 5% 증가(최대 4중첩)
+         nbf(boss, "받궁뎀", 5, "피어나는 눈꽃1", 1, 4);
+         nbf(boss, "받궁뎀", 5, "피어나는 눈꽃2", 1, 4);
+         nbf(boss, "받궁뎀", 5, "피어나는 눈꽃3", 1, 4);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 툰드라
+         // 아군 전체의 공격 데미지 40% 증가
+         tbf(all, "공퍼증", 40, "툰드라1", always);
+         // 자신의 궁극기 최대 CD+1
+         me.cd += 1; me.curCd += 1;
+         // 궁극기 발동 시,「적 전체가 받는 데미지 7.5% 증가(최대 4중첩)」효과 발동
+         anbf(me, "궁", boss, "받뎀증", 7.5, "툰드라2", 1, 4, always);
+         // 궁극기 발동 시,「적 전체가 받는 궁극기 데미지 12.5% 증가(최대 4중첩)」효과 발동
+         anbf(me, "궁", boss, "받궁뎀", 12.5, "툰드라3", 1, 4, always);
+         // 일반 공격 시,「자신의 공격 데미지 25%만큼 아군 전체의 공격 데미지 증가 (1턴)」효과 발동
+         atbf(me, "평", all, "공고증", myCurAtk+me.id+25, "툰드라4", 1, always);
+         // 자신에게 침묵 면역 효과
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 설풍 장벽
+         // 방어 시,「자신의 공격 데미지 50%만큼 아군 전체의 아머 강화(1턴)」효과 발동
+         atbf(me, "방", all, "아머", myCurAtk+me.id+50, "설풍 장벽", 1, always);
+         // 방어 시,「100% 확률로 자신에게 침묵 효과(2턴)」효과 발동
+         
+         // 패시브 스킬 2 : 칼바람
+         // 궁극기 발동 시,「자신의 데미지 18.75% 증가(최대 4중첩)」효과 발동
+         anbf(me, "궁", me, "가뎀증", 18.75, "칼바람1", 1, 4, always);
+         // 궁극기 발동 시,「자신의 궁극기 데미지 15% 증가(최대 4중첩)」효과 발동
+         anbf(me, "궁", me, "궁뎀증", 15, "칼바람2", 1, 4, always);
+         
+         // 패시브 스킬 3 : 설산 미인
+         // 자신이 가하는 데미지 15% 증가
+         tbf(me, "가뎀증", 15, "설산 미인1", always);
+         // 궁극기 발동 시,「자신의 최대 HP 20%만큼 아군 전체의 아머 강화(1턴)」효과 발동
+         atbf(me, "궁", all, "아머", me.hp*20, "설산 미인2", 1, always);
+         
+         // 패시브 스킬 4 : 공격력 증가
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격력 증가", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10075 : // 앨즈루
+      me.healTurn = [];
+      me.ultbefore = function() { // 역전극 개연~ 깡총~
+         // 자신의 공격 데미지 50% 증가(1턴)
+         tbf(me, "공퍼증", 50, "역전극 개연~ 깡총~1", 1);
+         // 자신의 공격 데미지의 40%만큼 아군 전체의 공격 데미지 증가 (1턴)
+         tbf(all, "공고증", myCurAtk+me.id+40, "역전극 개연~ 깡총~2", 1);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         // 자신이 "팀원 중 최소 3명 이상의 딜러가 있을 시, [《우리 함께 깡총!》] 발동" 효과 획득
+         if (me.isLeader && getRoleCnt("딜") >= 3) {
+            // 《우리 함께 깡총!》 : 궁극기 발동 시 "아군 딜러 전체의 궁극기 CD 1턴 감소" 발동
+            for(let idx of getRoleIdx("딜")) cdChange(comp[idx], -1);
+         }
+      };
+      me.atkbefore = function() { // 토끼의 응원~ 깡총♡
+         // 자신의 공격 데미지의 30%만큼 아군 전체의 공격 데미지 증가 (1턴)
+         tbf(all, "공고증", myCurAtk+me.id+30, "역전극 개연~ 깡총~2", 1);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 갑니다~ 깡총~
+         // 아군 전체가 "팀원 중 최소 3명 이상의 딜러가 있을 시, [《래빗의 팀워크》] 발동" 효과 획득
+         if (getRoleCnt("딜") >= 3) {
+            // 《래빗의 팀워크》
+            // 궁극기 데미지 50% 증가
+            tbf(all, "궁뎀증", 50, "<래빗의 팀워크>", always);
+            // 최대 HP 30% 증가
+            hpUpAll(30);
+         }
+
+         // 자신이 "팀원 중 최소 3명 이상의 딜러가 있을 시, [《우리 함께 깡총!》] 발동" 효과 획득 => ultimate로
+         // 《우리 함께 깡총!》 : 궁극기 발동 시 "아군 딜러 전체의 궁극기 CD 1턴 감소" 발동
+
+         // 1턴마다 자신 이외의 동료는 《깡총 깡총 깡깡총》 발동 => turnstart로
+         // 《깡총 깡총 깡깡총》 : 일반 공격 시, "이상한 나라의 치즈루의 공격 데미지 15% 증가(5턴)" 발동 (1턴)
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 급하다 급해~ => turnstart로
+         // 1턴마다 "아군 전체의 공격 데미지 2.5% 증가 (최대 8중첩)" 발동
+         
+         // 패시브 스킬 2 : 수제 토끼 쿠키
+         // TODO: 첫 번째 턴 시작 시 "아군 전체가 받는 치유량 30% 증가 (50턴)" 발동
+         // 1턴마다 "자신의 공격 데미지의 20%만큼 아군 전체를 치유 " 발동
+         me.healTurn.push(GLOBAL_TURN);
+         
+         // 패시브 스킬 3 : 행운의 토끼 다리
+         // 일반 공격 시 "아군 전체의 일반 공격 데미지 40% 증가 (1턴)" 발동
+         atbf(me, "평", all, "일뎀증", 40, "행운의 토끼 다리1", 1, always);
+         // 궁극기 발동 시 "아군 전체의 궁극기 데미지 15% 증가 (1턴)" 발동
+         atbf(me, "궁", all, "궁뎀증", 15, "행운의 토끼 다리2", 1, always);
+         
+         // 패시브 스킬 4 : 받는 데미지 감소+
+         // TODO: 자신이 받는 데미지 5% 감소
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {
+            // 1턴마다 자신 이외의 동료는 《깡총 깡총 깡깡총》 발동 => turnstart로
+            // 《깡총 깡총 깡깡총》 : 일반 공격 시, "이상한 나라의 치즈루의 공격 데미지 15% 증가(5턴)" 발동 (1턴)
+            if (GLOBAL_TURN > 1) for(let c of comp) if (c.id != me.id)
+               atbf(c, "평", me, "공퍼증", 15, "<깡총 깡총 깡깡총>", 5, 1);
+         }
+         // 패시브 스킬 1 : 급하다 급해~
+         // 1턴마다 "아군 전체의 공격 데미지 2.5% 증가 (최대 8중첩)" 발동
+         if (GLOBAL_TURN > 1) nbf(all, "공퍼증", 2.5, "급하다 급해~", 1, 8);
+      };
+      me.turnover = function() {if (me.isLeader) {}
+         // 매턴 아군 전체를 치유
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp); // c.heal();
+         me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me;
    case 10076 : // 앨루루
