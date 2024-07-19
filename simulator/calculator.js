@@ -705,6 +705,66 @@ function setDefault(me) {switch(me.id) {
          }
       };
       return me;
+   case 10040 : // 할브리
+      me.ultbefore = function() { // 궁극기 : 천재 특제, 할로윈 한정 마력포
+         // 타깃이 받는 서큐버스 브리트니의 데미지 15% 증가(최대 2중첩)
+         nbf(me, "받캐뎀", 15, "천재 특제, 할로윈 한정 마력포", 1, 2);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 여러분의 마력을 내게 내줄래... 농담이야
+         // 아군 전체의 공격 데미지 40% 증가
+         tbf(all, "공퍼증", 40, "여러분의 마력을 내게 내줄래... 농담이야1", always);
+         // 자신의 궁극기 CD 카운트다운 정지
+         me.stopCd = true;
+         // 자신의 궁극기 데미지 100% 증가
+         tbf(me, "궁뎀증", 100, "여러분의 마력을 내게 내줄래... 농담이야2", always);
+         // 자신 이외의 탱커가 아닌 파티원이 방어 시, 다음 효과 발동
+         for(let idx = 1; i < 5; i++) if (!getRoleIdx("탱").includes(idx)) {
+            const def = comp[idx].defense;
+            comp[idx].defense = function(...args) {
+               def.apply(this, args);
+               // - 할브리의 현재 궁극기 CD 2턴 감소 효과 발동
+               cdChange(comp[0], -2);
+               // - 할브리의 cd 변동 면역(1턴)
+               comp[0].canCDChange = false;
+               // - 해당 파티원 궁극기 CD 1턴 증가 효과 발동
+               cdChange(comp[idx], 1);
+            }
+            // - 해당 파티원의 공격 데미지 20%만큼 할브리의 공격 데미지 증가 (2턴) 효과 발동
+            atbf(comp[idx], "방", me, "공고증", myCurAtk+comp[idx].id+20, "여러분의 마력을 내게 내줄래... 농담이야3", 2, always);
+         }
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 서큐버스의 달란트
+         // 일반 공격 시, 궁극기 데미지 10% 증가 (4턴) 효과 발동
+         atbf(me, "평", me, "궁뎀증", 10, "서큐버스의 달란트", 4, always);
+         
+         // 패시브 스킬 2 : 빠진 독에 마력 붓기
+         // 궁극기 발동 시, 자신의 공격 데미지 50% 증가 (해당 효과는 턴이 지날때마다 12.5%씩 감소)
+         atbf(me, "궁", me, "공퍼증", 50, "빠진 독에 마력 붓기", 4, always);
+         
+         // 패시브 스킬 3 : 서큐버스 군사의 비책
+         // 자신의 데미지 35% 증가
+         tbf(me, "가뎀증", 35, "서큐버스 군사의 비책", always);         
+
+         // 패시브 스킬 4 : 궁극기 데미지+
+         // 자신의 궁극기 데미지 10% 증가
+         tbf(me, "궁뎀증", 10, "궁극기 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}
+         me.canCDChange = true;
+         for(let b of me.buff) {
+            if (b.div == "기본" && b.name == "빠진 독에 마력 붓기") b.size -= 12.5;
+         }
+      };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
    case 10042 : // 수이블
       me.ultbefore = function() {
          // 소녀의 연심은 무적!1 : 아군 수, 화 공퍼증 40%(1턴)
@@ -756,6 +816,105 @@ function setDefault(me) {switch(me.id) {
          }
       };
       me.turnover = function() {};
+      return me;
+   case 10043 : // 할살루
+      const salu = comp.find(i => i.id == 10004);
+      me.ultbefore = function() { // 최강 최고 최상의 할로 엘프 퀸
+         // 자신의 공격 데미지 30% 증가(3턴)
+         tbf(me, "공퍼증", 30, "최강 최고 최상의 할로 엘프 퀸1", 3);
+         // 타깃이 받는 할로 퀸 살루시아의 데미지 15% 증가(3턴)
+         tbf(me, "받캐뎀", 15, "최강 최고 최상의 할로 엘프 퀸2", 3);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 꽉 막힌 그녀, 아웃!
+         // 아군 풍속성 캐릭터의 최대 HP 35% 증가
+         for(let idx of getElementIdx("풍")) hpUpMe(comp[idx], 35);
+         // 파티의 풍속성 캐릭터가 5명인 경우, "자신이 받는 치유량 25% 증가, 공격 데미지 100% 증가" 효과 발동
+         if (getElementCnt("풍") >= 5) tbf(me, "공퍼증", 100, "꽉 막힌 그녀, 아웃!1", always);
+         // 첫 번째 턴 시작 시, "할살루의 공격 데미지 40%만큼 아군 풍속성 캐릭터의 공격 데미지 증가 (50턴)" 효과 발동
+         for(let idx of getElementIdx("풍"))
+            tbf(comp[idx], "공고증", myCurAtk+me.id+40, "꽉 막힌 그녀, 아웃!2", 50);
+         // 엘프의 왕 살루시아의 궁극기 강화 : 최대 CD 6턴→4턴, "타깃이 받는 데미지 20% 증가(3턴)" 효과 발동
+         if (salu) {
+            salu.cd -= 2; salu.curCd -= 2;
+            atbf(salu, "궁", boss, "받뎀증", 20, "꽉 막힌 그녀, 아웃!3", 3, always);
+         }
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 출격! 나의 엘프(노예)여!
+         // 일반 공격 시 "타깃이 받는 아군 딜러의 데미지 6% 증가(최대 4중첩)" 효과 발동
+         for(let idx of getRoleIdx("딜"))
+            anbf(me, "평", comp[idx], "받직뎀", 6, "출격! 나의 엘프(노예)여!1", 1, 4, always);
+         // 일반 공격 시 "타깃이 엘프의 왕 살루시아에게 받는 데미지 6% 증가 (최대 4중첩)" 효과 발동
+         if (salu) anbf(me, "평", salu, "받캐뎀", 6, "출격! 나의 엘프(노예)여!2", 1, 4, always);
+         
+         // 패시브 스킬 2 : 사탕 징수령
+         // 일반 공격 시 , 타깃이 받는 일반 공격 데미지 7.5% 증가 (최대 4중첩) 효과 발동
+         anbf(me, "평", boss, "받일뎀", 7.5, "사탕 징수령", 1, 4, always);
+         
+         // 패시브 스킬 3 : 엘프의 왕, 나를 위한 전투
+         // 궁극기 발동 시, "아군 풍속성 캐릭터의 데미지 15% 증가 (최대 2중첩)" 효과 발동
+         for(let idx of getElementIdx("풍"))
+            anbf(me, "궁", comp[idx], "가뎀증", 15, "엘프의 왕, 나를 위한 전투", 1, 2, always);
+         
+         // 패시브 스킬 4 : 공격력 증가
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격력 증가", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10045 : // 슈텐
+      me.ultbefore = function() {
+         // 궁극기 : 귀무에 취하다
+         // 자신의 공격 데미지 112.5% 증가(1턴)
+         tbf(me, "공퍼증", 112.5, "귀무에 취하다1", 1);
+         // 자신의 가하는 데미지 25% 증가(1턴)
+         tbf(me, "가뎀증", 25, "귀무에 취하다2", 1);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 미몽의 취무
+         // 아군에 3명 이상의 딜러가 있을 시, 아군 전체가 "공격 데미지 30% 증가" 효과 발동
+         if (getRoleCnt("딜") >= 3) tbf(all, "공퍼증", 30, "미몽의 취무1", always);
+         // 3명 이상의 화속성 캐릭터가 있을 시, "공격 데미지 40% 증가" 효과 발동
+         if (getElementCnt("화") >= 3) tbf(me, "공퍼증", 40, "미몽의 취무2", always);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 오니의 웃음
+         // 일반 공격 시, "궁극기 발동 후 공격 데미지의 60.5%로 타깃에게 추가 공격 (7턴)"효과 발동
+         ptbf(me, "평", me, "궁발동*", 60.5, "오니의 웃음", 7, always);
+         
+         // 패시브 스킬 2 : 술 들이붓기
+         // 매 턴마다 " 자신의 공격 데미지 15% 증가(최대 6중첩)"효과 발동 => turnstart로
+         // 궁극기 발동 시, "술 들이붓기의 공격 데미지 증가 효과 2중첩 감소"효과 발동
+         anbf(me, "궁", me, "공퍼증", 15, "술 들이붓기", -2, 6);
+         
+         // 패시브 스킬 3 : 오니의 가무
+         // 자신의 궁극기 데미지 35% 증가
+         tbf(me, "궁뎀증", 35, "오니의 가무", always);
+         
+         // 패시브 스킬 4 : 궁극기 데미지+
+         // 자신의 궁극기 데미지 10% 증가
+         tbf(me, "궁뎀증", 10, "궁극기 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}
+         // 패시브 스킬 2 : 술 들이붓기
+         // 매 턴마다 " 자신의 공격 데미지 15% 증가(최대 6중첩)"효과 발동
+         if (GLOBAL_TURN > 1) nbf(me, "공퍼증", 15, "술 들이붓기", 1, 6);
+      };
+      me.turnover = function() {if (me.isLeader) {}};
       return me;
    case 10047 : // 테키
       me.ultbefore = function() {
