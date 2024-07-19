@@ -1,7 +1,7 @@
-const liberationList = ["살루시아", "루루", "치즈루", "란", "이블리스", "바알", "사탄", "섹돌", "밀레"];
+const liberationList = ["바알", "사탄", "이블리스", "살루시아", "란", "루루", "밀레", "섹돌", "치즈루"];
 const chJSON = { data : [
-{ok : false, id : 10001, rarity : 3, fullname : "마왕 바알", name : "바알", element : 0, role : 0},
-{ok : false, id : 10002, rarity : 3, fullname : "마왕 사탄", name : "사탄", element : 4, role : 2},
+{ok : false, id : 10001, rarity : 3, fullname : "마왕 바알+", name : "바알", element : 0, role : 0},
+{ok : false, id : 10002, rarity : 3, fullname : "마왕 사탄+", name : "사탄", element : 4, role : 2},
 {ok : false, id : 10003, rarity : 3, fullname : "마왕 이블리스", name : "이블리스", element : 3, role : 0},
 {ok : true, id : 10004, rarity : 3, hp:1006228, atk:243585, cd:6, atkMag:100, ultMag:625, fullname : "엘프의 왕 살루시아", name : "살루시아", element : 2, role : 3},
 {ok : false, id : 10005, rarity : 3, fullname : "난쟁이의 왕 란", name : "란", element : 1, role : 0},
@@ -27,8 +27,8 @@ const chJSON = { data : [
 {ok : false, id : 10033, rarity : 3, fullname : "드림이터 아르티아", name : "아르티아", element : 4, role : 4},
 {ok : false, id : 10034, rarity : 3, fullname : "붉은 재단사 아나스티", name : "구빨강", element : 0, role : 0},
 {ok : false, id : 10035, rarity : 3, fullname : "푸른 재봉사 아나스나", name : "구파랑", element : 1, role : 0},
-{ok : false, id : 10037, rarity : 3, fullname : "나가 퀸 메스미나", name : "메스미나", element : 0, role : 4},
-{ok : false, id : 10039, rarity : 3, fullname : "천년의 혈족 라티아", name : "라티아", element : 4, role : 0},
+{ok : true, id : 10037, rarity : 3, hp:979665, atk:250228, cd:3, atkMag:100, ultMag:468, fullname : "나가 퀸 메스미나", name : "메스미나", element : 0, role : 4},
+{ok : true, id : 10039, rarity : 3, hp:932267, atk:262629, cd:5, atkMag:120, ultMag:829, fullname : "천년의 혈족 라티아", name : "라티아", element : 4, role : 0},
 {ok : true, id : 10040, rarity : 3, hp:974784, atk:277244, cd:4, atkMag:100, ultMag:468, fullname : "서큐버스 브리트니", name : "할브리", element : 0, role : 0},
 {ok : true, id : 10042, rarity : 3, hp:956625, atk:282116, cd:4, atkMag:100, ultMag:514, fullname : "여름날 이블리스", name : "수이블", element : 1, role : 0},
 {ok : true, id : 10043, rarity : 3, hp:960611, atk:281230, cd:4, atkMag:100, ultMag:514, fullname : "할로 퀸 살루시아", name : "할살루", element : 2, role : 0},

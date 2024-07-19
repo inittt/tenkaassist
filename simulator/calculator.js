@@ -705,6 +705,83 @@ function setDefault(me) {switch(me.id) {
          }
       };
       return me;
+   case 10037 : // 메스미나
+      me.ultbefore = function() {}
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 정열의 춤사위
+         // 아군 화속성 캐릭터의 공격 데미지 35% 증가
+         for(let idx of getElementIdx("화")) tbf(comp[idx], "공퍼증", 35, "정열의 춤사위", always);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 지연 독액
+         // TODO: 궁극기 발동시, "타깃의 현재 궁극기 CD 2턴 증가" 효과 발동.
+         
+         // 패시브 스킬 2 : 카두케우스의 물어뜯기
+         // 일반 공격 시, "타깃이 받는 일반 공격 데미지 10% 증가(3턴)"효과 발동
+         atbf(me, "평", boss, "받일뎀", 10, "카두케우스의 물어뜯기1", 3, always);
+         // 궁극기 발동 시, "타깃이 받는 궁극기 데미지 15% 증가(2턴)"효과 발동
+         atbf(me, "궁", boss, "받궁뎀", 15, "카두케우스의 물어뜯기2", 2, always);
+         
+         // 패시브 스킬 3 : 메스, 케이티 협공!
+         // 공격 시, "타깃이 받는 일반 공격 데미지 4% 증가(최대 5중첩),
+         anbf(me, "공격", boss, "받일뎀", 4, "메스, 케이티 협공!", 1, 5, always);
+         // TODO: 받는 궁극기 데미지 3% 증가(최대 5중첩)
+         // TODO: 데미지 4% 감소(최대 5중첩) 효과 발동
+         
+         // 패시브 스킬 4 : 일반 공격 데미지+
+         // 자신의 일반 공격 데미지 10% 증가
+         tbf(me, "일뎀증", 10, "일반 공격 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10039 : // 라티아
+      me.ultbefore = function() {/*me.hit();*/}
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {/*me.hit();*/}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 피의 제물
+         const idxs = [1, 3];
+         for(let idx of idxs) {
+            // 아군 2, 4번 자리 멤버가 공격 시, 해당 멤버의 공격력 65%만큼 라티아의 공격 데미지 증가 (1턴) 효과 발동
+            atbf(comp[idx], "공격", me, "공고증", myCurAtk+comp[idx].id+65, "피의 제물1", 1, always);
+            // TODO: 아군 2, 4번 자리 멤버가 공격 시, 자신에게 최대 hp25%만큼의 확정 데미지 효과 발동
+         }
+         // 공격 시, 라티아의 공격 데미지의 15%만큼 자신 이외의 모든 동료를 치유 효과 발동
+         atbf(me, "공격", all, "힐", 15, "피의 제물2", 1, always);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 선혈 섭취
+         // TODO: 자신이 적에게 가한 데미지의 33%만큼 HP 회복.
+         // 일반 공격 시, 자신의 공격 5% 증가 (최대 3중첩) 효과 발동
+         anbf(me, "평", me, "공퍼증", 5, "선혈 섭취", 1, 3, always);
+         
+         // 패시브 스킬 2 : 홍혈의 암벽
+         // TODO: HP가 15%보다 적을 시, 받는 데미지 95% 감소
+         
+         // 패시브 스킬 3 : 선혈 광희
+         // 자신의 궁극기 최대 CD 1 감소
+         me.cd -= 1; me.curCd -= 1;
+         // 자신의 궁극기 현재 CD 5턴 감소
+         cdChange(me, -5);
+         
+         // 패시브 스킬 4 : 공격력 증가
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격력 증가", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
    case 10040 : // 할브리
       me.ultbefore = function() { // 궁극기 : 천재 특제, 할로윈 한정 마력포
          // 타깃이 받는 서큐버스 브리트니의 데미지 15% 증가(최대 2중첩)
