@@ -89,6 +89,7 @@ class Champ {
    }
    heal() {
       addBuff(this, ["힐"], "추가");
+      addBuff(this, ["힐"], "발동");
       this.curHp = this.hp;
    }
    hit() {addBuff(this, ["피격"], "추가"); addBuff(this, ["피격"], "발동");}
@@ -163,8 +164,11 @@ function addBuff(me, act, div) {
 
       if (b.type == "아머") {armorContainer.push(b); continue;}
       let size = b.size;
-      if (b.type == "힐") {if (b.who == all) for(let c of comp) c.heal(); else b.who.heal();}
-      else if (b.div == "기본") {
+      if (b.type == "힐") {
+         if (b.div == "발동") continue;
+         if (b.who == all) for(let c of comp) c.heal();
+         else b.who.heal();
+      } else if (b.div == "기본") {
          if (act.includes("평") && div == "추가" && b.type == "평추가+") applyAddDmg(size/100*me.atkAddCoef());
          if (act.includes("평") && div == "추가" && b.type == "평추가*") applyAddDmg(size/100*me.getCurAtk()*me.atkAddCoef());
          if (act.includes("평") && div == "발동" && b.type == "평발동+") applyAtvDmg(size/100*me.atkAtvCoef());
