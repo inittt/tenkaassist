@@ -70,7 +70,7 @@ function makeComp(list) {
 
 function start(compIds) {
    document.getElementById("simulator").style.display = "flex";
-   GLOBAL_TURN = 1; comp = []; buff_ex.length = 0;
+   GLOBAL_TURN = 1; comp = [];
    lastDmg = 0; lastAtvDmg = 0;
    boss.hp = boss.maxHp;
    boss.buff = []; alltimeFunc.length = 0;
@@ -142,6 +142,7 @@ function updateAll() {
    getdiv("deal").innerHTML = `공격데미지 : ${Math.ceil(lastDmg).toLocaleString()}`;
    getdiv("deal_add").innerHTML = `추가데미지 : ${Math.ceil(lastAddDmg).toLocaleString()}`;
    getdiv("deal_atv").innerHTML = `발동데미지 : ${Math.ceil(lastAtvDmg).toLocaleString()}`;
+   getdiv("deal_dot").innerHTML = `도트데미지 : ${Math.ceil(lastDotDmg).toLocaleString()}`;
    updateProgressBar(boss.hp, boss.maxHp);
 }
 function updateCdBar(i) {

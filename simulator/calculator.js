@@ -1,6 +1,6 @@
 const COEF = 2*1.3*1.25, all = 0, allNotMe = 1, myCurAtk = "a", myCurShd = "b", always = 100;
 let comp = [], GLOBAL_TURN = 1;
-let lastDmg = 0, lastAddDmg = 0, lastAtvDmg = 0;
+let lastDmg = 0, lastAddDmg = 0, lastAtvDmg = 0, lastDotDmg = 0;
 
 class Boss {
    constructor() {
@@ -40,7 +40,7 @@ class Champ {
       return res;
    }
 // [0공퍼증, 1공고증, 2받뎀증, 3일뎀증, 4받일뎀, 5궁뎀증, 6받궁뎀, 7발뎀증, 8받발뎀, 9가뎀증, 10속뎀증, 11받속뎀,
-//  12발효증, 13받직뎀, 14받캐뎀, 15아머, 16가아증, 17받아증]
+//  12발효증, 13받직뎀, 14받캐뎀, 15아머, 16가아증, 17받아증, 18받지뎀]
    getCurAtk() {const li = getBuffSizeList(this); return Math.round(this.atk*(1+li[0])+li[1]);}
    getAtkDmg() {
       const li = getBuffSizeList(this);
@@ -68,21 +68,19 @@ class Champ {
       return (1+li[2])*(1+li[12]+li[5]+li[6]+li[7]+li[8]+li[13]+li[14])*(1+li[9])*(1+li[10]+li[11]);
    }
    act_attack() {
-      lastAddDmg = 0;
-      lastAtvDmg = 0;
+      lastAddDmg = 0; lastAtvDmg = 0; lastDotDmg = 0;
       addBuff(this, ["평", "행동", "공격"], "추가");
       addBuff(this, ["평", "행동", "공격"], "발동");
       this.isActed = true;
    }
    act_ultimate() {
-      lastAddDmg = 0;
-      lastAtvDmg = 0;
+      lastAddDmg = 0; lastAtvDmg = 0; lastDotDmg = 0;
       addBuff(this, ["궁", "행동", "공격"], "추가");
       addBuff(this, ["궁", "행동", "공격"], "발동");
       this.isActed = true;
    }
    act_defense() {
-      lastDmg = 0; lastAddDmg = 0; lastAtvDmg = 0;
+      lastDmg = 0; lastAddDmg = 0; lastAtvDmg = 0; lastDotDmg = 0;
       addBuff(this, ["방", "행동", "공격"], "추가");
       addBuff(this, ["방", "행동", "공격"], "발동");
       this.isActed = true;
@@ -113,6 +111,10 @@ function nextTurn() {
       comp[i].buff = comp[i].buff.filter(item => !isExpired(item));
       comp[i].isActed = false;
    }
+   const dotBuff = boss.buff.filter(i => i.type == "도트뎀");
+   const bf = getBossBuffSizeList(boss);
+   lastDotDmg = 0;
+   for(let dot of dotBuff) applyDotDmg(Math.round(dot.size/100)*(1+bf[2]+bf[18]));
    boss.buff = boss.buff.filter(item => !isExpired(item));
 }
 
@@ -204,6 +206,7 @@ function addBuff(me, act, div) {
 }
 function applyAddDmg(dmg) {if (dmg <= 0) dmg = 0; lastAddDmg += dmg; boss.hp -= dmg;}
 function applyAtvDmg(dmg) {if (dmg <= 0) dmg = 0; lastAtvDmg += dmg; boss.hp -= dmg;}
+function applyDotDmg(dmg) {if (dmg <= 0) dmg = 0; lastDotDmg += dmg; boss.hp -= dmg;}
 
 function isNest(a) {return a.act == undefined && a.nest != undefined;}
 function isTurn(a) {return a.act == undefined && a.nest == undefined;}
@@ -211,12 +214,12 @@ function isActNest(a) {return a.act != undefined && a.nest != undefined;}
 function isActTurn(a) {return a.act != undefined && a.nest == undefined;}
 
 // buff들을 리스트에 버프량만큼 담아 리턴
-const buff_ex = [];
+const buff_ex = ["도트뎀", "제거"];
 const txts = ["공퍼증","공고증","받뎀증","일뎀증","받일뎀","궁뎀증","받궁뎀","발뎀증","받발뎀","가뎀증","속뎀증",
-   "받속뎀","발효증","받직뎀","받캐뎀", "아머", "가아증", "받아증", "제거"];
+   "받속뎀","발효증","받직뎀","받캐뎀", "아머", "가아증", "받아증", "받지뎀"];
 function getBuffSizeList(me) {
    const curBuff = me.buff.filter(i => i.div == "기본");
-   const res = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+   const res = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
    for(const bf of curBuff) {
       if (!bf.on) continue;
       if (buff_ex.includes(bf.type)) continue;
@@ -231,7 +234,7 @@ function getBuffSizeList(me) {
 }
 function getBossBuffSizeList(me) {
    const curBuff = me.buff.filter(i => i.div == "기본");
-   const res = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+   const res = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
    for(const bf of curBuff) {
       if (!bf.on) continue;
       if (buff_ex.includes(bf.type)) continue;
@@ -643,6 +646,50 @@ function setDefault(me) {switch(me.id) {
             if (GLOBAL_TURN > 1) nbf(me, "<재편제>", 0, "광견의 시야2", -4, 4);
          }
       };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10025 : // 아이블
+      me.ultbefore = function() {
+         // 궁극기 : 달밤의 뜨거운 노래
+         // 타깃에게 "매턴 공격 데미지 226%(6턴)만큼 데미지" 효과 획득
+         tbf(boss, "도트뎀", myCurAtk+me.id+220, "달밤의 뜨거운 노래", 6);
+         // TODO: 타깃이 "공격력 15% 감소(6턴)" 효과 획득
+         // TODO: 타깃이 "받는 치유량 25% 감소(6턴)" 효과 획득
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {
+         // 일반 공격 : 열창
+         // 타깃에게 "매턴 공격 데미지 50%만큼 데미지(4턴)"효과 획득
+         tbf(boss, "도트뎀", myCurAtk+me.id+50, "열창", 4);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 고귀하고 완벽한 마족 아이돌
+         // 자신의 공격 데미지 50% 증가
+         tbf(me, "공퍼증", 50, "고귀하고 완벽한 마족 아이돌", always);
+         // 각 웨이브의 첫 번째 턴에서 "자신의 궁극기 CD 6턴 감소"효과 발동
+         cdChange(me, -6);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 가창력
+         // HP가 95%보다 많을 시, "자신의 공격 데미지 20% 증가"효과 발동
+         tbf(me, "공퍼증", 20, "가창력", always);
+         
+         // 패시브 스킬 2 : 무도력
+         // TODO: 받는 치유량 50% 증가
+         
+         // 패시브 스킬 3 : 아이돌 파워 - 풀 가동
+         // 자신의 궁극기 최대 CD 2턴 감소
+         me.cd -= 2; me.curCd = me.curCd < 2 ? 0 : me.curCd-2;
+         
+         // 패시브 스킬 4 : 공격력 증가
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격력 증가", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
    case 10026 : // 노엘리
@@ -7135,7 +7182,7 @@ function alwaysCheck() {for(let c of alltimeFunc) c();}
 /* ------------------------------------------------------------------------*/
 // 콘솔 띄우는 로직
 
-const fixList = ["궁추가+", "궁발동+", "공고증", "평추가+", "평발동+", "아머"]
+const fixList = ["궁추가+", "궁발동+", "공고증", "평추가+", "평발동+", "아머", "도트뎀"]
 function show_console(idx) {
    if (idx == -1) {
       console.log(allBuffToString(boss));
