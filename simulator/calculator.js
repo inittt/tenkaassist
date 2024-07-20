@@ -5515,7 +5515,10 @@ function setDefault(me) {switch(me.id) {
          // 패시브 스킬 2 : 전부 기절시킬 거야
          // 일반 공격 시 「《강제 수면》」 발동
          // 《강제 수면》 : 자신 이외의 아군은 공격 시 「자신의 공격 데미지의 25%만큼 타깃에게 데미지」 발동(1턴)
-         for(let c of comp) if (c.id != me.id) atbf(me, "평", c, "평발동*", 25, "<강제 수면>", 1, always);
+         for(let c of comp) if (c.id != me.id) {
+            atbf(me, "평", c, "평발동*", 25, "<강제 수면>1", 1, always);
+            atbf(me, "평", c, "궁발동*", 25, "<강제 수면>2", 1, always);
+         }
 
          // 패시브 스킬 3 : 분노한 드림이터
          // 4번째 턴에서 「아군 전체의 궁극기 데미지 30% 증가(16턴)」 발동 => turnstart로
