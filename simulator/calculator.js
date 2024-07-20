@@ -89,7 +89,6 @@ class Champ {
    }
    heal() {
       addBuff(this, ["힐"], "추가");
-      addBuff(this, ["힐"], "발동");
       this.curHp = this.hp;
    }
    hit() {addBuff(this, ["피격"], "추가"); addBuff(this, ["피격"], "발동");}
@@ -645,6 +644,106 @@ function setDefault(me) {switch(me.id) {
       };
       me.turnover = function() {if (me.isLeader) {}};
       return me;
+   case 10026 : // 노엘리
+      me.healTurn = []
+      me.ultbefore = function() {
+         // 아군 전체가 "매턴 공격 데미지 129.2%의 수치만큼 치유(6턴)"효과 흭득
+         for(let i = 0; i < 6; i++) me.healTurn.push(GLOBAL_TURN+i);
+         // 자신 이외의 동료의 궁극기 CD 1턴 감소
+         for(let c of comp) if (c.id != me.id) cdChange(c, -1);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {
+         // 공격 : 열창
+         // 자신의 공격 데미지 30%만큼 아군 전체의 공격 데미지 증가(1턴)
+         tbf(all, "공고증", myCurAtk+me.id+30, "열창", 1);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 반짝☆아이돌 스타 노엘리
+         // 자신의 궁극기 최대 CD 2턴 감소
+         me.cd -= 2; me.curCd -= 2;
+         // 아군 전체가 "매턴 공격 데미지 35%의 수치만큼 치유"효과 흭득 => turnover로
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 두 손을 들어요☆
+         // TODO: 공격 시, "아군 전체의 받는 치유 회복량 12.5% 증가(2턴)" 효과 발동
+         // 공격 시, "아군 전체의 받는 아머 강화 효과 12.5% 증가(2턴)"효과 발동
+         tbf(all, "받아증", 12.5, "두 손을 들어요", 2);
+         
+         // 패시브 스킬 2 : 함께 노래해요☆
+         // 궁극기 발동 시, "아군 전체의 공격 데미지 10% 증가(12턴)"효과 발동
+         atbf(me, "궁", all, "공퍼증", 10, "함께 노래해요", 12, always);
+         
+         // 패시브 스킬 3 : 팬들을 사랑해☆
+         // 궁극기 발동 시, "공격 데미지의 100%만큼 아군 전체의 아머 강화(4턴)"효과 발동
+         atbf(me, "궁", all, "아머", myCurAtk+me.id+100, "팬들을 사랑해", 4, always);
+         
+         // 패시브 스킬 4 : 데미지 피해 감소
+         // TODO: 자신이 받는 데미지 5% 감소
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {
+         if (me.isLeader) {
+            // 리더 스킬 : 반짝☆아이돌 스타 노엘리
+            // 아군 전체가 "매턴 공격 데미지 35%의 수치만큼 치유"효과 흭득
+            for(let c of comp); // c.heal();
+         }
+         // 매턴 아군 전체를 치유
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp); // c.heal();
+         me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
+      };
+      return me;
+   case 10027 : // 바니사탄
+      me.ultbefore = function() {
+         // 궁극기 : 살의의 유혹
+         // 타깃이 받는 발동기 데미지 100% 증가(3턴)
+         tbf(boss, "받발뎀", 100, "살의의 유혹1", 3);
+         // 자신에게 도발 부여(1턴)
+         // 자신을 방어 상태로 전환 후 공격 데미지 100% 증가(1턴)
+         tbf(me, "공퍼증", 100, "살의의 유혹2", 1);
+         // 피격 시, [공격 데미지의 50%만큼 자신을 치유] 효과 발동(1턴)
+         atbf(me, "피격", me, "힐", 50, "살의의 유혹3", 1, 1);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {
+         // 일반 공격 : 갈겨찢기
+         // 자신의 공격 데미지 25% 증가(2턴)
+         tbf(me, "공퍼증", 25, "갈겨찢기", 2);
+      }
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 블러드문의 재앙
+         // 자신의 궁극기 최대 CD 1턴 감소, 공격 데미지 33% 증가
+         me.cd -= 1; me.curCd -= 1;
+         tbf(me, "공퍼증", 33, "블러드문의 재앙", always);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 고통과 희열
+         // 피격 시 "자신의 공격 데미지 10% 증가(최대 5중첩)"효과 발동
+         anbf(me, "피격", me, "공퍼증", 10, "고통과 희열", 1, 5, always);
+         
+         // 패시브 스킬 2 : 살육의 욕망대로
+         // 피격 시 "100%의 공격 데미지로 타깃에게 반격"효과 발동
+         tbf(me, "반격*", 100, "살육의 욕망대로", always);
+         
+         // 패시브 스킬 3 : 살육의 충동
+         // 방어 상태에서 받는 데미지 감소 효과 10% 증가
+         // 부여하는 데미지 35% 증가
+         tbf(me, "가뎀증", 35, "살육의 충동", always);
+         
+         // 패시브 스킬 4 : 회복량+
+         // TODO: 치유를 받을 시 회복량 15% 증가
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
    case 10028 : // 치즈루
       me.ultbefore = function() { // 치즈루 전력의 일격!
          // 타깃이 받는 풍속성 데미지 25% 증가(최대 2중첩)
@@ -704,6 +803,310 @@ function setDefault(me) {switch(me.id) {
             me.heal();
          }
       };
+      return me;
+   case 10029 : // 수즈카
+      me.ultbefore = function() {
+         // 궁극기 : 워터 슬라이드 최고!
+         // 타깃이 받는 데미지 20% 증가 (최대 1중첩)
+         nbf(boss, "받뎀증", 20, "워터 슬라이드 최고!", 1, 1);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 다들~전력을 다해 놀아보자구!
+         // 아군 전체의 딜러 공격 데미지 60% 증가, 아군 전체 침묵 면역
+         for(let idx of getRoleIdx("딜")) tbf(comp[idx], "공퍼증", 60, "다들~전력을 다해 놀아보자구!", always);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 튜브 결박술!
+         // TODO: 공격 시, "타깃의 공격 데미지 10% 감소(1턴)" 효과 발동
+         
+         // 패시브 스킬 2 : 요호술 - 환통
+         // 공격 시, "타깃이 받는 데미지 4.5% 증가(최대 6중첩)"효과 발동
+         anbf(me, "공격", boss, "받뎀증", 4.5, "요호술 - 환통", 1, 6, always);
+         
+         // 패시브 스킬 3 : 멈출 수 없는 즐거움
+         // 자신의 공격 데미지 40% 증가
+         tbf(me, "공퍼증", 40, "멈출 수 없는 즐거움", always);
+         // 궁극기 발동 시, "100%의 확률로 타깃에게 침묵(1턴)"효과 발동
+         
+         // 패시브 스킬 4 : 궁극기 데미지+
+         // 자신의 궁극기 데미지 10% 증가
+         tbf(me, "궁뎀증", 10, "궁극기 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10030 : // 수루루
+      me.ultbefore = function() {
+         // 궁극기 : 여름이 최고!
+         // 아군 전체의 공격 데미지 30% 증가(2턴)
+         tbf(all, "공퍼증", 30, "여름이 최고!1", 2);
+         // 아군 힐러, 서포터가 일반 공격 시, "아군 전체의 공격 데미지 25% 증가(1턴)"효과 부여(2턴)
+         for(let idx of getRoleIdx("힐", "섶"))
+            atbf(comp[idx], "평", all, "공퍼증", 25, "여름이 최고!2", 1, 2);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {
+         // 공격 : 공주의 응원
+         // 자신의 공격 데미지 30%만큼 아군 전체의 공격 데미지 증가(1턴)
+         tbf(all, "공고증", myCurAtk+me.id+30, "공주의 응원", 1);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 집결! 공주호위대
+         // 아군 힐러, 서포터에게 다음 효과 부여
+         for(let idx of getRoleIdx("힐", "섶")) {
+            // 일반 공격 시 공격 데미지의 100%만큼 타깃에게 데미지 효과 추가
+            tbf(comp[idx], "평추가*", 100, "집결! 공주호위대1", always);
+            // 궁극기 발동 시 공격 데미지의 200%만큼 타깃에게 데미지 효과 추가
+            tbf(comp[idx], "궁추가*", 200, "집결! 공주호위대2", always);
+         }
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 루루는 아픈 게 싫다구요
+         // 궁극기 발동 시, "자신의 공격 데미지 100%만큼 아군 전체에 아머 강화(1턴)"효과 발동
+         atbf(me, "궁", all, "아머", myCurAtk+me.id+100, "루루는 아픈 게 싫다구요", 1, always);
+         
+         // 패시브 스킬 2 : 루루를 괴롭히면 안 돼요~
+         // 4턴마다 "타깃의 피격 데미지 35% 증가(1턴)"효과 발동 => turnstart로
+         
+         // 패시브 스킬 3 : 난 강해질 거에요
+         // 첫 번째 턴 시작 시, "아군 힐러 및 서포터의 궁극기 데미지 40% 증가(50턴)"효과 발동
+         for(let idx of getRoleIdx("힐", "섶")) tbf(comp[idx], "궁뎀증", 40, "난 강해질 거에요", 50);
+         
+         // 패시브 스킬 4 : 받는 데미지 감소+
+         // TODO: 자신이 받는 데미지 5% 감소
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}
+         // 패시브 스킬 2 : 루루를 괴롭히면 안 돼요~
+         // 4턴마다 "타깃의 피격 데미지 35% 증가(1턴)"효과 발동
+         if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%4 == 0) tbf(boss, "받뎀증", 35, "루루를 괴롭히면 안 돼요~", 1);
+      };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10031 : // 수섹돌
+      me.ultbefore = function() {}
+      me.ultafter = function() {
+         // 궁극기 : 출력 120% - 스매시
+         // 타깃의 궁극기 CD 2턴 증가
+         // 타깃의 공격 데미지 20% 감소(1턴)
+         // 타깃의 받는 데미지 20%증가(3턴)
+         tbf(boss, "받뎀증", 20, "출력 120% - 스매시", 3);
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 신뢰가는 해변의 보디가드
+         // 각 Wave 첫 번째 턴에서 "타깃이 받는 궁극기 데미지 50% 증가(50턴)"효과 발동
+         tbf(boss, "받궁뎀", 50, "신뢰가는 해변의 보디가드", 50);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 약점 분석
+         // 자신의 궁극기 데미지 20% 증가
+         tbf(me, "궁뎀증", 20, "약점 분석", always);
+         
+         // 패시브 스킬 2 : 고속 미니 어뢰
+         // 3턴마다 "자신의 공격 데미지의 40%의 데미지로 타깃에게 추가 공격 3회(1턴)" 효과 발동 => turnstart로
+         // 공격 시, 타깃이 받는 발동기 데미지 7.5% 증가(최대 4중첩) 발동
+         anbf(me, "공격", boss, "받발뎀", 7.5, "고속 미니 어뢰3", 1, 4, always);
+         
+         // 패시브 스킬 3 : 어획용 음폭탄
+         // 4턴마다 "자신의 공격 데미지의 50%의 데미지로 적 전체에게 추가 공격 4회(1턴)" 효과 발동 => turnstart로
+         // 궁극기 발동 시, 적 전체가 받는 발동기 데미지 32.5% 증가(최대 1중첩) 발동
+         anbf(me, "궁", boss, "받발뎀", 32.5, "어획용 음폭탄3", 1, 1, always);
+         
+         // 패시브 스킬 4 : 공격력 증가
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격력 증가", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}
+         // 패시브 스킬 2 : 고속 미니 어뢰
+         // 3턴마다 "자신의 공격 데미지의 40%의 데미지로 타깃에게 추가 공격 3회(1턴)" 효과 발동
+         if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%3 == 0) tbf(me, "평발동*", 120, "고속 미니 어뢰1", 1);
+         // 패시브 스킬 3 : 어획용 음폭탄
+         // 4턴마다 "자신의 공격 데미지의 50%의 데미지로 적 전체에게 추가 공격 4회(1턴)" 효과 발동 => turnstart로
+         if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%4 == 0) tbf(me, "평발동*", 200, "어획용 음폭탄1", 1);
+      };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10032 : // 수나나
+      me.ultbefore = function() {
+         // 궁극기 : 빛나는 모래사장이다냥!
+         // 자신의 공격 데미지 15% 증가(1턴)
+         tbf(me, "공퍼증", 15, "빛나는 모래사장이다냥!1", 1);
+         // 타깃에게 "받는 궁극기 데미지 35% 증가(1턴)"효과 발동
+         tbf(boss, "받궁뎀", 35, "빛나는 모래사장이다냥!2", 1);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 묘비술오의 - 모래바람 냥이
+         // 첫 번째 턴 시작 시, 아군 전체가 공격 흭득할 경우 "공격 데미지의 65%만큼 타깃에게 데미지"효과(50턴) 발동
+         tbf(all, "평발동*", 65, "묘비술오의 - 모래바람 냥이1", 50);
+         tbf(all, "궁발동*", 65, "묘비술오의 - 모래바람 냥이1", 50);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 화상을 조심해라냥
+         // TODO: 공격 시, "타깃의 받는 치유량 50% 감소(2턴)"효과 발동
+         
+         // 패시브 스킬 2 : 방심하지 않았다구
+         // 궁극기 발동 시, "자신의 공격 데미지 30% 증가(최대 1중첩)"효과 발동
+         anbf(me, "궁", me, "공퍼증", 30, "방심하지 않았다구", 1, 1, always);
+         
+         // 패시브 스킬 3 : 민첩한 몸놀림
+         // 공격 시, "아군 전체의 궁극기 데미지 5% 증가(최대 6중첩)"효과 발동
+         anbf(me, "공격", all, "궁뎀증", 5, "민첩한 몸놀림", 1, 6, always);
+         
+         // 패시브 스킬 4 : 궁극기 데미지+
+         // 자신의 궁극기 데미지 10% 증가
+         tbf(me, "궁뎀증", 10, "궁극기 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10033 : // 아르티아
+      me.ultbefore = function() {
+         // 궁극기 : 수마 기습
+         // TODO: 타깃에게 수면 부여 (2턴 동안 행동 불능, 받는 데미지 130% 증가. 데미지 받은 후 해제) [CD : 3]
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {
+         // 일반 공격 : 악몽
+         // 현재 적 타깃이 받는 일반 공격 데미지 10% 증가(3턴)
+         tbf(boss, "받일뎀", 10, "악몽1", 3);
+         // 타깃이 받는 궁극기 데미지 5% 증가 (3턴)
+         tbf(boss, "궁뎀증", 5, "악몽2", 3);
+         // 공격 데미지의 50%만큼 자신의 아머 강화 (1턴)
+         tbf(me, "아머", myCurAtk+me.id+50*armorUp(me, "평", "추가"), "악몽3", 1);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 동상이몽
+         // TODO: 아군 전체가 일반 공격 시, "20% 확률로 타깃에게 수면 부여 (1턴 동안 행동 불능, 받는 데미지 30% 증가, 데미지 받은 후 해제)
+         // TODO: 모든 동료가 일반 공격 시, 타깃의 수면 효과 발동 확률 20% 증가 (1턴)
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 자장가
+         // TODO: 일반 공격 시, 타깃의 수면 효과 발동 확률 40% 증가 (1턴)
+
+         // 패시브 스킬 2 : 더 잘래...
+         // TODO: 공격 시, 타깃의 공격 데미지 15% 감소 (2턴)
+         // TODO: 궁극기 발동 시, 타깃의 궁극기 CD 1턴 정지
+
+         // 패시브 스킬 3 : 한밤중의 꿈길
+         // TODO: 각 웨이브 진입 시, 적 전체의 데미지 10% 감소
+
+         // 패시브 스킬 4 : 받는 데미지 감소+
+         // TODO: 자신이 받는 데미지 5% 감소
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10034 : // 구빨강
+      const anasna = comp.find(i => i.id == 10035);
+      me.ultbefore = function() {}
+      me.ultafter = function() {
+         // 블러드 컷팅
+         // 각 아군이 자신의 최대 HP 15%만큼 아머 강화(1턴)
+         for(let c of comp) tbf(c, "아머", c.hp*15*armorUp(me, "궁", "추가"), "블러드 컷팅", 1);
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 뒤엉킨 운명 - 레드
+         // 아군 화속성과 수속성 동료가 "피해량 50% 증가" 효과 흭득.
+         for(let idx of getElementIdx("화", "수")) tbf(comp[idx], "가뎀증", 50, "뒤엉킨 운명 - 레드1", always);
+         // 첫 번째 턴 시작 시 "자신과 푸른 재봉사 아나스나의 일반 공격 데미지 30% 증가(50턴)" 효과 발동.
+         tbf(me, "일뎀증", 30, "뒤엉킨 운명 - 레드2", 50);
+         if (anasna) tbf(anasna, "일뎀증", 30, "뒤엉킨 운명 - 레드2", 50);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 붉은 재단
+         // 자신의 일반 공격 데미지 30% 증가.
+         tbf(me, "일뎀증", 30, "붉은 재단", always);
+         // TODO: "푸른 재봉사 아나스나"가 아군 측에서 살아 있을 경우, 자신이 받는 수속성 데미지 33% 감소
+         
+         // 패시브 스킬 2 : 블러드 커터
+         // 자신의 궁극기 데미지 30% 증가.
+         tbf(me, "궁뎀증", 30, "블러드 커터1", always);
+         // "푸른 재봉사 아나스나"가 아군 측에서 살아 있을 경우, 자신의 데미지 20% 증가
+         if (anasna) tbf(me, "가뎀증", 20, "블러드 커터2", always);
+         
+         // 패시브 스킬 3 : 영감 폭발
+         // 궁극기 발동 시, "자신의 일반 공격 데미지 50% 증가(4턴)"효과 발동.
+         atbf(me, "궁", me, "일뎀증", 50, "영감 폭발", 4, always);
+         
+         // 패시브 스킬 4 : 일반 공격 데미지+
+         // 자신의 일반 공격 데미지 10% 증가
+         tbf(me, "일뎀증", 10, "일반 공격 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10035 : // 구파랑
+      const anasti = comp.find(i => i.id == 10034);
+      me.ultbefore = function() {}
+      me.ultafter = function() {
+         // 궁극기 : 쪽빛 방직
+         // 각 아군이 자신의 최대 HP 15%만큼 아머 강화(1턴)
+         for(let c of comp) tbf(c, "아머", c.hp*15*armorUp(me, "궁", "추가"), "쪽빛 방직", 1);
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 뒤엉킨 운명 - 블루
+         // 아군 화속성과 수속성 동료의 피해량 50% 증가
+         for(let idx of getElementIdx("화", "수")) tbf(comp[idx], "가뎀증", 50, "뒤엉킨 운명 - 블루1", always);
+         // 첫 번째 턴 시작 시 "자신과 구빨강의 궁극기 데미지 20% 증가(50턴)" 효과 발동.
+         tbf(me, "궁뎀증", 20, "뒤엉킨 운명 - 블루3", 50);
+         if (anasti) tbf(anasti, "궁뎀증", 20, "뒤엉킨 운명 - 블루3", 50);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 푸른 봉제
+         // 자신의 궁극기 데미지 30% 증가.
+         tbf(me, "궁뎀증", 30, "푸른 봉제", always);
+         // TODO: "붉은 재단사 아나스티"가 아군 측에서 살아 있을 경우, 자신이 받는 풍속성 데미지 33% 감소 효과 발동
+         
+         // 패시브 스킬 2 : 코발트 니들
+         // 자신의 궁극기 데미지 30% 증가.
+         tbf(me, "궁뎀증", 30, "코발트 니들1", always);
+         // "붉은 재단사 아나스티"가 아군 측에서 살아 있을 경우, 자신의 데미지 20% 증가 효과 발동
+         if (anasti) tbf(me, "가뎀증", 20, "코발트 니들2", always);
+         
+         // 패시브 스킬 3 : 냉정한 판단
+         // 일반 공격 시, "자신의 궁극기 데미지 10% 증가(6턴)"효과 발동
+         atbf(me, "평", me, "궁뎀증", 10, "냉정한 판단", 6, always);
+         
+         // 패시브 스킬 4 : 궁극기 데미지+
+         // 자신의 궁극기 데미지 10% 증가
+         tbf(me, "궁뎀증", 10, "궁극기 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
       return me;
    case 10037 : // 메스미나
       me.ultbefore = function() {}
@@ -1582,7 +1985,7 @@ function setDefault(me) {switch(me.id) {
          // 일반 공격 시, 「〈백은의 바람〉」 발동
          // 〈백은의 바람〉
          // 자신이 「궁극기 발동 시, 추가로 『자신의 공격 데미지의 75% 만큼 타깃에게 데미지』 (2턴)」 효과 발동
-         atbf(me, "평", me, "궁발동*", 75, "<백은의 바람>", 2, always);
+         atbf(me, "평", me, "궁추가*", 75, "<백은의 바람>", 2, always);
          
          // 패시브 스킬 2 : 잠재력 폭발
          // 궁극기 발동 시, 「자신의 일반 공격 데미지 5% 증가 (최대 4중첩)」 발동
@@ -1590,7 +1993,7 @@ function setDefault(me) {switch(me.id) {
          // 궁극기 발동 시, 「〈팬텀의 바람〉」 발동
          // 〈팬텀의 바람〉
          // 자신이 「일반 공격 시, 추가로 『자신의 공격 데미지의 20%만큼 타깃에게 데미지』 (2턴)」 효과 발동
-         atbf(me, "궁", me, "평발동*", 20, "<팬텀의 바람>", 2, always);
+         atbf(me, "궁", me, "평추가*", 20, "<팬텀의 바람>", 2, always);
          
          // 패시브 스킬 3 : 마하 선봉
          // 궁극기 데미지 50% 증가
