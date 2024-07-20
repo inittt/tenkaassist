@@ -284,7 +284,9 @@ function hpUpAll(amount) {
    for(let c of comp) hpUpMe(c, amount);
 }
 function hpUpMe(me, amount) {
-   me.hp += Math.round(getCharacter(me.id).hp*(amount/100));
+   const ch = getCharacter(me.id);
+   if (liberationList.includes(me.name)) me.hp += Math.round(ch.hp*COEF*1.1*(amount/100));
+   else me.hp += Math.round(ch.hp*COEF*(amount/100));
    me.curHp = me.hp;
 }
 function cdChange(me, size) {
@@ -473,6 +475,83 @@ function setDefault(me) {switch(me.id) {
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me;
+   case 10021 : // 하쿠
+      me.healTurn = [];
+      me.ultbefore = function() { // 궁극기 : 재생의 바람
+         // 자신의 공격 데미지의 100%만큼 매턴 아군 전체를 치유(4턴)
+         for(let i = 0; i < 4; i++) me.healTurn.push(GLOBAL_TURN+i);
+         // 자신 이외의 동료들의 공격 데미지 25% 증가(1턴)
+         for(let c of comp) if (c.id != me.id) tbf(c, "공퍼증", 25, "재생의 바람1", 1);
+         // 자신 이외의 동료들의 공격 데미지 25% 증가(4턴)
+         for(let c of comp) if (c.id != me.id) tbf(c, "공퍼증", 25, "재생의 바람1", 4);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         // 공격 데미지의 50%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+      };
+      me.atkbefore = function() {
+         // 일반 공격 : 유합술
+         // 자신의 공격 데미지의 25%만큼 매턴 아군 전체를 치유(2턴)
+         for(let i = 0; i < 2; i++) me.healTurn.push(GLOBAL_TURN+i);
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);
+         // 자신의 공격 데미지의 25%만큼 아군 전체를 치유
+         for(let c of comp) c.heal();
+      };
+      me.leader = function() {
+         // 리더 스킬 : 시공을 초월한 현자
+         // 아군 전체의 HP 10% 증가
+         hpUpAll(10);
+         // 아군 전체의 공격 데미지 40% 증가
+         tbf(all, "공퍼증", 40, "시공을 초월한 현자1", always);
+         // 아군 딜러, 디스럽터가 가하는 데미지 20% 증가
+         for(let idx of getRoleIdx("딜", "디")) tbf(comp[idx], "가뎀증", 20, "시공을 초월한 현자2", always);
+         // 아군 탱커의 최대 HP 10% 증가
+         for(let idx of getRoleIdx("탱")) hpUpMe(comp[idx], 10);
+         // 아군 힐러, 서포터의 공격 데미지 40% 증가
+         for(let idx of getRoleIdx("힐", "섶")) tbf(comp[idx], "공퍼증", 40, "시공을 초월한 현자4", always);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 전능의 술
+         // TODO: 일반 공격 시 「자신의 공격 데미지의 25%만큼 현재 HP가 가장 낮은 아군을 치유」발동
+         // 공격 시 「아군 타깃의 최대 HP의 10%만큼 아군 전체의 아머 강화(1턴)」발동
+         for(let c of comp) atbf(me, "공격", c, "아머", c.hp*10, "전능의 술1", 1, always);
+         // 공격 시 「자신의 공격 데미지의 20%만큼 아군 딜러, 디스럽터의 공격 데미지 증가(1턴)」발동
+         for(let idx of getRoleIdx("딜", "디"))
+            atbf(me, "공격", comp[idx], "공고증", myCurAtk+me.id+20, "전능의 술2", 1, always);
+         
+         // 패시브 스킬 2 : 천 년의 지혜
+         // 최대 HP 10% 증가
+         hpUpMe(me, 10);
+         // 공격 데미지 20% 증가
+         tbf(me, "공퍼증", 20, "천 년의 지혜", always);
+         // TODO: 치유량 25% 증가
+         // TODO: 지속형 치유량 25% 증가
+
+         // 패시브 스킬 3 : 최적화 배치
+         // 첫 번째 턴 시작 시, <<적재적소>> 발동
+         
+         // <<적재적소>>
+         // 아군 딜러, 디스럽터가 가하는 데미지 15% 증가(50턴)
+         for(let idx of getRoleIdx("딜", "디")) tbf(comp[idx], "가뎀증", 15, "<적재적소>1", 50);
+         // TODO: 아군 탱커가 받는 데미지 15% 감소(50턴)
+         // 아군 힐러, 서포터의 공격 데미지 15% 증가(50턴)
+         for(let idx of getRoleIdx("힐", "섶")) tbf(comp[idx], "공퍼증", 15, "<적재적소>2", 50);
+         
+         // 패시브 스킬 4 : 공격+
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}
+         // 매턴 아군 전체를 치유
+         for(let turn of me.healTurn) if (turn == GLOBAL_TURN) for(let c of comp); // c.heal();
+         me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
+      };
+      return me;
    case 10022 : // 놀라이티
       me.ultbefore = function() {}
       me.ultafter = function() {
@@ -644,6 +723,103 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {
          if (me.isLeader) {
             if (GLOBAL_TURN > 1) nbf(me, "<재편제>", 0, "광견의 시야2", -4, 4);
+         }
+      };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10024 : // 엘자
+      buff_ex.push("<영혼 접촉>", "<대영혼 접촉>");
+      me.ultbefore = function() {
+         // 궁극기 : 네크로맨서술 : 영혼 휘감기
+         // 아군 전체의 일반 공격 데미지 50% 증가 (4턴)
+         tbf(all, "일뎀증", 50, "네크로맨서술 : 영혼 휘감기1", 4)
+         // 적 전체가 받는 일반 공격 데미지 25% 증가(4턴)
+         tbf(boss, "받일뎀", 25, "네크로맨서술 : 영혼 휘감기2", 4)
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 영혼 조종술 : 스릴 나이트
+         // 네크로맨서 여왕 엘리자베스가 《언데드 병사 강화술》획득
+         
+         // 《언데드 병사 강화술》
+         // 매 턴마다 "자신의 공격 데미지의 20%만큼 아군 딜러와 디스럽터의 공격 데미지 증가(1턴) 발동 => turnstart로
+         // 4턴마다 아군 딜러와 디스럽터는 2개의 《영혼 접촉》을 획득 (4턴) => turnstart로
+         
+         // 《영혼 접촉》
+         // 일반 공격 시 영혼 접촉 1스택을 소모하여 공격 데미지의 40%만큼 타깃에게 추가 데미지
+         for(let idx of getRoleIdx("딜", "디")) {
+            buff(comp[idx], "평추가*", 40, "<영혼 접촉>", always, false);
+            alltimeFunc.push(function() {
+               setBuffOn(comp[idx], "기본", "<영혼 접촉>", comp[idx].getNest("<영혼 접촉>") > 0);
+            });
+            anbf(comp[idx], "평", comp[idx], "<영혼 접촉>", 0, "영혼 조종술 : 스릴 나이트", -1, 2, always);
+         }
+         
+         // 아군 전체가 《망령 빙의》 획득
+         // 《망령 빙의》
+         // 팀원 중 최소 3명의 딜러, 또는 최소 2명의 디스럽터가 있을 시 아래 효과 발동
+         if (getRoleCnt("딜") >= 3) {
+            // 1 . 자신의 공격 데미지와 일반 공격 데미지가 40% 증가
+            tbf(all, "공퍼증", 40, "<망령 빙의>1", always);
+            tbf(all, "일뎀증", 40, "<망령 빙의>2", always);
+            // 2 . 궁극기 발동 시 타깃이 받는 일반 공격 데미지 6% 증가 (최대 4중첩)
+            for(let c of comp) anbf(c, "궁", c, "받일뎀", 6, "<망령 빙의>3", 1, 4, always);
+         }
+         if (getRoleCnt("디") >= 2) {
+            // 1 . 자신의 공격 데미지와 일반 공격 데미지가 40% 증가
+            tbf(all, "공퍼증", 40, "<망령 빙의>1", always);
+            tbf(all, "일뎀증", 40, "<망령 빙의>2", always);
+            // 2 . 궁극기 발동 시 타깃이 받는 일반 공격 데미지 6% 증가 (최대 4중첩)
+            for(let c of comp) anbf(c, "궁", c, "받일뎀", 6, "<망령 빙의>4", 1, 4, always);
+         }
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 집령의 힘
+         // 자신의 HP가 50%보다 많을 시, 공격 데미지 40% 증가
+         tbf(me, "공퍼증", 40, "집령의 힘", always);
+         
+         // 패시브 스킬 2 : 영혼 조종술 : 대영혼 접촉
+         // 4턴마다 아군 딜러와 디스럽터는 2개의 《대영혼 접촉》을 획득 (4턴) => turnstart로
+         
+         // 《대영혼 접촉》
+         // 일반 공격 시 대영혼 접촉 1스택을 소모하여 공격 데미지의 60%만큼 타깃에게 추가 데미지
+         for(let idx of getRoleIdx("딜", "디")) {
+            buff(comp[idx], "평추가*", 60, "<대영혼 접촉>", always, false);
+            alltimeFunc.push(function() {
+               setBuffOn(comp[idx], "기본", "<대영혼 접촉>", comp[idx].getNest("<대영혼 접촉>") > 0);
+            });
+            anbf(comp[idx], "평", comp[idx], "<대영혼 접촉>", 0, "영혼 조종술 : 대영혼 접촉", -1, 2, always);
+         }
+         
+         // 패시브 스킬 3 : 영혼 찢어발기기
+         // 일반 공격 시, 타깃이 받는 데미지 3.5% 증가 (최대 8중첩)
+         anbf(me, "평", boss, "받뎀증", 3.5, "영혼 찢어발기기", 1, 8, always);
+         
+         // 패시브 스킬 4 : 일반 공격 데미지+
+         // 일반 공격 데미지 10% 증가
+         tbf(me, "일뎀증", 10, "일반 공격 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {
+         if (me.isLeader) {
+            // 네크로맨서 여왕 엘리자베스가 《언데드 병사 강화술》획득
+            // 《언데드 병사 강화술》
+            // 매 턴마다 "자신의 공격 데미지의 20%만큼 아군 딜러와 디스럽터의 공격 데미지 증가(1턴) 발동 => turnstart로
+            if (GLOBAL_TURN > 1) for(let idx of getRoleIdx("딜", "디"))
+               tbf(comp[idx], "공고증", myCurAtk+me.id+20, "<언데드 병사 강화술>", 1);
+            // 4턴마다 아군 딜러와 디스럽터는 2개의 《영혼 접촉》을 획득 (4턴)
+            if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%4 == 0) for(let idx of getRoleIdx("딜", "디")) {
+               nbf(comp[idx], "<영혼 접촉>", 0, "영혼 조종술 : 스릴 나이트", 2, 2);
+            }
+         }
+         // 패시브 스킬 2 : 영혼 조종술 : 대영혼 접촉
+         // 4턴마다 아군 딜러와 디스럽터는 2개의 《대영혼 접촉》을 획득 (4턴)
+         if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%4 == 0) for(let idx of getRoleIdx("딜", "디")) {
+            nbf(comp[idx], "<대영혼 접촉>", 0, "영혼 조종술 : 대영혼 접촉", 2, 2);
          }
       };
       me.turnover = function() {if (me.isLeader) {}};
