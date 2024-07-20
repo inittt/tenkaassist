@@ -1,6 +1,6 @@
 const COEF = 2*1.3*1.25, all = 0, allNotMe = 1, myCurAtk = "a", myCurShd = "b", always = 100;
 let comp = [], GLOBAL_TURN = 1;
-let lastDmg = 0, lastAddDmg = 0, lastAtvDmg = 0, lastDotDmg = 0;
+let lastDmg = 0, lastAddDmg = 0, lastAtvDmg = 0, lastDotDmg = 0, lastRefDmg = 0;
 
 class Boss {
    constructor() {
@@ -68,19 +68,19 @@ class Champ {
       return (1+li[2])*(1+li[12]+li[5]+li[6]+li[7]+li[8]+li[13]+li[14])*(1+li[9])*(1+li[10]+li[11]);
    }
    act_attack() {
-      lastAddDmg = 0; lastAtvDmg = 0; lastDotDmg = 0;
+      lastAddDmg = 0; lastAtvDmg = 0; lastDotDmg = 0; lastRefDmg = 0;
       addBuff(this, ["평", "행동", "공격"], "추가");
       addBuff(this, ["평", "행동", "공격"], "발동");
       this.isActed = true;
    }
    act_ultimate() {
-      lastAddDmg = 0; lastAtvDmg = 0; lastDotDmg = 0;
+      lastAddDmg = 0; lastAtvDmg = 0; lastDotDmg = 0; lastRefDmg = 0;
       addBuff(this, ["궁", "행동", "공격"], "추가");
       addBuff(this, ["궁", "행동", "공격"], "발동");
       this.isActed = true;
    }
    act_defense() {
-      lastDmg = 0; lastAddDmg = 0; lastAtvDmg = 0; lastDotDmg = 0;
+      lastDmg = 0; lastAddDmg = 0; lastAtvDmg = 0; lastDotDmg = 0; lastRefDmg = 0;
       addBuff(this, ["방", "행동", "공격"], "추가");
       addBuff(this, ["방", "행동", "공격"], "발동");
       this.isActed = true;
@@ -179,8 +179,8 @@ function addBuff(me, act, div) {
          if (act.includes("궁") && div == "추가" && b.type == "궁추가*") applyAddDmg(size/100*me.getCurAtk()*me.ultAddCoef());
          if (act.includes("궁") && div == "발동" && b.type == "궁발동+") applyAtvDmg(size/100*me.ultAtvCoef());
          if (act.includes("궁") && div == "발동" && b.type == "궁발동*") applyAtvDmg(size/100*me.getCurAtk()*me.ultAtvCoef());
-         if (act.includes("피격") && div == "발동" && b.type == "반격+") applyAtvDmg(size/100*me.ultAtvCoef());
-         if (act.includes("피격") && div == "발동" && b.type == "반격*") applyAtvDmg(size/100*me.getCurAtk()*me.ultAtvCoef());
+         if (act.includes("피격") && div == "발동" && b.type == "반격+") applyRefDmg(size/100*me.ultAtvCoef());
+         if (act.includes("피격") && div == "발동" && b.type == "반격*") applyRefDmg(size/100*me.getCurAtk()*me.ultAtvCoef());
       } else {
          if (b.who == all) for(let c of comp) {
             if (b.nest == undefined) buff(c, b.type, size, b.name, b.turn, true);
@@ -207,6 +207,7 @@ function addBuff(me, act, div) {
 function applyAddDmg(dmg) {if (dmg <= 0) dmg = 0; lastAddDmg += dmg; boss.hp -= dmg;}
 function applyAtvDmg(dmg) {if (dmg <= 0) dmg = 0; lastAtvDmg += dmg; boss.hp -= dmg;}
 function applyDotDmg(dmg) {if (dmg <= 0) dmg = 0; lastDotDmg += dmg; boss.hp -= dmg;}
+function applyRefDmg(dmg) {if (dmg <= 0) dmg = 0; lastRefDmg += dmg; boss.hp -= dmg;}
 
 function isNest(a) {return a.act == undefined && a.nest != undefined;}
 function isTurn(a) {return a.act == undefined && a.nest == undefined;}
@@ -360,6 +361,157 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
+   case 10001 : // 바알
+      me.ultbefore = function() {
+         // 궁극기 : 맹렬한 불길
+         // 자신의 공격 데미지 35% 증가(3턴), 가하는 데미지 20% 증가(3턴)
+         tbf(me, "공퍼증", 35, "맹렬한 불길1", 3);
+         tbf(me, "가뎀증", 20, "맹렬한 불길2", 3);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         // 궁극기 발동 시 「자신의 궁극기 CD 1턴 감소, 타깃의 궁극기 CD 2턴 증가」 발동
+         cdChange(me, -1);
+      };
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 마왕 바알의 꿍꿍이
+         // 아군 전체의 최대 HP 20% 증가
+         hpUpAll(20);
+         // 아군 전체의 공격 데미지 40% 증가
+         tbf(all, "공퍼증", 40, "마왕 바알의 꿍꿍이1", always);
+         // 아군 전체의 가하는 데미지 20% 증가
+         tbf(all, "가뎀증", 20, "마왕 바알의 꿍꿍이2", always);
+         // 자신의 공격 데미지 125% 증가
+         tbf(me, "공퍼증", 125, "마왕 바알의 꿍꿍이3", always);
+         // 자신의 궁극기 데미지 25% 증가
+         tbf(me, "궁뎀증", 25, "마왕 바알의 꿍꿍이4", always);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 마왕의 육체
+         // 자신의 일반 공격 데미지 25% 증가
+         tbf(me, "일뎀증", 25, "마왕의 육체1", always);
+         // 자신의 궁극기 데미지 15% 증가
+         tbf(me, "궁뎀증", 15, "마왕의 육체2", always);
+         
+         // 패시브 스킬 2 : 알 수 없는 성격
+         // 궁극기 시전 시, 「자신의 공격 데미지 15% 증가(최대 2중첩)」 발동
+         anbf(me, "궁", me, "공퍼증", 15, "알 수 없는 성격", 1, 2, always);
+
+         // 패시브 스킬 3 : 바알의 장난
+         // 첫번째 턴 시작 시 「자신의 현재 궁극기 CD 1턴 감소」발동
+         cdChange(me, -1);
+         // 궁극기 발동 시 「자신의 궁극기 CD 1턴 감소, 타깃의 궁극기 CD 2턴 증가」 발동 => ultimate로
+         // 궁극기 발동 시「타깃이 받는 화속성 데미지 10% 증가(최대 2중첩)」발동
+         for(let idx of getElementIdx("화"))
+            anbf(me, "궁", comp[idx], "받속뎀", 10, "바알의 장난", 1, 2, always);
+         
+         // 패시브 스킬 4 : 일반 공격 데미지+
+         // 자신의 일반 공격 데미지 10% 증가
+         tbf(me, "일뎀증", 10, "일반 공격 데미지+", always);         
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10002 : // 사탄
+      me.ultbefore = function() {
+         // 궁극기 : 잔학무도
+         // 자신의 공격 데미지 100% 증가(3턴), 도발 효과 흭득(3턴), 방어 상태로 전환 [CD : 3]
+         tbf(me, "공퍼증", 100, "잔학무도", 3);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {
+         // 일반 공격 : 출혈
+         // 공격 데미지의 100%만큼 타깃에게 데미지, 자신을 방어 상태로 전환
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 마왕 사탄의 호기
+         // 아군 전체의 공격 데미지 40% 증가
+         tbf(all, "공퍼증", 40, "마왕 사탄의 호기1", always);
+         // 아군 전체의 가하는 데미지 20% 증가
+         tbf(all, "가뎀증", 20, "마왕 사탄의 호기2", always);
+         // 자신의 공격 데미지 100% 증가
+         tbf(me, "공퍼증", 100, "마왕 사탄의 호기3", always);
+         // TODO: 사탄은 영구적으로 도발을 얻고 방어 상태 시 받는 피해 감소 효과 15% 증가
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 마왕의 횡포
+         // TODO: 자신이 받는 데미지 20% 감소
+         
+         // 패시브 스킬 2 : 사탄의 보답
+         // 피격 시 「100%의 공격 데미지로 반격」 발동
+         tbf(me, "반격*", 100, "사탄의 보답1", always);
+         // 피격 시 「자신의 공격 데미지 10% 증가(최대 10중첩)」 발동
+         anbf(me, "피격", me, "공퍼증", 10, "사탄의 보답2", 1, 10, always);
+         
+         // 패시브 스킬 3 : 불패의 육체
+         // 매턴마다 자신의 최대 HP 20% 회복
+         // 피격 시 「자신이 가하는 데미지 2% 증가(최대 10중첩)」 발동
+         anbf(me, "피격", me, "가뎀증", 2, "불패의 육체", 1, 10, always);
+         
+         // 패시브 스킬 4 : 방어 데미지 감소+
+         // 방어 상태에서 받는 데미지 감소 효과 10% 증가
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10003 : // 이블리스
+      me.ultbefore = function() {
+         // 궁극기 : 장미 맹독
+         // 타깃이 받는 마왕 이블리스의 데미지 10% 증가(최대 3중첩)
+         nbf(me, "받캐뎀", 10, "장미 맹독", 1, 3);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 마왕 이블리스의 오만
+         // 아군 전체의 최대 HP 20% 증가
+         hpUpAll(20);
+         // 아군 전체의 공격 데미지 40% 증가
+         tbf(all, "공퍼증", 40, "마왕 이블리스의 오만1", always);
+         // 아군 전체의 가하는 데미지 20% 증가
+         tbf(all, "가뎀증", 20, "마왕 이블리스의 오만2", always);
+         // 공격 시 「공격 데미지의 150%만큼 적 전체에게 추가 공격」발동
+         tbf(me, "평추가*", 150, "마왕 이블리스의 오만3", always);
+         tbf(me, "궁추가*", 150, "마왕 이블리스의 오만3", always);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 비전의 마력 의식
+         // 현재 HP가 75%보다 많을 시, 「공격력 20% 증가」 발동
+         tbf(me, "공퍼증", 20, "비전의 마력 의식", always);
+         
+         // 패시브 스킬 2 : 마력 섭취
+         // 일반 공격 데미지 20% 증가
+         tbf(me, "일뎀증", 20, "마력 섭취1", always);
+         // TODO: 적에게 가한 데미지의 33%만큼 HP 회복
+         // 자신의 궁극기 데미지 25% 증가
+         tbf(me, "궁뎀증", 25, "마력 섭취3", always);
+         
+         // 패시브 스킬 3 : 중생 압박
+         // 자신의 공격 데미지 25% 증가
+         tbf(me, "공퍼증", 25, "중생 압박1", always);
+         // 공격 시 「적 전체가 받는 광속성 데미지 4% 증가(최대 5중첩)」발동
+         for(let idx of getElementIdx("광"))
+            anbf(me, "공격", comp[idx], "받속뎀", 4, "중생 압박2", 1, 5, always);
+         
+         // 패시브 스킬 4 : 일반 공격 데미지+
+         // 자신의 일반 공격 데미지 10% 증가
+         tbf(me, "일뎀증", 10, "일반 공격 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
    case 10004 : // 살루시아
       me.ultbefore = function() {}
       me.ultafter = function() { // 유도 화살
@@ -403,6 +555,51 @@ function setDefault(me) {switch(me.id) {
          // 일반 공격 데미지+
          // 자신의 일반 공격 데미지 10% 증가
          tbf(me, "일뎀증", 10, "일반 공격 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10005 : // 란
+      me.ultbefore = function() {}
+      me.ultafter = function() {
+         // 궁극기 : 활공 찢기
+         // 자신은 일반 공격 데미지 100% 증가 획득 (3턴)
+         tbf(me, "일뎀증", 100, "활공 찢기", 3);
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 난쟁이왕의 기세
+         // 아군 전체의 최대 HP 20% 증가
+         hpUpAll(20);
+         // 자신의 공격 데미지 125% 증가
+         tbf(me, "공퍼증", 125, "난쟁이왕의 기세1", always);
+         // 자신의 일반 공격 데미지 100% 증가
+         tbf(me, "일뎀증", 100, "난쟁이왕의 기세2", always);
+         // 자신이 가하는 데미지 35% 증가
+         tbf(me, "가뎀증", 35, "난쟁이왕의 기세3", always);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 에너지 세이브
+         // 행동 시, 「자신의 공격 데미지 15% 증가(최대 4중첩)」 발동
+         anbf(me, "행동", me, "공퍼증", 15, "에너지 세이브", 1, 4, always);
+
+         // 패시브 스킬 2 : 정신통일
+         // 행동 시 「자신의 공격 데미지 5% 증가(최대 4중첩)」발동
+         anbf(me, "행동", me, "공퍼증", 5, "정신통일", 1, 4, always);
+
+         // 패시브 스킬 3 : 파룡의 환광
+         // 자신의 궁극기 데미지 50% 증가
+         tbf(me, "궁뎀증", 50, "파룡의 환광1", always);
+         // 행동 시 「타깃이 받는 수속성 데미지 6% 증가(최대 4중첩)」 발동
+         for(let idx of getElementIdx("수"))
+            anbf(me, "행동", comp[idx], "받속뎀", 6, "파룡의 환광2", 1, 4, always);
+
+         // 패시브 스킬 4 : 받는 데미지 감소+
+         // TODO: 자신이 받는 데미지 5% 감소
       }
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {if (me.isLeader) {}};
@@ -475,6 +672,364 @@ function setDefault(me) {switch(me.id) {
          me.healTurn = me.healTurn.filter(turn => turn > GLOBAL_TURN);
       };
       return me;
+   case 10007 : // 밀레
+      me.ultbefore = function() {}
+      me.ultafter = function() {
+         // 궁극기 : 대천사의 진노
+         // 자신의 공격 데미지의 638%만큼 매턴 타깃에게 데미지(1턴)
+         tbf(boss, "도트뎀", myCurAtk+me.id+638, "대천사의 진노", 1);
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 대천사의 축복
+         // 첫 번째 턴 시작 시, 「《대천사의 축복-성벌》」 발동
+         // 첫 번째 턴 시작 시, 「《대천사의 축복-심판》」 발동
+         // 첫 번째 턴 시작 시, 「《대천사의 축복-정죄》」 발동
+         
+         // 《대천사의 축복-성벌》
+         // 광속성 아군 행동 시 「아군 전체의 공격 데미지 30% 증가(50턴)」 발동(1턴)
+         for(let idx of getElementIdx("광"))
+            atbf(comp[idx], "행동", all, "공퍼증", 30, "<대천사의 축복-성벌>", 50, 1);
+         // 《대천사의 축복-심판》
+         // 화, 풍속성 아군 행동 시 「아군 전체의 일반 공격 데미지 60% 증가(50턴)」 발동(1턴)
+         for(let idx of getElementIdx("화", "풍"))
+            atbf(comp[idx], "행동", all, "일뎀증", 60, "<대천사의 축복-심판>", 50, 1);
+         // 《대천사의 축복-정죄》
+         // 수, 암속성 아군 행동 시 「아군 전체의 궁극기 데미지 30% 증가(50턴)」 발동(1턴)
+         for(let idx of getElementIdx("수", "암"))
+            atbf(comp[idx], "행동", all, "궁뎀증", 30, "<대천사의 축복-정죄>", 50, 1);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 빛의 징계
+         // 일반 공격 시, 「자신의 공격 데미지의 130%만큼 타깃에게 매턴 데미지(1턴)」 효과 발동
+         atbf(me, "평", boss, "도트뎀", myCurAtk+me.id+130, "빛의 징계", 1, always);
+         
+         // 패시브 스킬 2 : 천사의 축복
+         // 첫 번째 턴 시작 시, 「《천사의 축복-성벌》」 발동
+         // 첫 번째 턴 시작 시, 「《천사의 축복-심판》」 발동
+         // 첫 번째 턴 시작 시, 「《천사의 축복-정죄》」 발동
+         
+         // 《천사의 축복-성벌》
+         // 광속성 아군 행동 시 「아군 전체의 공격 데미지 10% 증가(50턴)」 발동(1턴)
+         for(let idx of getElementIdx("광"))
+            atbf(comp[idx], "행동", all, "공퍼증", 10, "<천사의 축복-성벌>", 50, 1);
+         // 《천사의 축복-심판》
+         // 화, 풍속성 아군 행동 시 「아군 전체의 일반 공격 데미지 20% 증가(50턴)」 발동(1턴)
+         for(let idx of getElementIdx("화", "풍"))
+            atbf(comp[idx], "행동", all, "일뎀증", 20, "<천사의 축복-심판>", 50, 1);
+         // 《천사의 축복-정죄》
+         // 수, 암속성 아군 행동 시 「아군 전체의 궁극기 데미지 10% 증가(50턴)」 발동(1턴)
+         for(let idx of getElementIdx("수", "암"))
+            atbf(comp[idx], "행동", all, "궁뎀증", 10, "<천사의 축복-정죄>", 50, 1);
+         
+         // 패시브 스킬 3 : 천벌의 힘
+         // 공격 시, 「자신의 공격 데미지 50% 증가(4턴)」 발동
+         atbf(me, "공격", me, "공퍼증", 50, "천벌의 힘", 4, always);
+         
+         // 패시브 스킬 4 : 공격력 증가
+         // 공격력 증가 : 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격력 증가", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10008 : // 섹돌
+      me.ultbefore = function() {
+         // 궁극기 : 전 지역 섬멸모드 · 가동
+         // 자신의 공격 데미지 150% 증가(최대 2중첩)
+         nbf(me, "공퍼증", 150, "전 지역 섬멸모드 - 가동", 1, 2);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 최종 병기 소녀 모드
+         // 아군 전체의 공격 데미지 70% 증가
+         tbf(all, "공퍼증", 70, "최종 병기 소녀 모드", always);
+         // 자신은 《최종병기 · 해방》 획득
+         
+         // 《최종병기 · 해방》
+         // 첫 번째 턴에서 「자신의 현재 궁극기 CD 4턴 감소
+         cdChange(me, -4);
+         // 궁극기 최대 CD 3턴 감소(6턴)
+         me.cd -= 3;
+         // 공격 데미지 450% 증가(6턴)
+         tbf(me, "공퍼증", 450, "<최종병기 · 해방>1", 6);
+         // 일반 공격 데미지 100% 증가(6턴)
+         tbf(me, "일뎀증", 100, "<최종병기 · 해방>2", 6);
+         // 궁극기 데미지 100% 증가(6턴)」 발동
+         tbf(me, "궁뎀증", 100, "<최종병기 · 해방>3", 6);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 자아 학습 전투 시스템
+         // 공격 시, 「자신이 가하는 데미지 10% 증가(최대 5중첩)」 발동
+         anbf(me, "공격", me, "가뎀증", 10, "자아 학습 전투 시스템", 1, 5, always);
+         
+         // 패시브 스킬 2 : 방어 모드 · 전환
+         // 방어 시 「자신의 최대 HP 50%만큼 자신에게 아머 강화(3턴)」 발동
+         atbf(me, "방", me, "아머", me.hp*50, "방어 모드 - 전환", 3, always);
+         // 방어 시 「자신의 《자아 학습 전투 시스템》의 가하는 데미지 증가 효과 2중첩 감소」 발동
+         anbf(me, "방", me, "가뎀증", 10, "자아 학습 전투 시스템", -2, 5, always);
+         
+         // 패시브 스킬 3 : 마인드 센서포 · 가동
+         // 공격 시 「공격 데미지의 25%만큼 타깃에게 4회 공격」 발동
+         tbf(me, "평발동*", 100, "마인드 센서포 - 가동", always);
+         tbf(me, "궁발동*", 100, "마인드 센서포 - 가동", always);
+         
+         // 패시브 스킬 4 : 일반 공격 데미지+
+         // 자신의 일반 공격 데미지 10% 증가
+         tbf(me, "일뎀증", 10, "일반 공격 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}
+         if (GLOBAL_TURN == 7) {me.cd += 3; me.curCd += 3; if (me.curCd > me.cd) me.curCd = me.cd;}
+      };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10017 : // 페바알
+      me.ultbefore = function() {
+         // 궁극기 : 태양제의 성찬
+         // 자신의 공격 데미지 35% 증가 (4턴)
+         tbf(me, "공퍼증", 35, "태양제의 성찬", 4);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 축제 마왕의 기세
+         // 자신의 공격 데미지 35% 증가
+         tbf(me, "공퍼증", 35, "축제 마왕의 기세1", always);
+         // 자신의 일반 공격 데미지 150% 증가
+         tbf(me, "일뎀증", 150, "축제 마왕의 기세2", always);
+         // 자신 이외의 팀원이 가하는 데미지 15% 감소
+         for(let c of comp) if (c.id != me.id) tbf(c, "가뎀증", -15, "축제 마왕의 기세3", always);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 돈은 행동력으로부터
+         // 자신의 HP가 99%보다 아래일 시 "자신의 공격 데미지 35% 증가"효과 발동
+         tbf(me, "공퍼증", 35, "돈은 행동력으로부터", always);
+         
+         // 패시브 스킬 2 : 통증으로 인한 쾌감
+         // 자신의 HP가 99%보다 아래일 시 "자신의 일반 공격 데미지 70% 증가"효과 발동
+         tbf(me, "일뎀증", 70, "돈은 행동력으로부터", always);
+         
+         // 패시브 스킬 3 : 자업자득
+         // 매턴 자신의 최대 HP 7.5%만큼 자신을 치유 발동
+         // 첫 번째 턴 & 1턴마다 "자신의 현존 HP의 1.5%만큼 자신에게 데미지"효과 발동
+         // 첫 번째 턴 시작 시 {자신의 궁극기 CD 4턴 감소} 효과 발동
+         cdChange(me, -4);
+         
+         // 궁극기 발동 시 <고가 매입> 효과 발동
+         // <고가 매입>
+         // 일반 공격 시 "공격 데미지의 150%만큼 현재 타깃에게 추가 공격" 스킬 추가(4턴)
+         atbf(me, "궁", me, "평추가*", 150, "<고가 매입>", 4, always);
+         
+         // 패시브 스킬 4 : 일반 공격 데미지+
+         // 자신의 일반 공격 데미지 25% 증가
+         tbf(me, "일뎀증", 25, "일반 공격 데미지+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10018 : // 울타
+      me.ultbefore = function() {
+         // 궁극기 : 용자 돌진 - 엉망진창
+         // 자신에게 최대 HP의 50%만큼 아머 강화 + 도발 효과 + 받는 데미지 30% 감소(1턴)
+         tbf(me, "아머", me.hp*50*armorUp(me, "궁", "추가"), "용자 돌진 - 엉망진창1", 1);
+         // 자신이 공격 시 "기본 공격 데미지의 230%만큼 타깃에게 데미지" 효과 추가 (4턴)
+         tbf(me, "평추가+", me.atk*230, "용자 돌진 - 엉망진창2", 4);
+         tbf(me, "궁추가+", me.atk*230, "용자 돌진 - 엉망진창3", 4);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {
+         // 일반 공격 : 생을 위한 투쟁
+         // 자신의 최대 HP의 15%만큼 아머 강화(1턴)
+         tbf(me, "아머", me.hp*15, "생을 위한 투쟁", 1);
+      }
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 우자의 마음 - 나만의 정의
+         // 아군 전체의 공격 데미지 30% 증가, 최대 HP 25% 증가
+         tbf(all, "공퍼증", 30, "우자의 마음 - 나만의 정의1", always);
+         hpUpAll(25);
+         // 자신의 궁극기 최대 CD 1턴 감소, 일반 공격 데미지 100% 증가, 궁극기 데미지 40% 증가
+         me.cd -= 1; me.curCd -= 1;
+         tbf(me, "일뎀증", 100, "우자의 마음 - 나만의 정의2", always);
+         tbf(me, "궁뎀증", 40, "우자의 마음 - 나만의 정의3", always);
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 고대의 피
+         // TODO: 자신이 받는 데미지 20% 감소, 받는 치유량 35% 증가
+         
+         // 패시브 스킬 2 : 바보의 직진
+         // 일반 공격 시, "자신의 기본 공격 데미지의 150%만큼 타깃에게 데미지" 효과 추가
+         tbf(me, "평추가+", me.atk*150, "바보의 직진1", always);
+         // 궁극기 발동 시, "자신의 기본 공격 데미지의 375%만큼 타깃에게 데미지" 효과 추가
+         tbf(me, "궁추가+", me.atk*375, "바보의 직진2", always);
+         
+         // 패시브 스킬 3 : 공존 불가
+         // 자신이 받는 아머 강화 효과 35% 증가, 자신이 가하는 데미지 25% 증가
+         tbf(me, "받아증", 35, "공존 불가1", always);
+         tbf(me, "가뎀증", 25, "공존 불가2", always);
+         
+         // 패시브 스킬 4 : 받는 데미지 감소
+         // TODO: 자신이 받는 데미지 5% 감소
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10019 : // 아야네
+      me.ultbefore = function() {
+         // 궁극기 : 성검해방 - 성신역법
+         // 자신의 공격 데미지 45% 증가(3턴)
+         tbf(me, "공퍼증", 45, "성검해방 - 성신역법", 3);
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 기원의 힘
+         // 아군 전체의 공격 데미지 40% 증가
+         tbf(all, "공퍼증", 40, "기원의 힘1", always);
+         // 자신 이외의 파티원이 공격 시, 해당 파티원의 포지션에 따라 칸다 아야네에게 버프 부여 (1턴) 발동
+
+         for(let idx of getRoleIdx("딜")) {
+            // - 공격 습득 : 딜러
+            // 1 . 가하는 데미지 25% 증가(1턴)
+            atbf(comp[idx], "공격", me, "가뎀증", 25, "공격 습득1", 1, always);
+            // 2 . 공격 시, '자신의 공격 데미지의 75%로 타깃에게 추가 공격'효과 발동
+            atbf(comp[idx], "공격", me, "평추가*", 75, "공격 습득2", 1, always);
+            atbf(comp[idx], "공격", me, "궁추가*", 75, "공격 습득3", 1, always);
+         }
+         
+         // - 방어 습득 : 탱커
+         // TODO: 행동 시, 아군 전체가 받는 데미지 15% 감소(1턴) 효과 발동
+         
+         // - 치유 습득 : 힐러
+         // TODO: 치유량 50% 증가
+         // 2 . 공격 시, 자신의 공격 데미지의 50%만큼 아군 전체를 치유 효과 발동
+         
+         for(let idx of getRoleIdx("섶")) {
+            // - 보조 습득 : 서포터
+            // 공격 시, 자신의 공격 데미지 50% 증가(2턴) 효과 발동
+            const ult = comp[idx].ultafter;
+            comp[idx].ultafter = function(...args) {
+               ult.apply(this, args);
+               atbf(me, "공격", me, "공퍼증", 50, "보조 습득", 2, 1);
+            }
+            const atk = comp[idx].atkafter;
+            comp[idx].atkafter = function(...args) {
+               atk.apply(this, args);
+               atbf(me, "공격", me, "공퍼증", 50, "보조 습득", 2, 1);
+            }
+         }
+
+         for(let idx of getRoleIdx("디")) {
+            // - 방해 습득 : 디스럽터
+            // TODO: 공격 시, 타깃이 받는 치유량 50% 감소(1턴)
+            // 공격 시, 타깃이 받는 데미지 20% 증가(2턴) 효과 발동
+            const ult = comp[idx].ultafter;
+            comp[idx].ultafter = function(...args) {
+               ult.apply(this, args);
+               atbf(me, "공격", boss, "받뎀증", 20, "방해 습득", 2, 1);
+            }
+            const atk = comp[idx].atkafter;
+            comp[idx].atkafter = function(...args) {
+               atk.apply(this, args);
+               atbf(me, "공격", boss, "받뎀증", 20, "방해 습득", 2, 1);
+            }
+         }
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 흩날리는 별빛의 검
+         // 궁극기 발동 시, '자신의 공격 데미지의 10%만큼 타깃에게 10회 추가 공격' 효과 발동
+         tbf(me, "궁추가*", 100, "흩날리는 별빛의 검", always);
+         
+         // 패시브 스킬 2 : 메테오의 궤적
+         // 첫 번째 턴 시작 시, 자신의 동료가 "스타더스트 플래시" 획득 효과 발동
+         // -스타더스트 플래시
+         // 공격 시, '칸다 아야네의 일반 공격 데미지 10% 증가(1턴), 궁극기 데미지 4% 증가(1턴)' 효과 발동 (50턴)
+         for(let c of comp) if (c.id != me.id) {
+            atbf(c, "공격", me, "일뎀증", 10, "스타더스트 플래시1", 1, 50);
+            atbf(c, "공격", me, "궁뎀증", 4, "스타더스트 플래시2", 1, 50);
+         }
+         
+         // 패시브 스킬 3 : 구원의 별빛
+         // TODO: 받는 데미지 15% 감소
+         // 일반 공격 시, '자신의 최대 HP의 12.5%만큼 자신의 아머 강화 (1턴)' 효과 발동
+         atbf(me, "평", me, "아머", me.hp*12.5, "구원의 별빛1", 1, always);
+         // 궁극기 발동 시, '타깃이 받는 칸다 아야네의 데미지 17.5% 증가'(최대 2중첩) 효과 발동
+         anbf(me, "궁", me, "받캐뎀", 17.5, "구원의 별빛2", 1, 2, always);
+         
+         // 패시브 스킬 4 : 공격력 증가
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격력 증가", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10020 : // 무엘라
+      me.ultbefore = function() {}
+      me.ultafter = function() {
+         // 궁극기 : 일렉트로 마그네틱 펄스
+         // TODO: 적 전체가 가하는 데미지 15% 감소(최대 1중첩)
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 개조 시작... 히히히...
+         // 아군 전체의 공격 데미지 40% 증가
+         tbf(all, "공퍼증", 40, "개조 시작... 히히히...1", always);
+         // 아군 2, 4번 파티원의 궁극기 데미지 30% 증가, 일반 공격 데미지 60% 증가
+         const idxs = [1, 3];
+         for(let idx of idxs) {
+            tbf(comp[idx], "궁뎀증", 30, "개조 시작... 히히히...2", always);
+            tbf(comp[idx], "일뎀증", 60, "개조 시작... 히히히...3", always);
+         }
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 재생 방지 스프레이
+         // TODO: 궁극기 발동 시, 타깃이 받는 치유량 100% 감소 (3턴)효과 발동
+         
+         // 패시브 스킬 2 : 커브드 포스필드
+         // 궁극기 발동 시, 아군 전체가 자신의 최대 HP의 30%만큼 아머 강화(1턴) 효과 발동
+         for(let c of comp) atbf(me, "궁", c, "아머", c.hp*30, "커브드 포스필드", 1, always);
+         
+         // 패시브 스킬 3 : 마도 개조 수술 => turnstart로
+         // 4턴마다 아군 2, 4번 파티원이 '궁극기 데미지 50% 증가(2턴)' 효과 발동
+         
+         // 패시브 스킬 4 : 공격+
+         // 자신의 공격 데미지 10% 증가
+         tbf(me, "공퍼증", 10, "공격+", always);
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}
+         // 패시브 스킬 3 : 마도 개조 수술 => turnstart로
+         // 4턴마다 아군 2, 4번 파티원이 '궁극기 데미지 50% 증가(2턴)' 효과 발동
+         if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%4 == 0) {
+            const idxs = [1, 3];
+            for(let idx of idxs) tbf(comp[idx], "궁뎀증", 50, "마도 개조 수술", 2);
+         }
+      };
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
    case 10021 : // 하쿠
       me.healTurn = [];
       me.ultbefore = function() { // 궁극기 : 재생의 바람
@@ -514,6 +1069,10 @@ function setDefault(me) {switch(me.id) {
          for(let idx of getRoleIdx("힐", "섶")) tbf(comp[idx], "공퍼증", 40, "시공을 초월한 현자4", always);
       }
       me.passive = function() {
+         // 패시브 스킬 2 : 천 년의 지혜
+         // 최대 HP 10% 증가
+         hpUpMe(me, 10);
+
          // 패시브 스킬 1 : 전능의 술
          // TODO: 일반 공격 시 「자신의 공격 데미지의 25%만큼 현재 HP가 가장 낮은 아군을 치유」발동
          // 공격 시 「아군 타깃의 최대 HP의 10%만큼 아군 전체의 아머 강화(1턴)」발동
@@ -523,8 +1082,7 @@ function setDefault(me) {switch(me.id) {
             atbf(me, "공격", comp[idx], "공고증", myCurAtk+me.id+20, "전능의 술2", 1, always);
          
          // 패시브 스킬 2 : 천 년의 지혜
-         // 최대 HP 10% 증가
-         hpUpMe(me, 10);
+         // 최대 HP 10% 증가 => 제일 윗줄로
          // 공격 데미지 20% 증가
          tbf(me, "공퍼증", 20, "천 년의 지혜", always);
          // TODO: 치유량 25% 증가
