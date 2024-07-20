@@ -422,13 +422,6 @@ function setDefault(me) {switch(me.id) {
       me.attack = function() {atkLogic(me); // 격려
          // 자신의 공격 데미지의 75%만큼 아군 전체를 치유
          for(let c of comp) c.heal();
-
-         // 추가 치료
-         // 일반 공격시 "공격데미지의 40%만큼 hp가 가장 낮은 아군을 치유" 발동
-         const lowCh = comp.reduce((low, cur) => {
-            return (cur.curHp < low.curHp) ? cur : low;
-         }, comp[0]);
-         lowCh.heal();
       };
       me.leader = function() { // 보호 욕구 자극
          // 아군 전체의 최대 hp35% 증가
@@ -448,7 +441,11 @@ function setDefault(me) {switch(me.id) {
       me.passive = function() {
          // 추가 치료
          // TODO: 일반 공격 시 "hp가 가장 낮은 아군이 받는 데미지 15% 감소(1턴)" 발동
-         // 일반 공격시 "공격데미지의 40%만큼 hp가 가장 낮은 아군을 치유" 발동 => attack로
+         // 일반 공격시 "공격데미지의 40%만큼 hp가 가장 낮은 아군을 치유" 발동
+         const lowCh = comp.reduce((low, cur) => {
+            return (cur.curHp < low.curHp) ? cur : low;
+         }, comp[0]);
+         atbf(me, "평", lowCh, "힐", 40, "추가 치료", 1, always);
          
          // 전격 지원
          // 공격 시 "자신의 공격 데미지의 25%만큼 아군 전체의 공격 데미지 증가(1턴)" 발동
