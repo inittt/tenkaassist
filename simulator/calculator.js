@@ -348,19 +348,6 @@ function setBuffWho(me, div, name, who) {
 
 /* -------------------------------------------------------------------------------------- */
 function setDefault(me) {switch(me.id) {
-   case "base" :
-      me.ultbefore = function() {}
-      me.ultafter = function() {}
-      me.ultimate = function() {ultLogic(me);};
-      me.atkbefore = function() {}
-      me.atkafter = function() {}
-      me.attack = function() {atkLogic(me);};
-      me.leader = function() {}
-      me.passive = function() {}
-      me.defense = function() {me.act_defense();}
-      me.turnstart = function() {if (me.isLeader) {}};
-      me.turnover = function() {if (me.isLeader) {}};
-      return me;
    case 10001 : // 바알
       me.ultbefore = function() {
          // 궁극기 : 맹렬한 불길
@@ -2044,7 +2031,7 @@ function setDefault(me) {switch(me.id) {
          // 아군 전체의 공퍼증 100%
          tbf(all, "공퍼증", 100, "이블리스의 초호화 리조트!1", always);
          // 자신이 공격 시 아군 전체가 최대hp 25% 아머 획득
-         for(let c of comp) tbf(c, "아머", c.hp*25, "이블리스의 초호화 리조트!2", 1);
+         atbf(me, "공격", all, "아머", c.hp*25, "이블리스의 초호화 리조트!2", 1, always);
 
          // 아군 전체가 딜러이면 모두 여름 만끽 발동
          if (getRoleCnt("딜") == 5) {
@@ -7873,7 +7860,19 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-         
+   case "base" :
+      me.ultbefore = function() {}
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {}
+      me.passive = function() {}
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
 default: return null;}}
 function ultLogic(me) {
    lastDmg = 0; lastAddDmg = 0; lastAtvDmg = 0;
