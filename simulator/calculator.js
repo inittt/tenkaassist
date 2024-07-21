@@ -7856,7 +7856,148 @@ function setDefault(me) {switch(me.id) {
       me.turnstart = function() {if (me.isLeader) {}};
       me.turnover = function() {if (me.isLeader) {}};
       return me;
-   case "base" :
+   
+   case 10009 : // 아이카
+      me.ultbefore = function() {
+         // 궁극기 : 마도 메이드의 비기 - 마력 주입
+         // 아군 3번 자리 동료의 공격 데미지 50% 증가 (1턴)
+         // 공격 데미지의 100%만큼 아군 전체를 치유
+         // 아군 3번 자리 동료의 궁극기 CD 4턴 감소 효과 부여
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {
+         // 공격 : 치료술
+         // 공격 데미지의 75%만큼 아군 전체를 치유
+
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 아이카의 밀착 서비스
+         // 아군 3번 자리 동료의 공격 데미지 50% 증가
+         
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 최고의 원군
+         // 일반 공격 시, "아군 3번 자리 동료의 공격 데미지 10% 증가(1턴)"효과 발동
+         
+         // 패시브 스킬 2 : 세심한 보살핌
+         // 궁극기 발동 시, "아군 3번 자리 동료의 침묵, 마비, 수면 효과 제거"효과 발동
+         
+         // 패시브 스킬 3 : 세심한 보살핌
+         // 공격 시, "아군 3번 자리 동료의 공격 데미지 감소, 일반 공격 데미지 감소, 궁극기 데미지 감소 효과 제거" 효과 발동
+         
+         // 패시브 스킬 4 : 받는 데미지 감소+
+         // 자신이 받는 데미지 5% 감소
+         
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10013 : // 미나요미
+      me.ultbefore = function() {}
+      me.ultafter = function() {
+         // 궁극기 : 신무이도류 ● 멸천일격
+         // 공격 데미지의 331%만큼 타깃에게 데미지, "타깃이 받는 데미지 10% 증가(최대 3중첩)"효과 발동 [CD : 3]
+      }
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 신기 ● 약점 간파
+         // 각 웨이브의 첫 번째 턴에서, "타깃이 받는 데미지 30% 증가(50턴)"효과 발동
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 신무류 · 추격 베기
+         // 일반 공격 시, "공격 데미지의 30%만큼 타깃에게 추가 공격"효과 발동
+         
+         // 패시브 스킬 2 : 신무류 · 무쇠 가르기
+         // 공격 시, "타깃이 받는 데미지 5% 증가(최대 5중첩)" 효과 발동
+         
+         // 패시브 스킬 3 : 호 · 기 · 만 · 천
+         // 공격 시, "자신의 공격 데미지 6% 증가(최대 5중첩)" 효과 발동
+         
+         // 패시브 스킬 4 : 일반 공격 데미지+
+         // 자신의 일반 공격 데미지 10% 증가
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10036 : // 나프라라
+      me.ultbefore = function() {
+         // 궁극기 : 끈적끈적 미끌미끌
+         // 적 전체의 공격 데미지 15%감소(2턴), 매턴마다 자신의 공격 데미지 200%로 자신을 회복(2턴) [CD : 4]
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {
+         // 일반 공격 : 점액 공격
+         // 타깃의 공격 데미지 20% 감소(1턴)
+      }
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 나는 착한 슬라임이야
+         // : 자신의 최대 HP 30% 증가. 매 4턴마다 "타깃의 받는 데미지 15% 증가(2턴), 자신의 받는 치유량 30% 증가(2턴)"효과 발동
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 에너지 젤리
+         // 일반 공격 시, "공격 데미지의 100%만큼 HP가 가장 적은 동료 치유"효과 발동
+         
+         // 패시브 스킬 2 : 시선강탈
+         // 자신의 받는 데미지 감소 효과 10% 증가. 매 4턴마다 "자신에게 도발(2턴)"효과 발동
+         // 현재 받는 데미지 감소 효과는 방어 시에만 적용된다고 버프창에 표시됨
+         
+         // 패시브 스킬 3 : 슬라임의 내성
+         // 피격 시, 자신이 받는 피해 15% 감소(1턴)"효과 발동
+         
+         // 패시브 스킬 4 : 회복량+
+         // 치유를 받을 시 회복량 15% 증가
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   case 10038 : // 토타라
+      me.ultbefore = function() {
+         // 궁극기 : 필살기 · 마법소녀 빔!
+         // 타깃이 받는 광속성 데미지 30% 증가(최대 1중첩), 공격 데미지의 721%만큼 타깃에게 데미지 [CD : 5]
+      }
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);};
+      me.atkbefore = function() {}
+      me.atkafter = function() {}
+      me.attack = function() {atkLogic(me);};
+      me.leader = function() {
+         // 리더 스킬 : 사랑과 희망의 빛!
+         // 아군 광속성 동료의 공격 데미지 30% 증가. 자신의 궁극기 데미지 25% 증가
+      }
+      me.passive = function() {
+         // 패시브 스킬 1 : 빛의 제재!
+         // 궁극기 발동 시, 50% 확률로 "자신의 궁극기 CD 2턴 감소" 효과 발동(1턴)
+
+         // 패시브 스킬 2 : 정의는 굴복하지 않아!
+         // 궁극기 발동 시, "자신의 궁극기 데미지 50% 증가(4턴)" 효과 발동
+
+         // 패시브 스킬 3 : 마법소녀의 아우라!
+         // 궁극기 발동 시, "적 전체가 받는 광속성 데미지 20% 증가(4턴)" 효과 발동
+
+         // 패시브 스킬 4 : 궁극기 데미지+
+         // 자신의 궁극기 데미지 10% 증가
+
+      }
+      me.defense = function() {me.act_defense();}
+      me.turnstart = function() {if (me.isLeader) {}};
+      me.turnover = function() {if (me.isLeader) {}};
+      return me;
+   
+   
+   
+   case 0 :
       me.ultbefore = function() {}
       me.ultafter = function() {}
       me.ultimate = function() {ultLogic(me);};
