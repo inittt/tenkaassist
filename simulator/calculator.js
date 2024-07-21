@@ -1,6 +1,8 @@
 const COEF = 2*1.3*1.25, all = 0, allNotMe = 1, myCurAtk = "a", myCurShd = "b", always = 100;
 let comp = [], GLOBAL_TURN = 1;
 let lastDmg = 0, lastAddDmg = 0, lastAtvDmg = 0, lastDotDmg = 0, lastRefDmg = 0;
+const command = [];
+let dmg13 = 0;
 
 class Boss {
    constructor() {
@@ -116,6 +118,7 @@ function nextTurn() {
    lastDotDmg = 0;
    for(let dot of dotBuff) applyDotDmg(Math.round(dot.size/100)*(1+bf[2]+bf[18]));
    boss.buff = boss.buff.filter(item => !isExpired(item));
+   if (GLOBAL_TURN == 14) dmg13 = Math.floor(boss.maxHp - boss.hp);
 }
 
 function getSize(str) {

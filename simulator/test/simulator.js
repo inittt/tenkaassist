@@ -53,7 +53,7 @@ function makeComp(list) {
 
 function start(compIds) {
    document.getElementById("simulator").style.display = "flex";
-   GLOBAL_TURN = 1; comp = [];
+   GLOBAL_TURN = 1; comp = []; command.length = 0;
    lastDmg = 0; lastAtvDmg = 0;
    boss.hp = boss.maxHp;
    boss.buff = []; alltimeFunc.length = 0;
@@ -76,23 +76,51 @@ function start(compIds) {
 }
 
 function do_ult(idx) {
+   if (comp[idx].isActed) return;
+   command.push(`${idx+1}궁`);
    comp[idx].ultimate();
    endAct();
    updateAll();
 }
 function do_atk(idx) {
    if (comp[idx].isActed) return;
+   command.push(`${idx+1}평`);
    comp[idx].attack();
    endAct();
    updateAll();
 }
 function do_def(idx) {
+   if (comp[idx].isActed) return;
+   command.push(`${idx+1}방`);
    comp[idx].defense();
    endAct();
    updateAll();
 }
 
 function endAct() {
+   if (boss.hp <= 0) {
+      for(let c of comp) c.isActed = true;
+      updateAll();
+
+      const msg = [];
+      msg.push("시뮬레이터 종료");
+      msg.push(`허수턴 : ${GLOBAL_TURN}`);
+      msg.push(`13턴딜 : ${dmg13.toLocaleString()}`)
+
+      const cmd = [];
+      for(let i = 0; i < command.length; i++) {
+         if (i%5 == 0) {
+            if (Math.floor(i/5)+1 < 10) cmd.push(" ");
+            cmd.push(`${Math.floor(i/5)+1}턴 : `);
+         }
+         cmd.push(command[i]);
+         cmd.push((i+1)%5 == 0 ? "\n" : " > "); 
+      }
+      console.log(cmd.join(""));
+      alert(msg.join("\n"));
+      return;
+   }
+
    if (isAllActed()) {
       for(let i = 0; i < 5; i++) comp[i].turnover();
       nextTurn();
