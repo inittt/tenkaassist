@@ -1158,35 +1158,6 @@ function setDefault(me) {switch(me.id) {
          // 자신은 "방어 시 '자신의 최대 hp20%만큼 아군 전체에게 아머 부여(4턴)' 발동(4턴)"
          // (발동 1회 후 해제 => me.defense로) 획득
          atbf(me, "방", all, "아머", me.hp*20, "광견의 충복3", 4, 4);
-
-         // <반서의 포효>
-         if (me.isLeader && me.getNest("<방향 틀기>") >= 1) {
-            // 궁극기 발동 시 "자신의 공격 데미지의 25%만큼 자신 이외의 아군 전체의 공격 데미지 증가(1턴)" 추가
-            for(let c of comp) if (c.id != me.id)
-               buff(me, "궁", c, "공고증", myCurAtk+me.id+25, "<반서의 포효>", 1, 1, "추가", true);
-            // 궁극기 발동 시 "아군 전체의 가하는 데미지 50% 증가(1턴)" 추가
-            tbf(all, "가뎀증", 50, "<반서의 포효>", 1);
-            // 궁극기 발동 시 "아군 전체의 궁극기 데미지 50% 증가(1턴)" 추가
-            tbf(all, "궁뎀증", 50, "<반서의 포효>", 1);
-            // 궁극기 발동 시 "타깃이 받는 데미지 50% 증가(1턴)" 추가
-            tbf(boss, "받뎀증", 50, "<반서의 포효>", 1);
-            // 궁극기 발동 시 "자신의 <방향 틀기>의 모든 중첩 수 제거" 발동 => me.ultstart로
-         }
-         // <반서의 포효>
-         // 궁극기 발동 시 "자신의 <방향 틀기>의 모든 중첩 수 제거" 발동
-         if (me.isLeader) nbf(me, "<방향 틀기>", 0, "광견의 시야3", -1, 1);
-
-         if (me.getNest("<역공 타이밍>") == 1) {
-            // <역습의 총알 세례>
-            // 궁극기 발동 시 "자신의 공격 데미지의 45.5%만큼 타깃에게 8회 데미지" 추가
-            tbf(me, "궁추가*", 364, "<역습의 총알 세례>", 1);
-            // <역습의 포화>
-            // 궁극기 발동 시 "자신의 공격 데미지의 75%만큼 타깃에게 2회 데미지" 추가
-            tbf(me, "궁추가*", 150, "<역습의 포화>", 1);
-            // <역습의 포화>
-            // 궁극기 발동 시 "자신의 <역공 타이밍>의 모든 중첩수 제거" 발동
-            nbf(me, "<역공 타이밍>", 0, "자신감의 계략", -1, 1);
-         }
       }
       me.ultafter = function() {}
       me.ultimate = function() {ultLogic(me);};
@@ -1209,8 +1180,27 @@ function setDefault(me) {switch(me.id) {
          // => me.defense 로
 
          // 자신의 <방향 틀기> 중첩수 == 1일 시 <반서의 포효> 발동
-         
-         // <반서의 포효> => me.turnstart로
+         // <반서의 포효>
+         // 궁극기 발동 시 "자신의 공격 데미지의 25%만큼 자신 이외의 아군 전체의 공격 데미지 증가(1턴)" 추가
+         buff(me, "궁", comp[1], "공고증", myCurAtk+me.id+25, "<반서의 포효>1-1", 1, always, "추가", false);
+         buff(me, "궁", comp[2], "공고증", myCurAtk+me.id+25, "<반서의 포효>1-2", 1, always, "추가", false);
+         buff(me, "궁", comp[3], "공고증", myCurAtk+me.id+25, "<반서의 포효>1-3", 1, always, "추가", false);
+         buff(me, "궁", comp[4], "공고증", myCurAtk+me.id+25, "<반서의 포효>1-4", 1, always, "추가", false);
+         // 궁극기 발동 시 "아군 전체의 가하는 데미지 50% 증가(1턴)" 추가
+         buff(me, "궁", all, "가뎀증", 50, "<반서의 포효>2", 1, always, "추가", false);
+         // 궁극기 발동 시 "아군 전체의 궁극기 데미지 50% 증가(1턴)" 추가
+         buff(me, "궁", all, "궁뎀증", 50, "<반서의 포효>3", 1, always, "추가", false);
+         // 궁극기 발동 시 "타깃이 받는 데미지 50% 증가(1턴)" 추가
+         buff(me, "궁", boss, "받뎀증", 50, "<반서의 포효>4", 1, always, "추가", false);
+         // 궁극기 발동 시 "자신의 <방향 틀기>의 모든 중첩 수 제거" 발동
+         anbf(me, "궁", me, "<방향 틀기>", 0, "광견의 시야3", -1, 1, always);
+         alltimeFunc.push(function() {setBuffOn(me, "추가", "<반서의 포효>1-1", me.getNest("<방향 틀기>") >= 1)});
+         alltimeFunc.push(function() {setBuffOn(me, "추가", "<반서의 포효>1-2", me.getNest("<방향 틀기>") >= 1)});
+         alltimeFunc.push(function() {setBuffOn(me, "추가", "<반서의 포효>1-3", me.getNest("<방향 틀기>") >= 1)});
+         alltimeFunc.push(function() {setBuffOn(me, "추가", "<반서의 포효>1-4", me.getNest("<방향 틀기>") >= 1)});
+         alltimeFunc.push(function() {setBuffOn(me, "추가", "<반서의 포효>2", me.getNest("<방향 틀기>") >= 1)});
+         alltimeFunc.push(function() {setBuffOn(me, "추가", "<반서의 포효>3", me.getNest("<방향 틀기>") >= 1)});
+         alltimeFunc.push(function() {setBuffOn(me, "추가", "<반서의 포효>4", me.getNest("<방향 틀기>") >= 1)});
       }
       me.passive = function() {
          // 전략적 후퇴
@@ -1235,13 +1225,18 @@ function setDefault(me) {switch(me.id) {
 
          // <역습의 포화> => ultbefore로
          // 궁극기 발동 시 "자신의 공격 데미지의 75%만큼 타깃에게 2회 데미지" 추가
+         buff(me, "궁추가*", 150, "<역습의 포화>", always, false);
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "<역습의 포화>", me.getNest("<역공 타이밍>") >= 1)});
          // 궁극기 발동 시 "자신의 <역공 타이밍>의 모든 중첩수 제거" 발동
+         anbf(me, "궁", me, "<역공 타이밍>", 0, "자신감의 계략", -1, 1, always);
 
          // 장기 휴가를 주지
          // 자신의 <역공 타이밍> 중첩 수 == 1일 시 <역습의 총알 세례> 발동
 
          // <역습의 총알 세례> => ultbefore로
          // 궁극기 발동 시 "자신의 공격 데미지의 45.5%만큼 타깃에게 8회 데미지" 추가
+         buff(me, "궁추가*", 364, "<역습의 총알 세례>", always, false);
+         alltimeFunc.push(function() {setBuffOn(me, "기본", "<역습의 총알 세례>", me.getNest("<역공 타이밍>") >= 1)});
 
          // 공격+
          // 자신의 공격 데미지 10% 증가
@@ -2038,7 +2033,7 @@ function setDefault(me) {switch(me.id) {
             // 여름 만끽1 : 공격 시 아군 전체를 치유
             atbf(all, "공격", all, "힐", 1, "여름 만끽1", 1, always);
             // 여름 만끽2 : 궁발동시 자신공 12.5%만큼 아군 전체 아머 부여(1턴) 발동
-            atbf(me, "궁", all, "아머", myCurAtk+me.id+12.5, "여름 만끽2", 1, always);
+            for(let c of comp) atbf(c, "궁", all, "아머", myCurAtk+c.id+12.5, "여름 만끽2", 1, always);
             // 여름 만끽3 : 공격시 아군 전체의 궁뎀증 5% (10중첩)
             anbf(all, "공격", all, "궁뎀증", 5, "여름 만끽3", 1, 10, always);
             // 여름 만끽4 : 공격시 수/화받속뎀 3% (10중첩)
