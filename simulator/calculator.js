@@ -2031,7 +2031,7 @@ function setDefault(me) {switch(me.id) {
          // 아군 전체의 공퍼증 100%
          tbf(all, "공퍼증", 100, "이블리스의 초호화 리조트!1", always);
          // 자신이 공격 시 아군 전체가 최대hp 25% 아머 획득
-         atbf(me, "공격", all, "아머", c.hp*25, "이블리스의 초호화 리조트!2", 1, always);
+         for(let c of comp) atbf(me, "공격", c, "아머", c.hp*25, "이블리스의 초호화 리조트!2", 1, always);
 
          // 아군 전체가 딜러이면 모두 여름 만끽 발동
          if (getRoleCnt("딜") == 5) {
