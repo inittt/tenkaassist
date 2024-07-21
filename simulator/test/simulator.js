@@ -122,11 +122,11 @@ function updateAll() {
       }
    }
    getdiv("turn").innerHTML = `TURN ${GLOBAL_TURN}`;
-   getdiv("deal").innerHTML = `공격데미지 : ${Math.ceil(lastDmg).toLocaleString()}`;
-   getdiv("deal_add").innerHTML = `추가데미지 : ${Math.ceil(lastAddDmg).toLocaleString()}`;
-   getdiv("deal_atv").innerHTML = `발동데미지 : ${Math.ceil(lastAtvDmg).toLocaleString()}`;
-   getdiv("deal_dot").innerHTML = `도트데미지 : ${Math.ceil(lastDotDmg).toLocaleString()}`;
-   getdiv("deal_ref").innerHTML = `반격데미지 : ${Math.ceil(lastRefDmg).toLocaleString()}`;
+   getdiv("deal").innerHTML = `공격데미지 : ${Math.ceil(lastDmg).toLocaleString().replace("\n", '')}`;
+   getdiv("deal_add").innerHTML = `추가데미지 : ${Math.ceil(lastAddDmg).toLocaleString().replace("\n", '')}`;
+   getdiv("deal_atv").innerHTML = `발동데미지 : ${Math.ceil(lastAtvDmg).toLocaleString().replace("\n", '')}`;
+   getdiv("deal_dot").innerHTML = `도트데미지 : ${Math.ceil(lastDotDmg).toLocaleString().replace("\n", '')}`;
+   getdiv("deal_ref").innerHTML = `반격데미지 : ${Math.ceil(lastRefDmg).toLocaleString().replace("\n", '')}`;
    updateProgressBar(boss.hp, boss.maxHp);
 }
 function updateCdBar(i) {
