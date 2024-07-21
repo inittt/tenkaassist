@@ -144,6 +144,7 @@ function updateAll() {
    getdiv("deal_atv").innerHTML = `발동데미지 : ${Math.ceil(lastAtvDmg).toLocaleString()}`;
    getdiv("deal_dot").innerHTML = `도트데미지 : ${Math.ceil(lastDotDmg).toLocaleString()}`;
    getdiv("deal_ref").innerHTML = `반격데미지 : ${Math.ceil(lastRefDmg).toLocaleString()}`;
+   getdiv("simulator").style.fontSize = "1rem";
    updateProgressBar(boss.hp, boss.maxHp);
 }
 function updateCdBar(i) {
