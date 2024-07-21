@@ -2557,7 +2557,7 @@ function setDefault(me) {switch(me.id) {
       me.passive = function() {
          // 패시브 스킬 1 : 크리스마스 스피릿
          // 궁극기 발동 시, 아군 1, 2번 자리 "군중 제어 걸릴 확률 75% 감소 (1턴), 공격 데미지 30% 증가 (2턴)" 부여
-         for(let i = 0; i < 2; i++) atbf(me, "궁", comp[idx], "공퍼증", 30, "크리스마스 스피릿", 2, always);
+         for(let i = 0; i < 2; i++) atbf(me, "궁", comp[i], "공퍼증", 30, "크리스마스 스피릿", 2, always);
          
          // 패시브 스킬 2 : 음성 제어 썰매
          // TODO: 궁극기 발동 시, 아군 2, 5번 자리 받는 데미지 20% 감소(1턴)
@@ -6432,8 +6432,9 @@ function setDefault(me) {switch(me.id) {
       return me;
    case 10130 : // 셀리나
       buff_ex.push("<싸움상등!>");
-      me.hit = function() {
-         addBuff(me, ["피격"], "추가"); addBuff(me, ["피격"], "발동");
+      const h = me.hit();
+      me.hit = function(...args) {
+         h.apply(this, args);
          deleteBuff(me, "기본", "이 일격으로 머리를 뚫어버린다!2");
          deleteBuff(me, "기본", "<빠가야로!>");
       }
