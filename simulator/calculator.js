@@ -6432,7 +6432,7 @@ function setDefault(me) {switch(me.id) {
       return me;
    case 10130 : // 셀리나
       buff_ex.push("<싸움상등!>");
-      const h = me.hit();
+      const h = me.hit;
       me.hit = function(...args) {
          h.apply(this, args);
          deleteBuff(me, "기본", "이 일격으로 머리를 뚫어버린다!2");
