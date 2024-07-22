@@ -9,6 +9,9 @@ body {
    display: flex; justify-content: center; align-items: flex-start;
    background-color: #151515;
 }
+i {
+   color:#9a2424;
+}
 .button {
    height:5.2rem;
    cursor:pointer;
