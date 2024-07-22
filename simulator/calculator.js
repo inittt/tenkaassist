@@ -6801,7 +6801,7 @@ function setDefault(me) {switch(me.id) {
          // 일반 공격 시, "자신의 공격 데미지의 40% 만큼 매턴마다 아군 전체를 치유(1턴)" 효과 발동
          // 궁극기 발동 시, "자신의 공격 데미지의 80% 만큼 매턴마다 아군 전체를 치유(1턴)" 효과 발동
 
-         // 팬들은 wow => turnstart로
+         // 팬들은 wow => ultbefore로
          // 궁극기 발동 시, "자신의 공격 데미지의 15%만큼 매턴마다 자신을 제외한 아군의 공격 데미지 증가(1턴)" 효과 발동
          
          // 치유 부여+
@@ -6810,9 +6810,6 @@ function setDefault(me) {switch(me.id) {
       me.defense = function() {me.act_defense();}
       me.turnstart = function() {
          if (me.isLeader) {}
-         // // 궁극기 발동 시, "자신의 공격 데미지의 15%만큼 매턴마다 자신을 제외한 아군의 공격 데미지 증가(1턴)" 효과 발동
-         // if (me.turnAtkBonus) for(let c of comp) if (c.id != me.id)
-         //    tbf(c, "공고증", myCurAtk+me.id+15, "팬들은 wow", 1);
          me.turnAtkBonus = false;
       };
       me.turnover = function() {

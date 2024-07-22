@@ -1,6 +1,6 @@
 const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
-const curHeader = 7;
+const curHeader = 6;
 const idList = chIds.split(",").map(Number);
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -133,8 +133,23 @@ function endAct() {
          cmd.push(command[i]);
          cmd.push((i+1)%5 == 0 ? "\n" : " > "); 
       }
-      console.log(cmd.join(""));
+      const command_tmp = cmd.join("");
+      console.log(command_tmp);
       alert(msg.join("\n"));
+      
+      const formData = new FormData();
+      formData.append("name", `${comp[0].name}덱`);
+      formData.append("compstr", chIds);
+      formData.append("dmg13", dmg13);
+      formData.append("scarecrow", GLOBAL_TURN);
+      formData.append("command", command_tmp);
+      request(`${server}/comps/setPower`, {
+         method: "POST",
+         body: formData
+      }).then(response => {
+         if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+         return response.json();
+      }).then(res => {}).catch(e => {})
       return;
    }
 
@@ -191,7 +206,6 @@ function updateProgressBar(hp, maxhp) {
    const percentage = ((hp / maxhp) * 100);
    const bossHpText = document.getElementById("boss-hp");
    progressBar.style.width = percentage > 100 ? "100%" : `${percentage}%`;
-   //progressBar.textContent = `${Math.floor(hp).toLocaleString()} (${Math.floor(percentage*100)/100}%)`;
    bossHpText.innerHTML = `${Math.ceil(hp).toLocaleString()} (${Math.ceil(percentage*100)/100}%)`;
 }
 

@@ -21,48 +21,23 @@ document.addEventListener("DOMContentLoaded", function() {
       document.getElementById('titlebox').innerHTML = `ERROR`;
    })
 
-   // 나의 좋아요 목록 가져오기
-   request(`${server}/users/get/likes`, {
+   // 커맨드 가져오기
+   request(`${server}/comps/getCommand/${compId}`, {
       method: "GET",
    }).then(response => {
       if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
       return response.json();
    }).then(res => {
-      if (!res.success) return console.log(res.msg);
-      if (res.data == null) return;
-      for(const cid of res.data.split(" ").map(Number)) {
-         if (cid == compId) {
-            document.getElementById('like').classList.add("like-already");
-            return;
-         }
+      if (!res.success) {
+         document.getElementById('command').innerHTML = `ERROR`;
+         return console.log("커맨드 로드 실패");
+      } else {
+         document.getElementById('command').innerHTML = res.data.command;
       }
    }).catch(e => {
       console.log("데이터 로드 실패", e);
+      document.getElementById('command').innerHTML = `ERROR`;
    })
-
-   // 좋아요 누를 시 로직
-   document.getElementById('like').addEventListener('click', function() {
-      request(`${server}/comps/like/${compId}`, {
-         method: "PUT",
-      }).then(response => {
-         if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
-         return response.json();
-      }).then(res => {
-         if (!res.success) return alert(res.msg);
-         const likeDiv = document.getElementById('like');
-         if (res.data > curRecommend) {
-            likeDiv.innerHTML = `좋아요 ♥ ${++curRecommend}`;
-            likeDiv.classList.remove("like");
-            likeDiv.classList.add("like-already");
-         } else {
-            likeDiv.innerHTML = `좋아요 ♥ ${--curRecommend}`;
-            likeDiv.classList.add("like");
-            likeDiv.classList.remove("like-already");
-         }
-      }).catch(e => {
-         console.log("데이터 로드 실패", e);
-      })
-   });
 
    // admin일때 삭제버튼 보이기
    request(`${server}/users/isAdmin`, {
@@ -100,14 +75,14 @@ function makeCompBlock(comp) {
             </div>
             <div class="text-mini">${ch.name}</div>
          </div>
-      `);       
+      `);
    }
    compbox.innerHTML = stringArr.join("");
    document.getElementById('create_at').innerHTML = `등록 : ${create_at} ${creator}`;
    document.getElementById('update_at').innerHTML = `수정 : ${update_at == null ? " - " : update_at} ${updater}`;
 
-   document.getElementById('like').innerHTML = `좋아요 ♥ ${recommend}`;
-   document.getElementById('ranking').innerHTML = `랭킹 ▲ ${ranking.toFixed(2)}`;
+   document.getElementById('scarecrow').innerHTML = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}턴`;
+   document.getElementById('dmg13').innerHTML = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`;
 
    let escape = description.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
@@ -131,7 +106,7 @@ function reportComp() {
          alert("신고 10회 누적으로 삭제되었습니다");
          location.href=`${address}/index.html`;
       } else {
-         alert(`신고 성공 (현재 누적 ${res.data}회)`);
+         alert(`신고 성공 (현재 누적 ${res.data}/10 회)`);
       }
    }).catch(e => {
       console.log("데이터 로드 실패", e);

@@ -1,5 +1,5 @@
 let checkElementN, checkRoleN, checkRarityN;
-const curHeader = 6;
+const curHeader = 5;
 
 const selected = [];
 document.addEventListener("DOMContentLoaded", function() {

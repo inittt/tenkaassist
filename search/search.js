@@ -1,6 +1,7 @@
 const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const leaderId = params.get('leader');
+const curHeader = 2;
 
 document.addEventListener("DOMContentLoaded", function() {
    var dropdownBtn = document.getElementById("dropdownBtn");
@@ -22,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
          let sort = 0;
-         if ("추천순" === this.value) sort = 1;
+         if ("13턴딜" === this.value) sort = 1;
          if ("최신등록순" === this.value) sort = 2;
          if ("최신수정순" === this.value) sort = 3;
          getComps(sort);
@@ -84,11 +85,10 @@ function makeBlock(data, sort) {
       }
       let last;
       switch(sort) {
-         case 1 : last = `♥ ${recommend}`; break;
+         case 1 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`; break;
          case 2 : last = `${creator}`; break;
          case 3 : last = `${updater}`; break;
-         default : last = `▲ ${typeof ranking === 'number' ? ranking.toFixed(2) : ranking}`;
-         //default : last = `▲ ${ranking.tofixed(2)}`;
+         default : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}턴`;
       } stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
       let compcontainer = document.getElementById('compcontainer');
       let compblock = document.createElement('div');

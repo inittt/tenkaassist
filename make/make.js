@@ -3,6 +3,7 @@ const chIds = params.get('list');
 const possibleDeck = [];
 let allCombinations = [];
 let isDataLoaded = false, sort = 0, mod = 0;
+const curHeader = 5;
 
 document.addEventListener("DOMContentLoaded", function() {
    var dropdownBtn = document.getElementById("dropdownBtn");
@@ -47,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownContent2.style.display = "none";
 
          sort = 0;
-         if ("추천순" === this.value) sort = 1;
+         if ("13턴딜" === this.value) sort = 1;
          makeBlock();
       });
    });
@@ -165,8 +166,8 @@ function loadBlockAllDeck(pg) {
       }
       let last;
       switch(sort) {
-         case 1 : last = `♥ ${recommend}`; break;
-         default : last = `▲ ${typeof ranking === 'number' ? ranking.toFixed(2) : ranking}`;
+         case 1 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`; break;
+         default : last = `<i class="fa-solid fa-skull"></i> ${typeof ranking === 'number' ? ranking.toFixed(0) : ranking}턴`;
       } stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 
       let compblock = document.createElement('div');
@@ -246,8 +247,8 @@ function loadBlockNDeck(pg) {
             `);       
          }
          let last;
-         if (sort == 1) last = `♥ ${recommend}`;
-         else last = `▲ ${typeof ranking === 'number' ? ranking.toFixed(2) : ranking}`;
+         if (sort == 1) last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`;
+         else last = `<i class="fa-solid fa-skull"></i> ${typeof ranking === 'number' ? ranking.toFixed(0) : ranking}턴`;
          stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 
          let compblock = document.createElement('div');
