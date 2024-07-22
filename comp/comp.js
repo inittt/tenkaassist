@@ -138,6 +138,7 @@ function goTest() {
 
 function setCommand(str) {
    for(let i = 2; i < 50; i++) {
-      str.replace(`${i}턴`, `\n${i}턴`)
+      str = str.replace(`${i}턴`, `\n${i}턴`)
    }
+   return str;
 }
