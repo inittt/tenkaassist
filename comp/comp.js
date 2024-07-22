@@ -137,5 +137,8 @@ function goTest() {
 }
 
 function setCommand(str) {
-   return str.replace(/\n/g, '<br>')
+   for(let i = 2; i < 51; i++) {
+      str = str.replace(`${i}턴`, `</br>${i}턴`)
+   }
+   return str;
 }
