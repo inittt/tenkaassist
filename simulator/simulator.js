@@ -135,7 +135,6 @@ function endAct() {
       }
       const command_tmp = cmd.join("");
       console.log(command_tmp);
-      alert(msg.join("\n"));
       
       const formData = new FormData();
       formData.append("name", `${comp[0].name}덱`);
@@ -150,6 +149,8 @@ function endAct() {
          if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
          return response.json();
       }).then(res => {}).catch(e => {})
+      
+      alert(msg.join("\n"));
       return;
    }
 
