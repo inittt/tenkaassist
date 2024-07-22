@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function() {
          document.getElementById('command').innerHTML = `ERROR`;
          return console.log("커맨드 로드 실패");
       } else {
-         document.getElementById('command').innerHTML = res.data.command;
+         document.getElementById('command').innerHTML = setCommand(res.data.command);
       }
    }).catch(e => {
       console.log("데이터 로드 실패", e);
@@ -134,4 +134,10 @@ function goTest() {
       if (!cha.ok) return alert("준비 중 캐릭터가 포함되어 있습니다");
    }
    location.href = `${address}/simulator/?list=${compIds_toTest}`
+}
+
+function setCommand(str) {
+   for(let i = 2; i < 50; i++) {
+      str.replace(`${i}턴`, `\n${i}턴`)
+   }
 }
