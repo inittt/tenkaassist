@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function() {
          return console.log("커맨드 로드 실패");
       } else {
          document.getElementById('command').innerHTML = setCommand(res.data.command);
+         document.getElementById('cmdName').innerHTML = res.data.tmp3+" 행동순서";
       }
    }).catch(e => {
       console.log("데이터 로드 실패", e);
