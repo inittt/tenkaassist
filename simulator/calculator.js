@@ -8142,6 +8142,7 @@ const savedData = [];
 
 function loadBefore() {
    if (savedData.length == 0) return;
+   command.pop();
    const list = savedData.pop();
    for(let i = 0; i < 5; i++) jsonToCharacter(i, list[i]);
    jsonToBoss(list[5]);
