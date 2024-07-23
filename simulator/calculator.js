@@ -7795,7 +7795,7 @@ function setDefault(me) {switch(me.id) {
          // 아군 전체의 최대 hp 40% 증가
          hpUpAll(40);
          // 아군 전체의 공격 데미지 50% 증가
-         tbf(all, "공퍼증", "마물 요리 셰프", always);
+         tbf(all, "공퍼증", 50, "마물 요리 셰프", always);
          // 자신은 <모두 어서 먹어보라니까!> 획득
 
          // <모두 어서 먹어보라니까!>
