@@ -122,6 +122,7 @@ function endAct() {
       const msg = [];
       msg.push("시뮬레이터 종료");
       msg.push(`허수턴 : ${GLOBAL_TURN}`);
+      if (GLOBAL_TURN == 13) dmg13 = 10854389981;
       msg.push(`13턴딜 : ${dmg13.toLocaleString()}`)
 
       const cmd = [];
