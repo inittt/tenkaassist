@@ -6,11 +6,9 @@ let dmg13 = 0;
 
 class Boss {
    constructor() {
-      // this.hp = 10854389981;
-      // this.maxHp = 10854389981;
+      this.hp = 10854389981;
+      this.maxHp = 10854389981;
       this.name = "타깃"
-      this.hp = 5063653034;
-      this.maxHp = 5063653034;
       this.buff = [];
       this.li = [];
    }
@@ -24,14 +22,12 @@ class Champ {
    // ex) constructor(10011, "바니카", 5005, 2222, 3, "풍속성", "딜러", 100, 500)
    constructor(id, name, hp, atk, cd, el, ro, atkMag, ultMag) {
       this.id = id; this.name = name; this.atk = atk;
-      this.hp = hp; this.curHp = hp; this.hpUp = 0;
+      this.hp = hp; this.curHp = hp;
       this.cd = cd; this.curCd = cd; this.element = el; this.role = ro;
       this.buff = [];
-      this.curAtkAtv = 0; this.curUltAtv = 0;
       this.atkMag = atkMag; this.ultMag = ultMag;
       this.stopCd = false; this.canCDChange = true;
       this.isLeader = false; this.isActed = false;
-      this.armor = 0; this.armorUp = 1;
       this.hpAtkDmg = 0; this.hpUltDmg = 0;
       this.hpAddAtkDmg = 0; this.hpAddUltDmg = 0;
       this.hpAtvAtkDmg = 0; this.hpAtvUltDmg = 0;
@@ -313,12 +309,12 @@ function buffNestByType(me, str) {
 }
 function armorUp(me, act, div) {
    if (act == "궁") {
-      if (div == "추가") return me.armorUp*(1+buffSizeByType(me, "궁뎀증"))*(1+buffSizeByType(me, "가아증"));
-      if (div == "발동") return me.armorUp*(1+buffSizeByType(me, "궁뎀증")+buffSizeByType(me, "발효증")+buffSizeByType(me, "발뎀증"))*(1+buffSizeByType(me, "가아증"));
+      if (div == "추가") return (1+buffSizeByType(me, "궁뎀증"))*(1+buffSizeByType(me, "가아증"));
+      if (div == "발동") return (1+buffSizeByType(me, "궁뎀증")+buffSizeByType(me, "발효증")+buffSizeByType(me, "발뎀증"))*(1+buffSizeByType(me, "가아증"));
    } else if (act == "평") {
-      if (div == "추가") return me.armorUp*(1+buffSizeByType(me, "일뎀증"))*(1+buffSizeByType(me, "가아증"));
-      if (div == "발동") return me.armorUp*(1+buffSizeByType(me, "궁뎀증")+buffSizeByType(me, "발효증")+buffSizeByType(me, "발뎀증"))*(1+buffSizeByType(me, "가아증"));
-   } else return me.armorUp*(1+buffSizeByType(me, "가아증"));
+      if (div == "추가") return (1+buffSizeByType(me, "일뎀증"))*(1+buffSizeByType(me, "가아증"));
+      if (div == "발동") return (1+buffSizeByType(me, "궁뎀증")+buffSizeByType(me, "발효증")+buffSizeByType(me, "발뎀증"))*(1+buffSizeByType(me, "가아증"));
+   } else return (1+buffSizeByType(me, "가아증"));
 }
 /*--------------------------------------------------------------------------------------- */
 function tbf() {buff(...Array.from(arguments), true);}
@@ -6712,7 +6708,7 @@ function setDefault(me) {switch(me.id) {
       me.passive = function() {
          // 무대 준비
          // 자신이 가하는 아머 강화 효과 15% 증가
-         me.armorUp += 0.15;
+         tbf(me, "가아증", 15, "무대 준비", always);
          // 청순 아이돌 => ultafter로
          // 궁극기 발동 시 '자신의 공격 데미지의 25%만큼 아군 전체에게 아머 강화(1턴)' 추가 
          // 궁극기 발동 시 '자신의 최대 hp 30%만큼 아군 전체에게 아머 강화(1턴)' 추가
@@ -8138,3 +8134,76 @@ function allBuffToString(me) {
    }
    return res.join("\n");
 }
+
+
+/* 뒤로가기 관련 ------------------------------------------------------------------------*/
+
+const savedData = [];
+
+function loadBefore() {
+   if (savedData.length == 0) return;
+   const list = savedData.pop();
+   for(let i = 0; i < 5; i++) jsonToCharacter(i, list[i]);
+   jsonToBoss(list[5]);
+   updateAll();
+}
+
+function saveCur() {
+   const curData = [];
+   for(let i = 0; i < 5; i++) curData.push(characterToJson(i));
+   curData.push(bossToJson());
+   savedData.push(curData);
+}
+
+function bossToJson() {
+   const res = {
+      hp : boss.hp,
+      maxHp : boss.maxHp,
+      buff : getCopy(boss.buff),
+      li : getCopy(boss.li),
+      turn : GLOBAL_TURN
+   }
+   return res;
+}
+function jsonToBoss(data) {
+   const dt = JSON.parse(JSON.stringify(data));
+   boss.hp = dt.hp;
+   boss.maxHp = dt.maxHp;
+   boss.buff = dt.buff;
+   boss.li = dt.li;
+   GLOBAL_TURN = dt.turn;
+}
+function characterToJson(idx) {
+   const ch = comp[idx];
+   const res = {
+      atk : ch.atk, hp : ch.hp, curHp : ch.curHp,
+      cd : ch.cd, curCd : ch.curCd,
+      buff : getCopy(ch.buff),
+      stopCd : ch.stopCd, canCDChange : ch.canCDChange,
+      isLeader : ch.isLeader, isActed : ch.isActed,
+      hpAtkDmg : ch.hpAtkDmg, hpUltDmg : ch.hpUltDmg,
+      hpAddAtkDmg : ch.hpAddAtkDmg, hpAddUltDmg : ch.hpAddUltDmg,
+      hpAtvAtkDmg : ch.hpAtvAtkDmg, hpAtvUltDmg : ch.hpAtvUltDmg
+   }
+   return res;
+}
+function jsonToCharacter(idx, data) {
+   const ch = comp[idx];
+   const dt = JSON.parse(JSON.stringify(data));
+   ch.atk = dt.atk; ch.hp = dt.hp; ch.curHp = dt.curHp;
+   ch.cd = dt.cd, ch.curCd = dt.curCd;
+   ch.buff = dt.buff;
+   ch.stopCd = dt.stopCd; ch.canCDChange = dt.canCDChange;
+   ch.isLeader = dt.isLeader; ch.isActed = dt.isActed;
+   ch.hpAtkDmg = dt.hpAtkDmg; ch.hpUltDmg = dt.hpUltDmg;
+   ch.hpAddAtkDmg = dt.hpaddAtkDmg; ch.hpAddUltDmg = dt.hpAddUltDmg;
+   ch.hpAtvAtkDmg = dt.hpAtvAtkDmg; ch.hpAtvUltDmg = dt.hpAtvUltDmg;
+}
+
+
+function getCopy(data) {
+   return JSON.parse(JSON.stringify(data));
+}
+
+
+/*--------------------------------------------------------------------------------------*/

@@ -94,6 +94,7 @@ function start(compIds) {
 
 function do_ult(idx) {
    if (comp[idx].isActed) return;
+   saveCur();
    command.push(`${idx+1}궁`);
    comp[idx].ultimate();
    endAct();
@@ -101,6 +102,7 @@ function do_ult(idx) {
 }
 function do_atk(idx) {
    if (comp[idx].isActed) return;
+   saveCur();
    command.push(`${idx+1}평`);
    comp[idx].attack();
    endAct();
@@ -108,6 +110,7 @@ function do_atk(idx) {
 }
 function do_def(idx) {
    if (comp[idx].isActed) return;
+   saveCur();
    command.push(`${idx+1}방`);
    comp[idx].defense();
    endAct();
