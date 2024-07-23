@@ -154,6 +154,7 @@ function endAct() {
          return response.json();
       }).then(res => {}).catch(e => {})
       
+      savedData.length = 0;
       alert(msg.join("\n"));
       return;
    }
