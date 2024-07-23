@@ -8145,6 +8145,7 @@ function loadBefore() {
    const list = savedData.pop();
    for(let i = 0; i < 5; i++) jsonToCharacter(i, list[i]);
    jsonToBoss(list[5]);
+   lastDmg = 0; lastAddDmg = 0; lastAtvDmg = 0; lastDotDmg = 0; lastRefDmg = 0;
    updateAll();
 }
 
@@ -8159,26 +8160,25 @@ function bossToJson() {
    const res = {
       hp : boss.hp,
       maxHp : boss.maxHp,
-      buff : getCopy(boss.buff),
-      li : getCopy(boss.li),
+      buff : getCopyList(boss.buff),
+      li : JSON.parse(JSON.stringify(boss.li)),
       turn : GLOBAL_TURN
    }
    return res;
 }
 function jsonToBoss(data) {
-   const dt = JSON.parse(JSON.stringify(data));
-   boss.hp = dt.hp;
-   boss.maxHp = dt.maxHp;
-   boss.buff = dt.buff;
-   boss.li = dt.li;
-   GLOBAL_TURN = dt.turn;
+   boss.hp = data.hp;
+   boss.maxHp = data.maxHp;
+   boss.buff = getCopyList(data.buff);
+   boss.li = JSON.parse(JSON.stringify(data.li)),
+   GLOBAL_TURN = data.turn;
 }
 function characterToJson(idx) {
    const ch = comp[idx];
    const res = {
       atk : ch.atk, hp : ch.hp, curHp : ch.curHp,
       cd : ch.cd, curCd : ch.curCd,
-      buff : getCopy(ch.buff),
+      buff : getCopyList(ch.buff),
       stopCd : ch.stopCd, canCDChange : ch.canCDChange,
       isLeader : ch.isLeader, isActed : ch.isActed,
       hpAtkDmg : ch.hpAtkDmg, hpUltDmg : ch.hpUltDmg,
@@ -8189,21 +8189,24 @@ function characterToJson(idx) {
 }
 function jsonToCharacter(idx, data) {
    const ch = comp[idx];
-   const dt = JSON.parse(JSON.stringify(data));
-   ch.atk = dt.atk; ch.hp = dt.hp; ch.curHp = dt.curHp;
-   ch.cd = dt.cd, ch.curCd = dt.curCd;
-   ch.buff = dt.buff;
-   ch.stopCd = dt.stopCd; ch.canCDChange = dt.canCDChange;
-   ch.isLeader = dt.isLeader; ch.isActed = dt.isActed;
-   ch.hpAtkDmg = dt.hpAtkDmg; ch.hpUltDmg = dt.hpUltDmg;
-   ch.hpAddAtkDmg = dt.hpaddAtkDmg; ch.hpAddUltDmg = dt.hpAddUltDmg;
-   ch.hpAtvAtkDmg = dt.hpAtvAtkDmg; ch.hpAtvUltDmg = dt.hpAtvUltDmg;
+   ch.atk = data.atk; ch.hp = data.hp; ch.curHp = data.curHp;
+   ch.cd = data.cd, ch.curCd = data.curCd;
+   ch.buff = getCopyList(data.buff);
+   ch.stopCd = data.stopCd; ch.canCDChange = data.canCDChange;
+   ch.isLeader = data.isLeader; ch.isActed = data.isActed;
+   ch.hpAtkDmg = data.hpAtkDmg; ch.hpUltDmg = data.hpUltDmg;
+   ch.hpAddAtkDmg = data.hpaddAtkDmg; ch.hpAddUltDmg = data.hpAddUltDmg;
+   ch.hpAtvAtkDmg = data.hpAtvAtkDmg; ch.hpAtvUltDmg = data.hpAtvUltDmg;
 }
 
-
-function getCopy(data) {
-   return JSON.parse(JSON.stringify(data));
+function getCopyList(data) {
+   return data.map(copyTopLevelJson);
 }
 
+function copyTopLevelJson(obj) {
+   const newJson = {};
+   for (let key in obj) if (obj.hasOwnProperty(key)) newJson[key] = obj[key];
+   return newJson;
+}
 
 /*--------------------------------------------------------------------------------------*/

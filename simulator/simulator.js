@@ -90,11 +90,13 @@ function start(compIds) {
    for(let i = 0; i < 5; i++) comp[i].passive();
    for(let i = 0; i < 5; i++) comp[i].turnstart();
 
+   savedData.length = 0;
    updateAll();
 }
 
 function do_ult(idx) {
    if (comp[idx].isActed) return;
+   saveCur();
    command.push(`${idx+1}궁`);
    comp[idx].ultimate();
    endAct();
@@ -102,6 +104,7 @@ function do_ult(idx) {
 }
 function do_atk(idx) {
    if (comp[idx].isActed) return;
+   saveCur();
    command.push(`${idx+1}평`);
    comp[idx].attack();
    endAct();
@@ -109,6 +112,7 @@ function do_atk(idx) {
 }
 function do_def(idx) {
    if (comp[idx].isActed) return;
+   saveCur();
    command.push(`${idx+1}방`);
    comp[idx].defense();
    endAct();
@@ -152,6 +156,7 @@ function endAct() {
          return response.json();
       }).then(res => {}).catch(e => {})
       
+      savedData.length = 0;
       alert(msg.join("\n"));
       return;
    }
