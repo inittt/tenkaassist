@@ -60,3 +60,30 @@ function formatNumber(value) {
        return value.toString(); // 만이나 억 단위가 아닌 경우 그대로 반환
    }
 }
+
+// 날짜에 9시간 더하기
+function addNineHours(dateTimeStr) {
+   // 문자열을 날짜 객체로 변환
+   const [datePart, timePart] = dateTimeStr.split(' ');
+   const [day, month, year] = datePart.split('/').map(Number);
+   const [hours, minutes, seconds] = timePart.split(':').map(Number);
+
+   // 년도 앞에 2000을 더하여 2024년으로 변환
+   const fullYear = 2000 + year;
+
+   // Date 객체 생성 (월은 0부터 시작하므로 -1 필요)
+   const date = new Date(fullYear, month - 1, day, hours, minutes, seconds);
+
+   // 9시간 추가
+   date.setHours(date.getHours() + 9);
+
+   // 새로운 날짜와 시간을 형식에 맞게 변환
+   const newDay = String(date.getDate()).padStart(2, '0');
+   const newMonth = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 필요
+   const newYear = String(date.getFullYear()).slice(-2); // 마지막 두 자리만 사용
+   const newHours = String(date.getHours()).padStart(2, '0');
+   const newMinutes = String(date.getMinutes()).padStart(2, '0');
+   const newSeconds = String(date.getSeconds()).padStart(2, '0');
+
+   return `${newDay}/${newMonth}/${newYear} ${newHours}:${newMinutes}:${newSeconds}`;
+}

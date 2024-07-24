@@ -77,7 +77,7 @@ function makeBlock(data, sort) {
       const id = comp.id, name = comp.name, compstr = comp.compstr;
       const ranking = comp.ranking, recommend = comp.recommend;
       const creator = comp.creator, updater = comp.updater;
-      const create_at = comp.create_at, update_at = comp.update_at;
+      const create_at = addNineHours(comp.create_at), update_at = addNineHours(comp.update_at);
       stringArr.push(`<div class="comp-box">`);
 
       if (sort == 2) stringArr.push(`<div class="comp-time">${create_at}</div>`);
