@@ -1,4 +1,4 @@
-let checkElementN, checkRoleN, checkRarityN;
+let checkElementN, checkRoleN, checkRarityN, isOn = false;
 const curHeader = 5;
 
 const selected = [];
@@ -9,6 +9,11 @@ document.addEventListener("DOMContentLoaded", function() {
    searchInput.addEventListener('input', function() {
       getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, searchInput.value);
    })
+   const toggleButton = document.getElementById('srInclude');
+   toggleButton.addEventListener('click', () => {
+      isOn = toggleButton.classList.toggle('leaderOn');
+      toggleButton.classList.toggle('leaderOff', !isOn);
+   });
 });
 
 
@@ -52,7 +57,7 @@ function getCharactersWithCondition(element, role, rarity, search) {
 function searchDeck() {
    const go = [...selected];
    if (go.length < 1) return alert("하나 이상의 캐릭터를 선택해 주세요");
-   for(const ch of chJSON.data) {
+   if (isOn) for(const ch of chJSON.data) {
       if (ch.rarity == 3) continue;
       if (go.indexOf(ch.id) == -1) go.push(ch.id);
    }
