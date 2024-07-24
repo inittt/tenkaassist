@@ -68,7 +68,6 @@ function getAllCompsFromServer() {
          return;
       }
       setPossible(res.data);
-      console.log(possibleDeck);
       makeBlock();
    }).catch(e => {
       console.log("데이터 로드 실패", e);
@@ -80,8 +79,12 @@ function setPossible(data) {
    for(let d of data) {
       const compList = d.compstr.split(" ").map(Number);
       d.compstr = compList.slice();
-      if (compList.every(item => haveList.includes(item) || isAny(item)))
+      if (compList.every(item => haveList.includes(item) || isAny(item))) {
+         const bool = compList.some(item => isAny(item));
+         if (!bool && Math.floor(d.ranking) == 99) d.ranking = 98;
+         if (!bool && d.recommend == 0) d.recommend = 1;
          possibleDeck.push(d);
+      }
    }
 }
 function makeBlock() {
