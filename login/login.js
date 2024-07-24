@@ -1,3 +1,13 @@
+document.addEventListener('DOMContentLoaded', (event) => {
+   function handleEnterKey(event) {
+      if (event.key === "Enter") {
+         event.preventDefault(); // 기본 엔터 키 동작 방지
+         login(); // 로그인 함수 호출
+      }
+   }
+   document.getElementById("pass").addEventListener("keydown", handleEnterKey);
+});
+
 function login() {
    const username = document.querySelector('input[name="username"]').value;
    const password = document.querySelector('input[name="password"]').value;
