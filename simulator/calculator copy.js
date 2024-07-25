@@ -1153,9 +1153,9 @@ function setDefault(me, asc) {let aa; switch(me.id) {
       me.ultbefore = function() {}
       me.ultafter = function() {
          // 타깃은 피격 시 놀라에게 받는 데미지 15% 증가 (8중첩) (4턴)
-         buff(boss, "피격", me, "받캐뎀", 15, "배 가르기1", 1, 8, 4, "발동", true);
+         anbf(boss, "피격", me, "받캐뎀", 15, "배 가르기1", 1, 8, 4);
          // 타깃은 받는 데미지 30% 증가 (1중첩)
-         buff(boss, "받뎀증", 30, "배 가르기2", 1, 1, true);
+         nbf(boss, "받뎀증", 30, "배 가르기2", 1, 1);
       }
       me.ultimate = function() {
          ultLogic(me);
@@ -1167,19 +1167,19 @@ function setDefault(me, asc) {let aa; switch(me.id) {
       me.attack = function() {atkLogic(me);};
       me.leader = function() {
          hpUpAll(20); // 아군 전체의 최대 hp 20% 증가
-         for(let c of comp) buff(c, "궁뎀증", 50, "전쟁의 광기1", always, true); // 아군 전체의 궁극기 데미지 50% 증가
+         for(let c of comp) tbf(c, "궁뎀증", 50, "전쟁의 광기1", always); // 아군 전체의 궁극기 데미지 50% 증가
          for(let idx of getRoleIdx("딜", "디", "탱")) {
-            buff(comp[idx], "공퍼증", 40, "전쟁의 광기2", always, true); // 아군 딜디탱은 공격 데미지 40% 증가
-            buff(comp[idx], "가뎀증", 25, "전쟁의 광기3", always, true); // 아군 딜디탱은 가하는 데미지 25% 증가
+            tbf(comp[idx], "공퍼증", 40, "전쟁의 광기2", always); // 아군 딜디탱은 공격 데미지 40% 증가
+            tbf(comp[idx], "가뎀증", 25, "전쟁의 광기3", always); // 아군 딜디탱은 가하는 데미지 25% 증가
          }
          // 매턴 아군전체 힐(50턴) -> turnstart에 추가됨
          // 궁발동시 아군 전체 현재공200만큼 치유 발동
-         buff(me, "궁", all, "힐", myCurAtk+me.id+200, "전쟁의 광기4", 1, always, "발동", true);
+         atbf(me, "궁", all, "힐", myCurAtk+me.id+200, "전쟁의 광기4", 1, always);
          for(let idx of (getRoleIdx("딜", "디", "탱"))) if (idx != 0) {
             // 자신을 제외한 아군 딜디탱은 궁극기 사용 시 1번에게 공격 데미지 90%증가 발동
-            buff(comp[idx], "궁", comp[0], "공퍼증", 90, "학살 시간이다!1", 1, always, "발동", true);
+            atbf(comp[idx], "궁", comp[0], "공퍼증", 90, "학살 시간이다!1", 1, always);
             // 자신을 제외한 아군 딜디탱은 궁극기 사용 시 1번에게 궁사용시 데미지 80% 추가
-            buff(comp[idx], "궁", comp[0], "궁추가*", 80, "학살 시간이다!2", 1, always, "발동", true);
+            atbf(comp[idx], "궁", comp[0], "궁추가*", 80, "학살 시간이다!2", 1, always);
          }
       }
       me.passive = function() {

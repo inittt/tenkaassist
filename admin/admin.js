@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function setUserCnt() {
    request(`${server}/users/getAll`, {
-      method: "GET",
+      method: "PUT",
    })
    .then(response => {
       if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
