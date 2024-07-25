@@ -3853,7 +3853,7 @@ function setDefault(me) {switch(me.id) {
          // 궁극기 발동 시 "나도 기분좋게 해줘~" 효과 발동
          // 나도 기분 좋게 해줘~
          // 자신 이외의 동료가 궁극기 발동 시, 공격 데미지의 50%만큼 사쿠야 유메의 공격 데미지 증가 (2턴) 효과 발동(1턴)
-         for(let c of comp) if (c.id != me.id)
+         if (me.isLeader) for(let c of comp) if (c.id != me.id)
             atbf(c, "궁", me, "공고증", myCurAtk+c.id+50, "나도 기분 좋게 해줘~", 2, 1);
       }
       me.ultimate = function() {ultLogic(me);
