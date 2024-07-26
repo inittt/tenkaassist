@@ -29,8 +29,6 @@ class Champ {
       this.stopCd = false; this.canCDChange = true;
       this.isLeader = false; this.isActed = false;
       this.hpAtkDmg = 0; this.hpUltDmg = 0;
-      this.hpAddAtkDmg = 0; this.hpAddUltDmg = 0;
-      this.hpAtvAtkDmg = 0; this.hpAtvUltDmg = 0;
    }
    getArmor() {
       let res = 0;
@@ -8213,8 +8211,6 @@ function characterToJson(idx) {
       stopCd : ch.stopCd, canCDChange : ch.canCDChange,
       isLeader : ch.isLeader, isActed : ch.isActed,
       hpAtkDmg : ch.hpAtkDmg, hpUltDmg : ch.hpUltDmg,
-      hpAddAtkDmg : ch.hpAddAtkDmg, hpAddUltDmg : ch.hpAddUltDmg,
-      hpAtvAtkDmg : ch.hpAtvAtkDmg, hpAtvUltDmg : ch.hpAtvUltDmg
    }
    return res;
 }
@@ -8226,8 +8222,6 @@ function jsonToCharacter(idx, data) {
    ch.stopCd = data.stopCd; ch.canCDChange = data.canCDChange;
    ch.isLeader = data.isLeader; ch.isActed = data.isActed;
    ch.hpAtkDmg = data.hpAtkDmg; ch.hpUltDmg = data.hpUltDmg;
-   ch.hpAddAtkDmg = data.hpaddAtkDmg; ch.hpAddUltDmg = data.hpAddUltDmg;
-   ch.hpAtvAtkDmg = data.hpAtvAtkDmg; ch.hpAtvUltDmg = data.hpAtvUltDmg;
 }
 
 function getCopyList(data) {
