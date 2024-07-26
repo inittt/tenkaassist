@@ -123,7 +123,7 @@ function getSize(str) {
    if (str.charAt(0) == myCurAtk) return Number(per) * target.getCurAtk();
    else if (str.charAt(0) == myCurShd) return Number(per) * target.getArmor();
    else {
-      alert("버프에 오류 발견! 수정 필요");
+      alert("버프에 오류 발견");
       return 0;
    }
 }
@@ -5003,7 +5003,7 @@ function setDefault(me) {switch(me.id) {
          // 공격 데미지 70% 증가
          tbf(comp[2], "공퍼증", 70, "<가장 사랑하는 그대에게>1", always);
          // 궁극기 발동 시 "자신이 가하는 데미지 20% 증가(최대 2중첩)" 발동
-         atbf(comp[2], "궁", comp[2], "가뎀증", 20, "<가장 사랑하는 그대에게>2", 1, 2, always);
+         anbf(comp[2], "궁", comp[2], "가뎀증", 20, "<가장 사랑하는 그대에게>2", 1, 2, always);
       }
       me.passive = function() {
          // 상인의 마케팅 전략
