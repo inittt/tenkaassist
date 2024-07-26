@@ -122,7 +122,10 @@ function getSize(str) {
    let target = comp.filter(i => i.id == Number(thisId))[0];
    if (str.charAt(0) == myCurAtk) return Number(per) * target.getCurAtk();
    else if (str.charAt(0) == myCurShd) return Number(per) * target.getArmor();
-   else return 0;
+   else {
+      alert("버프에 오류 발견! 수정 필요");
+      return 0;
+   }
 }
 function buff() {
    alwaysCheck();
@@ -225,7 +228,7 @@ function getBuffSizeList(me) {
       if (buff_ex.includes(bf.type)) continue;
       if (bf.turn != undefined && bf.turn <= GLOBAL_TURN) continue;
       let i = txts.indexOf(bf.type);
-      if (i == -1 && !actList.includes(bf.type)) console.log("버프 누락 : " + bf.type);
+      if (i == -1 && !actList.includes(bf.type)) alert("버프 누락 : " + bf.type);
       else res[i] += (isTurn(bf) ? bf.size/100 : bf.size*bf.nest/100);
    }
    boss.setBuff();
@@ -317,13 +320,42 @@ function armorUp(me, act, div) {
    } else return (1+buffSizeByType(me, "가아증"));
 }
 /*--------------------------------------------------------------------------------------- */
-function tbf() {buff(...Array.from(arguments), true);}
-function ptbf() {buff(...Array.from(arguments), "추가", true);}
-function atbf() {buff(...Array.from(arguments), "발동", true);}
+function tbf() {
+   const arr = Array.from(arguments);
+   if (arr.length != 5) showAlert(arr);
+   buff(...arr, true);
+}
+function ptbf() {
+   const arr = Array.from(arguments);
+   if (arr.length != 8) showAlert(arr);
+   buff(...arr, "추가", true);
+}
+function atbf() {
+   const arr = Array.from(arguments);
+   if (arr.length != 8) showAlert(arr);
+   buff(...arr, "발동", true);
+}
 
-function nbf() {buff(...Array.from(arguments), true);}
-function pnbf() {buff(...Array.from(arguments), "추가", true);}
-function anbf() {buff(...Array.from(arguments), "발동", true);}
+function nbf() {
+   const arr = Array.from(arguments);
+   if (arr.length != 6) showAlert(arr);
+   buff(...arr, true);
+}
+function pnbf() {
+   const arr = Array.from(arguments);
+   if (arr.length != 9) showAlert(arr);
+   buff(...arr, " 추가", true);
+}
+function anbf() {
+   const arr = Array.from(arguments);
+   if (arr.length != 9) showAlert(arr);
+   buff(...arr, "발동", true);
+}
+function showAlert(arr) {
+   alert("버프에 오류 발견");
+   //alert("버프에 오류 발견\n" + arr);
+}
+
 function setBuffOn(me, div, name, bool) {
    const exist = me.buff.find(i => i.div == div && i.name == name);
    if (exist) exist.on = bool;
@@ -1256,7 +1288,7 @@ function setDefault(me) {switch(me.id) {
             // 피격 시 "아군 전체의 가하는 데미지 35% 증가(4턴)"
             atbf(me, "피격", all, "가뎀증", 35, "<반격>", 4, 1);
             // 피격 시 자신의 <나약한 허상> 의 모든 중첩 수 제거 발동
-            atbf(me, "피격", me, "<나약한 허상>", 0, "전략적 후퇴", -1, 1, 1);
+            anbf(me, "피격", me, "<나약한 허상>", 0, "전략적 후퇴", -1, 1, 1);
          }
       }
       me.turnstart = function() {

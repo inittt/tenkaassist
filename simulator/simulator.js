@@ -218,3 +218,5 @@ function updateProgressBar(hp, maxhp) {
 }
 
 function getdiv(id) {return document.getElementById(id);}
+
+function inquiry() {window.open("https://arca.live/b/tenkafumaa/111986385", '_blank');}
