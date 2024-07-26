@@ -465,10 +465,15 @@ header {
    vertical-align: middle;
 }
 .icon-gear {
-   width:1.5rem;
-   height:1.5rem;
+   width:1.3rem;
+   height:1.3rem;
    vertical-align: middle;
    margin-left:0.5rem;
+   cursor:pointer;
+}
+.svg-border {
+   stroke: white; /* 테두리 색상 */
+   stroke-width: 1; /* 테두리 두께 */
 }
 .icon-btn {
    cursor:pointer;
