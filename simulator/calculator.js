@@ -3221,9 +3221,9 @@ function setDefault(me) {switch(me.id) {
          for(let idx of getRoleIdx("딜", "디")) {
             // <<성욕 토끼발>>
             // 공격 시 「자신의 공격 데미지 20% 증가(최대 5중첩)」 발동
-            atbf(comp[idx], "공격", comp[idx], "공퍼증", 20, "<성욕 토끼발>1", 1, 5, always);
+            anbf(comp[idx], "공격", comp[idx], "공퍼증", 20, "<성욕 토끼발>1", 1, 5, always);
             // 공격 시 「타깃이 받는 발동형 스킬 데미지 20% 증가(최대 5중첩)」 발동
-            atbf(comp[idx], "공격", boss, "받발뎀", 20, "<성욕 토끼발>2", 1, 5, always);
+            anbf(comp[idx], "공격", boss, "받발뎀", 20, "<성욕 토끼발>2", 1, 5, always);
             // 궁극기 발동 시 「자신의 공격 데미지의 150%만큼 타깃에게 데미지」 발동
             tbf(comp[idx], "궁발동*", 150, "<성욕 토끼발>3", always);
          }
