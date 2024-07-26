@@ -121,7 +121,7 @@ function getSize(str) {
    if (str.charAt(0) == myCurAtk) return Number(per) * target.getCurAtk();
    else if (str.charAt(0) == myCurShd) return Number(per) * target.getArmor();
    else {
-      alert("버프에 오류 발견");
+      alert("버프 오류 발견");
       return 0;
    }
 }
@@ -145,7 +145,7 @@ function buff() {
       a[0].buff.push({div:a[8], act:a[1], who:a[2], type:a[3], size:a[4], name:a[5], turn:a[6], ex:a[7]+GLOBAL_TURN, on:a[9]});
    else if (a.length == 11)
       a[0].buff.push({div:a[9], act:a[1], who:a[2], type:a[3], size:a[4], name:a[5], nest:a[6], maxNest:a[7], ex:a[8]+GLOBAL_TURN, on:a[10]})
-   else alert("버프에 오류 발견");
+   else alert("버프 오류 발견");
 }
 
 
@@ -183,6 +183,7 @@ function addBuff(me, act, div) {
          if (act.includes("피격") && div == "발동" && b.type == "반격+") applyRefDmg(size/100*me.ultAtvCoef());
          if (act.includes("피격") && div == "발동" && b.type == "반격*") applyRefDmg(size/100*me.getCurAtk()*me.ultAtvCoef());
       } else {
+         if (b.act != undefined && b.act != "추가" && b.act != "발동") alert("버프 오류 발견");
          if (b.who == all) for(let c of comp) {
             if (b.nest == undefined) buff(c, b.type, size, b.name, b.turn, true);
             else buff(c, b.type, size, b.name, b.nest, b.maxNest, true);
@@ -351,8 +352,8 @@ function anbf() {
    buff(...arr, "발동", true);
 }
 function showAlert(arr) {
-   alert("버프에 오류 발견");
-   //alert("버프에 오류 발견\n" + arr);
+   alert("버프 오류 발견");
+   //alert("버프 오류 발견\n" + arr);
 }
 
 function setBuffOn(me, div, name, bool) {
