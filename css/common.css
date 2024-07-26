@@ -465,10 +465,10 @@ header {
    vertical-align: middle;
 }
 .icon-gear {
-   width:1rem;
-   height:1rem;
+   width:1.5rem;
+   height:1.5rem;
    vertical-align: middle;
-   margin-left:1rem;
+   margin-left:0.5rem;
 }
 .icon-btn {
    cursor:pointer;
