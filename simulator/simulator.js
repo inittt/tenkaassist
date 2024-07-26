@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
    }
    setComp();
 });
-
+function refresh() {location.reload();}
 function setComp() {
    if (idList.length != 5) return alert("캐릭터의 수가 5개가 아닙니다");
    for(const id of idList) {
