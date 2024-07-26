@@ -4818,7 +4818,7 @@ function setDefault(me) {switch(me.id) {
       me.turnover = function() {if (me.isLeader) {}
          // 패시브 스킬 3 : 가라! 악토끼 삼전사!
          // 1턴마다 "적 전체가 받는 일반 공격 데미지 20% 증가 (최대 5중첩)" 발동
-         nbf(boss, "받일뎀", 20, "가라! 악토끼 삼전사!", 1, 5, always);
+         nbf(boss, "받일뎀", 20, "가라! 악토끼 삼전사!", 1, 5);
       };
       return me;
    case 10106 : // 절살루
@@ -6395,9 +6395,7 @@ function setDefault(me) {switch(me.id) {
          // 가하는 데미지+ : 자신이 가하는 데미지 7.5% 증가
          tbf(me, "가뎀증", 7.5, "가하는 데미지+", always);
       }
-      me.defense = function() {
-         me.act_defense();
-      }
+      me.defense = function() {me.act_defense();}
       me.turnstart = function() {};
       me.turnover = function() {};
       return me;
