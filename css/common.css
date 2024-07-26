@@ -282,7 +282,7 @@ a {color: inherit; text-decoration: none;}
    background-color: #a21d1d;
    color:white;
 }
-.logoutBtn {
+.optionBtn {
    border: 2px solid transparent;
    font-weight: bold;
    cursor: pointer;

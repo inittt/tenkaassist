@@ -50,8 +50,8 @@ document.addEventListener('DOMContentLoaded', function() {
       }).then(res => {
          if (!res.success) userInfo.innerHTML = button;
          else {
-            let logout = `<button class="margin-left logoutBtn" onclick="logout()">로그아웃</button>`;
             let option = `<button class="margin-left optionBtn" onclick="goOption()">설정</button>`;
+            let logout = `<button class="margin-left logoutBtn" onclick="logout()">로그아웃</button>`;
             userInfo.innerHTML =  res.data + option + logout;
          }
       }).catch(error => {
