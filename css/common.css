@@ -464,6 +464,12 @@ header {
    height:1rem;
    vertical-align: middle;
 }
+.icon-gear {
+   width:1rem;
+   height:1rem;
+   vertical-align: middle;
+   margin-left:1rem;
+}
 .icon-btn {
    cursor:pointer;
    border: 0.1rem solid transparent;
