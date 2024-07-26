@@ -183,7 +183,7 @@ function addBuff(me, act, div) {
          if (act.includes("피격") && div == "발동" && b.type == "반격+") applyRefDmg(size/100*me.ultAtvCoef());
          if (act.includes("피격") && div == "발동" && b.type == "반격*") applyRefDmg(size/100*me.getCurAtk()*me.ultAtvCoef());
       } else {
-         //if (b.act != undefined && b.act != "추가" && b.act != "발동") alert("버프 오류 발견3", b);
+         if (b.div != undefined && b.div != "추가" && b.div != "발동") alert("버프 오류 발견");
          if (b.who == all) for(let c of comp) {
             if (b.nest == undefined) buff(c, b.type, size, b.name, b.turn, true);
             else buff(c, b.type, size, b.name, b.nest, b.maxNest, true);
