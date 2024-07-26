@@ -77,8 +77,8 @@ class Champ {
    }
    act_defense() {
       lastDmg = 0; lastAddDmg = 0; lastAtvDmg = 0; lastDotDmg = 0; lastRefDmg = 0;
-      addBuff(this, ["방", "행동", "공격"], "추가");
-      addBuff(this, ["방", "행동", "공격"], "발동");
+      addBuff(this, ["방", "행동"], "추가");
+      addBuff(this, ["방", "행동"], "발동");
       this.isActed = true;
    }
    heal() {
@@ -145,7 +145,9 @@ function buff() {
       a[0].buff.push({div:a[8], act:a[1], who:a[2], type:a[3], size:a[4], name:a[5], turn:a[6], ex:a[7]+GLOBAL_TURN, on:a[9]});
    else if (a.length == 11)
       a[0].buff.push({div:a[9], act:a[1], who:a[2], type:a[3], size:a[4], name:a[5], nest:a[6], maxNest:a[7], ex:a[8]+GLOBAL_TURN, on:a[10]})
+   else alert("버프에 오류 발견");
 }
+
 
 const actList = ["평추가*","평발동*","궁추가*","궁발동*","평추가+","평발동+","궁추가+","궁발동+","반격*","반격+"];
 function addBuff(me, act, div) {
@@ -163,7 +165,6 @@ function addBuff(me, act, div) {
          else deleteBuff(b.who, b.size, b.name);
          continue;
       }
-
       if (b.type == "아머") {armorContainer.push(b); continue;}
       let size = b.size;
       if (b.type == "힐") {
@@ -342,7 +343,7 @@ function nbf() {
 function pnbf() {
    const arr = Array.from(arguments);
    if (arr.length != 9) showAlert(arr);
-   buff(...arr, " 추가", true);
+   buff(...arr, "추가", true);
 }
 function anbf() {
    const arr = Array.from(arguments);
