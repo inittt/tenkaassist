@@ -282,6 +282,15 @@ a {color: inherit; text-decoration: none;}
    background-color: #a21d1d;
    color:white;
 }
+.logoutBtn {
+   border: 2px solid transparent;
+   font-weight: bold;
+   cursor: pointer;
+   border-radius: 0.3rem;
+   padding: 0.3rem 0.6rem;
+   background-color: dimgray;
+   color:white;
+}
 button:hover {
    border-color: white;
 }

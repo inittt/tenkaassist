@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <a class="h-line" href="${address}/have/">추천덱</a>
       <a class="h-line" href="${address}/selectSimulator/">시뮬레이터</a>
       <a class="h-line" href="${address}/contributors/">♥</a>
+      <a class="h-line" href="${address}/notification/">공지</a>
    `;
 
    let headerMain = document.createElement('header');
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <a id="h-5" class="h-left h-box" href="${address}/have/">추천덱</a>
       <a id="h-6" class="h-left h-box" href="${address}/selectSimulator/">시뮬레이터</a>
       <a id="h-7" class="h-left h-box" href="${address}/contributors/">♥</a>
+      <a id="h-8" class="h-left h-box" href="${address}/notification/">공지</a>
       <div id="userInfo" class="user-info h-right margin-right"></div>
    `;
 
@@ -48,8 +50,9 @@ document.addEventListener('DOMContentLoaded', function() {
       }).then(res => {
          if (!res.success) userInfo.innerHTML = button;
          else {
-            let logout = `<button class="margin-left logoutBtn" onclick="logout()">로그아웃</button>`
-            userInfo.innerHTML =  res.data + logout;
+            let logout = `<button class="margin-left logoutBtn" onclick="logout()">로그아웃</button>`;
+            let option = `<button class="margin-left optionBtn" onclick="goOption()">설정</button>`;
+            userInfo.innerHTML =  res.data + option + logout;
          }
       }).catch(error => {
          userInfo.innerHTML = button;
@@ -64,6 +67,9 @@ function goMain() {
 }
 function goLogin() {
    location.href = `${address}/login/`;
+}
+function goOption() {
+   location.href = `${address}/option/`;
 }
 
 function logout() {

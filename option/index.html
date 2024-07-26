@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>TenkaAssist - 설정</title>
+   <script src="../js/common.js"></script>
+   <link rel="stylesheet" href="../css/common.css" type = "text/css">
+</head>
+<body>
+   <script src="../js/header.js"></script>
+   <div class="main-container bg-dark">
+      <div class="block">
+         <div class="margin-left titleblock"><span id="titleboxText" class="titlebox">Option</span> </div>
+      </div>
+      <div class="block loginBox">
+        <input id="curPass" class="loginInput" name="password1" type="password" placeholder="현재 비밀번호">
+        <input id="newPass" class="loginInput" name="password2" type="password" placeholder="새 비밀번호">
+        <input id="newPassRe" class="loginInput" name="password3" type="password" placeholder="새 비밀번호 재입력">
+        <button class="submitBtn" onclick="setPassword()">완료</button>
+      </div>
+   </div>
+</body>
+<script>
+    function setPassword() {
+        const curPass = document.getElementById("curPass").value;
+        const newPass = document.getElementById("newPass").value;
+        const newPassRe = document.getElementById("newPassRe").value;
+        if (curPass.length == 0 || newPass.length == 0 || newPassRe.length == 0) return alert("빈 입력란이 있습니다");
+        if (newPass != newPassRe) return alert("새 비밀번호와 재입력이 다릅니다");
+        
+        const formData = new FormData();
+        formData.append("password", curPass);
+        formData.append("new_password", newPass);
+
+        updatePassword(formData);
+    }
+    function updatePassword(formData) {
+        request(`${server}/users/updatePassword`, {
+            method: 'PUT',
+            body: formData,
+        }).then(response => {
+            if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+            return response.json();
+        }).then(res => {
+            if (!res.success) alert(res.msg);
+            else {
+                localStorage.setItem("jwtToken", "");
+                alert("비밀번호 변경 완료. 다시 로그인해 주세요");
+                location.href = `${address}/login`;
+            }
+        }).catch(error => {
+            console.log(error);
+        });
+    }
+</script>
+</html>
