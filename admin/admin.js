@@ -1,0 +1,81 @@
+document.addEventListener("DOMContentLoaded", function() {
+   request(`${server}/users/isAdmin`, {
+      method: "GET",
+   }).then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   }).then(res => {
+      if (!res.success) {
+         alert("권한이 없습니다");
+         window.history.back();
+         return;
+      } else showPage();
+   }).catch(e => {});
+});
+
+function showPage() {
+   document.getElementById("admin").style.display = "block";
+   setUserCnt();
+   setCompGraph();
+}
+
+function setUserCnt() {
+   request(`${server}/users/getCnt`, {
+      method: "GET",
+   }).then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   }).then(res => {
+      if (!res.success) return alert(res.msg);
+      document.getElementById("userCnt").innerText = res.data;
+   }).catch(e => {});
+}
+
+function setCompGraph() {
+   request(`${server}/comps/getAll`, {
+      method: "GET",
+   }).then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   }).then(res => {
+      if (!res.success) return alert(res.msg);
+      drawGraph(res.data);
+   }).catch(e => {});
+}
+
+function drawGraph(data) {
+   const dateCount = {}; // 날짜별 개수를 세기 위한 객체
+
+   data.forEach(item => {
+      const date = addNineHours(item.create_at).split(' ')[0]; // 'create_at'에서 날짜 부분만 추출
+      // 날짜별로 개수를 셈
+      if (dateCount[date]) dateCount[date]++;
+      else dateCount[date] = 1;
+   });
+
+   // 날짜와 개수를 배열로 변환
+   const labels = Object.keys(dateCount), counts = Object.values(dateCount);
+
+   // Chart.js를 사용하여 그래프 그리기
+   const ctx = document.getElementById('myChart').getContext('2d');
+   new Chart(ctx, {
+      type: 'bar',
+      data: {
+         labels: labels,
+         datasets: [{
+               label: '조합등록 그래프',
+               data: counts,
+               backgroundColor: 'rgba(75, 192, 192, 0.2)',
+               borderColor: 'rgba(75, 192, 192, 1)',
+               borderWidth: 1
+         }]
+      },
+      options: {
+         scales: {
+               y: {
+                  beginAtZero: true
+               }
+         }
+      }
+   });
+}
