@@ -7712,10 +7712,7 @@ function setDefault(me) {switch(me.id) {
          for(let idx of getElementIdx("암")) nbf(comp[idx], "받속뎀", 40, "이도류 오의 - 절멸참3", 1, 1);
       }
       me.ultafter = function() {}
-      me.ultimate = function() {ultLogic(me);
-         // 궁극기 발동 시, "자신의 <정신통일>의 공격 데미지 증가 효과 제거" 발동
-         deleteBuff(me, "기본", "<정신통일>");
-      };
+      me.ultimate = function() {ultLogic(me);};
       me.atkbefore = function() {}
       me.atkafter = function() {}
       me.attack = function() {atkLogic(me);};
