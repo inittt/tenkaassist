@@ -67,12 +67,12 @@ function drawGraph(data) {
                data: counts,
                backgroundColor: 'rgba(75, 192, 192, 0.2)',
                borderColor: 'rgba(75, 192, 192, 1)',
-               borderWidth: 1,
+               borderWidth: 2,
                fill: false,
                pointBackgroundColor: 'rgba(75, 192, 192, 1)', // 꼭지점 원의 배경색
                pointBorderColor: 'rgba(75, 192, 192, 1)', // 꼭지점 원의 테두리색
-               pointRadius: 5, // 꼭지점 원의 반지름 크기
-               pointHoverRadius: 7 // 꼭지점 원의 호버 시 반지름 크기
+               pointRadius: 3, // 꼭지점 원의 반지름 크기
+               pointHoverRadius: 5 // 꼭지점 원의 호버 시 반지름 크기
          }]
       },
       options: {
@@ -85,7 +85,7 @@ function drawGraph(data) {
                   color:'white',
                },
                grid: {
-                  color:'lightgray',
+                  color:'dimgray',
                }
             },
             y: {
@@ -97,7 +97,7 @@ function drawGraph(data) {
                   color:'white',
                },
                grid: {
-                  color:'lightgray',
+                  color:'dimgray',
                }
             }
          },
