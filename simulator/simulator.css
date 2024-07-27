@@ -92,3 +92,19 @@
 .inquiry:hover {
    text-decoration: underline;
 }
+.console {
+   width:40rem;
+   max-width:95vw;
+   height: calc(98vh - 3.5rem);
+
+   top:3.5rem;
+   left:50%;
+   transform: translateX(-50%);
+
+   position:fixed;
+   overflow: auto;
+   z-index:1000;
+   box-sizing: border-box;
+   border-radius: 0.7rem;
+   background-color: rgba(0, 0, 0, 0.9);
+}

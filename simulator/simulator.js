@@ -235,9 +235,16 @@ function inquiry() {window.open("https://arca.live/b/tenkafumaa/111986385", '_bl
 
 function show_simple(idx) {
    const str = get_buff_simple(idx);
-   
+   document.getElementById("console").innerHTML = str;
+   document.getElementById("console").style.display = "block";
 }
 
 function show_console(idx) {
    const str = get_buff_all(idx);
+   document.getElementById("console").innerHTML = str;
+   document.getElementById("console").style.display = "block";
+}
+
+function close_console() {
+   document.getElementById("console").style.display = "none";
 }
