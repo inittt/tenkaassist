@@ -220,3 +220,24 @@ function updateProgressBar(hp, maxhp) {
 function getdiv(id) {return document.getElementById(id);}
 
 function inquiry() {window.open("https://arca.live/b/tenkafumaa/111986385", '_blank');}
+
+(function() {
+   const isDebuggerEnabled = () => {
+       const start = new Date();
+       debugger;
+       return new Date() - start > 100;
+   };
+
+   if (isDebuggerEnabled()) {
+      window.location.href = `${address}`;
+   }
+})();
+
+function show_simple(idx) {
+   const str = get_buff_simple(idx);
+   
+}
+
+function show_console(idx) {
+   const str = get_buff_all(idx);
+}

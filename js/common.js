@@ -87,15 +87,3 @@ function addNineHours(dateTimeStr) {
 
    return `${newYear}/${newMonth}/${newDay} ${newHours}:${newMinutes}:${newSeconds}`;
 }
-
-(function() {
-   const isDebuggerEnabled = () => {
-       const start = new Date();
-       debugger;
-       return new Date() - start > 100;
-   };
-
-   if (isDebuggerEnabled()) {
-      window.location.href = `${address}`;
-   }
-})();
