@@ -50,6 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
    }).then(res => {
       if (!res.success) return;
       document.getElementById('deleteBtn').style.display = "block";
+      document.getElementById('initDmgBtn').style.display = "block";
    }).catch(e => {});
 });
 
@@ -144,4 +145,18 @@ function setCommand(str) {
       str = str.replace(`${i}턴`, `</br>${i}턴`)
    }
    return str;
+}
+
+function initDmg() {
+   request(`${server}/comps/initDmg/${compId}`, {
+      method: "PUT",
+   }).then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   }).then(res => {
+      if (!res.success) return alert(res.msg);
+      alert(res.data);
+   }).catch(e => {
+      console.log("데이터 로드 실패", e);
+   })
 }
