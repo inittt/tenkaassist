@@ -101,6 +101,7 @@
    left:50%;
    transform: translateX(-50%);
 
+   padding:0.5rem;
    position:fixed;
    overflow: auto;
    z-index:1000;
