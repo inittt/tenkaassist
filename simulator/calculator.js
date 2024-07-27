@@ -3221,9 +3221,9 @@ function setDefault(me) {switch(me.id) {
          for(let idx of getRoleIdx("딜", "디")) {
             // <<성욕 토끼발>>
             // 공격 시 「자신의 공격 데미지 20% 증가(최대 5중첩)」 발동
-            anbf(comp[idx], "공격", comp[idx], "공퍼증", 20, "<성욕 토끼발>1", 1, 5, always);
+            atbf(comp[idx], "공격", comp[idx], "공퍼증", 20, "<성욕 토끼발>1", 1, 5, always);
             // 공격 시 「타깃이 받는 발동형 스킬 데미지 20% 증가(최대 5중첩)」 발동
-            anbf(comp[idx], "공격", boss, "받발뎀", 20, "<성욕 토끼발>2", 1, 5, always);
+            atbf(comp[idx], "공격", boss, "받발뎀", 20, "<성욕 토끼발>2", 1, 5, always);
             // 궁극기 발동 시 「자신의 공격 데미지의 150%만큼 타깃에게 데미지」 발동
             tbf(comp[idx], "궁발동*", 150, "<성욕 토끼발>3", always);
          }
@@ -5925,14 +5925,7 @@ function setDefault(me) {switch(me.id) {
          // 아군 전체의 공격 데미지 30% 증가(최대 2중첩)
          nbf(all, "공퍼증", 30, "히메는, 모두를 사랑해~3", 1, 2);
       }
-      me.ultafter = function() {
-         if (me.isLeader) {
-            // <시기의 화염>
-            // 궁극기 발동 시, "타깃이 받는 궁극기 데미지 20% 증가(최대 2중첩)"(4턴)(궁극기 발동 후에 이 효과는 사라짐) 발동
-            if (buffNestByType(me, "<시기의 화염>") > 0) nbf(me, "궁", boss, "받궁뎀", 20, "<시기의 화염>", 1, 2);
-            deleteBuffType(me, "기본", "<시기의 화염>");
-         }
-      }
+      me.ultafter = function() {}
       me.ultimate = function() {ultLogic(me);};
       me.atkbefore = function() { // 성광의 축복
          // 아군 전체가 가하는 데미지 25% 증가(1턴)
@@ -5953,7 +5946,7 @@ function setDefault(me) {switch(me.id) {
             tbf(all, "공퍼증", 40, "가슴이 커야 사람들의 마음을 수용할 수 있는 법2", always);
 
          // 매 4턴마다, "자신이 <시기의 화염> 획득" 발동 => turnstart로
-         // <시기의 화염> => ultafter로
+         // <시기의 화염>
          // 궁극기 발동 시, "타깃이 받는 궁극기 데미지 20% 증가(최대 2중첩)"(4턴)(궁극기 발동 후에 이 효과는 사라짐) 발동
       }
       me.passive = function() {
@@ -5982,21 +5975,16 @@ function setDefault(me) {switch(me.id) {
          if (me.isLeader) {
             // 가슴이 커야 사람들의 마음을 수용할 수 있는 법
             // 매 4턴마다, "자신이 <시기의 화염> 획득" 발동
-            if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%4 == 0)
-               nbf(me, "<시기의 화염>", 0, "가슴이 커야 사람들의 마음을 수용할 수 있는 법3", 1, 1);
+            if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%4 == 0) {
+               anbf(me, "궁", boss, "받궁뎀", 20, "<시기의 화염>", 1, 2, 4);
+               atbf(me, "궁", me, "제거", "발동", "<시기의 화염>", 1, 4);
+            }
          }
          // 불안해지면 먼저 가슴을 만져
          // 매 4턴마다 "아군 전체가 궁극기 발동 시, '아군 전체의 발동기 효과 30% 증가(4턴)' (궁극기 발동 후에 이 효과는 사라짐)" 발동(4턴)
          if (GLOBAL_TURN > 1 && (GLOBAL_TURN-1)%4 == 0) {
-            buff(all, "궁", all, "발효증", 30, "불안해지면 먼저 가슴을 만져3", 4, 4, "발동", true);
-            // for(let c of comp) atbf(c, "궁", c, "삭제", 0, "불안해지면 먼저 가슴을 만져3", 4, 4);
-            for(let i = 0; i < 5; i++) {
-               const original = comp[i].ultimate;
-               comp[i].ultimate = function(...args) {
-                  original.apply(this, args);
-                  deleteBuff(comp[i], "발동", "불안해지면 먼저 가슴을 만져3");
-               }
-            }
+            atbf(all, "궁", all, "발효증", 30, "불안해지면 먼저 가슴을 만져3", 4, 4);
+            for(let c of comp) atbf(c, "궁", c, "제거", "발동", "불안해지면 먼저 가슴을 만져3", 1, 4);
          }
       };
       me.turnover = function() {if (me.isLeader) {}};
@@ -8145,7 +8133,8 @@ function allBuffToString(me) {
          const curName = target.name, curStandard = b.size.charAt(0) == myCurAtk ? "공" : "아머";
          size = ` '${curName}의 ${curStandard} ${per}%만큼'`;
       } else if (b.type == "제거") {
-         res.push(`${b.act}시 ${b.who == all ? "모두" : b.who.name}의 ${b.name} ${b.size}버프 제거 (${b.ex >= 100 ? "상시" : (b.ex+"턴")})`);
+         let txt = b.ex >= 100 ? "상시" : `${b.ex-GLOBAL_TURN}턴`;
+         res.push(`${b.act}시 ${b.who == all ? "모두" : b.who.name}의 ${b.name} ${b.size}버프 제거 (${txt})`);
          continue;
       } else size = b.size == 0 ? "" : ` ${b.size}%`;
 
