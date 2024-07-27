@@ -6184,19 +6184,20 @@ function setDefault(me) {switch(me.id) {
          // 아군 전체의 궁극기 데미지 30% 증가(4턴)
          tbf(all, "궁뎀증", 30, "사탕을 줘도 장난 칠거야!3", 4);
       }
-      me.ultafter = function() {
+      me.ultafter = function() {}
+      me.ultimate = function() {ultLogic(me);
+         if (me.isLeader) {
+            // 궁극기 발동 시 "자신의 <연쇄 트랩> 중첩 수에 따라 '타깃이 받는 광/암속성 데미지 6% 증가(1턴) 발동' 발동"
+            for(let idx of getElementIdx("광", "암"))
+               tbf(comp[idx], "받속뎀", 6*me.getNest("<연쇄 트랩>"), "참신한 말썽꾸러기2", 1);
+            // 궁극기 발동 시 "자신의 <연쇄 트랩> 중첩 수에 따라 "타깃이 받는 화/수속성 데미지 3% 증가(1턴) 발동' 발동"
+            for(let idx of getElementIdx("화", "수"))
+               tbf(comp[idx], "받속뎀", 3*me.getNest("<연쇄 트랩>"), "참신한 말썽꾸러기3", 1);
+         }
          // 할로윈 미궁 : 궁발동 시 "자신의 <연쇄 트랩> 중첩 수에 따라 '타깃이 받는 화/수속성 데미지 3% 증가(1턴)'"발동
          for(let idx of getElementIdx("화", "수"))
             tbf(comp[idx], "받속뎀", 3*me.getNest("<연쇄 트랩>"), "할로윈 미궁", 1);
-         if (!me.isLeader) return;
-         // 궁극기 발동 시 "자신의 <연쇄 트랩> 중첩 수에 따라 '타깃이 받는 광/암속성 데미지 6% 증가(1턴) 발동' 발동"
-         for(let idx of getElementIdx("광", "암"))
-            tbf(comp[idx], "받속뎀", 6*me.getNest("<연쇄 트랩>"), "참신한 말썽꾸러기2", 1);
-         // 궁극기 발동 시 "자신의 <연쇄 트랩> 중첩 수에 따라 "타깃이 받는 화/수속성 데미지 3% 증가(1턴) 발동' 발동"
-         for(let idx of getElementIdx("화", "수"))
-            tbf(comp[idx], "받속뎀", 3*me.getNest("<연쇄 트랩>"), "참신한 말썽꾸러기3", 1);
-      }
-      me.ultimate = function() {ultLogic(me);};
+      };
       me.atkbefore = function() { // 찹쌀 끈적끈적탄
          // 자신의 공격 데미지의 30% 만큼 아군 전체의 공격 데미지 증가(1턴)
          for(let c of comp) tbf(c, "공고증", myCurAtk+me.id+30, "찹쌀 끈적끈적탄", 1);
@@ -6209,9 +6210,9 @@ function setDefault(me) {switch(me.id) {
          // 궁극기 발동 시 "자신의 최대 hp 10% 만큼 아군 전체에게 실드 부여(1턴) 발동"
          atbf(me, "궁", all, "아머", me.hp*10, "참신한 말썽꾸러기1", 1, always);
          // 궁극기 발동 시 "자신의 <연쇄 트랩> 중첩 수에 따라 '타깃이 받는 광/암속성 데미지 6% 증가(1턴) 발동' 발동"
-         // => ultafter로
+         // => ultimate로
          // 궁극기 발동 시 "자신의 <연쇄 트랩> 중첩 수에 따라 "타깃이 받는 화/수속성 데미지 3% 증가(1턴) 발동' 발동"
-         // => ultafter로
+         // => ultimate로
 
          // 아군 전체는 "팀에 4종 위치의 캐릭터가 편성되어 있을 시 <할로윈 장난 파티!> 활성화" 획득
          // <할로윈 장난 파티>
@@ -6237,7 +6238,7 @@ function setDefault(me) {switch(me.id) {
          // 현재 자신의 <연쇄 트랩> 중첩 수 > 6 일 시 "공격 데미지 20% 증가" 활성화 => turnstart로
          // 현재 자신의 <연쇄 트랩> 중첩 수 = 9 일 시 "공격 데미지 20% 증가" 활성화 => turnstart로
 
-         // 할로윈 미궁 => ultafter로
+         // 할로윈 미궁 => ultimate로
 
          // 데미지 감소+
          // TODO: 자신이 받는 데미지 5% 감소
