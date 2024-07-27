@@ -53,31 +53,18 @@ function drawGraph(data) {
       else dateCount[date] = 1;
    });
 
-   // 날짜 배열 생성
-   const dates = Object.keys(dateCount);
-   const minDate = new Date(Math.min(...dates.map(date => new Date(date))));
-   const maxDate = new Date(Math.max(...dates.map(date => new Date(date))));
-
-   // 모든 날짜 생성
-   const allDates = [];
-   const dateArray = [];
-   let currentDate = minDate;
-   while (currentDate <= maxDate) {
-       const formattedDate = currentDate.toISOString().split('T')[0];
-       allDates.push(formattedDate);
-       dateArray.push(dateCount[formattedDate] || 0);
-       currentDate.setDate(currentDate.getDate() + 1);
-   }
+   // 날짜와 개수를 배열로 변환
+   const labels = Object.keys(dateCount), counts = Object.values(dateCount);
 
    // Chart.js를 사용하여 그래프 그리기
    const ctx = document.getElementById('myChart').getContext('2d');
    new Chart(ctx, {
       type: 'line',
       data: {
-         labels: allDates,
+         labels: labels,
          datasets: [{
                label: '개수',
-               data: dateArray,
+               data: counts,
                backgroundColor: 'rgba(75, 192, 192, 0.2)',
                borderColor: 'rgba(75, 192, 192, 1)',
                borderWidth: 2,
