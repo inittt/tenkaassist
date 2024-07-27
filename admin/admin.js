@@ -59,21 +59,36 @@ function drawGraph(data) {
    // Chart.js를 사용하여 그래프 그리기
    const ctx = document.getElementById('myChart').getContext('2d');
    new Chart(ctx, {
-      type: 'bar',
+      type: 'line',
       data: {
          labels: labels,
          datasets: [{
-               label: '조합등록 그래프',
+               label: '개수',
                data: counts,
                backgroundColor: 'rgba(75, 192, 192, 0.2)',
                borderColor: 'rgba(75, 192, 192, 1)',
-               borderWidth: 1
+               borderWidth: 1,
+               fill: false
          }]
       },
       options: {
          scales: {
+               x: {
+                  ticks: {
+                     color:'white',
+                  },
+                  title: {
+                     color:'white',
+                  }
+               },
                y: {
-                  beginAtZero: true
+                  ticks: {
+                     color:'white',
+                     beginAtZero: true
+                  },
+                  title: {
+                     color:'white',
+                  }
                }
          }
       }
