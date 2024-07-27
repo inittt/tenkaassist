@@ -68,29 +68,46 @@ function drawGraph(data) {
                backgroundColor: 'rgba(75, 192, 192, 0.2)',
                borderColor: 'rgba(75, 192, 192, 1)',
                borderWidth: 1,
-               fill: false
+               fill: false,
+               pointBackgroundColor: 'rgba(75, 192, 192, 1)', // 꼭지점 원의 배경색
+               pointBorderColor: 'rgba(75, 192, 192, 1)', // 꼭지점 원의 테두리색
+               pointRadius: 5, // 꼭지점 원의 반지름 크기
+               pointHoverRadius: 7 // 꼭지점 원의 호버 시 반지름 크기
          }]
       },
       options: {
          scales: {
-               x: {
-                  ticks: {
-                     color:'white',
-                  },
-                  title: {
-                     color:'white',
-                  }
+            x: {
+               ticks: {
+                  color:'white',
                },
-               y: {
-                  ticks: {
-                     color:'white',
-                     beginAtZero: true
-                  },
-                  title: {
-                     color:'white',
-                  }
+               title: {
+                  color:'white',
+               },
+               grid: {
+                  color:'lightgray',
                }
-         }
+            },
+            y: {
+               ticks: {
+                  color:'white',
+                  beginAtZero: true
+               },
+               title: {
+                  color:'white',
+               },
+               grid: {
+                  color:'lightgray',
+               }
+            }
+         },
+         plugins: {
+            legend: {
+                labels: {
+                    color: 'white' // 범례 폰트 색상
+                }
+            }
+        }
       }
    });
 }
