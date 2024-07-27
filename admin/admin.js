@@ -89,8 +89,6 @@ function drawGraph(data) {
          }]
       },
       options: {
-         responsive: true, // 그래프의 크기를 자동으로 조정
-         maintainAspectRatio: false, // aspect ratio 유지하지 않음
          scales: {
             x: {
                ticks: {
