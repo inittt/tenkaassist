@@ -93,7 +93,7 @@
    text-decoration: underline;
 }
 .console {
-   width:40rem;
+   width:30rem;
    max-width:95vw;
    height: calc(98vh - 3.5rem);
 
@@ -106,5 +106,13 @@
    z-index:1000;
    box-sizing: border-box;
    border-radius: 0.7rem;
-   background-color: rgba(0, 0, 0, 0.9);
+   background-color: rgba(0, 0, 0, 0.8);
+
+   -ms-overflow-style: none; /* 인터넷 익스플로러 */
+   scrollbar-width: none; /* 파이어폭스 */
 }
+
+.console:-webkit-scrollbar {
+   display: none;
+}
+ 
