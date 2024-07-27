@@ -251,22 +251,29 @@ function makeSRBlock(list) {
 
 //해당 태그의 SSR이 아닌 객체들 리턴
 function filteredData(list) {
-   return recruitJson.data.filter(item => {
+   const tmp = recruitJson.data.filter(item => {
       if (item.rarity == 'SSR') return false;
       const tagsArray = item.tags.split(' ');
       return list.every(tag => tagsArray.includes(tag));
    });
+   return tmp.map(copyTopLevelJson);
 }
 
 //해당 태그의 SSR인 객체들 리턴
 function filteredLeaderData(list) {
-   return recruitJson.data.filter(item => {
+   const tmp = recruitJson.data.filter(item => {
       if (item.rarity != 'SSR') return false;
       const tagsArray = item.tags.split(' ');
       return list.every(tag => tagsArray.includes(tag));
    });
+   return tmp.map(copyTopLevelJson);
 }
 
+function copyTopLevelJson(obj) {
+   const newJson = {};
+   for (let key in obj) if (obj.hasOwnProperty(key)) newJson[key] = obj[key];
+   return newJson;
+}
 
 /*-------------------------------------------------------*/
 function init() {
