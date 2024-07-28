@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
    }).then(res => {
       if (!res.success) return;
       document.getElementById('deleteBtn').style.display = "block";
-      document.getElementById('initDmgBtn').style.display = "block";
+      document.getElementById('initDmgBtn').style.display = "inline";
    }).catch(e => {});
 });
 
