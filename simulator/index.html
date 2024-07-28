@@ -11,10 +11,10 @@
    <script src="./calculator.js"></script>
    <script src="./simulator.js"></script>
 </head>
-<body>
+<body class="no-scrollbar">
    <script src="../js/header.js"></script>
-   <div class="main-container bg-dark">
-      <div class="block">
+   <div id="main-sim" class="main-container bg-dark">
+      <div id="title-sim" class="block">
          <div class="margin-left titleblock">
             <span id="titlebox" class="titlebox">시뮬레이터</span>
             <button class="button" onclick="refresh()" style="height:2rem; margin-left:1rem;">리셋</button>
@@ -37,6 +37,6 @@
          <button class="logoutBtn" onclick="loadBefore()">undo</button>
       </div>
    </div>
-   <div id="console" class="console" style="display:none" onclick="close_console()"></div>
+   <div id="console" class="console no-scrollbar" style="display:none" onclick="close_console()"></div>
 </body>
 </html>

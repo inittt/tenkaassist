@@ -237,14 +237,20 @@ function show_simple(idx) {
    const str = get_buff_simple(idx);
    document.getElementById("console").innerHTML = str;
    document.getElementById("console").style.display = "block";
+
+   document.body.classList.add('no-scroll');
 }
 
 function show_console(idx) {
    const str = get_buff_all(idx);
    document.getElementById("console").innerHTML = str;
    document.getElementById("console").style.display = "block";
+   
+   document.body.classList.add('no-scroll');
 }
 
 function close_console() {
    document.getElementById("console").style.display = "none";
+
+   document.body.classList.remove('no-scroll');
 }
