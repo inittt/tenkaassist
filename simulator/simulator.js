@@ -68,7 +68,13 @@ function makeComp(list) {
    compDiv.innerHTML = stringArr.join("");
 }
 
+function hasDuplicates(arr) {
+   let set = new Set(arr);
+   return set.size !== arr.length;
+}
+
 function start(compIds) {
+   if (hasDuplicates(compIds)) return alert("중복된 캐릭터가 있습니다");
    document.getElementById("simulator").style.display = "flex";
    GLOBAL_TURN = 1; comp = []; command.length = 0; dmg13 = 0;
    lastDmg = 0; lastAtvDmg = 0;
