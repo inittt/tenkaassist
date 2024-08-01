@@ -148,19 +148,21 @@ function endAct() {
       const command_tmp = cmd.join("");
       console.log(command_tmp);
       
-      const formData = new FormData();
-      formData.append("name", `${comp[0].name}덱`);
-      formData.append("compstr", chIds);
-      formData.append("dmg13", dmg13);
-      formData.append("scarecrow", GLOBAL_TURN);
-      formData.append("command", command_tmp);
-      request(`${server}/comps/setPower`, {
-         method: "POST",
-         body: formData
-      }).then(response => {
-         if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
-         return response.json();
-      }).then(res => {}).catch(e => {})
+      if (isValidComp(idList)) {
+         const formData = new FormData();
+         formData.append("name", `${comp[0].name}덱`);
+         formData.append("compstr", chIds);
+         formData.append("dmg13", dmg13);
+         formData.append("scarecrow", GLOBAL_TURN);
+         formData.append("command", command_tmp);
+         request(`${server}/comps/setPower`, {
+            method: "POST",
+            body: formData
+         }).then(response => {
+            if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+            return response.json();
+         }).then(res => {}).catch(e => {})
+      }
       
       savedData.length = 0;
       alert(msg.join("\n"));

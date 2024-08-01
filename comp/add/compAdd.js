@@ -59,7 +59,9 @@ function getCharactersWithCondition(element, role, rarity, search) {
 // 등록 버튼 누를시
 function registerDeck() {
    if (selected.length != 5) return alert("덱 하나에 5개의 캐릭터만 가능합니다");
-   
+
+   if (!isValidComp(selected)) return alert("회복수단이 없는 조합입니다");
+
    const deckName = `${getCharacter(selected[0]).name}덱`;
    let description = document.getElementById("description").value;
    if (description == "" || description == null || description == undefined) description = "-";

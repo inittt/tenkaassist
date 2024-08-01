@@ -191,58 +191,90 @@ function getCharacter(id) {
 
 //캐릭터 명칭 fix
 function fixName(txt) {
-      switch(txt) {
-         case "색돌": return "섹돌";
-         case "구미나": return "미나요미";
-         case "바사탄": return "바니사탄";
-         case "바니탄": return "바니사탄";
-         case "베이린": return "배이린";
-         case "수색돌": return "수섹돌";
-         case "졸류": return "아르티아";
-         case "전갤주": return "나가 퀸 메스미나";
-         case "산타란": return "크란";
-         case "릴리": return "구릴리";
-         case "신나요미": return "신미나";
-         case "갤주": return "인기 버튜버 안닌 미루";
-         case "수엘리": return "수앨리";
-         case "수졸류": return "수르티아";
-         case "할티아": return "로티아";
-         case "뷰노안": return "뷰지안";
-         case "크졸류": return "크르티아";
-         case "엘루루": return "앨루루";
-         case "엘즈루": return "앨즈루";
-         case "엘리자베스": return "엘자";
-         case "몬미나": return "헌미나";
-         case "호야네": return "할야네";
-         default: return txt;
-      }
+   switch(txt) {
+      case "색돌": return "섹돌";
+      case "구미나": return "미나요미";
+      case "바사탄": return "바니사탄";
+      case "바니탄": return "바니사탄";
+      case "베이린": return "배이린";
+      case "수색돌": return "수섹돌";
+      case "졸류": return "아르티아";
+      case "전갤주": return "나가 퀸 메스미나";
+      case "산타란": return "크란";
+      case "릴리": return "구릴리";
+      case "신나요미": return "신미나";
+      case "갤주": return "인기 버튜버 안닌 미루";
+      case "수엘리": return "수앨리";
+      case "수졸류": return "수르티아";
+      case "할티아": return "로티아";
+      case "뷰노안": return "뷰지안";
+      case "크졸류": return "크르티아";
+      case "엘루루": return "앨루루";
+      case "엘즈루": return "앨즈루";
+      case "엘리자베스": return "엘자";
+      case "몬미나": return "헌미나";
+      case "호야네": return "할야네";
+      default: return txt;
+   }
 }
 
 addAnyCh();
 function addAnyCh() {
-      chJSON.data.push(anyCh("아무거나", null, null));
-      chJSON.data.push(anyCh("화속성", 0, null));
-      chJSON.data.push(anyCh("수속성", 1, null));
-      chJSON.data.push(anyCh("풍속성", 2, null));
-      chJSON.data.push(anyCh("광속성", 3, null));
-      chJSON.data.push(anyCh("암속성", 4, null));
-      chJSON.data.push(anyCh("딜러", null, 0));
-      chJSON.data.push(anyCh("힐러", null, 1));
-      chJSON.data.push(anyCh("탱커", null, 2));
-      chJSON.data.push(anyCh("서포터", null, 3));
-      chJSON.data.push(anyCh("디스럽터", null, 4));
+   chJSON.data.push(anyCh("아무거나", null, null));
+   chJSON.data.push(anyCh("화속성", 0, null));
+   chJSON.data.push(anyCh("수속성", 1, null));
+   chJSON.data.push(anyCh("풍속성", 2, null));
+   chJSON.data.push(anyCh("광속성", 3, null));
+   chJSON.data.push(anyCh("암속성", 4, null));
+   chJSON.data.push(anyCh("딜러", null, 0));
+   chJSON.data.push(anyCh("힐러", null, 1));
+   chJSON.data.push(anyCh("탱커", null, 2));
+   chJSON.data.push(anyCh("서포터", null, 3));
+   chJSON.data.push(anyCh("디스럽터", null, 4));
 
-      const el = ['화', '수', '풍', '광', '암'];
-      const ro = ['딜', '힐', '탱', '서폿', '디럽'];
-      for(let e = 0; e < 5; e++) for(let r = 0; r < 5; r++) 
-            chJSON.data.push(anyCh(el[e]+ro[r], e, r));
+   const el = ['화', '수', '풍', '광', '암'];
+   const ro = ['딜', '힐', '탱', '서폿', '디럽'];
+   for(let e = 0; e < 5; e++) for(let r = 0; r < 5; r++) 
+         chJSON.data.push(anyCh(el[e]+ro[r], e, r));
 }
 function anyCh(name, el, ro) {
-      if (el == null) el = 9;
-      if (ro == null) ro = 9;
-      return {id : 90000 + el*10 + ro, rarity : 9, fullname : name, name : name, element : el, role : ro};
+   if (el == null) el = 9;
+   if (ro == null) ro = 9;
+   return {id : 90000 + el*10 + ro, rarity : 9, fullname : name, name : name, element : el, role : ro};
 }
 
 function isAny(id) {
-      return Math.floor(id/10000) == 9;
+   return Math.floor(id/10000) == 9;
+}
+
+function isValidComp(ids) {
+   if (ids.length != 5) return false;
+   const comp = ids.map(id => getCharacter(id));
+
+   // 힐러
+   if (comp.find(i => i.role == 1)) return true;
+   // 아이카, 유메
+   if (comp.find(i => i.id == 10009 || i.id == 10083)) return true;
+   // 5번 에밀리
+   if (comp[4].id == 10063) return true;
+   // 수앨리 리더
+   if (comp[0].id == 10091) {
+      for(let i = 1; i < 5; i++) if (comp[i].role != 2 && comp[i].role != 4) return false;
+      return true;
+   }
+   // 수이블 리더
+   if (comp[0].id == 10042) {
+      for(let i = 1; i < 5; i++) if (comp[i].role != 0) return false;
+      return true;
+   }
+   // 놀라이티 리더
+   if (comp[0].id == 10022) {
+      for(let i = 1; i < 5; i++) if (comp[i].role == 1) return false;
+      return true;
+   }
+   // 노엘리 리더
+   if (comp[0].id == 10026) return true;
+
+
+   return false;
 }
