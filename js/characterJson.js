@@ -274,7 +274,8 @@ function isValidComp(ids) {
    }
    // 노엘리 리더
    if (comp[0].id == 10026) return true;
-
+   // 구릴리 리더
+   if (comp[0].id == 10054) return true;
 
    return false;
 }
