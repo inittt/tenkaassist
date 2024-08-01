@@ -378,7 +378,7 @@ header {
 .h-box {
    box-sizing:border-box;
    height:100%;
-   max-width: 6rem;
+   max-width: 5rem;
    margin-right: 1rem;
    margin-left: 1rem;
    
