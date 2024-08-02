@@ -298,6 +298,14 @@ button:hover {
    justify-content: center;
    align-items: center;
 }
+.changePWInput {
+   margin:0.2rem;
+   width:20rem;
+   border-radius: 0.3rem;
+   padding:0.2rem;
+   outline:none;
+   font-size:1.1rem;
+}
 .loginInput {
    margin:0.5rem;
    width:20rem;

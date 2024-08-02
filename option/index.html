@@ -11,13 +11,14 @@
    <script src="../js/header.js"></script>
    <div class="main-container bg-dark">
       <div class="block">
-         <div class="margin-left titleblock"><span id="titleboxText" class="titlebox">Option</span> </div>
+         <div class="margin-left titleblock"><span id="titleboxText" class="titlebox">Option</span></div>
       </div>
       <div class="block loginBox">
-        <input id="curPass" class="loginInput" name="password1" type="password" placeholder="현재 비밀번호">
-        <input id="newPass" class="loginInput" name="password2" type="password" placeholder="새 비밀번호">
-        <input id="newPassRe" class="loginInput" name="password3" type="password" placeholder="새 비밀번호 재입력">
-        <button class="submitBtn" onclick="setPassword()">완료</button>
+        <div>비밀번호 변경</div>
+        <input id="curPass" class="changePWInput" name="password1" type="password" placeholder="현재 비밀번호">
+        <input id="newPass" class="changePWInput" name="password2" type="password" placeholder="새 비밀번호">
+        <input id="newPassRe" class="changePWInput" name="password3" type="password" placeholder="새 비밀번호 재입력">
+        <button class="loginButton bg-green" onclick="setPassword()">완료</button>
       </div>
    </div>
 </body>
