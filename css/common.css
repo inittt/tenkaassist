@@ -314,6 +314,18 @@ button:hover {
    outline:none;
    font-size:1.2rem;
 }
+.changePWButton {
+   color: white;
+   cursor: pointer;
+   margin:0.2rem;
+   width:20.5rem;
+   font-weight:bold;
+   border-radius: 0.3rem;
+   padding:0.2rem;
+   box-sizing:border-box;
+   border: 2px solid transparent;
+   font-size:1rem;
+}
 .loginButton {
    color: white;
    cursor: pointer;
