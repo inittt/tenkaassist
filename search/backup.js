@@ -2,7 +2,6 @@ const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const leaderId = params.get('leader');
 const curHeader = 2;
-let page = 0, sort = 0, curData = [], isLoading = false;
 
 document.addEventListener("DOMContentLoaded", function() {
    var dropdownBtn = document.getElementById("dropdownBtn");
@@ -22,7 +21,8 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
-         cnt = 0; sort = 0; page = 0;
+
+         let sort = 0;
          if ("13턴딜" === this.value) sort = 1;
          if ("최신등록순" === this.value) sort = 2;
          if ("최신수정순" === this.value) sort = 3;
@@ -30,19 +30,6 @@ document.addEventListener("DOMContentLoaded", function() {
       });
    });
    getComps(0);
-
-   // Intersection Observer 설정
-   const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !isLoading) {
-         if (page == 0) return;
-         isLoading = true;
-         makeBlock(sort);
-         isLoading = false;
-      }
-   });
-
-   // 감지할 요소
-   observer.observe(document.getElementById('scroll-observer'));
 });
 
 function getComps(sort) {
@@ -60,18 +47,16 @@ function getComps(sort) {
       return response.json();
    }).then(res => {
       if (!res.success) return console.log(res.msg);
-      curData = res.data;
-      makeBlock(sort);
+      makeBlock(res.data, sort);
    }).catch(e => {
       console.log("데이터 로드 실패", e);
    })
 }
 
-let cnt = 0;
-function makeBlock(sort) {
-   for(let i = page*20; i < page*20+20; i++) {
-      const comp = curData[i];
-      if (comp == undefined || comp == null) return;
+function makeBlock(data, sort) {
+
+   let cnt = 0;
+   for(const comp of data) {
       const stringArr = [];
       cnt++;
       const id = comp.id, name = comp.name, compstr = comp.compstr;
@@ -117,8 +102,7 @@ function makeBlock(sort) {
    }
    if (cnt == 0) document.getElementById('compcontainer').innerHTML = `
       <div class="block">검색결과 없음</div>
-   `;
-   page++;
+   `
 }
 
 function init() {
