@@ -60,7 +60,10 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 
    checkAndAssign('curHeader', 0);
-   if (curHeader != 0) document.getElementById(`h-${curHeader}`).classList.add("h-cur");
+   if (curHeader != 0) {
+      document.getElementById(`h-${curHeader}`).classList.add("h-cur");
+      document.getElementById(`h-${curHeader}`).classList.add("txt-bold");
+   }
 });
 
 function goMain() {

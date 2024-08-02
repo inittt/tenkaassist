@@ -12,6 +12,9 @@ body {
 i {
    color:#c93838;
 }
+.txt-bold {
+   font-weight:bold;
+}
 .button {
    height:5.2rem;
    cursor:pointer;
