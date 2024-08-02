@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
-         cnt = 0; sort = 0; page = 0;
+         isEnd = false; cnt = 0; sort = 0; page = 0;
          if ("13턴딜" === this.value) sort = 1;
          if ("최신등록순" === this.value) sort = 2;
          if ("최신수정순" === this.value) sort = 3;
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
    // Intersection Observer 설정
    const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && !isLoading) {
-         if (page == 0) return;
+         if (page == 0 || isEnd) return;
          isLoading = true;
          makeBlock(sort);
          isLoading = false;
@@ -67,11 +67,11 @@ function getComps(sort) {
    })
 }
 
-let cnt = 0;
+let cnt = 0, isEnd = false;
 function makeBlock(sort) {
    for(let i = page*20; i < page*20+20; i++) {
       const comp = curData[i];
-      if (comp == undefined || comp == null) return;
+      if (comp == undefined || comp == null) {isEnd = true; break;}
       const stringArr = [];
       cnt++;
       const id = comp.id, name = comp.name, compstr = comp.compstr;
