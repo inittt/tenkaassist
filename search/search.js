@@ -59,8 +59,12 @@ function getComps(sort) {
       if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
       return response.json();
    }).then(res => {
-      if (!res.success) return console.log(res.msg);
+      if (!res.success) {
+         document.getElementById("cnt-all").innerHTML = `검색결과 : 0개`;
+         return console.log(res.msg);
+      }
       curData = res.data;
+      document.getElementById("cnt-all").innerHTML = `검색결과 : ${curData.length}개`;
       makeBlock(sort);
    }).catch(e => {
       console.log("데이터 로드 실패", e);
