@@ -1,7 +1,7 @@
 const params = new URLSearchParams(window.location.search);
-const chIds = params.get('list');
+const chIds = params.get('list'), idList = chIds.split(",").map(Number);
+const bond = params.get('bond'), bondList = bond == null ? [5, 5, 5, 5, 5] : bond.split(",").map(Number);
 const curHeader = 6;
-const idList = chIds.split(",").map(Number);
 
 document.addEventListener("DOMContentLoaded", function() {
    getdiv("bossBuffBtn").innerHTML = `
@@ -89,7 +89,8 @@ function start(compIds) {
    }
    comp[0].isLeader = true;
    for(let i = 0; i < 5; i++) {
-      comp[i] = setDefault(comp[i]);
+      comps[i] = setDefault(comp[i]);
+      // comp[i] = setDefault(comp[i], bondList[i]);
       if (comp[i] == undefined || comp[i] == null) return alert("캐릭터 세팅에 문제가 발생");
    }
    comp[0].leader();
