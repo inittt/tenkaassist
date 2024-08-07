@@ -89,8 +89,9 @@ function start(compIds) {
    }
    comp[0].isLeader = true;
    for(let i = 0; i < 5; i++) {
-      comp[i] = setDefault(comp[i]);
-      // comp[i] = setDefault(comp[i], bondList[i]);
+      // comp[i] = setDefault(comp[i]);
+      if (bondList[i] < 1 || bondList[i] > 5 || typeof bondList[i] != 'number') bondList[i] = 5;
+      comp[i] = setDefault(comp[i], bondList[i]);
       if (comp[i] == undefined || comp[i] == null) return alert("캐릭터 세팅에 문제가 발생");
    }
    comp[0].leader();
@@ -149,7 +150,7 @@ function endAct() {
       const command_tmp = cmd.join("");
       console.log(command_tmp);
       
-      if (isValidComp(idList)) {
+      if (isValidComp(idList) && bondList.every(e => e == 5)) {
          const formData = new FormData();
          formData.append("name", `${comp[0].name}덱`);
          formData.append("compstr", chIds);
