@@ -89,7 +89,7 @@ function start(compIds) {
    }
    comp[0].isLeader = true;
    for(let i = 0; i < 5; i++) {
-      comps[i] = setDefault(comp[i]);
+      comp[i] = setDefault(comp[i]);
       // comp[i] = setDefault(comp[i], bondList[i]);
       if (comp[i] == undefined || comp[i] == null) return alert("캐릭터 세팅에 문제가 발생");
    }
