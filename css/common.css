@@ -262,7 +262,7 @@ a {color: inherit; text-decoration: none;}
 }
 .c-radio span {
    border-radius: 0.3rem;
-   padding: 0.4rem 0.8rem;
+   padding: 0.3rem 0.5rem;
    border: 2px solid transparent;
    transition: border-color 0.3s;
 }
@@ -281,7 +281,7 @@ a {color: inherit; text-decoration: none;}
    color:white;
 }
 .logoutBtn {
-   margin: 0 0.5rem;
+   margin-left: 0.3rem;
    border: 2px solid transparent;
    font-weight: bold;
    cursor: pointer;

@@ -7,7 +7,7 @@ const chJSON = { data : [
 {ok : true, id : 10005, rarity : 3, hp:1041659, atk:235170, cd:6, atkMag:100, ultMag:1050, fullname : "난쟁이의 왕 란", name : "란", element : 1, role : 0},
 {ok : true, id : 10006, rarity : 3, hp:984084, atk:248899, cd:4, atkMag:0, ultMag:0, fullname : "파스제국의 공주 루루", name : "루루", element : 2, role : 1},
 {ok : true, id : 10007, rarity : 3, hp:939796, atk:260414, cd:4, atkMag:100, ultMag:514, fullname : "대천사 성녀 밀레", name : "밀레", element : 3, role : 0},
-{ok : true, id : 10008, rarity : 3, hp:938024, atk:261300, cd:4, atkMag:100, ultMag:100, fullname : "마도인형 KS-Ⅷ", name : "섹돌", element : 4, role : 0},
+{ok : false, id : 10008, rarity : 3, hp:938024, atk:261300, cd:4, atkMag:100, ultMag:100, fullname : "마도인형 KS-Ⅷ", name : "섹돌", element : 4, role : 0},
 {ok : true, id : 10017, rarity : 3, hp:942010, atk:259971, cd:3, atkMag:50, ultMag:211, fullname : "광란의 페스티벌 바알", name : "페바알", element : 4, role : 0},
 {ok : true, id : 10018, rarity : 3, hp:1583304, atk:187339, cd:3, atkMag:100, ultMag:0, fullname : "고대의 용자 울타", name : "울타", element : 2, role : 2},
 {ok : true, id : 10019, rarity : 3, hp:945996, atk:259086, cd:4, atkMag:100, ultMag:514, fullname : "현대 용자 칸다 아야네", name : "아야네", element : 3, role : 0},

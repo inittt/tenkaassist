@@ -3,12 +3,11 @@ const curHeader = 2;
 
 const selected = [];
 document.addEventListener("DOMContentLoaded", function() {
-   getCharactersWithCondition(null, null, null, "");
-
    const searchInput = document.getElementById('searchInput');
    searchInput.addEventListener('input', function() {
       getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, searchInput.value);
-   })
+   });
+   getCharactersWithCondition(null, null, checkRarityN = 3, "");
 
    const toggleButton = document.getElementById('leaderBtn');
    toggleButton.addEventListener('click', () => {

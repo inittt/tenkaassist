@@ -89,8 +89,10 @@ function start(compIds) {
    }
    comp[0].isLeader = true;
    for(let i = 0; i < 5; i++) {
-      // comp[i] = setDefault(comp[i]);
-      if (bondList[i] < 1 || bondList[i] > 5 || typeof bondList[i] != 'number') bondList[i] = 5;
+      if (bondList[i] < 1 || bondList[i] > 5 || typeof bondList[i] != 'number') {
+         alert(`${i+1}번째 캐릭터의 구속력이 올바르지 않음. (5구속으로 적용)`);
+         bondList[i] = 5;
+      }
       comp[i] = setDefault(comp[i], bondList[i]);
       if (comp[i] == undefined || comp[i] == null) return alert("캐릭터 세팅에 문제가 발생");
    }

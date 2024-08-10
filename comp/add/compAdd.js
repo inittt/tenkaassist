@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
    searchInput.addEventListener('input', function() {
       getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, searchInput.value);
    })
-   getCharactersWithCondition(null, null, null, "");
+   getCharactersWithCondition(null, null, checkRarityN = 3, "");
 });
 function getCharactersWithCondition(element, role, rarity, search) {
    const characterContainer = document.getElementById("characterContainer");

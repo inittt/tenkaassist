@@ -9,8 +9,30 @@ document.addEventListener("DOMContentLoaded", function() {
    searchInput.addEventListener('input', function() {
       getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, searchInput.value);
    })
-   getCharactersWithCondition(null, null, null, "");
+   getCharactersWithCondition(null, null, checkRarityN = 3, "");
+   
+
+   // 구속 드랍박스
+   for(let i = 0; i < 5; i++) {
+      const dropdownBtn = document.getElementById(`btn${i}`);
+      const dropdownContent = document.getElementById(`drop${i}`);
+      dropdownBtn.addEventListener("click", function() {
+         dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+      });
+      const radios = document.querySelectorAll(`.dropdown-content input[name='b${i}']`);
+      radios.forEach(function(option) {
+         option.addEventListener("click", function() {
+            dropdownBtn.innerText = `${this.value}`;
+            const spanElement = document.createElement('span');
+            spanElement.classList.add('absolute-right');
+            spanElement.innerHTML = '▼'
+            dropdownBtn.appendChild(spanElement);
+            dropdownContent.style.display = "none";
+         });
+      });
+   }
 });
+
 function getCharactersWithCondition(element, role, rarity, search) {
    const characterContainer = document.getElementById("characterContainer");
    characterContainer.innerHTML = "로드 중...";
@@ -49,12 +71,21 @@ function getCharactersWithCondition(element, role, rarity, search) {
    characterContainer.innerHTML = innerArray.join("");
 }
 
-// 등록 버튼 누를시
-function startSimulator() {
-   if (selected.length != 5) return alert("5개의 캐릭터를 선택해주세요");
-   location.href = `${address}/simulator/?list=${selected}`
+// 구속력 리스트 리턴
+function getBondList() {
+   const b_arr = [];
+   for(let i = 0; i < 5; i++) {
+      const selectedRadio = document.querySelector(`input[name="b${i}"]:checked`);
+      b_arr.push(Number(selectedRadio.value));
+   }
+   return b_arr;
 }
 
+// 시작 버튼 누를시
+function startSimulator() {
+   if (selected.length != 5) return alert("5개의 캐릭터를 선택해주세요");
+   location.href = `${address}/simulator/?list=${selected}&bond=${getBondList()}`
+}
 
 // 검색창에 선택된 캐릭터 이미지 띄우기
 function updateSelected() {
