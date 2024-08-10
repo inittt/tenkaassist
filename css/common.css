@@ -402,8 +402,8 @@ header {
    box-sizing:border-box;
    height:100%;
    max-width: 5rem;
-   margin-right: 0.5rem;
-   margin-left: 0.5rem;
+   margin-right: 0.6rem;
+   margin-left: 0.6rem;
    
    overflow-x: hidden;
    white-space: nowrap;
