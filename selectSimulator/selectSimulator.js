@@ -2,6 +2,7 @@ let checkElementN, checkRoleN, checkRarityN;
 const curHeader = 6;
 
 const selected = [];
+const params = new URLSearchParams(window.location.search);
 const ch_ids = params.get('list');
 if (ch_ids != null) {
    const ch_idList = ch_ids.split(",").map(Number);
