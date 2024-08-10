@@ -2,6 +2,12 @@ let checkElementN, checkRoleN, checkRarityN;
 const curHeader = 6;
 
 const selected = [];
+const ch_ids = params.get('list');
+if (ch_ids != null) {
+   const ch_idList = ch_ids.split(",").map(Number);
+   for(let i of ch_idList) selected.push(i);
+}
+
 const chJsonList = chJSON.data.slice();
 addAnyCh();
 document.addEventListener("DOMContentLoaded", function() {

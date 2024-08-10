@@ -137,7 +137,7 @@ function goTest() {
       if (cha == undefined || cha == null) return alert("캐릭터를 찾을 수 없음 : " + id);
       if (!cha.ok) return alert("준비 중 캐릭터가 포함되어 있습니다");
    }
-   location.href = `${address}/simulator/?list=${compIds_toTest}`
+   location.href = `${address}/selectSimulator/?list=${compIds_toTest}`
 }
 
 function setCommand(str) {
