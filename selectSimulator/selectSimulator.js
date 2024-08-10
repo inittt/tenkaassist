@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
       getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, searchInput.value);
    })
    getCharactersWithCondition(null, null, checkRarityN = 3, "");
+   updateSelected();
    
 
    // 구속 드랍박스
