@@ -90,7 +90,7 @@ function start(compIds) {
    comp[0].isLeader = true;
    for(let i = 0; i < 5; i++) {
       if (bondList[i] < 1 || bondList[i] > 5 || typeof bondList[i] != 'number') {
-         alert(`${i+1}번째 캐릭터의 구속력이 올바르지 않음. (5구속으로 적용)`);
+         alert(`${i+1}번 캐릭터의 구속력이 올바르지 않음. (5구속으로 적용)`);
          bondList[i] = 5;
       }
       comp[i] = setDefault(comp[i], bondList[i]);
@@ -136,6 +136,7 @@ function endAct() {
 
       const msg = [];
       msg.push("시뮬레이터 종료");
+      msg.push(`${comp[0].name} ${comp[1].name} ${comp[2].name} ${comp[3].name} ${comp[4].name}`);
       msg.push(`허수턴 : ${GLOBAL_TURN}`);
       if (GLOBAL_TURN == 13) dmg13 = 10854389981;
       msg.push(`13턴딜 : ${dmg13.toLocaleString()}`)
