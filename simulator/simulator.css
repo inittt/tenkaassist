@@ -131,3 +131,18 @@ body {
 ::-webkit-scrollbar {
    display: none; /* 크롬, 사파리, 엣지 */
 }
+
+.bond-icon {
+   font-size:0.7rem;
+   text-align:center;
+   
+   border-top-right-radius: 0.3rem;
+   border-bottom-left-radius: 0.3rem;
+   position:absolute;
+   right:0.2rem;
+   top:0.2rem;
+   width:1rem;
+   height:1rem;
+   color:white;
+   background-color: rgba(0, 0, 0, 0.6);
+}

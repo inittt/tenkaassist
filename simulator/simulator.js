@@ -39,7 +39,7 @@ function setComp() {
 function makeComp(list) {
    const compDiv = document.getElementById('comp');
    const stringArr = [];
-   let idx = 0;
+   let idx = 0, i = 0;
    for(const id of list) {
       const ch = getCharacter(id);
       stringArr.push(`
@@ -49,6 +49,7 @@ function makeComp(list) {
             <div class="character" style="margin:0.2rem;">
                <div id="atk${idx}" style="margin:0.2rem;" onclick="do_atk(${idx})">
                   <img id="img${idx}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
+                  <div class="bond-icon z-2">${numToBond(bondList[i++])}</div>
                   ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                   <div id="act${idx}" class="acted z-3"></div>
                   <div id="el${idx}" class="element${ch.element} ch_border z-4"></div>
@@ -66,6 +67,16 @@ function makeComp(list) {
       idx++;
    }
    compDiv.innerHTML = stringArr.join("");
+}
+
+function numToBond(num) {
+   switch(num) {
+      case 1: return "Ⅰ";
+      case 2: return "Ⅱ";
+      case 3: return "Ⅲ";
+      case 4: return "Ⅳ";
+      default: return "Ⅴ";
+   }
 }
 
 function hasDuplicates(arr) {
