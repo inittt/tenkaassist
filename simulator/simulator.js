@@ -135,7 +135,6 @@ function endAct() {
       updateAll();
 
       const msg = [];
-      msg.push("시뮬레이터 종료");
       msg.push(`조합 : ${comp[0].name} ${comp[1].name} ${comp[2].name} ${comp[3].name} ${comp[4].name}`);
       msg.push(`구속 : ${bondList[0]} ${bondList[1]} ${bondList[2]} ${bondList[3]} ${bondList[4]} `)
       msg.push(`허수턴 : ${GLOBAL_TURN}`);
