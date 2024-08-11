@@ -67,7 +67,7 @@ const chJSON = { data : [
 {ok : true, id : 10088, rarity : 3, hp:946882, atk:285216, cd:3, atkMag:100, ultMag:397, fullname : "붉은 쌍성 아나스티", name : "신빨강", element : 0, role : 0},
 {ok : true, id : 10089, rarity : 3, hp:1426967, atk:189110, cd:3, atkMag:50, ultMag:0, fullname : "푸른 은하 아나스나", name : "신파랑", element : 1, role : 2},
 {ok : true, id : 10090, rarity : 3, hp:995599, atk:271044, cd:4, atkMag:100, ultMag:514, fullname : "여름날 성녀 밀레", name : "수밀레", element : 1, role : 0},
-{ok : true, id : 10091, rarity : 3, hp:1249371, atk:216126, cd:3, atkMag:0, ultMag:0, fullname : "여름날 블랙앤화이트 노엘리", name : "수앨리", element : 3, role : 3},
+{ok : true, id : 10091, rarity : 3, hp:1249371, atk:216126, cd:3, atkMag:0, ultMag:0, fullname : "여름날 블랙앤화이트 노엘리", name : "수엘리", element : 3, role : 3},
 {ok : true, id : 10092, rarity : 3, hp:913223, atk:295845, cd:3, atkMag:120, ultMag:546, fullname : "여름날 아르티아", name : "수르티아", element : 1, role : 0},
 {ok : true, id : 10093, rarity : 3, hp:1012872, atk:266615, cd:4, atkMag:125, ultMag:680, fullname : "적격자 나나", name : "적나나", element : 3, role : 0},
 {ok : true, id : 10094, rarity : 3, hp:1006228, atk:268386, cd:50, atkMag:100, ultMag:471, fullname : "미지의 생명체 키베루", name : "키베루", element : 4, role : 0},
@@ -204,7 +204,7 @@ function fixName(txt) {
       case "릴리": return "구릴리";
       case "신나요미": return "신미나";
       case "갤주": return "인기 버튜버 안닌 미루";
-      case "수엘리": return "수앨리";
+      case "수앨리": return "수엘리";
       case "수졸류": return "수르티아";
       case "할티아": return "로티아";
       case "뷰노안": return "뷰지안";
