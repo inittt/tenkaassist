@@ -124,7 +124,7 @@ a {color: inherit; text-decoration: none;}
    height:2.5rem;
 }
 .el-icon {
-   border-top-right-radius: 0.5rem;
+   border-top-right-radius: 0.3rem;
    border-bottom-left-radius: 0.3rem;
    position:absolute;
    right:0.2rem;
