@@ -178,7 +178,7 @@ function loadBlockAllDeck(pg) {
       compblock.style.width = "100%";
       compblock.innerHTML = stringArr.join("");
       compblock.addEventListener("click", function() {
-         window.location.href = `${address}/comp/?id=${id}`;
+         window.open(`${address}/comp/?id=${id}`, '_blank');
       });
       compcontainer.appendChild(compblock);
    }
@@ -257,7 +257,7 @@ function loadBlockNDeck(pg) {
          let compblock = document.createElement('div');
          compblock.classList.add("block", "hoverblock");
          compblock.innerHTML = stringArr.join("");
-         compblock.addEventListener("click", function() {window.location.href = `${address}/comp/?id=${id}`;});
+         compblock.addEventListener("click", function() {window.open(`${address}/comp/?id=${id}`, '_blank');});
          deckBundle.appendChild(compblock);
       }
       compcontainer.appendChild(deckBundle);

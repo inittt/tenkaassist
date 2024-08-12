@@ -115,7 +115,7 @@ function makeBlock(sort) {
       compblock.classList.add("block", "hoverblock");
       compblock.innerHTML = stringArr.join("");
       compblock.addEventListener("click", function() {
-         window.location.href = `${address}/comp/?id=${id}`;
+         window.open(`${address}/comp/?id=${id}`, '_blank');
       });
       compcontainer.appendChild(compblock);
    }
