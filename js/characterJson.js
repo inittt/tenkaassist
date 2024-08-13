@@ -199,11 +199,9 @@ function fixName(txt) {
       case "베이린": return "배이린";
       case "수색돌": return "수섹돌";
       case "졸류": return "아르티아";
-      case "전갤주": return "나가 퀸 메스미나";
       case "산타란": return "크란";
       case "릴리": return "구릴리";
       case "신나요미": return "신미나";
-      case "갤주": return "인기 버튜버 안닌 미루";
       case "수앨리": return "수엘리";
       case "수졸류": return "수르티아";
       case "할티아": return "로티아";
