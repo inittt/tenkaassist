@@ -150,7 +150,7 @@ function endAct() {
       msg.push(`${comp[0].name} ${comp[1].name} ${comp[2].name} ${comp[3].name} ${comp[4].name}`);
       msg.push(`구속 : ${bondList[0]} ${bondList[1]} ${bondList[2]} ${bondList[3]} ${bondList[4]} `)
       msg.push(`허수턴 : ${GLOBAL_TURN}`);
-      if (GLOBAL_TURN == 13) dmg13 = 10854389981;
+      if (GLOBAL_TURN <= 13) dmg13 = 10854389981;
       msg.push(`13턴딜 : ${dmg13.toLocaleString()}`)
 
       const cmd = [];
