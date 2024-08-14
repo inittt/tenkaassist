@@ -141,56 +141,58 @@ function do_def(idx) {
    updateAll();
 }
 
+let scarecrowTurn = 99;
 function endAct() {
-   if (boss.hp <= 0) {
-      for(let c of comp) c.isActed = true;
-      updateAll();
-
-      const msg = [];
-      msg.push(`${comp[0].name} ${comp[1].name} ${comp[2].name} ${comp[3].name} ${comp[4].name}`);
-      msg.push(`구속 : ${bondList[0]} ${bondList[1]} ${bondList[2]} ${bondList[3]} ${bondList[4]} `)
-      msg.push(`허수턴 : ${GLOBAL_TURN}`);
-      if (GLOBAL_TURN <= 13) dmg13 = 10854389981;
-      msg.push(`13턴딜 : ${dmg13.toLocaleString()}`)
-
-      const cmd = [];
-      for(let i = 0; i < command.length; i++) {
-         if (i%5 == 0) {
-            if (Math.floor(i/5)+1 < 10) cmd.push(" ");
-            cmd.push(`${Math.floor(i/5)+1}턴 : `);
-         }
-         cmd.push(command[i]);
-         cmd.push((i+1)%5 == 0 ? "\n" : " > "); 
-      }
-      const command_tmp = cmd.join("");
-      console.log(command_tmp);
-      
-      if (isValidComp(idList) && bondList.every(e => e == 5)) {
-         const formData = new FormData();
-         formData.append("name", `${comp[0].name}덱`);
-         formData.append("compstr", chIds);
-         formData.append("dmg13", dmg13);
-         formData.append("scarecrow", GLOBAL_TURN);
-         formData.append("command", command_tmp);
-         request(`${server}/comps/setPower`, {
-            method: "POST",
-            body: formData
-         }).then(response => {
-            if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
-            return response.json();
-         }).then(res => {}).catch(e => {})
-      }
-      
-      savedData.length = 0;
-      alert(msg.join("\n"));
-      return;
-   }
+   if (boss.hp <= 0 && scarecrowTurn > GLOBAL_TURN) scarecrowTurn = GLOBAL_TURN;
 
    if (isAllActed()) {
       for(let i = 0; i < 5; i++) comp[i].turnover();
       nextTurn();
+      if (boss.hp <= 0 && GLOBAL_TURN >= 14) return endGame();
       for(let i = 0; i < 5; i++) comp[i].turnstart();
    }
+}
+
+function endGame() {
+   for(let c of comp) c.isActed = true;
+   updateAll();
+
+   const msg = [];
+   msg.push(`${comp[0].name} ${comp[1].name} ${comp[2].name} ${comp[3].name} ${comp[4].name}`);
+   msg.push(`구속 : ${bondList[0]} ${bondList[1]} ${bondList[2]} ${bondList[3]} ${bondList[4]} `)
+   msg.push(`허수턴 : ${scarecrowTurn}`);
+   msg.push(`13턴딜 : ${dmg13.toLocaleString()}`)
+
+   const cmd = [];
+   for(let i = 0; i < command.length; i++) {
+      if (i%5 == 0) {
+         if (Math.floor(i/5)+1 < 10) cmd.push(" ");
+         cmd.push(`${Math.floor(i/5)+1}턴 : `);
+      }
+      cmd.push(command[i]);
+      cmd.push((i+1)%5 == 0 ? "\n" : " > "); 
+   }
+   const command_tmp = cmd.join("");
+   console.log(command_tmp);
+   
+   if (isValidComp(idList) && bondList.every(e => e == 5)) {
+      const formData = new FormData();
+      formData.append("name", `${comp[0].name}덱`);
+      formData.append("compstr", chIds);
+      formData.append("dmg13", dmg13);
+      formData.append("scarecrow", scarecrowTurn);
+      formData.append("command", command_tmp);
+      request(`${server}/comps/setPower`, {
+         method: "POST",
+         body: formData
+      }).then(response => {
+         if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+         return response.json();
+      }).then(res => {}).catch(e => {})
+   }
+   
+   savedData.length = 0;
+   alert(msg.join("\n"));
 }
 
 function isAllActed() {
@@ -240,7 +242,7 @@ function updateShdBar(i) {
 }
 function updateProgressBar(hp, maxhp) {
    const progressBar = document.getElementById("boss");
-   const percentage = ((hp / maxhp) * 100);
+   const percentage = ((hp / maxhp) * 100) > 0 ? ((hp / maxhp) * 100) : 0;
    const bossHpText = document.getElementById("boss-hp");
    progressBar.style.width = percentage > 100 ? "100%" : `${percentage}%`;
    bossHpText.innerHTML = `${Math.ceil(hp).toLocaleString()} (${Math.ceil(percentage*100)/100}%)`;
