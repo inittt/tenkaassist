@@ -121,6 +121,7 @@ function do_ult(idx) {
    saveCur();
    command.push(`${idx+1}궁`);
    comp[idx].ultimate();
+   for(let i = 0; i < 5; i++) comp[i].isHealed = false;
    endAct();
    updateAll();
 }
@@ -129,6 +130,7 @@ function do_atk(idx) {
    saveCur();
    command.push(`${idx+1}평`);
    comp[idx].attack();
+   for(let i = 0; i < 5; i++) comp[i].isHealed = false;
    endAct();
    updateAll();
 }
@@ -137,6 +139,7 @@ function do_def(idx) {
    saveCur();
    command.push(`${idx+1}방`);
    comp[idx].defense();
+   for(let i = 0; i < 5; i++) comp[i].isHealed = false;
    endAct();
    updateAll();
 }
