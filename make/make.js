@@ -342,11 +342,6 @@ function backtrack(startIndex, selectedEntities, callback) {
    processNext(startIndex);
 }
 
-// 호출 예시
-backtrack([], allOptions, () => {
-   console.log('백트래킹 작업 완료');
-});
-
 /* observer 세팅 로직 ------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', function() {
    const observerDiv = document.getElementById('observer');
