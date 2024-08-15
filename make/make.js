@@ -97,6 +97,7 @@ function makeBlock() {
    else {
       deckCnt = mod+1;
       backtrack(0, []);
+      makeBlockNDeck();
    }
 }
 
