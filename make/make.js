@@ -93,8 +93,6 @@ function makeBlock() {
    allCombinations.length = 0;
    isEndOfDeck = false;
 
-   document.getElementById('compcontainer').innerHTML = "계산중...";
-
    if (mod == 0) makeBlockAllDeck();
    else {
       deckCnt = mod+1;
