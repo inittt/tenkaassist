@@ -319,9 +319,6 @@ function backtrack(startIndex, selectedEntities) {
         isProcessing = false;
         updateProgress("완료");
 
-        // 버튼 활성화
-        setDropdownButtonsEnabled(true);
-
         makeBlockNDeck();
     });
 }
