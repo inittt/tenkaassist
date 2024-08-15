@@ -93,6 +93,8 @@ function makeBlock() {
    allCombinations.length = 0;
    isEndOfDeck = false;
 
+   const compcontainer = document.getElementById('compcontainer');
+   compcontainer.innerHTML = "계산중...";
    if (mod == 0) makeBlockAllDeck();
    else {
       deckCnt = mod+1;
@@ -268,28 +270,82 @@ function loadBlockNDeck(pg) {
 /* 백트래킹 함수 -----------------------------------------------------------*/
 
 let usedNumbers = new Set();
-function backtrack(startIndex, selectedEntities) {
-    if (selectedEntities.length === deckCnt) {allCombinations.push([...selectedEntities]); return;}
+// function backtrack(startIndex, selectedEntities) {
+//     if (selectedEntities.length === deckCnt) {allCombinations.push([...selectedEntities]); return;}
 
-    for (let i = startIndex; i < possibleDeck.length; i++) {
-        let entity = possibleDeck[i];
-        let canUseEntity = true;
-        let tempUsedNumbers = new Set();
+//     for (let i = startIndex; i < possibleDeck.length; i++) {
+//         let entity = possibleDeck[i];
+//         let canUseEntity = true;
+//         let tempUsedNumbers = new Set();
 
-        for (let num of entity.compstr) {
-            if (isAny(num)) continue;
-            if (usedNumbers.has(num)) {canUseEntity = false; break;}
-            tempUsedNumbers.add(num);
-        }
-        if (canUseEntity) {
-            for (let num of tempUsedNumbers) usedNumbers.add(num);
-            selectedEntities.push(entity);
-            backtrack(i+1, selectedEntities);
-            selectedEntities.pop();
-            for (let num of tempUsedNumbers) usedNumbers.delete(num);
-        }
-    }
+//         for (let num of entity.compstr) {
+//             if (isAny(num)) continue;
+//             if (usedNumbers.has(num)) {canUseEntity = false; break;}
+//             tempUsedNumbers.add(num);
+//         }
+//         if (canUseEntity) {
+//             for (let num of tempUsedNumbers) usedNumbers.add(num);
+//             selectedEntities.push(entity);
+//             backtrack(i+1, selectedEntities);
+//             selectedEntities.pop();
+//             for (let num of tempUsedNumbers) usedNumbers.delete(num);
+//         }
+//     }
+// }
+
+function backtrack(startIndex, selectedEntities, callback) {
+   if (selectedEntities.length === deckCnt) {
+       allCombinations.push([...selectedEntities]);
+       if (callback) callback(); // 작업 완료 시 콜백 호출
+       return;
+   }
+
+   function processNext(i) {
+       if (i >= possibleDeck.length) {
+           if (callback) callback(); // 모든 작업이 끝났을 때 콜백 호출
+           return;
+       }
+
+       let entity = possibleDeck[i];
+       let canUseEntity = true;
+       let tempUsedNumbers = new Set();
+
+       for (let num of entity.compstr) {
+           if (isAny(num)) continue;
+           if (usedNumbers.has(num)) {
+               canUseEntity = false;
+               break;
+           }
+           tempUsedNumbers.add(num);
+       }
+
+       if (canUseEntity) {
+           for (let num of tempUsedNumbers) usedNumbers.add(num);
+           selectedEntities.push(entity);
+
+           // UI 업데이트를 위해 requestAnimationFrame을 사용하여 호출
+           requestAnimationFrame(() => {
+               backtrack(i + 1, selectedEntities, () => {
+                   selectedEntities.pop();
+                   for (let num of tempUsedNumbers) usedNumbers.delete(num);
+                   processNext(i + 1);
+               });
+           });
+       } else {
+           // 유효하지 않은 경우 다음 인덱스를 처리
+           requestAnimationFrame(() => {
+               processNext(i + 1);
+           });
+       }
+   }
+
+   processNext(startIndex);
 }
+
+// 호출 예시
+backtrack([], allOptions, () => {
+   console.log('백트래킹 작업 완료');
+});
 
 /* observer 세팅 로직 ------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', function() {
