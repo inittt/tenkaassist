@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>TenkaAssist - 추천덱</title>
+   <script src="../js/common.js"></script>
+   <link rel="stylesheet" href="../css/common.css" type = "text/css">
+   <link rel="stylesheet" href="./make.css" type = "text/css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+   <script src="../js/characterJson.js"></script>
+   <script src="./make.js"></script>
+</head>
+<body onload="init()">
+   <script src="../js/header.js"></script>
+   <div class="main-container bg-dark">
+      <div class="block">
+         <div class="margin-left titleblock">
+            <span id="titleBoxText" class="titlebox">추천덱 - 1덱</span>
+            <div style="margin-left:auto;">
+               <div class="dropdown">
+                  <button id="dropdownBtn">조합1개<span class="absolute-right">▼</span></button>
+                  <div id="dropdown-content" class="dropdown-content">
+                     <input type="radio" id="option1" name="options" value="1개" checked>
+                     <label class="sortLabel" for="option1">1개</label>
+                     <input type="radio" id="option2" name="options" value="2개">
+                     <label class="sortLabel" for="option2">2개</label>
+                     <input type="radio" id="option3" name="options" value="3개">
+                     <label class="sortLabel" for="option3">3개</label>
+                     <input type="radio" id="option4" name="options" value="4개">
+                     <label class="sortLabel" for="option4">4개</label>
+                  </div>
+               </div>
+               <div class="dropdown">
+                  <button id="dropdownBtn2">허수+<span class="absolute-right">▼</span></button>
+                  <div id="dropdown-content2" class="dropdown-content">
+                     <input type="radio" id="option2-1" name="options2" value="허수+" checked>
+                     <label class="sortLabel" for="option2-1">허수+</label>
+                     <input type="radio" id="option2-2" name="options2" value="13턴딜">
+                     <label class="sortLabel" for="option2-2">13턴딜</label>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div id="compcontainer">
+         <div class="block">서버로부터 데이터 로드 중...</div>
+      </div>
+      <div class="target" id="observer"></div>
+   </div>
+</body>
+</html>
