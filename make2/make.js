@@ -279,6 +279,7 @@ function backtrack(startIndex, selectedEntities) {
 
     if (selectedEntities.length === deckCnt) {
         allCombinations.push([...selectedEntities]);
+        console.log("진행중...");
         return;
     }
 
