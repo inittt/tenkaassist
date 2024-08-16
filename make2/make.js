@@ -97,7 +97,11 @@ function makeBlock() {
    if (mod == 0) makeBlockAllDeck();
    else {
       deckCnt = mod+1;
-      backtrack0(0, []);
+      cc.innerHTML = `계산중...0.00%`;
+
+      requestAnimationFrame(() => {
+         backtrack0(0, []);
+      });
       makeBlockNDeck();
    }
 }
@@ -313,7 +317,9 @@ function backtrack(startIndex, selectedEntities) {
 }
 
 function updateProgress(currentIndex) {
-   cc.innerHTML = `${currentIndex} / ${possibleDeck.length}`;
+   const per = ((currentIndex+1)/possibleDeck.length*100).toFixed(2);
+   cc.innerHTML = `계산중...${per}`;
+   console.log(per);
 }
 
 /* observer 세팅 로직 ------------------------------------------------------- */
