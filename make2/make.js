@@ -98,10 +98,10 @@ function makeBlock() {
    else {
       deckCnt = mod+1;
       cc.innerHTML = `계산중...`;
-      requestAnimationFrame(() => 
-         backtrack(0, [])
-      );
-      makeBlockNDeck();
+      setTimeout(() => {
+         backtrack(0, []);
+         makeBlockNDeck();
+      }, 100);
    }
 }
 
@@ -269,26 +269,44 @@ function loadBlockNDeck(pg) {
 
 let usedNumbers = new Set();
 function backtrack(startIndex, selectedEntities) {
-    if (selectedEntities.length === deckCnt) {allCombinations.push([...selectedEntities]); return;}
+   if (selectedEntities.length === deckCnt) {allCombinations.push([...selectedEntities]); return;}
 
-    for (let i = startIndex; i < possibleDeck.length; i++) {
-        let entity = possibleDeck[i];
-        let canUseEntity = true;
-        let tempUsedNumbers = new Set();
+   for (let i = startIndex; i < possibleDeck.length; i++) {
+      let entity = possibleDeck[i];
+      let canUseEntity = true;
+      let tempUsedNumbers = new Set();
 
-        for (let num of entity.compstr) {
-            if (isAny(num)) continue;
-            if (usedNumbers.has(num)) {canUseEntity = false; break;}
-            tempUsedNumbers.add(num);
-        }
-        if (canUseEntity) {
+      for (let num of entity.compstr) {
+         if (isAny(num)) continue;
+         if (usedNumbers.has(num)) {canUseEntity = false; break;}
+         tempUsedNumbers.add(num);
+      }
+      
+      if (selectedEntities.length == 0) {
+         updateProgress();
+         setTimeout(() => {
+            if (canUseEntity) {
+               for (let num of tempUsedNumbers) usedNumbers.add(num);
+               selectedEntities.push(entity);
+               backtrack(i+1, selectedEntities);
+               selectedEntities.pop();
+               for (let num of tempUsedNumbers) usedNumbers.delete(num);
+            }
+         }, 100);
+      } else {
+         if (canUseEntity) {
             for (let num of tempUsedNumbers) usedNumbers.add(num);
             selectedEntities.push(entity);
             backtrack(i+1, selectedEntities);
             selectedEntities.pop();
             for (let num of tempUsedNumbers) usedNumbers.delete(num);
-        }
-    }
+         }
+      }
+   }
+}
+
+function updateProgress() {
+   
 }
 
 
