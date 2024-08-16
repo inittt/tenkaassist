@@ -2,7 +2,7 @@ const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const possibleDeck = [];
 let allCombinations = [];
-let isDataLoaded = false, sort = 0, mod = 0, curProgress = 0;
+let isDataLoaded = false, sort = 0, mod = 0;
 const curHeader = 5;
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -96,9 +96,7 @@ function makeBlock() {
    if (mod == 0) makeBlockAllDeck();
    else {
       deckCnt = mod+1;
-      curProgress = 0;
       backtrack(0, []);
-      document.getElementById('compcontainer').innerHTML = "";
       makeBlockNDeck();
    }
 }
@@ -270,16 +268,22 @@ function loadBlockNDeck(pg) {
 /* 백트래킹 함수 -----------------------------------------------------------*/
 
 let usedNumbers = new Set();
-function backtrack(startIndex, selectedEntities) {
+let progressElement;
+
+function initProgressBar() {
+   progressElement = document.createElement('div');
+   progressElement.classList.add('progress-bar');
+   progressElement.style.width = '0%';
+   progressElement.innerText = '0%';
+   document.getElementById('compcontainer').appendChild(progressElement);
+}
+
+async function backtrackWithProgress(startIndex, selectedEntities, totalCombinations, updateInterval = 100) {
+   // 백트래킹 로직을 비동기적으로 처리
    if (selectedEntities.length === deckCnt) {
-      curProgress++;
       allCombinations.push([...selectedEntities]);
-      updateProgress();
-      return;
-   }
-   if (startIndex >= possibleDeck.length) {
-      curProgress++;
-      updateProgress();
+      updateProgress(totalCombinations);
+      await sleep(0); // UI 업데이트를 위해 잠시 대기
       return;
    }
 
@@ -290,34 +294,74 @@ function backtrack(startIndex, selectedEntities) {
 
       for (let num of entity.compstr) {
          if (isAny(num)) continue;
-         if (usedNumbers.has(num)) {canUseEntity = false; break;}
+         if (usedNumbers.has(num)) {
+            canUseEntity = false;
+            break;
+         }
          tempUsedNumbers.add(num);
       }
+
       if (canUseEntity) {
          for (let num of tempUsedNumbers) usedNumbers.add(num);
          selectedEntities.push(entity);
-         backtrack(i+1, selectedEntities);
+
+         // 진행 상황 업데이트
+         if (allCombinations.length % updateInterval === 0) {
+            updateProgress(totalCombinations);
+            await sleep(0); // UI 업데이트를 위해 잠시 대기
+         }
+
+         await backtrackWithProgress(i + 1, selectedEntities, totalCombinations, updateInterval);
+
          selectedEntities.pop();
          for (let num of tempUsedNumbers) usedNumbers.delete(num);
       }
    }
 }
 
-function updateProgress() {
-   const percent = curProgress/combination(possibleDeck.length, deckCnt)*100;
-   document.getElementById('compcontainer').innerHTML = `계산중...${percent}%`;
-}
-function factorial(num) {
-   if (num === 0 || num === 1) return 1;
-   let result = 1;
-   for (let i = 2; i <= num; i++) result *= i;
-   return result;
+function updateProgress(totalCombinations) {
+   const progress = Math.min((allCombinations.length / totalCombinations) * 100, 100);
+   progressElement.style.width = `${progress}%`;
+   progressElement.innerText = `${progress.toFixed(1)}%`;
 }
 
-function combination(n, r) {
-   return factorial(n) / (factorial(r) * factorial(n - r));
-} 
+function sleep(ms) {
+   return new Promise(resolve => setTimeout(resolve, ms));
+}
 
+function makeBlockNDeck() {
+   const compcontainer = document.getElementById('compcontainer');
+   compcontainer.innerHTML = "";
+
+   if (allCombinations.length == 0) {
+      compcontainer.innerHTML = `<div class="block">검색결과 없음</div>`;
+      return;
+   }
+
+   // 비동기 백트래킹 시작
+   initProgressBar();
+   const totalCombinations = calculateTotalCombinations();
+   backtrackWithProgress(0, [], totalCombinations).then(() => {
+      loadBlockNDeck(page++);
+   });
+}
+
+function calculateTotalCombinations() {
+   let total = 0;
+   function calculateRecursively(startIndex, selectedEntities) {
+      if (selectedEntities.length === deckCnt) {
+         total++;
+         return;
+      }
+      for (let i = startIndex; i < possibleDeck.length; i++) {
+         selectedEntities.push(possibleDeck[i]);
+         calculateRecursively(i + 1, selectedEntities);
+         selectedEntities.pop();
+      }
+   }
+   calculateRecursively(0, []);
+   return total;
+}
 
 /* observer 세팅 로직 ------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', function() {
