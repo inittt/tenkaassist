@@ -306,6 +306,8 @@ function backtrack(startIndex, selectedEntities, usedNumbers) {
 
 function updateProgress() {
    const per = Math.round((++curCalc)/possibleDeck.length*10000)/100;
+   
+   console.log(`${curCalc}/${possibleDeck.length} = ${per}`);
    cc.innerHTML = `계산중...${per}%`;
 
    if (curCalc == possibleDeck.length) {
