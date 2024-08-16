@@ -290,7 +290,7 @@ function backtrack0(startIndex, selectedEntities) {
          if (progress == possibleDeck.length) makeBlockNDeck();
       }, 0);
    }
-   for(let i = half; i < possibleDeck.length; i++) {
+   for(let i = possibleDeck.length-1; i >= half; i--) {
       setTimeout(() => {
          let usedNumbers = new Set();
          let entity = possibleDeck[i];
