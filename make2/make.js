@@ -266,7 +266,31 @@ function loadBlockNDeck(pg) {
 /* 백트래킹 함수 -----------------------------------------------------------*/
 let progress = 0;
 function backtrack0(startIndex, selectedEntities) {
-   for(let i = startIndex; i < possibleDeck.length; i++) {
+   let half = Math.round(possibleDeck.length/2);
+   for(let i = startIndex; i < half; i++) {
+      setTimeout(() => {
+         let usedNumbers = new Set();
+         let entity = possibleDeck[i];
+         let canUseEntity = true;
+         let tempUsedNumbers = new Set();
+
+         for (let num of entity.compstr) {
+            if (isAny(num)) continue;
+            if (usedNumbers.has(num)) {canUseEntity = false; break;}
+            tempUsedNumbers.add(num);
+         }
+         if (canUseEntity) {
+            for (let num of tempUsedNumbers) usedNumbers.add(num);
+            selectedEntities.push(entity);
+            backtrack(i+1, selectedEntities, usedNumbers);
+            selectedEntities.pop();
+            for (let num of tempUsedNumbers) usedNumbers.delete(num);
+         }
+         updateProgress();
+         if (progress == possibleDeck.length) makeBlockNDeck();
+      }, 0);
+   }
+   for(let i = half; i < possibleDeck.length; i++) {
       setTimeout(() => {
          let usedNumbers = new Set();
          let entity = possibleDeck[i];
