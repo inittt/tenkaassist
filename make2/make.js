@@ -101,7 +101,7 @@ function makeBlock() {
       cc.innerHTML = `계산중...0.00%`;
       setTimeout(() => {
          backtrack(0, [], new Set());
-      }, 100);
+      }, 300);
    }
 }
 
@@ -268,7 +268,10 @@ function loadBlockNDeck(pg) {
 /* 백트래킹 함수 -----------------------------------------------------------*/
 
 function backtrack(startIndex, selectedEntities, usedNumbers) {
-   if (selectedEntities.length === deckCnt) {allCombinations.push([...selectedEntities]); return;}
+   if (selectedEntities.length === deckCnt) {
+      console.log("하나 발견!");
+      allCombinations.push([...selectedEntities]); return;
+   }
 
    for (let i = startIndex; i < possibleDeck.length; i++) {
       let entity = possibleDeck[i];
@@ -291,7 +294,7 @@ function backtrack(startIndex, selectedEntities, usedNumbers) {
                selectedEntities.pop();
                for (let num of tempUsedNumbers) usedNumbers.delete(num);
             }
-         }, 200);
+         }, 300);
       } else {
          if (canUseEntity) {
             for (let num of tempUsedNumbers) usedNumbers.add(num);
