@@ -88,6 +88,8 @@ function setPossible(data) {
       }
    }
 }
+
+let isCalculating = false;
 function makeBlock() {
    page = 0;
    bundleCnt = 0;
@@ -98,8 +100,21 @@ function makeBlock() {
    else {
       deckCnt = mod+1;
       progress = 0;
-      backtrack(0, []);
-      makeBlockNDeck();
+      isCalculating = true;
+
+      setTimeout(() => {
+         backtrack(0, []);
+         isCalculating = false;
+      }, 0);
+
+      const intervalId = setInterval(() => {
+         if (!isCalculating) {
+            makeBlockNDeck();
+            clearInterval(intervalId);
+            return;
+         }
+         setProgressBar();
+      }, 1000);
    }
 }
 
@@ -267,7 +282,7 @@ function loadBlockNDeck(pg) {
 
 let usedNumbers = new Set();
 function backtrack(startIndex, selectedEntities) {
-   if (selectedEntities.length == 1) setTimeout(setProgressBar,0);
+   if (selectedEntities.length == 1) progress++;
    if (selectedEntities.length === deckCnt) {allCombinations.push([...selectedEntities]); return;}
 
    for (let i = startIndex; i < possibleDeck.length; i++) {
@@ -286,7 +301,7 @@ function backtrack(startIndex, selectedEntities) {
          backtrack(i+1, selectedEntities);
          selectedEntities.pop();
          for (let num of tempUsedNumbers) usedNumbers.delete(num);
-      }
+      } else if (selectedEntities.length == 0) progress++;
    }
 }
 
