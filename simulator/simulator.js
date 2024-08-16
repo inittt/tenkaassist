@@ -151,7 +151,10 @@ function endAct() {
    if (isAllActed()) {
       for(let i = 0; i < 5; i++) comp[i].turnover();
       nextTurn();
-      if (boss.hp <= 0 && GLOBAL_TURN >= 14) return endGame();
+      if (boss.hp <= 0 && GLOBAL_TURN >= 14) {
+         GLOBAL_TURN--;
+         return endGame();
+      }
       for(let i = 0; i < 5; i++) comp[i].turnstart();
    }
 }
