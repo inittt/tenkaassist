@@ -282,10 +282,10 @@ function loadBlockNDeck(pg) {
 
 let usedNumbers = new Set();
 function backtrack(startIndex, selectedEntities) {
-   if (selectedEntities.length == 1) progress++;
    if (selectedEntities.length === deckCnt) {allCombinations.push([...selectedEntities]); return;}
 
    for (let i = startIndex; i < possibleDeck.length; i++) {
+      if (selectedEntities.length == 0) progress++;
       let entity = possibleDeck[i];
       let canUseEntity = true;
       let tempUsedNumbers = new Set();
