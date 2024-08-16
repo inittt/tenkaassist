@@ -2,7 +2,7 @@ const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const possibleDeck = [];
 let allCombinations = [];
-let isDataLoaded = false, sort = 0, mod = 0, cc;
+let isDataLoaded = false, sort = 0, mod = 0, cc, curCalc = 0;
 const curHeader = 5;
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -97,6 +97,7 @@ function makeBlock() {
    if (mod == 0) makeBlockAllDeck();
    else {
       deckCnt = mod+1;
+      curCalc = 0;
       cc.innerHTML = `계산중...`;
       setTimeout(() => {
          backtrack(0, []);
@@ -306,7 +307,8 @@ function backtrack(startIndex, selectedEntities) {
 }
 
 function updateProgress() {
-   
+   const per = Math.round((++curCalc)/possibleDeck.length*10000)/100;
+   cc.innerHTML = `${per}%`;
 }
 
 
