@@ -30,9 +30,9 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownContent.style.display = "none";
 
          const titleBoxText = document.getElementById('titleBoxText');
-         if ("2개" === this.value) {mod = 1; initProgressBar(); titleBoxText.innerHTML = '추천덱 - 2덱';}
-         else if ("3개" === this.value) {mod = 2; initProgressBar(); titleBoxText.innerHTML = '추천덱 - 3덱';}
-         else if ("4개" === this.value) {mod = 3; initProgressBar(); titleBoxText.innerHTML = '추천덱 - 4덱';}
+         if ("2개" === this.value) {mod = 1; titleBoxText.innerHTML = '추천덱 - 2덱';}
+         else if ("3개" === this.value) {mod = 2; titleBoxText.innerHTML = '추천덱 - 3덱';}
+         else if ("4개" === this.value) {mod = 3; titleBoxText.innerHTML = '추천덱 - 4덱';}
          else {mod = 0; titleBoxText.innerHTML = '추천덱 - 1덱';}
          makeBlock();
       });
@@ -99,6 +99,8 @@ function makeBlock() {
    if (mod == 0) makeBlockAllDeck();
    else {
       deckCnt = mod + 1;
+      initProgressBar();
+      sleep(25);
       backtrackWithProgress(0, [], calculateTotalCombinations()).then(() => makeBlockNDeck());
    }
 }
@@ -279,7 +281,7 @@ function loadBlockNDeck(pg) {
 let usedNumbers = new Set();
 
 function initProgressBar() {
-   document.getElementById('compcontainer').innerHTML = `<div class="progress-bar">0%</div>`;
+   document.getElementById('compcontainer').innerHTML = `<div class="progress-bar" width="0%">0%</div>`;
 }
 
 async function backtrackWithProgress(startIndex, selectedEntities, totalCombinations, updateInterval = 100) {
