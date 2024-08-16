@@ -2,7 +2,7 @@ const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const possibleDeck = [];
 let allCombinations = [];
-let isDataLoaded = false, sort = 0, mod = 0, cc, progress = 0;
+let isDataLoaded = false, sort = 0, mod = 0, cc;
 const curHeader = 5;
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -88,8 +88,6 @@ function setPossible(data) {
       }
    }
 }
-
-let isCalculating = false;
 function makeBlock() {
    page = 0;
    bundleCnt = 0;
@@ -99,22 +97,8 @@ function makeBlock() {
    if (mod == 0) makeBlockAllDeck();
    else {
       deckCnt = mod+1;
-      progress = 0;
-      isCalculating = true;
-
-      setTimeout(() => {
-         backtrack(0, []);
-         isCalculating = false;
-      }, 0);
-
-      const intervalId = setInterval(() => {
-         if (!isCalculating) {
-            makeBlockNDeck();
-            clearInterval(intervalId);
-            return;
-         }
-         setProgressBar();
-      }, 1000);
+      backtrack0(0, []);
+      makeBlockNDeck();
    }
 }
 
@@ -281,36 +265,56 @@ function loadBlockNDeck(pg) {
 /* 백트래킹 함수 -----------------------------------------------------------*/
 
 let usedNumbers = new Set();
-function backtrack(startIndex, selectedEntities) {
+function backtrack0(startIndex, selectedEntities) {
    if (selectedEntities.length === deckCnt) {allCombinations.push([...selectedEntities]); return;}
 
    for (let i = startIndex; i < possibleDeck.length; i++) {
-      if (selectedEntities.length == 0) progress++;
-      let entity = possibleDeck[i];
-      let canUseEntity = true;
-      let tempUsedNumbers = new Set();
+       let entity = possibleDeck[i];
+       let canUseEntity = true;
+       let tempUsedNumbers = new Set();
 
-      for (let num of entity.compstr) {
-         if (isAny(num)) continue;
-         if (usedNumbers.has(num)) {canUseEntity = false; break;}
-         tempUsedNumbers.add(num);
-      }
-      if (canUseEntity) {
-         for (let num of tempUsedNumbers) usedNumbers.add(num);
-         selectedEntities.push(entity);
-         backtrack(i+1, selectedEntities);
-         selectedEntities.pop();
-         for (let num of tempUsedNumbers) usedNumbers.delete(num);
-      } else if (selectedEntities.length == 0) progress++;
+       for (let num of entity.compstr) {
+           if (isAny(num)) continue;
+           if (usedNumbers.has(num)) {canUseEntity = false; break;}
+           tempUsedNumbers.add(num);
+       }
+       if (canUseEntity) {
+           for (let num of tempUsedNumbers) usedNumbers.add(num);
+           selectedEntities.push(entity);
+           backtrack(i+1, selectedEntities);
+           selectedEntities.pop();
+           for (let num of tempUsedNumbers) usedNumbers.delete(num);
+       }
    }
+   updateProgress(startIndex);
 }
 
-function setProgressBar() {
-   const per = Math.round((++progress)/possibleDeck.length*10000)/100;
-   console.log(`${progress}/${possibleDeck.length} = ${per.toFixed(2)}`);
-   cc.innerHTML = `계산중...${per.toFixed(2)}%`;
+function backtrack(startIndex, selectedEntities) {
+    if (selectedEntities.length === deckCnt) {allCombinations.push([...selectedEntities]); return;}
+
+    for (let i = startIndex; i < possibleDeck.length; i++) {
+        let entity = possibleDeck[i];
+        let canUseEntity = true;
+        let tempUsedNumbers = new Set();
+
+        for (let num of entity.compstr) {
+            if (isAny(num)) continue;
+            if (usedNumbers.has(num)) {canUseEntity = false; break;}
+            tempUsedNumbers.add(num);
+        }
+        if (canUseEntity) {
+            for (let num of tempUsedNumbers) usedNumbers.add(num);
+            selectedEntities.push(entity);
+            backtrack(i+1, selectedEntities);
+            selectedEntities.pop();
+            for (let num of tempUsedNumbers) usedNumbers.delete(num);
+        }
+    }
 }
 
+function updateProgress(currentIndex) {
+   cc.innerHTML = `${currentIndex} / ${possibleDeck.length}`;
+}
 
 /* observer 세팅 로직 ------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', function() {
