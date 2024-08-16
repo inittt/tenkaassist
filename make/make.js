@@ -2,7 +2,7 @@ const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const possibleDeck = [];
 let allCombinations = [];
-let isDataLoaded = false, sort = 0, mod = 0;
+let isDataLoaded = false, sort = 0, mod = 0, cc;
 const curHeader = 5;
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
    var dropdownBtn2 = document.getElementById("dropdownBtn2");
    var dropdownContent = document.getElementById("dropdown-content");
    var dropdownContent2 = document.getElementById("dropdown-content2");
+   cc = document.getElementById('compcontainer');
 
    dropdownBtn.addEventListener("click", function() {
       dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
@@ -64,14 +65,14 @@ function getAllCompsFromServer() {
       return response.json();
    }).then(res => {
       if (!res.success) {
-         document.getElementById('compcontainer').innerHTML = `<div class="block">${res.msg}</div>`
+         cc.innerHTML = `<div class="block">${res.msg}</div>`
          return;
       }
       setPossible(res.data);
       makeBlock();
    }).catch(e => {
       console.log("데이터 로드 실패", e);
-      document.getElementById('compcontainer').innerHTML = `<div class="block">데이터 로드 실패</div>`;
+      cc.innerHTML = `<div class="block">데이터 로드 실패</div>`;
    })
 }
 function setPossible(data) {
@@ -116,12 +117,11 @@ function init() {
 let deckCnt, bundleCnt = 0, page = 0, isEndOfDeck = false;
 
 function makeBlockAllDeck() {
-   const compcontainer = document.getElementById('compcontainer');
-   compcontainer.innerHTML = "";
+   cc.innerHTML = "";
 
    allCombinations = [...possibleDeck];
    if (allCombinations.length == 0) {
-      compcontainer.innerHTML = `<div class="block">검색결과 없음</div>`;
+      cc.innerHTML = `<div class="block">검색결과 없음</div>`;
       return;
    }
 
@@ -132,7 +132,6 @@ function makeBlockAllDeck() {
 }
 
 function loadBlockAllDeck(pg) {
-   const compcontainer = document.getElementById('compcontainer');
    for(let i = pg*10; i < pg*10+10; i++) {
       const comp = allCombinations[i];
       if (comp == undefined || comp == null) {
@@ -142,7 +141,7 @@ function loadBlockAllDeck(pg) {
          compblock.classList.add("block", "hoverblock");
          compblock.style.width = "100%";
          compblock.innerHTML = "더이상 조합이 없습니다";
-         compcontainer.appendChild(compblock);
+         cc.appendChild(compblock);
          return;
       }
 
@@ -180,15 +179,14 @@ function loadBlockAllDeck(pg) {
       compblock.addEventListener("click", function() {
          window.open(`${address}/comp/?id=${id}`, '_blank');
       });
-      compcontainer.appendChild(compblock);
+      cc.appendChild(compblock);
    }
 }
 function makeBlockNDeck() {
-   const compcontainer = document.getElementById('compcontainer');
-   compcontainer.innerHTML = "";
+   cc.innerHTML = "";
    
    if (allCombinations.length == 0) {
-      compcontainer.innerHTML = `<div class="block">검색결과 없음</div>`;
+      cc.innerHTML = `<div class="block">검색결과 없음</div>`;
       return;
    }
    if (sort == 1) allCombinations.sort((a, b) => {
@@ -205,7 +203,6 @@ function makeBlockNDeck() {
 }
 
 function loadBlockNDeck(pg) {
-   const compcontainer = document.getElementById('compcontainer');
    for(let i = pg*6; i < pg*6+6; i++) {
       const bundle = allCombinations[i];
       if (bundle == undefined || bundle == null) {
@@ -214,7 +211,7 @@ function loadBlockNDeck(pg) {
          let deckBundle = document.createElement('div');
          deckBundle.classList.add('deckBundle');
          deckBundle.innerHTML = "더이상 조합이 없습니다";
-         compcontainer.appendChild(deckBundle);
+         cc.appendChild(deckBundle);
          return;
       }
 
@@ -260,7 +257,7 @@ function loadBlockNDeck(pg) {
          compblock.addEventListener("click", function() {window.open(`${address}/comp/?id=${id}`, '_blank');});
          deckBundle.appendChild(compblock);
       }
-      compcontainer.appendChild(deckBundle);
+      cc.appendChild(deckBundle);
    }
 }
 
