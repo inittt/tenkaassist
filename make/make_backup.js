@@ -97,9 +97,8 @@ function makeBlock() {
    if (mod == 0) makeBlockAllDeck();
    else {
       deckCnt = mod+1;
-      progress = 0;
-      cc.innerHTML = `계산중...0.00%`;
-      backtrack0(0, []);
+      backtrack(0, []);
+      makeBlockNDeck();
    }
 }
 
@@ -264,89 +263,31 @@ function loadBlockNDeck(pg) {
 
 
 /* 백트래킹 함수 -----------------------------------------------------------*/
-let progress = 0;
-function backtrack0(startIndex, selectedEntities) {
-   let half = Math.round(possibleDeck.length/2);
-   for(let i = startIndex; i < half; i++) {
-      setTimeout(() => {
-         let usedNumbers = new Set();
-         let entity = possibleDeck[i];
-         let canUseEntity = true;
-         let tempUsedNumbers = new Set();
 
-         for (let num of entity.compstr) {
+let usedNumbers = new Set();
+function backtrack(startIndex, selectedEntities) {
+    if (selectedEntities.length === deckCnt) {allCombinations.push([...selectedEntities]); return;}
+
+    for (let i = startIndex; i < possibleDeck.length; i++) {
+        let entity = possibleDeck[i];
+        let canUseEntity = true;
+        let tempUsedNumbers = new Set();
+
+        for (let num of entity.compstr) {
             if (isAny(num)) continue;
             if (usedNumbers.has(num)) {canUseEntity = false; break;}
             tempUsedNumbers.add(num);
-         }
-         if (canUseEntity) {
+        }
+        if (canUseEntity) {
             for (let num of tempUsedNumbers) usedNumbers.add(num);
             selectedEntities.push(entity);
-            backtrack(i+1, selectedEntities, usedNumbers);
+            backtrack(i+1, selectedEntities);
             selectedEntities.pop();
             for (let num of tempUsedNumbers) usedNumbers.delete(num);
-         }
-         updateProgress();
-         if (progress == possibleDeck.length) makeBlockNDeck();
-      }, 0);
-   }
-   for(let i = possibleDeck.length-1; i >= half; i--) {
-      setTimeout(() => {
-         let usedNumbers = new Set();
-         let entity = possibleDeck[i];
-         let canUseEntity = true;
-         let tempUsedNumbers = new Set();
-
-         for (let num of entity.compstr) {
-            if (isAny(num)) continue;
-            if (usedNumbers.has(num)) {canUseEntity = false; break;}
-            tempUsedNumbers.add(num);
-         }
-         if (canUseEntity) {
-            for (let num of tempUsedNumbers) usedNumbers.add(num);
-            selectedEntities.push(entity);
-            backtrack(i+1, selectedEntities, usedNumbers);
-            selectedEntities.pop();
-            for (let num of tempUsedNumbers) usedNumbers.delete(num);
-         }
-         updateProgress();
-         if (progress == possibleDeck.length) makeBlockNDeck();
-      }, 0);
-   };
+        }
+    }
 }
 
-function copy(a) {
-   return JSON.parse(JSON.stringify(a));
-}
-
-function backtrack(startIndex, selectedEntities, usedNumbers) {
-   if (selectedEntities.length === deckCnt) {allCombinations.push([...selectedEntities]); return;}
-
-   for (let i = startIndex; i < possibleDeck.length; i++) {
-      let entity = possibleDeck[i];
-      let canUseEntity = true;
-      let tempUsedNumbers = new Set();
-
-      for (let num of entity.compstr) {
-         if (isAny(num)) continue;
-         if (usedNumbers.has(num)) {canUseEntity = false; break;}
-         tempUsedNumbers.add(num);
-      }
-      if (canUseEntity) {
-         for (let num of tempUsedNumbers) usedNumbers.add(num);
-         selectedEntities.push(entity);
-         backtrack(i+1, selectedEntities, usedNumbers);
-         selectedEntities.pop();
-         for (let num of tempUsedNumbers) usedNumbers.delete(num);
-      }
-   }
-}
-
-function updateProgress() {
-   const per = ((++progress)/possibleDeck.length*100).toFixed(2);
-   cc.innerHTML = `&nbsp;&nbsp;계산중...${per}%`;
-   console.log(per);
-}
 
 /* observer 세팅 로직 ------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', function() {
