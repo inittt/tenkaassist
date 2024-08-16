@@ -98,7 +98,7 @@ function makeBlock() {
    else {
       deckCnt = mod+1;
       curCalc = 0;
-      cc.innerHTML = `계산중...`;
+      cc.innerHTML = `계산중...0.00%`;
       setTimeout(() => {
          backtrack(0, [], new Set());
       }, 100);
@@ -291,7 +291,7 @@ function backtrack(startIndex, selectedEntities, usedNumbers) {
                selectedEntities.pop();
                for (let num of tempUsedNumbers) usedNumbers.delete(num);
             }
-         }, 100);
+         }, 200);
       } else {
          if (canUseEntity) {
             for (let num of tempUsedNumbers) usedNumbers.add(num);
@@ -307,10 +307,10 @@ function backtrack(startIndex, selectedEntities, usedNumbers) {
 function updateProgress() {
    const per = Math.round((++curCalc)/possibleDeck.length*10000)/100;
    
-   console.log(`${curCalc}/${possibleDeck.length} = ${per}`);
-   cc.innerHTML = `계산중...${per}%`;
+   console.log(`${curCalc}/${possibleDeck.length} = ${per.toFixed(2)}`);
+   cc.innerHTML = `계산중...${per.toFixed(2)}%`;
 
-   if (curCalc == possibleDeck.length) {
+   if (per == 100.00) {
       cc.innerHTML = "";
       makeBlockNDeck();
    }
