@@ -4,6 +4,7 @@ const possibleDeck = [];
 let allCombinations = [];
 let isDataLoaded = false, sort = 0, mod = 0;
 const curHeader = 5;
+let progressElement;
 
 document.addEventListener("DOMContentLoaded", function() {
    var dropdownBtn = document.getElementById("dropdownBtn");
@@ -24,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn.innerText = `조합${this.value}`;
          const spanElement = document.createElement('span');
          spanElement.classList.add('absolute-right');
-         spanElement.innerHTML = '▼'
+         spanElement.innerHTML = '▼';
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
@@ -43,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn2.innerText = `${this.value}`;
          const spanElement = document.createElement('span');
          spanElement.classList.add('absolute-right');
-         spanElement.innerHTML = '▼'
+         spanElement.innerHTML = '▼';
          dropdownBtn2.appendChild(spanElement);
          dropdownContent2.style.display = "none";
 
@@ -64,7 +65,7 @@ function getAllCompsFromServer() {
       return response.json();
    }).then(res => {
       if (!res.success) {
-         document.getElementById('compcontainer').innerHTML = `<div class="block">${res.msg}</div>`
+         document.getElementById('compcontainer').innerHTML = `<div class="block">${res.msg}</div>`;
          return;
       }
       setPossible(res.data);
@@ -72,8 +73,9 @@ function getAllCompsFromServer() {
    }).catch(e => {
       console.log("데이터 로드 실패", e);
       document.getElementById('compcontainer').innerHTML = `<div class="block">데이터 로드 실패</div>`;
-   })
+   });
 }
+
 function setPossible(data) {
    const haveList = chIds.slice().split(",").map(Number);
    for(let d of data) {
@@ -87,6 +89,7 @@ function setPossible(data) {
       }
    }
 }
+
 function makeBlock() {
    page = 0;
    bundleCnt = 0;
@@ -95,9 +98,8 @@ function makeBlock() {
 
    if (mod == 0) makeBlockAllDeck();
    else {
-      deckCnt = mod+1;
-      backtrack(0, []);
-      makeBlockNDeck();
+      deckCnt = mod + 1;
+      backtrackWithProgress(0, [], calculateTotalCombinations()).then(() => makeBlockNDeck());
    }
 }
 
@@ -133,7 +135,7 @@ function makeBlockAllDeck() {
 
 function loadBlockAllDeck(pg) {
    const compcontainer = document.getElementById('compcontainer');
-   for(let i = pg*10; i < pg*10+10; i++) {
+   for(let i = pg * 10; i < pg * 10 + 10; i++) {
       const comp = allCombinations[i];
       if (comp == undefined || comp == null) {
          isEndOfDeck = true;
@@ -150,7 +152,7 @@ function loadBlockAllDeck(pg) {
       const id = comp.id, name = comp.name, compstr = comp.compstr;
       const ranking = comp.ranking, recommend = comp.recommend;
       stringArr.push(`<div class="comp-box">`);
-      stringArr.push(`<div class="comp-order">#${++bundleCnt}</div>`)
+      stringArr.push(`<div class="comp-order">#${++bundleCnt}</div>`);
       stringArr.push(`<div class="comp-name">${name}</div><div class="comp-deck">`);
 
       for(const cid of compstr) {
@@ -171,7 +173,8 @@ function loadBlockAllDeck(pg) {
       switch(sort) {
          case 1 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`; break;
          default : last = `<i class="fa-solid fa-skull"></i> ${typeof ranking === 'number' ? ranking.toFixed(0) : ranking}턴`;
-      } stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
+      }
+      stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 
       let compblock = document.createElement('div');
       compblock.classList.add("block", "hoverblock");
@@ -183,6 +186,7 @@ function loadBlockAllDeck(pg) {
       compcontainer.appendChild(compblock);
    }
 }
+
 function makeBlockNDeck() {
    const compcontainer = document.getElementById('compcontainer');
    compcontainer.innerHTML = "";
@@ -197,78 +201,82 @@ function makeBlockNDeck() {
       return sumB - sumA;
    });
    else allCombinations.sort((a, b) => {
-      let sumA = a.reduce((sum, item) => sum + (item.ranking || 0), 0);
-      let sumB = b.reduce((sum, item) => sum + (item.ranking || 0), 0);
+      let sumA = a.reduce((sum, item) => sum + (typeof item.ranking === 'number' ? item.ranking : 100), 0);
+      let sumB = b.reduce((sum, item) => sum + (typeof item.ranking === 'number' ? item.ranking : 100), 0);
       return sumA - sumB;
    });
+
    loadBlockNDeck(page++);
 }
 
 function loadBlockNDeck(pg) {
    const compcontainer = document.getElementById('compcontainer');
-   for(let i = pg*6; i < pg*6+6; i++) {
-      const bundle = allCombinations[i];
-      if (bundle == undefined || bundle == null) {
+   for(let i = pg * 10; i < pg * 10 + 10; i++) {
+      const compArr = allCombinations[i];
+      if (compArr == undefined || compArr == null) {
          isEndOfDeck = true;
-
-         let deckBundle = document.createElement('div');
-         deckBundle.classList.add('deckBundle');
-         deckBundle.innerHTML = "더이상 조합이 없습니다";
-         compcontainer.appendChild(deckBundle);
-         return;
-      }
-
-      let deckBundle = document.createElement('div');
-      deckBundle.classList.add('deckBundle');
-
-      const newP = document.createElement('p');
-      newP.classList.add('newP');
-      newP.textContent = ` # ${++bundleCnt}`;
-      deckBundle.appendChild(newP);
-
-      if (sort == 1) bundle.sort((a, b) => b.recommend - a.recommend);
-      else bundle.sort((a, b) => a.ranking - b.ranking);
-
-      for(const comp of bundle) {
-         const stringArr = [];
-         const id = comp.id, name = comp.name, compstr = comp.compstr;
-         const ranking = comp.ranking, recommend = comp.recommend;
-         stringArr.push(`<div class="comp-box"><div class="comp-deck">`);
-
-         for(const cid of compstr) {
-            const ch = getCharacter(cid);
-            stringArr.push(`
-               <div class="character" style="margin:0.2rem;">
-                  <div style="margin:0.2rem;">
-                     <img src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-                     ${isAny(ch.id) ? "" : `<img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">`}
-                     ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
-                     <div class="element${ch.element} ch_border z-4"></div>
-                  </div>
-                  <div class="text-mini">${ch.name}</div>
-               </div>
-            `);       
-         }
-         let last;
-         if (sort == 1) last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`;
-         else last = `<i class="fa-solid fa-skull"></i> ${typeof ranking === 'number' ? ranking.toFixed(0) : ranking}턴`;
-         stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 
          let compblock = document.createElement('div');
          compblock.classList.add("block", "hoverblock");
-         compblock.innerHTML = stringArr.join("");
-         compblock.addEventListener("click", function() {window.open(`${address}/comp/?id=${id}`, '_blank');});
-         deckBundle.appendChild(compblock);
+         compblock.style.width = "100%";
+         compblock.innerHTML = "더이상 조합이 없습니다";
+         compcontainer.appendChild(compblock);
+         return;
       }
-      compcontainer.appendChild(deckBundle);
+
+      const stringArr = [];
+      stringArr.push(`<div class="comp-box"><div class="comp-order">#${++bundleCnt}</div>`);
+      stringArr.push(`<div class="comp-name">`);
+
+      const compstr = compArr.map((item) => item.compstr).flat();
+      const uniqueCompstr = [...new Set(compstr)].map(Number);
+      const nameArr = uniqueCompstr.map(cid => getCharacter(cid).name);
+      stringArr.push(`${nameArr.join(", ")}</div>`);
+
+      stringArr.push(`<div class="comp-deck">`);
+      for(const cid of uniqueCompstr) {
+         const ch = getCharacter(cid);
+         stringArr.push(`
+            <div class="character" style="margin:0.2rem;">
+               <div style="margin:0.2rem;">
+                  <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
+                  ${isAny(ch.id) ? "" : `<img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">`}
+                  ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
+                  <div class="element${ch.element} ch_border z-4"></div>
+               </div>
+               <div class="text-mini">${ch.name}</div>
+            </div>
+         `);
+      }
+      stringArr.push(`</div>`);
+
+      let last;
+      switch(sort) {
+         case 1 :
+            let totalRecommend = compArr.reduce((sum, item) => sum + (item.recommend || 0), 0);
+            last = `<i class="fa-solid fa-burst"></i> ${formatNumber(totalRecommend)}`;
+            break;
+         default :
+            let totalRanking = compArr.reduce((sum, item) => sum + (typeof item.ranking === 'number' ? item.ranking : 100), 0);
+            last = `<i class="fa-solid fa-skull"></i> ${totalRanking}턴`;
+      }
+      stringArr.push(`<div class="comp-rank">${last}</div></div>`);
+
+      let compblock = document.createElement('div');
+      compblock.classList.add("block", "hoverblock");
+      compblock.style.width = "100%";
+      compblock.innerHTML = stringArr.join("");
+      compblock.addEventListener("click", function() {
+         const compIds = compArr.map(item => item.id).join(",");
+         window.open(`${address}/comp/?id=${compIds}`, '_blank');
+      });
+      compcontainer.appendChild(compblock);
    }
 }
 
-
-/* 백트래킹 함수 -----------------------------------------------------------*/
+/* 백트래킹 함수 --------------------------------------------------------------------*/
 
 let usedNumbers = new Set();
-let progressElement;
 
 function initProgressBar() {
    progressElement = document.createElement('div');
@@ -279,11 +287,10 @@ function initProgressBar() {
 }
 
 async function backtrackWithProgress(startIndex, selectedEntities, totalCombinations, updateInterval = 100) {
-   // 백트래킹 로직을 비동기적으로 처리
    if (selectedEntities.length === deckCnt) {
       allCombinations.push([...selectedEntities]);
       updateProgress(totalCombinations);
-      await sleep(0); // UI 업데이트를 위해 잠시 대기
+      await sleep(0);
       return;
    }
 
@@ -305,10 +312,9 @@ async function backtrackWithProgress(startIndex, selectedEntities, totalCombinat
          for (let num of tempUsedNumbers) usedNumbers.add(num);
          selectedEntities.push(entity);
 
-         // 진행 상황 업데이트
          if (allCombinations.length % updateInterval === 0) {
             updateProgress(totalCombinations);
-            await sleep(0); // UI 업데이트를 위해 잠시 대기
+            await sleep(0);
          }
 
          await backtrackWithProgress(i + 1, selectedEntities, totalCombinations, updateInterval);
@@ -327,23 +333,6 @@ function updateProgress(totalCombinations) {
 
 function sleep(ms) {
    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function makeBlockNDeck() {
-   const compcontainer = document.getElementById('compcontainer');
-   compcontainer.innerHTML = "";
-
-   if (allCombinations.length == 0) {
-      compcontainer.innerHTML = `<div class="block">검색결과 없음</div>`;
-      return;
-   }
-
-   // 비동기 백트래킹 시작
-   initProgressBar();
-   const totalCombinations = calculateTotalCombinations();
-   backtrackWithProgress(0, [], totalCombinations).then(() => {
-      loadBlockNDeck(page++);
-   });
 }
 
 function calculateTotalCombinations() {
