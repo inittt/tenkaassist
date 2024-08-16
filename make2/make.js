@@ -279,18 +279,14 @@ function loadBlockNDeck(pg) {
 let usedNumbers = new Set();
 
 function initProgressBar() {
-   progressElement = document.createElement('div');
-   progressElement.classList.add('progress-bar');
-   progressElement.style.width = '0%';
-   progressElement.innerText = '0%';
-   document.getElementById('compcontainer').appendChild(progressElement);
+   document.getElementById('compcontainer').innerHTML = `<div class="progress-bar">0%</div>`;
 }
 
 async function backtrackWithProgress(startIndex, selectedEntities, totalCombinations, updateInterval = 100) {
    if (selectedEntities.length === deckCnt) {
       allCombinations.push([...selectedEntities]);
       updateProgress(totalCombinations);
-      await sleep(0);
+      await sleep(25);
       return;
    }
 
@@ -314,7 +310,7 @@ async function backtrackWithProgress(startIndex, selectedEntities, totalCombinat
 
          if (allCombinations.length % updateInterval === 0) {
             updateProgress(totalCombinations);
-            await sleep(0);
+            await sleep(25);
          }
 
          await backtrackWithProgress(i + 1, selectedEntities, totalCombinations, updateInterval);
