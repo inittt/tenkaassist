@@ -99,6 +99,7 @@ function makeBlock() {
       deckCnt = mod+1;
       curCalc = 0;
       cc.innerHTML = `계산중...0.00%`;
+      console.log(possibleDeck[0]);
       setTimeout(() => {
          backtrack(0, [], new Set());
       }, 300);
@@ -290,7 +291,7 @@ function backtrack(startIndex, selectedEntities, usedNumbers) {
             if (canUseEntity) {
                for (let num of tempUsedNumbers) usedNumbers.add(num);
                selectedEntities.push(entity);
-               backtrack(i+1, [...selectedEntities], new Set(usedNumbers));
+               backtrack(i+1, copy(selectedEntities), new Set(usedNumbers));
                selectedEntities.pop();
                for (let num of tempUsedNumbers) usedNumbers.delete(num);
             }
@@ -299,12 +300,16 @@ function backtrack(startIndex, selectedEntities, usedNumbers) {
          if (canUseEntity) {
             for (let num of tempUsedNumbers) usedNumbers.add(num);
             selectedEntities.push(entity);
-            backtrack(i+1, [...selectedEntities], new Set(usedNumbers));
+            backtrack(i+1, copy(selectedEntities), new Set(usedNumbers));
             selectedEntities.pop();
             for (let num of tempUsedNumbers) usedNumbers.delete(num);
          }
       }
    }
+}
+
+function copy(json) {
+   return JSON.parse(JSON.stringify(json));
 }
 
 function updateProgress() {
