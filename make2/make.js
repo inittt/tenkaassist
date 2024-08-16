@@ -287,7 +287,7 @@ function backtrack0(startIndex, selectedEntities) {
          }
          updateProgress();
          if (progress == possibleDeck.length) makeBlockNDeck();
-      }, 25);
+      }, 0);
    };
 }
 
@@ -320,7 +320,7 @@ function backtrack(startIndex, selectedEntities, usedNumbers) {
 
 function updateProgress() {
    const per = ((++progress)/possibleDeck.length*100).toFixed(2);
-   cc.innerHTML = `계산중...${per}`;
+   cc.innerHTML = `&nbsp;&nbsp;계산중...${per}%`;
    console.log(per);
 }
 
