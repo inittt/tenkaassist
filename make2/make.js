@@ -2,7 +2,7 @@ const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const possibleDeck = [];
 let allCombinations = [];
-let isDataLoaded = false, sort = 0, mod = 0, cc, curCalc = 0;
+let isDataLoaded = false, sort = 0, mod = 0, cc, progress = 0;
 const curHeader = 5;
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -97,12 +97,9 @@ function makeBlock() {
    if (mod == 0) makeBlockAllDeck();
    else {
       deckCnt = mod+1;
-      curCalc = 0;
-      cc.innerHTML = `계산중...0.00%`;
-      console.log(possibleDeck[0]);
-      setTimeout(() => {
-         backtrack(0, [], new Set());
-      }, 300);
+      progress = 0;
+      backtrack(0, []);
+      makeBlockNDeck();
    }
 }
 
@@ -268,11 +265,10 @@ function loadBlockNDeck(pg) {
 
 /* 백트래킹 함수 -----------------------------------------------------------*/
 
-function backtrack(startIndex, selectedEntities, usedNumbers) {
-   if (selectedEntities.length === deckCnt) {
-      console.log("하나 발견!");
-      allCombinations.push([...selectedEntities]); return;
-   }
+let usedNumbers = new Set();
+function backtrack(startIndex, selectedEntities) {
+   if (selectedEntities.length == 1) setTimeout(setProgressBar,0);
+   if (selectedEntities.length === deckCnt) {allCombinations.push([...selectedEntities]); return;}
 
    for (let i = startIndex; i < possibleDeck.length; i++) {
       let entity = possibleDeck[i];
@@ -284,44 +280,20 @@ function backtrack(startIndex, selectedEntities, usedNumbers) {
          if (usedNumbers.has(num)) {canUseEntity = false; break;}
          tempUsedNumbers.add(num);
       }
-      
-      if (selectedEntities.length == 0) {
-         updateProgress();
-         setTimeout(() => {
-            if (canUseEntity) {
-               for (let num of tempUsedNumbers) usedNumbers.add(num);
-               selectedEntities.push(entity);
-               backtrack(i+1, copy(selectedEntities), new Set(usedNumbers));
-               selectedEntities.pop();
-               for (let num of tempUsedNumbers) usedNumbers.delete(num);
-            }
-         }, 300);
-      } else {
-         if (canUseEntity) {
-            for (let num of tempUsedNumbers) usedNumbers.add(num);
-            selectedEntities.push(entity);
-            backtrack(i+1, copy(selectedEntities), new Set(usedNumbers));
-            selectedEntities.pop();
-            for (let num of tempUsedNumbers) usedNumbers.delete(num);
-         }
+      if (canUseEntity) {
+         for (let num of tempUsedNumbers) usedNumbers.add(num);
+         selectedEntities.push(entity);
+         backtrack(i+1, selectedEntities);
+         selectedEntities.pop();
+         for (let num of tempUsedNumbers) usedNumbers.delete(num);
       }
    }
 }
 
-function copy(json) {
-   return JSON.parse(JSON.stringify(json));
-}
-
-function updateProgress() {
-   const per = Math.round((++curCalc)/possibleDeck.length*10000)/100;
-   
-   console.log(`${curCalc}/${possibleDeck.length} = ${per.toFixed(2)}`);
+function setProgressBar() {
+   const per = Math.round((++progress)/possibleDeck.length*10000)/100;
+   console.log(`${progress}/${possibleDeck.length} = ${per.toFixed(2)}`);
    cc.innerHTML = `계산중...${per.toFixed(2)}%`;
-
-   if (per == 100.00) {
-      cc.innerHTML = "";
-      makeBlockNDeck();
-   }
 }
 
 
