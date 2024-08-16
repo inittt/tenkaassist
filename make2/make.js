@@ -281,7 +281,7 @@ function backtrack0(startIndex, selectedEntities) {
          if (canUseEntity) {
             for (let num of tempUsedNumbers) usedNumbers.add(num);
             selectedEntities.push(entity);
-            backtrack(i+1, copy(selectedEntities), new Set(usedNumbers));
+            backtrack(i+1, selectedEntities, usedNumbers);
             selectedEntities.pop();
             for (let num of tempUsedNumbers) usedNumbers.delete(num);
          }
@@ -311,7 +311,7 @@ function backtrack(startIndex, selectedEntities, usedNumbers) {
       if (canUseEntity) {
          for (let num of tempUsedNumbers) usedNumbers.add(num);
          selectedEntities.push(entity);
-         backtrack(i+1, copy(selectedEntities), usedNumbers);
+         backtrack(i+1, selectedEntities, usedNumbers);
          selectedEntities.pop();
          for (let num of tempUsedNumbers) usedNumbers.delete(num);
       }
