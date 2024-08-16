@@ -2,7 +2,7 @@ const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const possibleDeck = [];
 let allCombinations = [];
-let isDataLoaded = false, sort = 0, mod = 0;
+let isDataLoaded = false, sort = 0, mod = 0, curProgress = 0;
 const curHeader = 5;
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -12,19 +12,15 @@ document.addEventListener("DOMContentLoaded", function() {
    var dropdownContent2 = document.getElementById("dropdown-content2");
 
    dropdownBtn.addEventListener("click", function() {
-      if (isProcessing) return; // 백트래킹 중일 때 클릭 무시
       dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
    });
-
    dropdownBtn2.addEventListener("click", function() {
-     if (isProcessing) return; // 백트래킹 중일 때 클릭 무시
      dropdownContent2.style.display = dropdownContent2.style.display === "block" ? "none" : "block";
    });
-
+ 
    var options = document.querySelectorAll(".dropdown-content input[type='radio'][name='options']");
    options.forEach(function(option) {
       option.addEventListener("change", function() {
-         if (isProcessing) return; // 백트래킹 중일 때 클릭 무시
          dropdownBtn.innerText = `조합${this.value}`;
          const spanElement = document.createElement('span');
          spanElement.classList.add('absolute-right');
@@ -44,7 +40,6 @@ document.addEventListener("DOMContentLoaded", function() {
    var options2 = document.querySelectorAll(".dropdown-content input[type='radio'][name='options2']");
    options2.forEach(function(option) {
       option.addEventListener("change", function() {
-         if (isProcessing) return; // 백트래킹 중일 때 클릭 무시
          dropdownBtn2.innerText = `${this.value}`;
          const spanElement = document.createElement('span');
          spanElement.classList.add('absolute-right');
@@ -79,7 +74,6 @@ function getAllCompsFromServer() {
       document.getElementById('compcontainer').innerHTML = `<div class="block">데이터 로드 실패</div>`;
    })
 }
-
 function setPossible(data) {
    const haveList = chIds.slice().split(",").map(Number);
    for(let d of data) {
@@ -93,7 +87,6 @@ function setPossible(data) {
       }
    }
 }
-
 function makeBlock() {
    page = 0;
    bundleCnt = 0;
@@ -102,8 +95,11 @@ function makeBlock() {
 
    if (mod == 0) makeBlockAllDeck();
    else {
-      deckCnt = mod + 1;
+      deckCnt = mod+1;
+      curProgress = 0;
       backtrack(0, []);
+      document.getElementById('compcontainer').innerHTML = "";
+      makeBlockNDeck();
    }
 }
 
@@ -111,15 +107,15 @@ function init() {
    // 라디오 버튼 초기화
    var rds = document.querySelectorAll(".dropdown-content input[type='radio'][name='options']");
    var rds2 = document.querySelectorAll(".dropdown-content input[type='radio'][name='options2']");
-   rds.forEach(function(radio) { radio.checked = false; });
-   rds2.forEach(function(radio) { radio.checked = false; });
+   rds.forEach(function(radio) {radio.checked = false;});
+   rds2.forEach(function(radio) {radio.checked = false;});
    document.getElementById('option1').checked = true;
    document.getElementById('option2-1').checked = true;
 }
 
 /* 덱 만들기 함수 --------------------------------------------------------------------*/
 
-let deckCnt, bundleCnt = 0, page = 0, isEndOfDeck = false, isProcessing = false;
+let deckCnt, bundleCnt = 0, page = 0, isEndOfDeck = false;
 
 function makeBlockAllDeck() {
    const compcontainer = document.getElementById('compcontainer');
@@ -189,17 +185,19 @@ function loadBlockAllDeck(pg) {
       compcontainer.appendChild(compblock);
    }
 }
-
 function makeBlockNDeck() {
    const compcontainer = document.getElementById('compcontainer');
    compcontainer.innerHTML = "";
-
+   
    if (allCombinations.length == 0) {
       compcontainer.innerHTML = `<div class="block">검색결과 없음</div>`;
       return;
    }
-
-   if (sort == 1) allCombinations.sort((a, b) => b.reduce((sum, item) => sum + (item.recommend || 0), 0) - a.reduce((sum, item) => sum + (item.recommend || 0), 0));
+   if (sort == 1) allCombinations.sort((a, b) => {
+      let sumA = a.reduce((sum, item) => sum + (item.recommend || 0), 0);
+      let sumB = b.reduce((sum, item) => sum + (item.recommend || 0), 0);
+      return sumB - sumA;
+   });
    else allCombinations.sort((a, b) => {
       let sumA = a.reduce((sum, item) => sum + (item.ranking || 0), 0);
       let sumB = b.reduce((sum, item) => sum + (item.ranking || 0), 0);
@@ -268,70 +266,58 @@ function loadBlockNDeck(pg) {
    }
 }
 
+
 /* 백트래킹 함수 -----------------------------------------------------------*/
 
 let usedNumbers = new Set();
-let isBacktracking = false;
-let progressElement;
-
 function backtrack(startIndex, selectedEntities) {
-    if (isBacktracking || isProcessing) return;  // 이미 백트래킹 중이거나 처리 중일 경우 반환
+   if (selectedEntities.length === deckCnt) {
+      curProgress++;
+      allCombinations.push([...selectedEntities]);
+      updateProgress();
+      return;
+   }
+   if (startIndex >= possibleDeck.length) {
+      curProgress++;
+      updateProgress();
+      return;
+   }
 
-    if (selectedEntities.length === deckCnt) {
-        allCombinations.push([...selectedEntities]);
-        console.log("진행중...");
-        return;
-    }
+   for (let i = startIndex; i < possibleDeck.length; i++) {
+      let entity = possibleDeck[i];
+      let canUseEntity = true;
+      let tempUsedNumbers = new Set();
 
-    isBacktracking = true;
-    updateProgress("진행 중...");
-    isProcessing = true;
-
-    let promises = [];
-    for (let i = startIndex; i < possibleDeck.length; i++) {
-        let entity = possibleDeck[i];
-        let canUseEntity = true;
-        let tempUsedNumbers = new Set();
-
-        for (let num of entity.compstr) {
-            if (isAny(num)) continue;
-            if (usedNumbers.has(num)) { canUseEntity = false; break; }
-            tempUsedNumbers.add(num);
-        }
-
-        if (canUseEntity) {
-            for (let num of tempUsedNumbers) usedNumbers.add(num);
-            selectedEntities.push(entity);
-
-            // 비동기로 백트래킹 호출
-            promises.push(new Promise((resolve) => {
-                setTimeout(() => {
-                    backtrack(i + 1, selectedEntities);
-                    selectedEntities.pop();
-                    for (let num of tempUsedNumbers) usedNumbers.delete(num);
-                    resolve();
-                }, 0);
-            }));
-        }
-    }
-
-    Promise.all(promises).then(() => {
-        isBacktracking = false;
-        isProcessing = false;
-        updateProgress("완료");
-
-        makeBlockNDeck();
-    });
+      for (let num of entity.compstr) {
+         if (isAny(num)) continue;
+         if (usedNumbers.has(num)) {canUseEntity = false; break;}
+         tempUsedNumbers.add(num);
+      }
+      if (canUseEntity) {
+         for (let num of tempUsedNumbers) usedNumbers.add(num);
+         selectedEntities.push(entity);
+         backtrack(i+1, selectedEntities);
+         selectedEntities.pop();
+         for (let num of tempUsedNumbers) usedNumbers.delete(num);
+      }
+   }
 }
 
-function updateProgress(message) {
-    if (!progressElement) {
-        progressElement = document.createElement('div');
-        progressElement.classList.add('progress');
-        document.getElementById('compcontainer').appendChild(progressElement);
-    }
-    progressElement.textContent = message;
+function updateProgress() {
+   const percent = curProgress/combination(possibleDeck.length, deckCnt)*100;
+   document.getElementById('compcontainer').innerHTML = `계산중...${percent}%`;
 }
+function factorial(num) {
+   if (num === 0 || num === 1) return 1;
+   let result = 1;
+   for (let i = 2; i <= num; i++) result *= i;
+   return result;
+}
+
+function combination(n, r) {
+   return factorial(n) / (factorial(r) * factorial(n - r));
+} 
+
 
 /* observer 세팅 로직 ------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', function() {
@@ -339,7 +325,7 @@ document.addEventListener('DOMContentLoaded', function() {
    const observer = new IntersectionObserver(function(entries, observer) {
       entries.forEach(entry => {
          if (entry.isIntersecting) {
-            if (page > 0 && !isEndOfDeck && !isProcessing) {
+            if (page > 0 && !isEndOfDeck) {
                if (mod == 0) loadBlockAllDeck(page++);
                else loadBlockNDeck(page++);
             }
