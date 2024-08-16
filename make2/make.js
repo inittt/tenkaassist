@@ -267,7 +267,6 @@ function loadBlockNDeck(pg) {
 let progress = 0;
 function backtrack0(startIndex, selectedEntities) {
    for(let i = startIndex; i < possibleDeck.length; i++) {
-      updateProgress();
       setTimeout(() => {
          let usedNumbers = new Set();
          let entity = possibleDeck[i];
@@ -286,9 +285,10 @@ function backtrack0(startIndex, selectedEntities) {
             selectedEntities.pop();
             for (let num of tempUsedNumbers) usedNumbers.delete(num);
          }
+         updateProgress();
+         if (progress == possibleDeck.length) makeBlockNDeck();
       }, 25);
    };
-   makeBlockNDeck();
 }
 
 function copy(a) {
