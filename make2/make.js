@@ -101,7 +101,6 @@ function makeBlock() {
       cc.innerHTML = `계산중...`;
       setTimeout(() => {
          backtrack(0, [], new Set());
-         makeBlockNDeck();
       }, 100);
    }
 }
@@ -307,7 +306,12 @@ function backtrack(startIndex, selectedEntities, usedNumbers) {
 
 function updateProgress() {
    const per = Math.round((++curCalc)/possibleDeck.length*10000)/100;
-   cc.innerHTML = `${per}%`;
+   cc.innerHTML = `계산중...${per}%`;
+
+   if (curCalc == possibleDeck.length) {
+      cc.innerHTML = "";
+      makeBlockNDeck();
+   }
 }
 
 
