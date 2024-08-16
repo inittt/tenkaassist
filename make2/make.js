@@ -102,7 +102,6 @@ function makeBlock() {
       requestAnimationFrame(() => {
          backtrack0(0, []);
       });
-      makeBlockNDeck();
    }
 }
 
@@ -272,25 +271,28 @@ let usedNumbers = new Set();
 function backtrack0(startIndex, selectedEntities) {
    if (selectedEntities.length === deckCnt) {allCombinations.push([...selectedEntities]); return;}
 
-   for (let i = startIndex; i < possibleDeck.length; i++) {
-       let entity = possibleDeck[i];
-       let canUseEntity = true;
-       let tempUsedNumbers = new Set();
+   for(let i = startIndex; i < possibleDeck.length; i++) {
+      updateProgress(startIndex);
+      requestAnimationFrame(() => {
+         let entity = possibleDeck[i];
+         let canUseEntity = true;
+         let tempUsedNumbers = new Set();
 
-       for (let num of entity.compstr) {
-           if (isAny(num)) continue;
-           if (usedNumbers.has(num)) {canUseEntity = false; break;}
-           tempUsedNumbers.add(num);
-       }
-       if (canUseEntity) {
-           for (let num of tempUsedNumbers) usedNumbers.add(num);
-           selectedEntities.push(entity);
-           backtrack(i+1, selectedEntities);
-           selectedEntities.pop();
-           for (let num of tempUsedNumbers) usedNumbers.delete(num);
-       }
-   }
-   updateProgress(startIndex);
+         for (let num of entity.compstr) {
+            if (isAny(num)) continue;
+            if (usedNumbers.has(num)) {canUseEntity = false; break;}
+            tempUsedNumbers.add(num);
+         }
+         if (canUseEntity) {
+            for (let num of tempUsedNumbers) usedNumbers.add(num);
+            selectedEntities.push(entity);
+            backtrack(i+1, selectedEntities);
+            selectedEntities.pop();
+            for (let num of tempUsedNumbers) usedNumbers.delete(num);
+         }
+      });
+   };
+   makeBlockNDeck();
 }
 
 function backtrack(startIndex, selectedEntities) {
