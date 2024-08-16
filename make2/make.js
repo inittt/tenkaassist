@@ -100,7 +100,7 @@ function makeBlock() {
       curCalc = 0;
       cc.innerHTML = `계산중...`;
       setTimeout(() => {
-         backtrack(0, []);
+         backtrack(0, [], new Set());
          makeBlockNDeck();
       }, 100);
    }
@@ -268,8 +268,7 @@ function loadBlockNDeck(pg) {
 
 /* 백트래킹 함수 -----------------------------------------------------------*/
 
-let usedNumbers = new Set();
-function backtrack(startIndex, selectedEntities) {
+function backtrack(startIndex, selectedEntities, usedNumbers) {
    if (selectedEntities.length === deckCnt) {allCombinations.push([...selectedEntities]); return;}
 
    for (let i = startIndex; i < possibleDeck.length; i++) {
@@ -289,7 +288,7 @@ function backtrack(startIndex, selectedEntities) {
             if (canUseEntity) {
                for (let num of tempUsedNumbers) usedNumbers.add(num);
                selectedEntities.push(entity);
-               backtrack(i+1, selectedEntities);
+               backtrack(i+1, [...selectedEntities], new Set(usedNumbers));
                selectedEntities.pop();
                for (let num of tempUsedNumbers) usedNumbers.delete(num);
             }
@@ -298,7 +297,7 @@ function backtrack(startIndex, selectedEntities) {
          if (canUseEntity) {
             for (let num of tempUsedNumbers) usedNumbers.add(num);
             selectedEntities.push(entity);
-            backtrack(i+1, selectedEntities);
+            backtrack(i+1, [...selectedEntities], new Set(usedNumbers));
             selectedEntities.pop();
             for (let num of tempUsedNumbers) usedNumbers.delete(num);
          }
