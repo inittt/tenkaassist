@@ -2,7 +2,7 @@ const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const possibleDeck = [];
 let allCombinations = [];
-let isDataLoaded = false, sort = 0, mod = 0, cc;
+let isDataLoaded = false, sort = 0, mod = 0, cc, isCalculating = false;
 const curHeader = 5;
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -13,9 +13,11 @@ document.addEventListener("DOMContentLoaded", function() {
    cc = document.getElementById('compcontainer');
 
    dropdownBtn.addEventListener("click", function() {
+      if (isCalculating) return;
       dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
    });
    dropdownBtn2.addEventListener("click", function() {
+      if (isCalculating) return;
      dropdownContent2.style.display = dropdownContent2.style.display === "block" ? "none" : "block";
    });
  
@@ -96,6 +98,7 @@ function makeBlock() {
 
    if (mod == 0) makeBlockAllDeck();
    else {
+      isCalculating = true;
       deckCnt = mod+1;
       progress = 0;
       cc.innerHTML = `계산중...0.00%`;
@@ -201,6 +204,7 @@ function makeBlockNDeck() {
       return sumA - sumB;
    });
    loadBlockNDeck(page++);
+   isCalculating = false;
 }
 
 function loadBlockNDeck(pg) {
