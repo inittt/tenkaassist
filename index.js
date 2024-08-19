@@ -103,8 +103,8 @@ function makeBlock(data, sort) {
       let last;
       switch(sort) {
          case 1 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`; break;
-         case 2 : last = `${creator}`; break;
-         case 3 : last = `${updater}`; break;
+         case 2 : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}턴`; break;
+         case 3 : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}턴`; break;
          default : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}턴`;
       } stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 
