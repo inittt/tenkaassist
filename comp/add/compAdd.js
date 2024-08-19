@@ -5,14 +5,6 @@ const selected = [];
 const chJsonList = chJSON.data.slice();
 addAnyCh();
 document.addEventListener("DOMContentLoaded", function() {
-   function autoResize() {
-      var textarea = document.querySelector('.addCompDescription');
-      textarea.style.height = 'auto';
-      textarea.style.height = textarea.scrollHeight + 'px';
-   }
-   autoResize();
-   document.querySelector('.addCompDescription').addEventListener('input', autoResize);
-
    const searchInput = document.getElementById('searchInput');
    searchInput.addEventListener('input', function() {
       getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, searchInput.value);
@@ -63,12 +55,9 @@ function registerDeck() {
    if (!isValidComp(selected)) return alert("회복수단이 없는 조합입니다");
 
    const deckName = `${getCharacter(selected[0]).name}덱`;
-   let description = document.getElementById("description").value;
-   if (description == "" || description == null || description == undefined) description = "-";
-
    const formData = new FormData();
    formData.append("name", deckName);
-   formData.append("description", description);
+   formData.append("description", "-");
    formData.append("str", `${selected.join(",")}`);
    request(`${server}/comps/add`, {
       method: "POST",
