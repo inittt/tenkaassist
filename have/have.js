@@ -151,6 +151,7 @@ function checkRarity(num) {
 /*------------------------------------------------------------------------*/
 /* 캐릭터 계정 동기화 로직 -------------------------------------------------*/
 function synchro() {
+   if (!confirm("보유 캐릭터를 가져오시겠습니까?")) return;
    request(`${server}/users/get/have`, {
       method: "GET",
    }).then(response => {
@@ -173,6 +174,7 @@ function synchro() {
 function setHave() {
    if (selected.length == 0) return alert("저장할 캐릭터가 없습니다");
    else {
+      if (!confirm("현재 캐릭터를 저장하시겠습니까?")) return;
       request(`${server}/users/set/have/${selected.join(" ")}`, {
          method: "PUT",
       }).then(response => {
