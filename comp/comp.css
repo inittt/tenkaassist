@@ -49,9 +49,8 @@
    padding:1rem;
 }
 #description {
-   line-height: 1.2rem;
+   line-height: 1.1rem;
    padding: 0.5rem;
-   white-space: pre-wrap;
 }
 .testBtn {
    margin-left: 0.5rem;
