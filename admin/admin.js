@@ -40,7 +40,13 @@ function setCompGraph() {
    }).then(res => {
       if (!res.success) return alert(res.msg);
       drawGraph(res.data);
+      setCompNum(res.data);
    }).catch(e => {});
+}
+function setCompNum(data) {
+   document.getElementById("allcomp").innerText = data.length+"개";
+   document.getElementById("dealok").innerText = data.filter(i => i.recommand < 90).length+"개";
+   document.getElementById("dealno").innerText = data.filter(i => i.recommand >= 90).length+"개";
 }
 
 function drawGraph(data) {
