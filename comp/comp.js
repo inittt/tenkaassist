@@ -21,26 +21,6 @@ document.addEventListener("DOMContentLoaded", function() {
       document.getElementById('titlebox').innerHTML = `ERROR`;
    })
 
-   // 커맨드 가져오기
-   request(`${server}/comps/getCommand/${compId}`, {
-      method: "GET",
-   }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
-      return response.json();
-   }).then(res => {
-      if (!res.success) {
-         document.getElementById('command').innerHTML = `ERROR`;
-         return console.log("커맨드 로드 실패");
-      } else {
-         document.getElementById('command').innerHTML = setCommand(res.data.command);
-         document.getElementById('cmdName').innerHTML = 
-            res.data.tmp3 != null ? (res.data.tmp3+" 행동순서") : "-";
-      }
-   }).catch(e => {
-      console.log("데이터 로드 실패", e);
-      document.getElementById('command').innerHTML = `ERROR`;
-   })
-
    // admin일때 삭제버튼 보이기
    request(`${server}/users/isAdmin`, {
       method: "GET",
@@ -88,13 +68,7 @@ function makeCompBlock(comp) {
    document.getElementById('scarecrow').innerHTML = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}턴`;
    document.getElementById('dmg13').innerHTML = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`;
 
-   let escape = description.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-   document.getElementById('description').innerHTML = `${escape}`;
-}
-
-function updateComp() {
-   location.href = `${address}/comp/update/?id=${compId}`;
+   document.getElementById('description').innerHTML = setCommand(description);
 }
 
 function reportComp() {

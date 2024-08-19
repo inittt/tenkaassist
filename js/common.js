@@ -4,10 +4,6 @@ const address = "https://inittt.github.io/tenkaassist"
 const server = "https://port-0-tenkafuma-assistant-server-1272llx2xidhk.sel5.cloudtype.app"
 const noImg = `${address}/images/default.jpg`;
 
-// 삭제할것---------------------------------
-location.href = `${address}/serverFix`;
-//------------------------------------------
-
 // 새로운 아이콘을 추가
 function setFavicon(url) {
    // 기존 아이콘을 제거
