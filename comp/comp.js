@@ -68,7 +68,7 @@ function makeCompBlock(comp) {
    document.getElementById('scarecrow').innerHTML = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}턴`;
    document.getElementById('dmg13').innerHTML = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`;
 
-   document.getElementById('description').innerHTML = setCommand(description);
+   document.getElementById('description').innerHTML = setCommand(description).trim();
 }
 
 function reportComp() {
