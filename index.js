@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
          sort = 0;
          document.getElementById('nextTrigger').innerHTML = t("로드 중...");
-         document.getElementById('titleboxText').innerHTML = `${t(조합)} - ${t(this.value)}`;
+         document.getElementById('titleboxText').innerHTML = `${t("조합")} - ${t(this.value)}`;
          if ("13턴딜" === this.value) sort = 1;
          if ("최신등록순" === this.value) sort = 2;
          if ("최신수정순" === this.value) sort = 3;
