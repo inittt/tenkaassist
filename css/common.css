@@ -443,6 +443,7 @@ header {
    width:2.5rem;
    height:2.5rem;
    cursor: pointer;
+   margin-right:1rem;
 }
 .h-toggle {
    display:flex;
@@ -476,6 +477,37 @@ header {
 }
 .h-cur {
    border-bottom: 2px solid white;
+}
+.h-lang {
+   height:1.5rem;
+   width:auto;
+   color:white;
+   cursor:pointer;
+}
+.h-lang:hover {
+   color:rgb(214, 55, 55);
+}
+.h-lang-list {
+   display:none;
+   position:absolute;
+   background-color:#272727;
+   border-radius:0.3rem;
+   border:0.1rem solid white;
+}
+.h-lang-btn {
+   border-radius:0.2rem;
+   padding:0.5rem;
+   font-size:0.9rem;
+   background-color:#272727;
+   cursor:pointer;
+   font-weight:bold;
+}
+.h-lang-btn:hover {
+   background-color: white;
+   color:black;
+}
+.h-lang-on {
+   display: block;
 }
 .characterSearchBtn {
    height:100%;

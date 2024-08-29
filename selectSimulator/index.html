@@ -14,12 +14,12 @@
    <script src="../js/header.js"></script>
    <div class="main-container bg-dark">
       <div class="block">
-         <div class="margin-left titleblock"><span class="titlebox">시뮬레이터 - 캐릭선택</span></div>
+         <div class="margin-left titleblock"><span id="titlebox-text" class="titlebox">시뮬레이터 - 캐릭선택</span></div>
       </div>
       <div class="block" style="margin-bottom:0;">
          <div class="margin-left titleblock">
             <div id="selectedCh" class="flex">캐릭터를 선택해 추가해 주세요</div>
-            <button style="margin-left:auto;" class="button2" onclick="startSimulator()">시작</button>
+            <button id="start-button" style="margin-left:auto;" class="button2" onclick="startSimulator()">시작</button>
          </div>
       </div>
       <div class="block" style="margin-top:0.3rem; padding-top:0.3rem">
@@ -102,18 +102,18 @@
          </div>
       </div>
       <div class="block flex">
-         <label class="c-radio"><input type="radio" name="element" value="0" onclick="checkElement(0)"><span>화속성</span></label>
-         <label class="c-radio"><input type="radio" name="element" value="1" onclick="checkElement(1)"><span>수속성</span></label>
-         <label class="c-radio"><input type="radio" name="element" value="2" onclick="checkElement(2)"><span>풍속성</span></label>
-         <label class="c-radio"><input type="radio" name="element" value="3" onclick="checkElement(3)"><span>광속성</span></label>
-         <label class="c-radio"><input type="radio" name="element" value="4" onclick="checkElement(4)"><span>암속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="0" onclick="checkElement(0)"><span id="e-0">화속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="1" onclick="checkElement(1)"><span id="e-1">수속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="2" onclick="checkElement(2)"><span id="e-2">풍속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="3" onclick="checkElement(3)"><span id="e-3">광속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="4" onclick="checkElement(4)"><span id="e-4">암속성</span></label>
       </div>
       <div class="block flex">
-         <label class="c-radio"><input type="radio" name="role" value="0" onclick="checkRole(0)"><span>딜러</span></label>
-         <label class="c-radio"><input type="radio" name="role" value="1" onclick="checkRole(1)"><span>힐러</span></label>
-         <label class="c-radio"><input type="radio" name="role" value="2" onclick="checkRole(2)"><span>탱커</span></label>
-         <label class="c-radio"><input type="radio" name="role" value="3" onclick="checkRole(3)"><span>서포터</span></label>
-         <label class="c-radio"><input type="radio" name="role" value="4" onclick="checkRole(4)"><span>디스럽터</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="0" onclick="checkRole(0)"><span id="r-0">딜러</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="1" onclick="checkRole(1)"><span id="r-1">힐러</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="2" onclick="checkRole(2)"><span id="r-2">탱커</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="3" onclick="checkRole(3)"><span id="r-3">서포터</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="4" onclick="checkRole(4)"><span id="r-4">디스럽터</span></label>
       </div>
       <div class="block flex">
          <label class="c-radio"><input type="radio" name="rarity" value="3" onclick="checkRarity(3)" checked><span>SSR</span></label>
@@ -127,4 +127,23 @@
       </div>
    </div>
 </body>
+<script>
+   document.title = "TenkaAssist - " + t("시뮬레이터");
+   document.getElementById("titlebox-text").innerText = t("시뮬레이터")+" - "+t("캐릭선택");
+   document.getElementById("searchInput").placeholder = t("검색");
+   document.getElementById("start-button").innerText = t("시작");
+   document.getElementById("selectedCh").innerText = t("캐릭터를 선택해 추가해 주세요");
+
+   document.getElementById("e-0").innerText = t("화속성");
+   document.getElementById("e-1").innerText = t("수속성");
+   document.getElementById("e-2").innerText = t("풍속성");
+   document.getElementById("e-3").innerText = t("광속성");
+   document.getElementById("e-4").innerText = t("암속성");
+   
+   document.getElementById("r-0").innerText = t("딜러");
+   document.getElementById("r-1").innerText = t("힐러");
+   document.getElementById("r-2").innerText = t("탱커");
+   document.getElementById("r-3").innerText = t("서포터");
+   document.getElementById("r-4").innerText = t("디스럽터");
+</script>
 </html>

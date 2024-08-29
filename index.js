@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
    radios.forEach(function(option) {
       option.addEventListener("change", function() {
          document.getElementById('compcontainer').innerHTML = "";
-         dropdownBtn.innerText = `${this.value}`;
+         dropdownBtn.innerText = `${t(this.value)}`;
          const spanElement = document.createElement('span');
          spanElement.classList.add('absolute-right');
          spanElement.innerHTML = '▼'
@@ -24,8 +24,8 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownContent.style.display = "none";
 
          sort = 0;
-         document.getElementById('nextTrigger').innerHTML = "로드 중...";
-         document.getElementById('titleboxText').innerHTML = `조합 - ${this.value}`;
+         document.getElementById('nextTrigger').innerHTML = t("로드 중...");
+         document.getElementById('titleboxText').innerHTML = `${t(조합)} - ${t(this.value)}`;
          if ("13턴딜" === this.value) sort = 1;
          if ("최신등록순" === this.value) sort = 2;
          if ("최신수정순" === this.value) sort = 3;
@@ -52,22 +52,22 @@ function getComps(page) {
    request(`${server}/comps/all/${sort}/${page}`, {
       method: "GET",
    }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
    }).then(res => {
       isLoading = false;
       if (!res.success) {
          isLoading = true;
          document.getElementById('nextTrigger').innerHTML = `${res.msg}`;
-         return console.log("데이터 로드 실패");
+         return console.log(t("데이터 로드 실패"));
       }
       makeBlock(res.data.content, sort);
       isLoading = false;
-      document.getElementById('nextTrigger').innerHTML = `더이상 조합이 없습니다`;
+      document.getElementById('nextTrigger').innerHTML = t(`더이상 조합이 없습니다`);
    }).catch(e => {
       isLoading = false;
-      console.log("데이터 로드 실패", e);
-      document.getElementById('nextTrigger').innerHTML = "데이터 로드 실패";
+      console.log(t("데이터 로드 실패"), e);
+      document.getElementById('nextTrigger').innerHTML = t("데이터 로드 실패");
    })
 }
 
@@ -103,9 +103,9 @@ function makeBlock(data, sort) {
       let last;
       switch(sort) {
          case 1 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`; break;
-         case 2 : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}턴`; break;
-         case 3 : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}턴`; break;
-         default : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}턴`;
+         case 2 : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)+t("턴")}`; break;
+         case 3 : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)+t("턴")}`; break;
+         default : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)+t("턴")}`;
       } stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 
       let compcontainer = document.getElementById('compcontainer');
@@ -131,12 +131,12 @@ function loadAllCompCnt() {
    request(`${server}/comps/getCnt`, {
       method: "GET",
    }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
    }).then(res => {
-      if (!res.success) return console.log("덱개수 로드 실패");
-      document.getElementById("cnt-all").innerHTML = `총 덱 개수 : ${res.data}개`;
+      if (!res.success) return console.log(t("덱개수 로드 실패"));
+      document.getElementById("cnt-all").innerHTML = `${t("총 덱 개수")} : ${res.data}`;
    }).catch(e => {
-      console.log("덱개수 로드 실패", e);
+      console.log(t("덱개수 로드 실패"), e);
    })
 }

@@ -56,12 +56,22 @@ function loadCSS(url) {
 
 // 딜량 문자열로 변환
 function formatNumber(value) {
-   if (value >= 100000000) { // 1억 이상
-       return (value / 100000000).toFixed(2) + '억';
-   } else if (value >= 10000) { // 1만 이상
-       return (value / 10000).toFixed(2) + '만';
+   if (lang != "ko") {
+      if (value >= 1000000000) { // 10억 이상
+         return (value / 1000000000).toFixed(2) + 'B';
+      } else if (value >= 1000000) { // 100만 이상
+         return (value / 1000000).toFixed(2) + 'M';
+      } else {
+         return value.toString(); // B나 M 단위가 아닌 경우 그대로 반환
+      }
    } else {
-       return value.toString(); // 만이나 억 단위가 아닌 경우 그대로 반환
+      if (value >= 100000000) { // 1억 이상
+         return (value / 100000000).toFixed(2) + '억';
+      } else if (value >= 10000) { // 1만 이상
+         return (value / 10000).toFixed(2) + '만';
+      } else {
+         return value.toString(); // 만이나 억 단위가 아닌 경우 그대로 반환
+      }
    }
 }
 
@@ -91,3 +101,133 @@ function addNineHours(dateTimeStr) {
 
    return `${newYear}/${newMonth}/${newDay} ${newHours}:${newMinutes}:${newSeconds}`;
 }
+
+// 번역 -----------------------------------------------------------------------------
+if (localStorage.getItem("lang") == null) localStorage.setItem("lang", "ko");
+const lang = localStorage.getItem("lang");
+function t(str) {
+   if (lang == "ko") return str;
+   if (lang == "en" && (str in translate)) return translate[str].en;
+   return str;
+}
+
+const translate = {
+   // 헤더
+   "조합목록" : {en : "List"},
+   "조합검색" : {en : "Search"},
+   "조합등록" : {en : "Register"},
+   "전지역모집" : {en : "Recruit"},
+   "추천덱" : {en : "Suggest"},
+   "시뮬레이터" : {en : "Simulator"},
+   "공지" : {en : "Notify"},
+   "로그아웃" : {en : "LogOut"},
+   "로그인" : {en : "LogIn"},
+
+   // 조합목록
+   "홈" : {en : "Home"},
+   "조합" : {en : "Team"},
+   "허수+" : {en : "scarecrow+"},
+   "13턴딜" : {en : "13t dmg"},
+   "최신등록순" : {en : "newest"},
+   "최신수정순" : {en : "recent"},
+   "총 덱 개수" : {en : "total cnt"},
+   "턴" : {en: " turns"},
+   "로드 중..." : {en: "Loading..."},
+   "네트워크 응답이 올바르지 않습니다." : {en: "The network response is not correct"},
+   "데이터 로드 실패" : {en: "Data load failed"},
+   "더이상 조합이 없습니다" : {en : "There are no more teams"},
+   "덱개수 로드 실패" : {en : "Count load failed"},
+
+   // 시뮬레이터 선택
+   "캐릭선택" : {en : "Select"},
+   "화속성" : {en : "Fire"},
+   "수속성" : {en : "Water"},
+   "풍속성" : {en : "Wind"},
+   "광속성" : {en : "Light"},
+   "암속성" : {en : "Dark"},
+   "딜러" : {en : "Attacker"},
+   "힐러" : {en : "Healer"},
+   "탱커" : {en : "Guardian"},
+   "서포터" : {en : "Supporter"},
+   "디스럽터" : {en : "Obstructer"},
+   "검색" : {en : "Search"},
+   "시작" : {en : "GO"},
+   "캐릭터를 선택해 추가해 주세요" : {en : "Select a character to add"},
+
+   // 시뮬레이터
+   "리셋" : {en : "reset"},
+   "공격데미지" : {en : "Basic"},
+   "추가데미지" : {en : "Addition"},
+   "발동데미지" : {en : "Trigger"},
+   "도트데미지" : {en : "Periodic"},
+   "반격데미지" : {en : "Counter"},
+   "준비 중 캐릭터가 포함되어 있습니다" : {en : "Some of the characters are in preparation"},
+   "캐릭터를 찾을 수 없음" : {en : "Character not found"},
+   "캐릭터의 수가 5개가 아닙니다" : {en : "Five characters are needed"},
+   "캐릭터 정보가 잘못되었습니다" : {en : "Character information is wrong"},
+   "중복된 캐릭터가 있습니다" : {en : "There are duplicate characters"},
+   "번 캐릭터의 구속력이 올바르지 않음. (5구속으로 적용)" : {en : "'s bond is incorrect. (Applied as 5)"},
+   "캐릭터 세팅에 문제가 발생" : {en : "There is a problem with the character setup"},
+   "구속" : {en : "bond"},
+   "허수턴" : {en : "turns"},
+
+   "버프요약" : {en : "Buff Summary"},
+   "현재 아머 수치" : {en : "Armor"},
+   "공퍼증" : {en : "atk*"},
+   "공고증" : {en : "atk+"},
+   "받뎀증" : {en : "dmg taken"},
+   "일뎀증" : {en : "increase basic attack power"},
+   "받일뎀" : {en : "basic attack dmg taken"},
+   "궁뎀증" : {en : "increase ult skill power"},
+   "받궁뎀" : {en : "ult skill dmg taken"},
+   "발뎀증" : {en : "increase trigger power"},
+   "받발뎀" : {en : "trigger dmg taken"},
+   "가뎀증" : {en : "increase dmg output"},
+   "속뎀증" : {en : "increase elemental dmg"},
+   "받속뎀" : {en : "elemental dmg taken"},
+   "발효증" : {en : "increase trigger effect"},
+   "받직뎀" : {en : "class dmg taken"},
+   "받캐뎀" : {en : "character dmg taken"},
+   "아머" : {en : "armor"},
+   "가아증" : {en : "increase armor output"},
+   "받아증" : {en : "armor taken"}, 
+   "받지뎀" : {en : "periodic dmg taken"},
+
+   "버프상세" : {en : "Buff Details"},
+   "의" : {en : "'s"},
+   "공" : {en : "atk"},
+   "만큼" : {en : ""},
+   "상시" : {en : "always"},
+
+   "평시" : {en : "when basic attack,"},
+   "행동시" : {en : "when action,"},
+   "공격시" : {en : "when attack,"},
+   "궁시" : {en : "when use ult skill,"},
+   "방시" : {en : "when defense,"},
+   "힐시" : {en : "when healed,"},
+   "피격시" : {en : "when get hit,"},
+   "기본" : {en : "basic"},
+   "추가" : {en : "addition"},
+   "발동" : {en : "trigger"},
+   "모두" : {en : "party"},
+   "버프 제거" : {en : " remove"},
+   "평추가*" : {en : "addition basic attack dmg*"},
+   "평발동*" : {en : "trigger basic attack dmg*"},
+   "궁추가*" : {en : "addition ult skill dmg*"},
+   "궁발동*" : {en : "trigger ult skill dmg*"},
+   "평추가+" : {en : "addition basic attack dmg+"},
+   "평발동+" : {en : "trigger basic attack dmg+"},
+   "궁추가+" : {en : "addition ult skill dmg+"},
+   "궁발동+" : {en : "trigger ult skill dmg+"},
+   "반격*" : {en : "counter*"},
+   "반격+" : {en : "counter+"},
+   "중첩" : {en : "stack"},
+   "최대" : {en : "max"},
+   "미발동" : {en : "inactive"},
+   "에게" : {en : " get"},
+   "부여" : {en : ""},
+
+   
+};
+
+//---------------------------------------------------------------------------
