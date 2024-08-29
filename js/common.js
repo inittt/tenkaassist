@@ -131,7 +131,7 @@ const translate = {
    "최신등록순" : {en : "newest"},
    "최신수정순" : {en : "recent"},
    "총 덱 개수" : {en : "total cnt"},
-   "턴" : {en: " t"},
+   "턴" : {en: "t"},
    "로드 중..." : {en: "Loading..."},
    "네트워크 응답이 올바르지 않습니다." : {en: "The network response is not correct"},
    "데이터 로드 실패" : {en: "Data load failed"},
@@ -153,6 +153,9 @@ const translate = {
    "검색" : {en : "Search"},
    "시작" : {en : "GO"},
    "캐릭터를 선택해 추가해 주세요" : {en : "Select a character to add"},
+   "5개의 캐릭터를 선택해주세요" : {en : "Five characters are needed"},
+   "5개까지 선택 가능합니다" : {en : "Up to 5 characters can be selected"},
+   
 
    // 시뮬레이터
    "리셋" : {en : "reset"},
