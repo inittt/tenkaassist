@@ -155,7 +155,7 @@ const translate = {
    "캐릭터를 선택해 추가해 주세요" : {en : "Select a character to add"},
    "5개의 캐릭터를 선택해주세요" : {en : "Five characters are needed"},
    "5개까지 선택 가능합니다" : {en : "Up to 5 characters can be selected"},
-   
+
 
    // 시뮬레이터
    "리셋" : {en : "reset"},
@@ -229,6 +229,7 @@ const translate = {
    "미발동" : {en : "inactive"},
    "에게" : {en : " get"},
    "부여" : {en : ""},
+   "타깃" : {en : "target"},
 
    
 };
