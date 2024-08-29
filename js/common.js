@@ -131,7 +131,7 @@ const translate = {
    "최신등록순" : {en : "newest"},
    "최신수정순" : {en : "recent"},
    "총 덱 개수" : {en : "total cnt"},
-   "턴" : {en: " turns"},
+   "턴" : {en: " t"},
    "로드 중..." : {en: "Loading..."},
    "네트워크 응답이 올바르지 않습니다." : {en: "The network response is not correct"},
    "데이터 로드 실패" : {en: "Data load failed"},
