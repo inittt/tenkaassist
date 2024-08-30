@@ -8,16 +8,16 @@ document.addEventListener("DOMContentLoaded", function() {
    request(`${server}/comps/get/${compId}`, {
       method: "GET",
    }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
    }).then(res => {
       if (!res.success) {
          document.getElementById('titlebox').innerHTML = `ERROR`;
-         return console.log("데이터 로드 실패");
+         return console.log(t("데이터 로드 실패"));
       }
       makeCompBlock(res.data);
    }).catch(e => {
-      console.log("데이터 로드 실패", e);
+      console.log(t("데이터 로드 실패"), e);
       document.getElementById('titlebox').innerHTML = `ERROR`;
    })
 
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
    request(`${server}/users/isAdmin`, {
       method: "GET",
    }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
    }).then(res => {
       if (!res.success) return;
@@ -62,32 +62,32 @@ function makeCompBlock(comp) {
       `);
    }
    compbox.innerHTML = stringArr.join("");
-   document.getElementById('create_at').innerHTML = `등록 : ${create_at} ${creator}`;
-   document.getElementById('update_at').innerHTML = `수정 : ${update_at == null ? " - " : update_at} ${updater}`;
+   document.getElementById('create_at').innerHTML = `${t("등록")} : ${create_at} ${creator}`;
+   document.getElementById('update_at').innerHTML = `${t("수정")} : ${update_at == null ? " - " : update_at} ${updater}`;
 
-   document.getElementById('scarecrow').innerHTML = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}턴`;
+   document.getElementById('scarecrow').innerHTML = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}${t("턴")}`;
    document.getElementById('dmg13').innerHTML = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`;
 
    document.getElementById('description').innerHTML = setCommand(description).trim();
 }
 
 function reportComp() {
-   if (!confirm("신고하시겠습니까?")) return;
+   if (!confirm(t("신고하시겠습니까?"))) return;
    request(`${server}/comps/report/${compId}`, {
       method: "PUT",
    }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
    }).then(res => {
       if (!res.success) return alert(res.msg);
       if (res.data > 10) {
-         alert("신고 10회 누적으로 삭제되었습니다");
+         alert(t("신고 10회 누적으로 삭제되었습니다"));
          location.href=`${address}/index.html`;
       } else {
-         alert(`신고 성공 (현재 누적 ${res.data}/10 회)`);
+         alert(`${t("신고 성공")} (${t("현재 누적")} ${res.data}/10 ${t("회")})`);
       }
    }).catch(e => {
-      console.log("데이터 로드 실패", e);
+      console.log(t("데이터 로드 실패"), e);
    })
 }
 
@@ -95,29 +95,32 @@ function deleteComp() {
    request(`${server}/comps/remove/${compId}`, {
       method: "DELETE",
    }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
    }).then(res => {
       if (!res.success) return alert(res.msg);
       alert(res.data);
    }).catch(e => {
-      console.log("데이터 로드 실패", e);
+      console.log(t("데이터 로드 실패"), e);
    })
 }
 
 function goTest() {
    for(let id of compIds_toTest) {
       const cha = getCharacter(id);
-      if (cha == undefined || cha == null) return alert("캐릭터를 찾을 수 없음 : " + id);
-      if (!cha.ok) return alert("준비 중 캐릭터가 포함되어 있습니다");
+      if (cha == undefined || cha == null) return alert(t("캐릭터를 찾을 수 없음") + " : " + id);
+      if (!cha.ok) return alert(t("준비 중 캐릭터가 포함되어 있습니다"));
    }
    location.href = `${address}/selectSimulator/?list=${compIds_toTest}`
 }
 
 function setCommand(str) {
    for(let i = 2; i < 101; i++) {
-      str = str.replace(`${i}턴`, `</br>${i}턴`)
+      str = str.replace(`${i}턴`, `</br>${i}${t("턴")}`)
    }
+   str.replace("평", t("평"));
+   str.replace("궁", t("궁"));
+   str.replace("방", t("방"));
    return str;
 }
 
@@ -125,12 +128,12 @@ function initDmg() {
    request(`${server}/comps/initDmg/${compId}`, {
       method: "PUT",
    }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
    }).then(res => {
       if (!res.success) return alert(res.msg);
       alert(res.data);
    }).catch(e => {
-      console.log("데이터 로드 실패", e);
+      console.log(t("데이터 로드 실패"), e);
    })
 }

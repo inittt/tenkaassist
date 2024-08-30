@@ -231,6 +231,21 @@ const translate = {
    "부여" : {en : ""},
    "타깃" : {en : "target"},
 
+   // 조합상세
+   "체험하기" : {en : "test"},
+   "초기화" : {en : "init"},
+   "삭제" : {en : "del"},
+   "행동 순서" : {en : "Order of Actions"},
+   "등록" : {en : "Add"},
+   "수정" : {en : "Edit"},
+   "신고하시겠습니까?" : {en : "Do you want to report this?"},
+   "신고 10회 누적으로 삭제되었습니다" : {en : "Deleted after 10 reports"},
+   "신고 성공" : {en : "Report Successful"},
+   "현재 누적" : {en : "Current"},
+   "회" : {en : "reports"},
+   "평" : {en : "A"},
+   "궁" : {en : "U"},
+   "방" : {en : "D"},
    
 };
 
