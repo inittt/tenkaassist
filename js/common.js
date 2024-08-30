@@ -236,8 +236,8 @@ const translate = {
    "초기화" : {en : "init"},
    "삭제" : {en : "del"},
    "행동 순서" : {en : "Order of Actions"},
-   "등록" : {en : "Add"},
-   "수정" : {en : "Edit"},
+   "등록 : " : {en : "Add : "},
+   "수정 : " : {en : "Edit : "},
    "신고하시겠습니까?" : {en : "Do you want to report this?"},
    "신고 10회 누적으로 삭제되었습니다" : {en : "Deleted after 10 reports"},
    "신고 성공" : {en : "Report Successful"},
@@ -246,6 +246,13 @@ const translate = {
    "평" : {en : "A"},
    "궁" : {en : "U"},
    "방" : {en : "D"},
+
+   // 조합등록
+   "조합 등록" : {en : "Register Team"},
+   "등록" : {en : "OK"},
+   "회복수단이 없는 조합입니다" : {en : "This team has no recovery options"},
+   "등록 성공" : {en : "Register Successful"},
+   "조합 등록 실패" : {en : "Team registration failed"},
    
 };
 

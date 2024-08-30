@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 function getCharactersWithCondition(element, role, rarity, search) {
    const characterContainer = document.getElementById("characterContainer");
-   characterContainer.innerHTML = "로드 중...";
+   characterContainer.innerHTML = t("로드 중...");
 
    search = fixName(search);
    const dataArray = chJsonList;
@@ -50,9 +50,9 @@ function getCharactersWithCondition(element, role, rarity, search) {
 
 // 등록 버튼 누를시
 function registerDeck() {
-   if (selected.length != 5) return alert("덱 하나에 5개의 캐릭터만 가능합니다");
+   if (selected.length != 5) return alert(t("5개의 캐릭터를 선택해주세요"));
 
-   if (!isValidComp(selected)) return alert("회복수단이 없는 조합입니다");
+   if (!isValidComp(selected)) return alert(t("회복수단이 없는 조합입니다"));
 
    const deckName = `${getCharacter(selected[0]).name}덱`;
    const formData = new FormData();
@@ -63,14 +63,14 @@ function registerDeck() {
       method: "POST",
       body: formData
    }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
    }).then(res => {
       if (!res.success) return alert(res.msg);
-      alert("등록 성공");
+      alert(t("등록 성공"));
       location.href = `${address}/comp/?id=${res.data}`
    }).catch(e => {
-      alert("조합 등록 실패", e);
+      alert(t("조합 등록 실패"), e);
    })
 
 
@@ -80,7 +80,7 @@ function registerDeck() {
 // 검색창에 선택된 캐릭터 이미지 띄우기
 function updateSelected() {
    const div = document.getElementById("selectedCh");
-   if (selected.length == 0) div.innerHTML = "캐릭터를 선택해 추가해 주세요";
+   if (selected.length == 0) div.innerHTML = t("캐릭터를 선택해 추가해 주세요");
    else {
       let innerArray = [];
       for(let chId of selected) {
@@ -105,8 +105,8 @@ function updateSelected() {
 
 // 클릭하면 체크표시 활성/비활성화, 리스트에 추가/제거
 function clickedCh(id) {
-   if (selected.length > 4 && !selected.includes(id)) return alert("5개까지 선택 가능합니다");
-   if (selected.length > 4 && isAny(id)) return alert("5개까지 선택 가능합니다");
+   if (selected.length > 4 && !selected.includes(id)) return alert(t("5개까지 선택 가능합니다"));
+   if (selected.length > 4 && isAny(id)) return alert(t("5개까지 선택 가능합니다"));
 
    if (isAny(id)) selected.push(id);
    else {
