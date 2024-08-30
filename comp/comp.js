@@ -115,12 +115,13 @@ function goTest() {
 }
 
 function setCommand(str) {
+   str = str.replace(`1턴`, `1${t("턴")}`);
    for(let i = 2; i < 101; i++) {
-      str = str.replace(`${i}턴`, `</br>${i}${t("턴")}`)
+      str = str.replace(`${i}턴`, `</br>${i}${t("턴")}`);
    }
-   str.replace("평", t("평"));
-   str.replace("궁", t("궁"));
-   str.replace("방", t("방"));
+   str = str.replace("평", t("평"));
+   str = str.replace("궁", t("궁"));
+   str = str.replace("방", t("방"));
    return str;
 }
 
