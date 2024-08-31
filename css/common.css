@@ -412,6 +412,14 @@ header {
    border-bottom: 2px solid white;
    font-weight: bold;
 }
+.bol::after {
+   content: attr(title);
+   display: block;
+   font-weight: bold;
+   height: 0px;
+   visibility: hidden;
+   overflow-y: hidden;
+}
 .margin-left {
    margin-left: 1rem;
 }

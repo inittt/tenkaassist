@@ -17,14 +17,14 @@ document.addEventListener('DOMContentLoaded', function() {
       <img src="${address}/images/nav-bar.png" class="h-nav-button h-left margin-left">
       <img src="${address}/images/icons/main.webp" class="h-nav-icon h-left margin-left"
          onclick="goMain()">
-      <a id="h-1" class="h-left h-box" href="${address}/">${t("조합목록")}</a>
-      <a id="h-2" class="h-left h-box" href="${address}/characters/">${t("조합검색")}</a>
-      <a id="h-3" class="h-left h-box" href="${address}/comp/add/">${t("조합등록")}</a>
-      <a id="h-4" class="h-left h-box" href="${address}/recruit/">${t("전지역모집")}</a>
-      <a id="h-5" class="h-left h-box" href="${address}/have/">${t("추천덱")}</a>
-      <a id="h-6" class="h-left h-box" href="${address}/selectSimulator/">${t("시뮬레이터")}</a>
+      <a id="h-1" class="h-left h-box" href="${address}/"><span class="bol" title="${t("조합목록")}">${t("조합목록")}</span></a>
+      <a id="h-2" class="h-left h-box" href="${address}/characters/"><span class="bol" title="${t("조합검색")}">${t("조합검색")}</span></a>
+      <a id="h-3" class="h-left h-box" href="${address}/comp/add/"><span class="bol" title="${t("조합등록")}">${t("조합등록")}</span></a>
+      <a id="h-4" class="h-left h-box" href="${address}/recruit/"><span class="bol" title="${t("전지역모집")}">${t("전지역모집")}</span></a>
+      <a id="h-5" class="h-left h-box" href="${address}/have/"><span class="bol" title="${t("추천덱")}">${t("추천덱")}</span></a>
+      <a id="h-6" class="h-left h-box" href="${address}/selectSimulator/"><span class="bol" title="${t("시뮬레이터")}">${t("시뮬레이터")}</span></a>
       <a id="h-7" class="h-left h-box" href="${address}/contributors/">♥</a>
-      <a id="h-8" class="h-left h-box" href="${address}/notification/">${t("공지")}</a>
+      <a id="h-8" class="h-left h-box" href="${address}/notification/"><span class="bol" title="${t("공지")}">${t("공지")}</span></a>
       <div id="translate" class="h-right">
          <img class="h-lang" onclick="showLang()" src="${address}/images/icons/language.svg">
          <div id="h-lang-list" class="h-lang-list">
