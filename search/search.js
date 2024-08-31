@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
    var options = document.querySelectorAll(".dropdown-content input[type='radio']");
    options.forEach(function(option) {
       option.addEventListener("change", function() {
-         dropdownBtn.innerText = `${this.value}`;
+         dropdownBtn.innerText = `${t(this.value)}`;
          const spanElement = document.createElement('span');
          spanElement.classList.add('absolute-right');
          spanElement.innerHTML = '▼'
@@ -56,18 +56,18 @@ function getComps(sort) {
    request(url, {
       method: "GET",
    }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
    }).then(res => {
       if (!res.success) {
-         document.getElementById("cnt-all").innerHTML = `검색결과 : 0개`;
+         document.getElementById("cnt-all").innerHTML = `${t("검색된 덱 개수")} : 0`;
          return console.log(res.msg);
       }
       curData = res.data;
-      document.getElementById("cnt-all").innerHTML = `검색결과 : ${curData.length}개`;
+      document.getElementById("cnt-all").innerHTML = `${t("검색된 덱 개수")} : ${curData.length}`;
       makeBlock(sort);
    }).catch(e => {
-      console.log("데이터 로드 실패", e);
+      console.log(t("데이터 로드 실패"), e);
    })
 }
 
@@ -120,7 +120,7 @@ function makeBlock(sort) {
       compcontainer.appendChild(compblock);
    }
    if (cnt == 0) document.getElementById('compcontainer').innerHTML = `
-      <div class="block">검색결과 없음</div>
+      <div class="block">${t("검색결과 없음")}</div>
    `;
    page++;
 }

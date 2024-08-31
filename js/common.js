@@ -253,7 +253,19 @@ const translate = {
    "회복수단이 없는 조합입니다" : {en : "This team has no recovery options"},
    "등록 성공" : {en : "Register Successful"},
    "조합 등록 실패" : {en : "Team registration failed"},
+
+   // 조합검색 - 캐릭터
+   "리더" : {en : "Leader"},
+   "선택 캐릭터가 전부 포함된 조합 검색" : {en : "Search teams with all selected characters"},
+   " 검색" : {en : "GO"},
+   "하나 이상의 캐릭터를 선택해 주세요" : {en : "Select at least one character"},
+
+   // 조합검색 - 검색
+   "검색결과" : {en : "Search Results"},
+   "검색된 덱 개수" : {en : "Search result cnt"},
+   "검색결과 없음" : {en : "No search results"},
    
+
 };
 
 //---------------------------------------------------------------------------
