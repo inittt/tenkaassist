@@ -14,11 +14,11 @@
          <div class="margin-left titleblock"><span id="titleboxText" class="titlebox">Option</span></div>
       </div>
       <div class="block loginBox">
-        <div style="font-size:1.2rem; font-weight:bold;">비밀번호 변경</div>
+        <div id="change-pw-text" style="font-size:1.2rem; font-weight:bold;">비밀번호 변경</div>
         <input id="curPass" class="changePWInput" name="password1" type="password" placeholder="현재 비밀번호">
         <input id="newPass" class="changePWInput" name="password2" type="password" placeholder="새 비밀번호">
         <input id="newPassRe" class="changePWInput" name="password3" type="password" placeholder="새 비밀번호 재입력">
-        <button class="changePWButton bg-green" onclick="setPassword()">완료</button>
+        <button id="finishBtn" class="changePWButton bg-green" onclick="setPassword()">완료</button>
       </div>
    </div>
 </body>
@@ -27,8 +27,8 @@
         const curPass = document.getElementById("curPass").value;
         const newPass = document.getElementById("newPass").value;
         const newPassRe = document.getElementById("newPassRe").value;
-        if (curPass.length == 0 || newPass.length == 0 || newPassRe.length == 0) return alert("빈 입력란이 있습니다");
-        if (newPass != newPassRe) return alert("새 비밀번호와 재입력이 다릅니다");
+        if (curPass.length == 0 || newPass.length == 0 || newPassRe.length == 0) return alert(t("빈 입력란이 있습니다"));
+        if (newPass != newPassRe) return alert(t("새 비밀번호와 재입력이 다릅니다"));
         
         const formData = new FormData();
         formData.append("password", curPass);
@@ -41,18 +41,25 @@
             method: 'PUT',
             body: formData,
         }).then(response => {
-            if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+            if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
             return response.json();
         }).then(res => {
             if (!res.success) alert(res.msg);
             else {
                 localStorage.setItem("jwtToken", "");
-                alert("비밀번호 변경 완료. 다시 로그인해 주세요");
+                alert(t("비밀번호 변경 완료. 다시 로그인해 주세요"));
                 location.href = `${address}/login`;
             }
         }).catch(error => {
             console.log(error);
         });
     }
+
+    document.title = "TenkaAssist - " + t("설정");
+    document.getElementById("change-pw-text").innerText = t("비밀번호 변경");
+    document.getElementById("curPass").placeholder = t("현재 비밀번호");
+    document.getElementById("newPass").placeholder = t("새 비밀번호");
+    document.getElementById("newPassRe").placeholder = t("새 비밀번호 재입력");
+    document.getElementById("finishBtn").innerText = t("완료");
 </script>
 </html>

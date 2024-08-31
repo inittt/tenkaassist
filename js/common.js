@@ -126,7 +126,7 @@ const translate = {
    // 조합목록
    "홈" : {en : "Home"},
    "조합" : {en : "Team"},
-   "허수+" : {en : "scarecrow+"},
+   "허수+" : {en : "dummy+"},
    "13턴딜" : {en : "13t dmg"},
    "최신등록순" : {en : "newest"},
    "최신수정순" : {en : "recent"},
@@ -295,7 +295,17 @@ const translate = {
    "4개" : {en : "4 team"},
    "서버로부터 데이터 로드 중..." : {en : "Loading data from the server..."},
    "계산중" : {en : "Calculating"},
-   
+
+   // 설정
+   "설정" : {en : "Option"},
+   "비밀번호 변경" : {en : "Change password"},
+   "현재 비밀번호" : {en : "Current password"},
+   "새 비밀번호" : {en : "New password"},
+   "새 비밀번호 재입력" : {en : "Re-enter new password"},
+   "완료" : {en : "Finish"},
+   "빈 입력란이 있습니다" : {en : "There are empty fields"},
+   "새 비밀번호와 재입력이 다릅니다" : {en : "New password and confirmation do not match"},
+   "비밀번호 변경 완료. 다시 로그인해 주세요" : {en : "Password change complete. Please log in again."},
 };
 
 //---------------------------------------------------------------------------
