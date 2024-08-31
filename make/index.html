@@ -22,31 +22,45 @@
                   <button id="dropdownBtn">조합1개<span class="absolute-right">▼</span></button>
                   <div id="dropdown-content" class="dropdown-content">
                      <input type="radio" id="option1" name="options" value="1개" checked>
-                     <label class="sortLabel" for="option1">1개</label>
+                     <label id="t1" class="sortLabel" for="option1">1개</label>
                      <input type="radio" id="option2" name="options" value="2개">
-                     <label class="sortLabel" for="option2">2개</label>
+                     <label id="t2" class="sortLabel" for="option2">2개</label>
                      <input type="radio" id="option3" name="options" value="3개">
-                     <label class="sortLabel" for="option3">3개</label>
+                     <label id="t3" class="sortLabel" for="option3">3개</label>
                      <input type="radio" id="option4" name="options" value="4개">
-                     <label class="sortLabel" for="option4">4개</label>
+                     <label id="t4" class="sortLabel" for="option4">4개</label>
                   </div>
                </div>
                <div class="dropdown">
                   <button id="dropdownBtn2">허수+<span class="absolute-right">▼</span></button>
                   <div id="dropdown-content2" class="dropdown-content">
                      <input type="radio" id="option2-1" name="options2" value="허수+" checked>
-                     <label class="sortLabel" for="option2-1">허수+</label>
+                     <label id="sc" class="sortLabel" for="option2-1">허수+</label>
                      <input type="radio" id="option2-2" name="options2" value="13턴딜">
-                     <label class="sortLabel" for="option2-2">13턴딜</label>
+                     <label id="d13" class="sortLabel" for="option2-2">13턴딜</label>
                   </div>
                </div>
             </div>
          </div>
       </div>
       <div id="compcontainer">
-         <div class="block">서버로부터 데이터 로드 중...</div>
+         <div id="defaultBox" class="block">서버로부터 데이터 로드 중...</div>
       </div>
       <div class="target" id="observer"></div>
    </div>
 </body>
+<script>
+   document.title = "TenkaAssist - " + t("추천덱");
+   document.getElementById("titleBoxText").innerText = t("추천덱") + " - 1" + t("덱");
+   document.getElementById("dropdownBtn").innerHTML = `${t("조합1개")}<span class="absolute-right">▼</span>`;
+   document.getElementById("t1").innerText = t("1개");
+   document.getElementById("t2").innerText = t("2개");
+   document.getElementById("t3").innerText = t("3개");
+   document.getElementById("t4").innerText = t("4개");
+   document.getElementById("dropdownBtn2").innerHTML = `${t("허수+")}<span class="absolute-right">▼</span>`;
+   document.getElementById("sc").innerText = t("허수+");
+   document.getElementById("d13").innerText = t("13턴딜");
+   document.getElementById("defaultBox").innerText = t("서버로부터 데이터 로드 중...");
+
+</script>
 </html>

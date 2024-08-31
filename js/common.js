@@ -277,6 +277,24 @@ const translate = {
    "저장할 캐릭터가 없습니다" : {en : "No characters to save"},
    "현재 캐릭터를 저장하시겠습니까?" : {en : "Do you want to save the current character?"},
    "저장되었습니다" : {en : "Saved successfully"},
+
+   // 로그인
+   "아이디" : {en : "username"},
+   "비밀번호" : {en : "password"},
+   "회원가입" : {en : "Sign Up"},
+
+   // 추천덱
+   "덱" : {en : " team"},
+   "조합1개" : {en : "1 team"},
+   "조합2개" : {en : "2 team"},
+   "조합3개" : {en : "3 team"},
+   "조합4개" : {en : "4 team"},
+   "1개" : {en : "1 team"},
+   "2개" : {en : "2 team"},
+   "3개" : {en : "3 team"},
+   "4개" : {en : "4 team"},
+   "서버로부터 데이터 로드 중..." : {en : "Loading data from the server..."},
+   "계산중" : {en : "Calculating"},
    
 };
 
