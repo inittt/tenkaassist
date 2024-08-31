@@ -308,7 +308,7 @@ const translate = {
    "비밀번호 변경 완료. 다시 로그인해 주세요" : {en : "Password change complete. Please log in again."},
 
    // 전지역모집
-   "첫글자 입력" : {en : "Initials search"},
+   "첫글자 입력" : {en : "Initial search"},
    "태그조합당 SR 비율" : {en : "SR ratio by tag combination"},
    "화속성" : {en : "Fire"},
    "수속성" : {en : "Water"}, 
@@ -323,27 +323,32 @@ const translate = {
    "인간" : {en : "Human"}, 
    "마족" : {en : "Demon"}, 
    "야인" : {en : "Demihuman"},
-   "작은체형" : {en : "Small Sized"}, 
-   "표준체형" : {en : "Medium Sized"},
-   "빈유" : {en : "Flat tits"}, 
-   "미유" : {en : "Hot tits"}, 
-   "거유" : {en : "Giant tits"},
+   "작은체형" : {en : "SmallSized"}, 
+   "표준체형" : {en : "MediumSized"},
+   "빈유" : {en : "FlatTits"}, 
+   "미유" : {en : "HotTits"}, 
+   "거유" : {en : "GiantTits"},
    "병사" : {en : "Soldier"}, 
    "정예" : {en : "Elite"}, 
    "리더" : {en : "Leader"},
    "방어" : {en : "Defense"}, 
    "방해" : {en : "Interference"}, 
-   "데미지" : {en : "Damage Output"}, 
+   "데미지" : {en : "DamageOutput"}, 
    "보호" : {en : "Protection"}, 
    "회복" : {en : "Recovery"}, 
    "지원" : {en : "Support"}, 
    "쇠약" : {en : "Weaken"},
    "폭발력" : {en : "Explosiveness"}, 
    "생존력" : {en : "Survivability"}, 
-   "전투" : {en : "More Power"}, 
+   "전투" : {en : "MorePower"}, 
    "범위공격" : {en : "AoE"}, 
    "반격" : {en : "Counterstrike"},
+   
+   // 회원가입
+   "닉네임" : {en : "Nickname"},
+   "회원가입 성공" : {en : "Registration successful"},
 
+   
 
 };
 

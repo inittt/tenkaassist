@@ -11,17 +11,24 @@
    <script src="../js/header.js"></script>
    <div class="main-container bg-dark" id="compcontainer">
       <div class="block">
-         <div class="margin-left titleblock"><span class="titlebox">회원가입</span></div>
+         <div class="margin-left titleblock"><span id="titleBox" class="titlebox">회원가입</span></div>
       </div>
       <div class="block loginBox">
-         <input class="loginInput" name="username" type="text" placeholder="아이디">
-         <input class="loginInput" name="password" type="password" placeholder="비밀번호">
-         <input class="loginInput" name="name" type="text" placeholder="닉네임">
-         <button class="loginButton bg-blue" onclick="register()">회원가입</button>
+         <input id="un" class="loginInput" name="username" type="text" placeholder="아이디">
+         <input id="pw" class="loginInput" name="password" type="password" placeholder="비밀번호">
+         <input id="nn" class="loginInput" name="name" type="text" placeholder="닉네임">
+         <button id="signUpBtn" class="loginButton bg-blue" onclick="register()">회원가입</button>
       </div>
    </div>
 </body>
 <script>
+   document.title = t("회원가입");
+   document.getElementById("titleBox").innerText = t("회원가입");
+   document.getElementById("un").placeholder = t("아이디");
+   document.getElementById("pw").placeholder = t("비밀번호");
+   document.getElementById("nn").placeholder = t("닉네임");
+   document.getElementById("signUpBtn").innerText = t("회원가입");
+
    function register() {
       const username = document.querySelector('input[name="username"]').value;
       const password = document.querySelector('input[name="password"]').value;
@@ -34,12 +41,12 @@
          method: 'POST',
          body: formData,
       }).then(response => {
-         if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+         if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
          return response.json();
       }).then(res => {
          if (!res.success) alert(res.msg);
          else {
-            alert("회원가입 성공");
+            alert(t("회원가입 성공"));
             location.href = `${address}/login/`;
          }
       }).catch(error => {
