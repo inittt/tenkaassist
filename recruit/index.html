@@ -3,7 +3,7 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>TenkaAssist - 캐릭터</title>
+   <title>TenkaAssist - 전지역모집</title>
    <script src="../js/common.js"></script>
    <link rel="stylesheet" href="../css/common.css" type = "text/css">
    <link rel="stylesheet" href="../css/dropdown.css" type = "text/css">
@@ -15,60 +15,60 @@
    <div class="main-container bg-dark">
       <div class="block">
          <div class="margin-left titleblock">
-            <span class="titlebox">전지역모집</span>
+            <span id="titleBox" class="titlebox">전지역모집</span>
             <input id="tagSearch" class="searchInput" type="text" placeholder="첫글자 입력" style="margin-left:1rem;">
          </div>
       </div>
       <div class="recruit-main">
          <div class="checkbox-container" style="flex:1;">
             <div class="block flex">
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="화속성"><span>화속성</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="수속성"><span>수속성</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="풍속성"><span>풍속성</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="광속성"><span>광속성</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="암속성"><span>암속성</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="화속성"><span id="c1">화속성</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="수속성"><span id="c2">수속성</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="풍속성"><span id="c3">풍속성</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="광속성"><span id="c4">광속성</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="암속성"><span id="c5">암속성</span></label>
             </div>
             <div class="block flex">
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="딜러"><span>딜러</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="힐러"><span>힐러</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="탱커"><span>탱커</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="서포터"><span>서포터</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="디스럽터"><span>디스럽터</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="딜러"><span id="c6">딜러</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="힐러"><span id="c7">힐러</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="탱커"><span id="c8">탱커</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="서포터"><span id="c9">서포터</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="디스럽터"><span id="c10">디스럽터</span></label>
             </div>
             <div class="block flex">
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="인간"><span>인간</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="마족"><span>마족</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="야인"><span>야인</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="인간"><span id="c11">인간</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="마족"><span id="c12">마족</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="야인"><span id="c13">야인</span></label>
             </div>
             <div class="block flex">
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="작은체형"><span>작은체형</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="표준체형"><span>표준체형</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="작은체형"><span id="c14">작은체형</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="표준체형"><span id="c15">표준체형</span></label>
             </div>
             <div class="block flex">
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="빈유"><span>빈유</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="미유"><span>미유</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="거유"><span>거유</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="빈유"><span id="c16">빈유</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="미유"><span id="c17">미유</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="거유"><span id="c18">거유</span></label>
             </div>
             <div class="block flex">
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="병사"><span>병사</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="정예"><span>정예</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="리더"><span>리더</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="병사"><span id="c19">병사</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="정예"><span id="c20">정예</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="리더"><span id="c21">리더</span></label>
             </div>
             <div class="block flex">
-               <label class="c-checkbox"><input id="b1" type="checkbox" name="tag" value="방어"><span>방어</span></label>
-               <label class="c-checkbox"><input id="b2" type="checkbox" name="tag" value="방해"><span>방해</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="데미지"><span>데미지</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="보호"><span>보호</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="회복"><span>회복</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="지원"><span>지원</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="쇠약"><span>쇠약</span></label>
+               <label class="c-checkbox"><input id="b1" type="checkbox" name="tag" value="방어"><span id="c22">방어</span></label>
+               <label class="c-checkbox"><input id="b2" type="checkbox" name="tag" value="방해"><span id="c23">방해</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="데미지"><span id="c24">데미지</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="보호"><span id="c25">보호</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="회복"><span id="c26">회복</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="지원"><span id="c27">지원</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="쇠약"><span id="c28">쇠약</span></label>
             </div>
             <div class="block flex">
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="폭발력"><span>폭발력</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="생존력"><span>생존력</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="전투"><span>전투</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="범위공격"><span>범위공격</span></label>
-               <label class="c-checkbox"><input type="checkbox" name="tag" value="반격"><span>반격</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="폭발력"><span id="c29">폭발력</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="생존력"><span id="c30">생존력</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="전투"><span id="c31">전투</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="범위공격"><span id="c32">범위공격</span></label>
+               <label class="c-checkbox"><input type="checkbox" name="tag" value="반격"><span id="c33">반격</span></label>
             </div>
          </div>
          <div id="resultBox" class="block" style="flex:1;">
@@ -77,4 +77,20 @@
       </div>
    </div>
 </body>
+<script>
+   document.title = "TenkaAssist - " + t("전지역모집");
+   document.getElementById("titleBox").innerText = t("전지역모집");
+   document.getElementById("tagSearch").placeholder = t("첫글자 입력")
+   const textList = [
+      "화속성", "수속성", "풍속성", "광속성", "암속성",
+      "딜러", "힐러", "탱커", "서포터", "디스럽터",
+      "인간", "마족", "야인",
+      "작은체형", "표준체형",
+      "빈유", "미유", "거유",
+      "병사", "정예", "리더",
+      "방어", "방해", "데미지", "보호", "회복", "지원", "쇠약",
+      "폭발력", "생존력", "전투", "범위공격", "반격"
+   ]
+   for(let i = 0; i < 33; i++) document.getElementById(`c${i+1}`).innerText = t(textList[i]);
+</script>
 </html>
