@@ -60,11 +60,11 @@ function getComps(sort) {
       return response.json();
    }).then(res => {
       if (!res.success) {
-         document.getElementById("cnt-all").innerHTML = `${t("검색된 덱 개수")} : 0`;
+         document.getElementById("cnt-all").innerHTML = `${t("검색된 덱")} : 0`;
          return console.log(res.msg);
       }
       curData = res.data;
-      document.getElementById("cnt-all").innerHTML = `${t("검색된 덱 개수")} : ${curData.length}`;
+      document.getElementById("cnt-all").innerHTML = `${t("검색된 덱")} : ${curData.length}`;
       makeBlock(sort);
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
@@ -106,9 +106,9 @@ function makeBlock(sort) {
       let last;
       switch(sort) {
          case 1 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`; break;
-         case 2 : last = `${creator}`; break;
-         case 3 : last = `${updater}`; break;
-         default : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}턴`;
+         case 2 : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}${t("턴")}`; break;
+         case 3 : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}${t("턴")}`; break;
+         default : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}${t("턴")}`;
       } stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
       let compcontainer = document.getElementById('compcontainer');
       let compblock = document.createElement('div');

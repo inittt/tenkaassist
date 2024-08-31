@@ -262,9 +262,9 @@ const translate = {
 
    // 조합검색 - 검색
    "검색결과" : {en : "Search Results"},
-   "검색된 덱 개수" : {en : "Search result cnt"},
+   "검색된 덱" : {en : "Teams Found"},
    "검색결과 없음" : {en : "No search results"},
-   
+
 
 };
 
