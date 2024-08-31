@@ -14,7 +14,7 @@
    <div class="main-container bg-dark">
       <div class="block">
          <div class="margin-left titleblock">
-            <span class="titlebox">보유 캐릭터</span>
+            <span id="titleBox" class="titlebox">보유 캐릭터</span>
             <button class="icon-btn i-save" onclick="setHave()"><img class="icon" src="../images/icons/ico-save.svg"></button>
             <button class="icon-btn i-load" onclick="synchro()"><img class="icon" src="../images/icons/ico-load.svg"></button>
             <button id="srInclude" class="leaderButton leaderOff" style="padding:0.3rem 0; margin-left:0.5rem; width:6rem;">SR이하 포함</button>
@@ -30,18 +30,18 @@
          </div>
       </div>
       <div class="block flex">
-         <label class="c-radio"><input type="radio" name="element" value="0" onclick="checkElement(0)"><span>화속성</span></label>
-         <label class="c-radio"><input type="radio" name="element" value="1" onclick="checkElement(1)"><span>수속성</span></label>
-         <label class="c-radio"><input type="radio" name="element" value="2" onclick="checkElement(2)"><span>풍속성</span></label>
-         <label class="c-radio"><input type="radio" name="element" value="3" onclick="checkElement(3)"><span>광속성</span></label>
-         <label class="c-radio"><input type="radio" name="element" value="4" onclick="checkElement(4)"><span>암속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="0" onclick="checkElement(0)"><span id="e-0">화속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="1" onclick="checkElement(1)"><span id="e-1">수속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="2" onclick="checkElement(2)"><span id="e-2">풍속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="3" onclick="checkElement(3)"><span id="e-3">광속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="4" onclick="checkElement(4)"><span id="e-4">암속성</span></label>
       </div>
       <div class="block flex">
-         <label class="c-radio"><input type="radio" name="role" value="0" onclick="checkRole(0)"><span>딜러</span></label>
-         <label class="c-radio"><input type="radio" name="role" value="1" onclick="checkRole(1)"><span>힐러</span></label>
-         <label class="c-radio"><input type="radio" name="role" value="2" onclick="checkRole(2)"><span>탱커</span></label>
-         <label class="c-radio"><input type="radio" name="role" value="3" onclick="checkRole(3)"><span>서포터</span></label>
-         <label class="c-radio"><input type="radio" name="role" value="4" onclick="checkRole(4)"><span>디스럽터</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="0" onclick="checkRole(0)"><span id="r-0">딜러</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="1" onclick="checkRole(1)"><span id="r-1">힐러</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="2" onclick="checkRole(2)"><span id="r-2">탱커</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="3" onclick="checkRole(3)"><span id="r-3">서포터</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="4" onclick="checkRole(4)"><span id="r-4">디스럽터</span></label>
       </div>
       <div class="block flex">
          <label class="c-radio"><input type="radio" name="rarity" value="3" onclick="checkRarity(3)" checked><span>SSR</span></label>
@@ -55,4 +55,25 @@
       </div>
    </div>
 </body>
+<script>
+   document.title = "TenkaAssist - " + t("보유 캐릭터");
+   document.getElementById("titleBox").innerText = t("보유 캐릭터");
+   document.getElementById("srInclude").innerText = t("SR이하 포함");
+   document.getElementById("selectedCh").innerHTML = 
+      `${t("보유중인 캐릭터를 선택해 주세요")}<br>(${t("로그인 된 경우 동기화 가능")})`;
+   document.getElementById("characterSearchBtn").innerText = t(" 검색").trim();
+   document.getElementById("searchInput").placeholder = t("검색");
+
+   document.getElementById("e-0").innerText = t("화속성");
+   document.getElementById("e-1").innerText = t("수속성");
+   document.getElementById("e-2").innerText = t("풍속성");
+   document.getElementById("e-3").innerText = t("광속성");
+   document.getElementById("e-4").innerText = t("암속성");
+   
+   document.getElementById("r-0").innerText = t("딜러");
+   document.getElementById("r-1").innerText = t("힐러");
+   document.getElementById("r-2").innerText = t("탱커");
+   document.getElementById("r-3").innerText = t("서포터");
+   document.getElementById("r-4").innerText = t("디스럽터");
+</script>
 </html>

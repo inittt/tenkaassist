@@ -265,7 +265,19 @@ const translate = {
    "검색된 덱" : {en : "Teams Found"},
    "검색결과 없음" : {en : "No search results"},
 
+   // 기여자
+   "기여자" : {en : "Contributors"},
 
+   // 보유 캐릭터
+   "보유 캐릭터" : {en : "Owned"},
+   "SR이하 포함" : {en : "Includes below SSR"},
+   "보유중인 캐릭터를 선택해 주세요" : {en : "Select from your owned characters"},
+   "로그인 된 경우 동기화 가능" : {en : "Syncing available when logged in"},
+   "보유 캐릭터를 가져오시겠습니까?" : {en : "Do you want to retrieve your owned characters?"},
+   "저장할 캐릭터가 없습니다" : {en : "No characters to save"},
+   "현재 캐릭터를 저장하시겠습니까?" : {en : "Do you want to save the current character?"},
+   "저장되었습니다" : {en : "Saved successfully"},
+   
 };
 
 //---------------------------------------------------------------------------

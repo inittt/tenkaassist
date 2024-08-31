@@ -14,19 +14,26 @@
    <div class="main-container bg-dark">
       <div class="block">
          <div class="margin-left titleblock">
-            <span class="titlebox">기여자</span>
+            <span id="titleBox" class="titlebox">기여자</span>
          </div>
       </div>
       <div class="block main-box">
          <div class="user-box">
-            <p class="underline">시뮬레이터</p>
+            <p id="sim-text" class="underline">시뮬레이터</p>
             <div id="game-user" class="user-container"></div>
          </div>
          <div class="user-box">
-            <p class="underline">조합 추가</p>
+            <p id="add-text" class="underline">조합등록</p>
             <div id="add-user" class="user-container"></div>
          </div>
       </div>
    </div>
 </body>
+<script>
+   document.title = "TenkaAssist - " + t("기여자");
+   document.getElementById("titleBox").innerText = t("기여자");
+   document.getElementById("sim-text").innerText = t("시뮬레이터");
+   document.getElementById("add-text").innerText = t("조합등록");
+
+</script>
 </html>

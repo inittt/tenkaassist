@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function getCharactersWithCondition(element, role, rarity, search) {
    const characterContainer = document.getElementById("characterContainer");
-   characterContainer.innerHTML = "로드 중...";
+   characterContainer.innerHTML = t("로드 중...");
 
    search = fixName(search);
    const dataArray = chJSON.data;
@@ -56,11 +56,11 @@ function getCharactersWithCondition(element, role, rarity, search) {
 // 검색 버튼 누를시
 function searchDeck() {
    const go = [...selected];
-   if (go.length < 1) return alert("하나 이상의 캐릭터를 선택해 주세요");
    if (isOn) for(const ch of chJSON.data) {
       if (ch.rarity == 3) continue;
       if (go.indexOf(ch.id) == -1) go.push(ch.id);
    }
+   if (go.length < 1) return alert(t("하나 이상의 캐릭터를 선택해 주세요"));
    location.href = `${address}/make/?list=${go}`;
 }
 
@@ -74,7 +74,7 @@ function resizeButton() {
 // 검색창에 선택된 캐릭터 이미지 띄우기
 function updateSelected() {
    const div = document.getElementById("selectedCh");
-   if (selected.length == 0) div.innerHTML = "보유중인 캐릭터를 선택해 주세요<br>(로그인 된 경우 동기화)";
+   if (selected.length == 0) div.innerHTML = `${t("보유중인 캐릭터를 선택해 주세요")}<br>(${t("로그인 된 경우 동기화 가능")})`;
    else {
       let innerArray = [];
       for(let chId of selected) {
@@ -151,11 +151,11 @@ function checkRarity(num) {
 /*------------------------------------------------------------------------*/
 /* 캐릭터 계정 동기화 로직 -------------------------------------------------*/
 function synchro() {
-   if (!confirm("보유 캐릭터를 가져오시겠습니까?")) return;
+   if (!confirm(t("보유 캐릭터를 가져오시겠습니까?"))) return;
    request(`${server}/users/get/have`, {
       method: "GET",
    }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
    }).then(res => {
       if (!res.success) return alert(res.msg);
@@ -172,17 +172,17 @@ function synchro() {
 }
 
 function setHave() {
-   if (selected.length == 0) return alert("저장할 캐릭터가 없습니다");
+   if (selected.length == 0) return alert(t("저장할 캐릭터가 없습니다"));
    else {
-      if (!confirm("현재 캐릭터를 저장하시겠습니까?")) return;
+      if (!confirm(t("현재 캐릭터를 저장하시겠습니까?"))) return;
       request(`${server}/users/set/have/${selected.join(" ")}`, {
          method: "PUT",
       }).then(response => {
-         if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+         if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
          return response.json();
       }).then(res => {
          if (!res.success) return alert(res.msg);
-         alert("저장되었습니다");
+         alert(t("저장되었습니다"));
       }).catch(error => {
          return;
       });
