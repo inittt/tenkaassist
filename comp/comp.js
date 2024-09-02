@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function makeCompBlock(comp) {
    const id = comp.id, name = comp.name, compstr = comp.compstr;
-   const description = comp.description, ranking = comp.ranking;
+   const description = comp.description, ranking = comp.ranking, vote = comp.vote;
    const recommend = comp.recommend, creator = comp.creator, updater = comp.updater;
    const create_at = comp.create_at == null ? '-' : addNineHours(comp.create_at);
    const update_at = comp.update_at == null ? '-' : addNineHours(comp.update_at);
@@ -67,6 +67,7 @@ function makeCompBlock(comp) {
 
    document.getElementById('scarecrow').innerHTML = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}${t("턴")}`;
    document.getElementById('dmg13').innerHTML = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`;
+   document.getElementById('dmg13-1').innerHTML = `<i class="fa-solid fa-burst"></i> ${formatNumber(vote)}`;
 
    document.getElementById('description').innerHTML = setCommand(description).trim();
 }
