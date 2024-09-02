@@ -106,8 +106,8 @@ function makeBlock(sort) {
       let last;
       switch(sort) {
          case 1 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`; break;
-         case 2 : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}${t("턴")}`; break;
-         case 3 : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}${t("턴")}`; break;
+         case 2 : last = `<i class="fa-solid fa-skull"></i> ${rankOrBond1(ranking, vote)}`; break;
+         case 3 : last = `<i class="fa-solid fa-skull"></i> ${rankOrBond1(ranking, vote)}`; break;
          case 4 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(vote)}`; break;
          default : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}${t("턴")}`;
       } stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
@@ -124,6 +124,11 @@ function makeBlock(sort) {
       <div class="block">${t("검색결과 없음")}</div>
    `;
    page++;
+}
+
+function rankOrBond1(ranking, dmg13_1) {
+   if (ranking < 99 || dmg13_1 == 0) return ranking.toFixed(0)+t("턴");
+   return formatNumber(dmg13_1);
 }
 
 function init() {
