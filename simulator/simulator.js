@@ -182,7 +182,7 @@ function endGame() {
    const command_tmp = cmd.join("");
    console.log(command_tmp);
    
-   if (isValidComp(idList) && bondList.every(e => e == 5)) saveBond5();
+   if (isValidComp(idList) && bondList.every(e => e == 5)) saveBond5(command_tmp);
    
    savedData.length = 0;
    alert(msg.join("\n"));
@@ -201,7 +201,7 @@ function saveBond1() {
       return response.json();
    }).then(res => {}).catch(e => {})
 }
-function saveBond5() {
+function saveBond5(command_tmp) {
    const formData = new FormData();
    formData.append("name", `${comp[0].name}덱`);
    formData.append("compstr", chIds);
