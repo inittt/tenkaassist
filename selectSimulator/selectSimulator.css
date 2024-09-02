@@ -65,3 +65,27 @@
   margin-left:auto;
   right: 0.1rem;
 }
+
+.bond1BtnWrapper {
+  position: relative;
+  display: inline-block;
+  margin-top:0.2rem;
+  margin:0.2rem;
+}
+.bond1Btn {
+  position:relative;
+  display: flex;
+  align-items: center;
+  box-sizing:border-box;
+  border:1px solid transparent;
+  border-radius: 0.2rem;
+  padding: 0.1rem 0.6rem;
+  background-color: #0a6cff;
+  color: white;
+  cursor: pointer;
+  font-weight:bold;
+  font-size:0.9rem;
+}
+.bond1Btn:hover {
+  border-color:white;
+}

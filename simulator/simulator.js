@@ -155,6 +155,7 @@ function endAct() {
          GLOBAL_TURN--;
          return endGame();
       }
+      if (GLOBAL_TURN == 14 && isValidComp(idList) && bondList.every(e => e == 1)) saveBond1();
       for(let i = 0; i < 5; i++) comp[i].turnstart();
    }
 }
@@ -181,24 +182,39 @@ function endGame() {
    const command_tmp = cmd.join("");
    console.log(command_tmp);
    
-   if (isValidComp(idList) && bondList.every(e => e == 5)) {
-      const formData = new FormData();
-      formData.append("name", `${comp[0].name}덱`);
-      formData.append("compstr", chIds);
-      formData.append("dmg13", dmg13);
-      formData.append("scarecrow", scarecrowTurn);
-      formData.append("command", command_tmp);
-      request(`${server}/comps/setPower`, {
-         method: "POST",
-         body: formData
-      }).then(response => {
-         if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
-         return response.json();
-      }).then(res => {}).catch(e => {})
-   }
+   if (isValidComp(idList) && bondList.every(e => e == 5)) saveBond5();
    
    savedData.length = 0;
    alert(msg.join("\n"));
+}
+
+function saveBond1() {
+   const formData = new FormData();
+   formData.append("name", `${comp[0].name}덱`);
+   formData.append("compstr", chIds);
+   formData.append("dmg13", dmg13);
+   request(`${server}/comps/setPower1`, {
+      method: "POST",
+      body: formData
+   }).then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   }).then(res => {}).catch(e => {})
+}
+function saveBond5() {
+   const formData = new FormData();
+   formData.append("name", `${comp[0].name}덱`);
+   formData.append("compstr", chIds);
+   formData.append("dmg13", dmg13);
+   formData.append("scarecrow", scarecrowTurn);
+   formData.append("command", command_tmp);
+   request(`${server}/comps/setPower`, {
+      method: "POST",
+      body: formData
+   }).then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   }).then(res => {}).catch(e => {})
 }
 
 function isAllActed() {

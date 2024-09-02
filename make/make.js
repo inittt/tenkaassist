@@ -51,7 +51,8 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownContent2.style.display = "none";
 
          sort = 0;
-         if ("13턴딜" === this.value) sort = 1;
+         if ("13턴딜(5)" === this.value) sort = 1;
+         if ("13턴딜(1)" === this.value) sort = 2;
          makeBlock();
       });
    });
@@ -86,6 +87,7 @@ function setPossible(data) {
          const bool = compList.some(item => isAny(item));
          if (!bool && Math.floor(d.ranking) == 99) d.ranking = 98;
          if (!bool && d.recommend == 0) d.recommend = 1;
+         if (!bool && d.vote == 0) d.vote = 1;
          possibleDeck.push(d);
       }
    }
@@ -130,6 +132,7 @@ function makeBlockAllDeck() {
    }
 
    if (sort == 1) allCombinations.sort((a, b) => b.recommend - a.recommend);
+   else if (sort == 2) allCombinations.sort((a, b) => b.vote - a.vote);
    else allCombinations.sort((a, b) => a.ranking - b.ranking);
 
    loadBlockAllDeck(page++);
@@ -151,7 +154,7 @@ function loadBlockAllDeck(pg) {
 
       const stringArr = [];
       const id = comp.id, name = comp.name, compstr = comp.compstr;
-      const ranking = comp.ranking, recommend = comp.recommend;
+      const ranking = comp.ranking, recommend = comp.recommend, vote = comp.vote;
       stringArr.push(`<div class="comp-box">`);
       stringArr.push(`<div class="comp-order">#${++bundleCnt}</div>`)
       stringArr.push(`<div class="comp-name">${name}</div><div class="comp-deck">`);
@@ -173,6 +176,7 @@ function loadBlockAllDeck(pg) {
       let last;
       switch(sort) {
          case 1 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`; break;
+         case 2 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(vote)}`; break;
          default : last = `<i class="fa-solid fa-skull"></i> ${typeof ranking === 'number' ? ranking.toFixed(0) : ranking}${t("턴")}`;
       } stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 
@@ -197,6 +201,11 @@ function makeBlockNDeck() {
    if (sort == 1) allCombinations.sort((a, b) => {
       let sumA = a.reduce((sum, item) => sum + (item.recommend || 0), 0);
       let sumB = b.reduce((sum, item) => sum + (item.recommend || 0), 0);
+      return sumB - sumA;
+   });
+   else if (sort == 2) allCombinations.sort((a, b) => {
+      let sumA = a.reduce((sum, item) => sum + (item.vote || 0), 0);
+      let sumB = b.reduce((sum, item) => sum + (item.vote || 0), 0);
       return sumB - sumA;
    });
    else allCombinations.sort((a, b) => {
@@ -230,12 +239,13 @@ function loadBlockNDeck(pg) {
       deckBundle.appendChild(newP);
 
       if (sort == 1) bundle.sort((a, b) => b.recommend - a.recommend);
+      else if (sort == 2) bundle.sort((a, b) => b.vote - a.vote);
       else bundle.sort((a, b) => a.ranking - b.ranking);
 
       for(const comp of bundle) {
          const stringArr = [];
          const id = comp.id, name = comp.name, compstr = comp.compstr;
-         const ranking = comp.ranking, recommend = comp.recommend;
+         const ranking = comp.ranking, recommend = comp.recommend, vote = comp.vote;
          stringArr.push(`<div class="comp-box"><div class="comp-deck">`);
 
          for(const cid of compstr) {
@@ -254,6 +264,7 @@ function loadBlockNDeck(pg) {
          }
          let last;
          if (sort == 1) last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`;
+         else if (sort == 2) last = `<i class="fa-solid fa-burst"></i> ${formatNumber(vote)}`;
          else last = `<i class="fa-solid fa-skull"></i> ${typeof ranking === 'number' ? ranking.toFixed(0) : ranking}${t("턴")}`;
          stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 

@@ -128,6 +128,8 @@ const translate = {
    "조합" : {en : "Team"},
    "허수+" : {en : "dummy+"},
    "13턴딜" : {en : "13t dmg"},
+   "13턴딜(5)" : {en : "13t dmg(5)"},
+   "13턴딜(1)" : {en : "13t dmg(1)"},
    "최신등록순" : {en : "newest"},
    "최신수정순" : {en : "recent"},
    "총 덱 개수" : {en : "total cnt"},
@@ -140,6 +142,7 @@ const translate = {
 
    // 시뮬레이터 선택
    "캐릭선택" : {en : "Select"},
+   "1구속" : {en : "Set 1"},
    "화속성" : {en : "Fire"},
    "수속성" : {en : "Water"},
    "풍속성" : {en : "Wind"},

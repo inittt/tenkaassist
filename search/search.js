@@ -23,9 +23,10 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownContent.style.display = "none";
 
          isEnd = false; cnt = 0; sort = 0; page = 0;
-         if ("13턴딜" === this.value) sort = 1;
+         if ("13턴딜(5)" === this.value) sort = 1;
          if ("최신등록순" === this.value) sort = 2;
          if ("최신수정순" === this.value) sort = 3;
+         if ("13턴딜(1)" === this.value) sort = 4;
          getComps(sort);
       });
    });
@@ -79,8 +80,7 @@ function makeBlock(sort) {
       const stringArr = [];
       cnt++;
       const id = comp.id, name = comp.name, compstr = comp.compstr;
-      const ranking = comp.ranking, recommend = comp.recommend;
-      const creator = comp.creator, updater = comp.updater;
+      const ranking = comp.ranking, recommend = comp.recommend, vote = comp.vote;
       const create_at = comp.create_at == null ? '-' : addNineHours(comp.create_at);
       const update_at = comp.update_at == null ? '-' : addNineHours(comp.update_at);
       stringArr.push(`<div class="comp-box">`);
@@ -108,6 +108,7 @@ function makeBlock(sort) {
          case 1 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`; break;
          case 2 : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}${t("턴")}`; break;
          case 3 : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}${t("턴")}`; break;
+         case 4 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(vote)}`; break;
          default : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}${t("턴")}`;
       } stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
       let compcontainer = document.getElementById('compcontainer');

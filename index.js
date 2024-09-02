@@ -26,9 +26,10 @@ document.addEventListener("DOMContentLoaded", function() {
          sort = 0;
          document.getElementById('nextTrigger').innerHTML = t("로드 중...");
          document.getElementById('titleboxText').innerHTML = `${t("조합")} - ${t(this.value)}`;
-         if ("13턴딜" === this.value) sort = 1;
+         if ("13턴딜(5)" === this.value) sort = 1;
          if ("최신등록순" === this.value) sort = 2;
          if ("최신수정순" === this.value) sort = 3;
+         if ("13턴딜(1)" === this.value) sort = 4;
          
          page = 0; cnt = 1; isLoading = true;
          getComps(page++);
@@ -75,15 +76,15 @@ function makeBlock(data, sort) {
    for(const comp of data) {
       const stringArr = [];
       const id = comp.id, name = comp.name, compstr = comp.compstr;
-      const ranking = comp.ranking, recommend = comp.recommend;
-      const creator = comp.creator, updater = comp.updater;
+      const ranking = comp.ranking, recommend = comp.recommend, vote = comp.vote;
       const create_at = comp.create_at == null ? '-' : addNineHours(comp.create_at);
       const update_at = comp.update_at == null ? '-' : addNineHours(comp.update_at);
       stringArr.push(`<div class="comp-box">`);
 
       if (sort == 2) stringArr.push(`<div class="comp-time">${create_at}</div>`);
       else if (sort == 3) stringArr.push(`<div class="comp-time">${update_at}</div>`);
-      else stringArr.push(`<div class="comp-order">#${cnt++}</div>`)
+      else if (sort == 4) stringArr.push(`<div class="comp-order">#${cnt++}</div>`);
+      else stringArr.push(`<div class="comp-order">#${cnt++}</div>`);
       stringArr.push(`<div class="comp-name">${name}</div><div class="comp-deck">`);
 
       for(const cid of compstr.split(" ").map(Number)) {
@@ -105,6 +106,7 @@ function makeBlock(data, sort) {
          case 1 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`; break;
          case 2 : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)+t("턴")}`; break;
          case 3 : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)+t("턴")}`; break;
+         case 4 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(vote)}`; break;
          default : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)+t("턴")}`;
       } stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 

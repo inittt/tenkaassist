@@ -99,6 +99,9 @@
                   <label for="b45">5</label>
                </div>
             </div>
+            <div class="bond1BtnWrapper">
+               <div id="bond1Btn" class="bond1Btn" onclick="setBond(1)">1구속</div>
+            </div>
          </div>
       </div>
       <div class="block flex">
@@ -130,6 +133,7 @@
 <script>
    document.title = "TenkaAssist - " + t("시뮬레이터");
    document.getElementById("titlebox-text").innerText = t("시뮬레이터")+" - "+t("캐릭선택");
+   document.getElementById("bond1Btn").innerText = t("1구속");
    document.getElementById("searchInput").placeholder = t("검색");
    document.getElementById("start-button").innerText = t("시작");
    document.getElementById("selectedCh").innerText = t("캐릭터를 선택해 추가해 주세요");

@@ -22,8 +22,10 @@
                <div class="dropdown-content">
                   <input type="radio" id="option1" name="options" value="허수+" checked>
                   <label id="r1" class="sortLabel" for="option1">허수+</label>
-                  <input type="radio" id="option2" name="options" value="13턴딜">
-                  <label id="r2" class="sortLabel" for="option2">13턴딜</label>
+                  <input type="radio" id="option2" name="options" value="13턴딜(5)">
+                  <label id="r2" class="sortLabel" for="option2">13턴딜(5)</label>
+                  <input type="radio" id="option5" name="options" value="13턴딜(1)">
+                  <label id="r5" class="sortLabel" for="option5">13턴딜(1)</label>
                   <input type="radio" id="option3" name="options" value="최신등록순">
                   <label id="r3" class="sortLabel" for="option3">최신등록순</label>
                   <input type="radio" id="option4" name="options" value="최신수정순">
@@ -42,8 +44,9 @@
    document.getElementById("titleBox").innerText = t("검색결과");
    document.getElementById("dropdownBtn").innerHTML = `${t("허수+")}<span class="absolute-right">▼</span>`;
    document.getElementById("r1").innerText = t("허수+");
-   document.getElementById("r2").innerText = t("13턴딜");
+   document.getElementById("r2").innerText = t("13턴딜(5)");
    document.getElementById("r3").innerText = t("최신등록순");
    document.getElementById("r4").innerText = t("최신수정순");
+   document.getElementById("r5").innerText = t("13턴딜(1)");
 </script>
 </html>

@@ -157,6 +157,24 @@ function clickedSel(div, id) {
    updateSelected()
 }
 
+function setBond(num) {
+   // 구속 드랍박스
+   for(let i = 0; i < 5; i++) {
+      const dropdownBtn = document.getElementById(`btn${i}`);
+      const dropdownContent = document.getElementById(`drop${i}`);
+      const radios = document.querySelectorAll(`.dropdown-content input[name='b${i}']`);
+      radios.forEach(function(option) {
+         if (option.value == num) option.checked = true;
+      });
+      dropdownBtn.innerText = "1";
+      const spanElement = document.createElement('span');
+      spanElement.classList.add('absolute-right');
+      spanElement.innerHTML = '▼'
+      dropdownBtn.appendChild(spanElement);
+      dropdownContent.style.display = "none";
+   }
+}
+
 
 /* input:radio 버튼해제 로직 --------------------------------------------------*/
 function checkElement(num) {
