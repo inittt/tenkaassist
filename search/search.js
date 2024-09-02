@@ -128,7 +128,7 @@ function makeBlock(sort) {
 
 function rankOrBond1(ranking, dmg13_1) {
    if (ranking < 99 || dmg13_1 == 0) return ranking.toFixed(0)+t("턴");
-   return formatNumber(dmg13_1);
+   return formatNumber(dmg13_1)+" (1)";
 }
 
 function init() {
