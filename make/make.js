@@ -191,6 +191,7 @@ function makeBlockNDeck() {
    
    if (allCombinations.length == 0) {
       cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
+      isCalculating = false;
       return;
    }
    if (sort == 1) allCombinations.sort((a, b) => {
