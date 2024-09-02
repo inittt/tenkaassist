@@ -211,8 +211,14 @@ function makeBlockNDeck() {
    else allCombinations.sort((a, b) => {
       let sumA = a.reduce((sum, item) => sum + (item.ranking || 0), 0);
       let sumB = b.reduce((sum, item) => sum + (item.ranking || 0), 0);
+      
+      if (sumA === sumB) {
+          let recommendA = a.reduce((sum, item) => sum + (item.recommend || 0), 0);
+          let recommendB = b.reduce((sum, item) => sum + (item.recommend || 0), 0);
+          return recommendB - recommendA;
+      }
       return sumA - sumB;
-   });
+  });
    loadBlockNDeck(page++);
    isCalculating = false;
 }
