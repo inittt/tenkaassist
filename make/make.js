@@ -51,8 +51,8 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownContent2.style.display = "none";
 
          sort = 0;
-         if ("13턴딜(5)" === this.value) sort = 1;
-         if ("13턴딜(1)" === this.value) sort = 2;
+         if ("13턴(5)" === this.value) sort = 1;
+         else if ("13턴(1)" === this.value) sort = 2;
          makeBlock();
       });
    });
