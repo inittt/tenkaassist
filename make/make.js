@@ -32,10 +32,10 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownContent.style.display = "none";
 
          const titleBoxText = document.getElementById('titleBoxText');
-         if ("2개" === this.value) {mod = 1; titleBoxText.innerHTML = t("추천덱") + " - 2" + t("덱");}
-         else if ("3개" === this.value) {mod = 2; titleBoxText.innerHTML = t("추천덱") + " - 3" + t("덱");}
-         else if ("4개" === this.value) {mod = 3; titleBoxText.innerHTML = t("추천덱") + " - 4" + t("덱");}
-         else {mod = 0; titleBoxText.innerHTML = t("추천덱") + " - 1" + t("덱");}
+         if ("2개" === this.value) {mod = 1; titleBoxText.innerHTML = t("추천덱") + " - 2";}
+         else if ("3개" === this.value) {mod = 2; titleBoxText.innerHTML = t("추천덱") + " - 3";}
+         else if ("4개" === this.value) {mod = 3; titleBoxText.innerHTML = t("추천덱") + " - 4";}
+         else {mod = 0; titleBoxText.innerHTML = t("추천덱") + " - 1";}
          makeBlock();
       });
    });
