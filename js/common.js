@@ -68,7 +68,7 @@ function formatNumber(value) {
       if (value >= 100000000) { // 1억 이상
          return (value / 100000000).toFixed(2) + '억';
       } else if (value >= 10000) { // 1만 이상
-         return (value / 10000).toFixed(2) + '만';
+         return (value / 10000).toFixed(0) + '만';
       } else {
          return value.toString(); // 만이나 억 단위가 아닌 경우 그대로 반환
       }
