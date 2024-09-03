@@ -60,7 +60,7 @@ function formatNumber(value) {
       if (value >= 1000000000) { // 10억 이상
          return (value / 1000000000).toFixed(2) + 'B';
       } else if (value >= 1000000) { // 100만 이상
-         return (value / 1000000).toFixed(2) + 'M';
+         return (value / 1000000).toFixed(0) + 'M';
       } else {
          return value.toString(); // B나 M 단위가 아닌 경우 그대로 반환
       }
