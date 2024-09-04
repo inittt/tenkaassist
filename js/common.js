@@ -114,7 +114,7 @@ function t_d(str) {
    if (lang == "ko") return str;
    if (lang == "en") {
       const tmp = removeLastCharacter(str);
-      if (tmp in translate) return translate[tmp].en + "'s";
+      if (tmp in translate) return "Team " + translate[tmp].en;
    }
    return str;
 }

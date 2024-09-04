@@ -42,7 +42,7 @@ function makeCompBlock(comp) {
    const update_at = comp.update_at == null ? '-' : addNineHours(comp.update_at);
    
    curRecommend = recommend;
-   document.title = `TenkaAssist - ${name}`
+   document.title = `TenkaAssist - ${t_d(name)}`
    document.getElementById('titlebox').innerHTML = `${t_d(name)}`;
    const compbox = document.getElementById('comp-box-in');
    const stringArr = [];
