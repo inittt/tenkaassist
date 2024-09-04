@@ -165,7 +165,7 @@ function endGame() {
    updateAll();
 
    const msg = [];
-   msg.push(`${t(comp[0].name)}, ${t(comp[1].name)}, ${t(comp[2].name)}, ${t(comp[3].name)}, ${t(comp[4].name)}`);
+   msg.push(`${t(comp[0].name).replace(" <br>\u200B","")}, ${t(comp[1].name).replace(" <br>\u200B","")}, ${t(comp[2].name).replace(" <br>\u200B","")}, ${t(comp[3].name).replace(" <br>\u200B","")}, ${t(comp[4].name).replace(" <br>\u200B","")}`);
    msg.push(`${t("구속")} : ${bondList[0]}, ${bondList[1]}, ${bondList[2]}, ${bondList[3]}, ${bondList[4]}`);
    msg.push(`${t("허수턴")} : ${scarecrowTurn}`);
    msg.push(`${t("13턴딜")} : ${dmg13.toLocaleString()}`);

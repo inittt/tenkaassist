@@ -43,7 +43,7 @@ function makeCompBlock(comp) {
    
    curRecommend = recommend;
    document.title = `TenkaAssist - ${name}`
-   document.getElementById('titlebox').innerHTML = `${name}`;
+   document.getElementById('titlebox').innerHTML = `${t_d(name)}`;
    const compbox = document.getElementById('comp-box-in');
    const stringArr = [];
    for(const cid of compstr.split(" ").map(Number)) {

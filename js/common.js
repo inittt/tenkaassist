@@ -110,6 +110,20 @@ function t(str) {
    if (lang == "en" && (str in translate)) return translate[str].en;
    return str;
 }
+function t_d(str) {
+   if (lang == "ko") return str;
+   if (lang == "en") {
+      const tmp = removeLastCharacter(str);
+      if (tmp in translate) return translate[tmp].en + "'s";
+   }
+   return str;
+}
+function removeLastCharacter(str) {
+   if (str.length === 0) {
+       return str; // 문자열이 비어 있으면 그대로 반환
+   }
+   return str.slice(0, -1); // 문자열의 마지막 문자를 제외한 부분을 반환
+}
 
 const translate = {
    // 헤더

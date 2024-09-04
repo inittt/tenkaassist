@@ -157,7 +157,7 @@ function loadBlockAllDeck(pg) {
       const ranking = comp.ranking, recommend = comp.recommend, vote = comp.vote;
       stringArr.push(`<div class="comp-box">`);
       stringArr.push(`<div class="comp-order">#${++bundleCnt}</div>`)
-      stringArr.push(`<div class="comp-name">${name}</div><div class="comp-deck">`);
+      stringArr.push(`<div class="comp-name">${t_d(name)}</div><div class="comp-deck">`);
 
       for(const cid of compstr) {
          const ch = getCharacter(cid);

@@ -87,7 +87,7 @@ function makeBlock(sort) {
       if (sort == 2) stringArr.push(`<div class="comp-time">${create_at}</div>`);
       else if (sort == 3) stringArr.push(`<div class="comp-time">${update_at}</div>`);
       else stringArr.push(`<div class="comp-order">#${cnt}</div>`)
-      stringArr.push(`<div class="comp-name">${name}</div><div class="comp-deck">`);
+      stringArr.push(`<div class="comp-name">${t_d(name)}</div><div class="comp-deck">`);
 
       for(const cid of compstr.split(" ").map(Number)) {
          const ch = getCharacter(cid);
