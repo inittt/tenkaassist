@@ -186,11 +186,19 @@ a {color: inherit; text-decoration: none;}
    flex-direction: column;
    align-items: center;
 }
+/*
 .text-mini {
    font-size: 0.7rem;
    width:2.8rem;
    text-align: center;
    white-space: nowrap;
+   overflow-x: hidden;
+}
+*/
+.text-mini {
+   font-size: 0.7rem;
+   width:2.8rem;
+   text-align: center;
    overflow-x: hidden;
 }
 .titlebox {

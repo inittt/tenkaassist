@@ -169,7 +169,7 @@ function loadBlockAllDeck(pg) {
                   ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                   <div class="element${ch.element} ch_border z-4"></div>
                </div>
-               <div class="text-mini">${ch.name}</div>
+               <div class="text-mini">${t(ch.name)}</div>
             </div>
          `);       
       }
@@ -264,7 +264,7 @@ function loadBlockNDeck(pg) {
                      ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                      <div class="element${ch.element} ch_border z-4"></div>
                   </div>
-                  <div class="text-mini">${ch.name}</div>
+                  <div class="text-mini">${t(ch.name)}</div>
                </div>
             `);       
          }

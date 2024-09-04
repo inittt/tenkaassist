@@ -220,7 +220,7 @@ function makeSSRBlock(list) {
             <div class="character">   
                <div style="margin:0.2rem;">
                   <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-                  <div class="text-mini" style="text-align:center;">${ch.name}</div>
+                  <div class="text-mini" style="text-align:center;">${t(ch.name)}</div>
                </div>
             </div>
             <div style="width:3rem;">${Math.floor(ch.per*100)}%</div>

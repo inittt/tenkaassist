@@ -354,7 +354,126 @@ const translate = {
    "회원가입 성공" : {en : "Registration successful"},
 
    
-
+   // 캐릭터명
+   "바알" : {en : "Baal <br>\u200B"},
+   "사탄" : {en : "Satan <br>\u200B"},
+   "이블리스" : {en : "Iblis <br>\u200B"},
+   "살루시아" : {en : "Salucia <br>\u200B"},
+   "란" : {en : "Lana <br>\u200B"},
+   "루루" : {en : "Lulu <br>\u200B"},
+   "밀레" : {en : "Milae <br>\u200B"},
+   "섹돌" : {en : "KS-Ⅷ <br>\u200B"},
+   "페바알" : {en : "Festive Baal"},
+   "울타" : {en : "Uruta <br>\u200B"},
+   "아야네" : {en : "Ayane <br>\u200B"},
+   "무엘라" : {en : "Muila <br>\u200B"},
+   "하쿠" : {en : "Shiro <br>\u200B"},
+   "놀라이티" : {en : "Noma <br>\u200B"},
+   "벨레트" : {en : "Bella donna"},
+   "엘자" : {en : "Elizabeth <br>\u200B"},
+   "아이블" : {en : "Idol Iblis"},
+   "노엘리" : {en : "Noel <br>\u200B"},
+   "바니사탄" : {en : "Easter Satan"},
+   "치즈루" : {en : "Chizuru <br>\u200B"},
+   "수즈카" : {en : "Summer Shizuka"},
+   "수루루" : {en : "Summer Lulu"},
+   "수섹돌" : {en : "Summer KS-Ⅷ"},
+   "수나나" : {en : "Summer Nana"},
+   "아르티아" : {en : "Aridya <br>\u200B"},
+   "구빨강" : {en : "Asida <br>\u200B"},
+   "구파랑" : {en : "Asina <br>\u200B"},
+   "메스미나" : {en : "Mesmiia <br>\u200B"},
+   "라티아" : {en : "Lotiya <br>\u200B"},
+   "할브리" : {en : "Hween Britney"}, // "Little Devil Britney"
+   "수이블" : {en : "Summer Iblis"},
+   "할살루" : {en : "Hween Salucia"}, // "Hallow-Queen Salucia"
+   "슈텐" : {en : "Shuten <br>\u200B"},
+   "테키" : {en : "Didi <br>\u200B"},
+   "모모" : {en : "Momo <br>\u200B"},
+   "파야" : {en : "Faya <br>\u200B"},
+   "뷰저" : {en : "Caesar <br>\u200B"},
+   "산타카" : {en : "Xmax Aiko"}, // "Dark Christmas Aiko"
+   "크란" : {en : "Xmas Lana"}, // "Xmas Dwarf Queen Lana"
+   "구릴리" : {en : "Evie <br>\u200B"},
+   "카시피나" : {en : "Karina <br>\u200B"},
+   "에피나" : {en : "Bloom <br>\u200B"},
+   "아온" : {en : "Fufu <br>\u200B"},
+   "이노리" : {en : "Inori <br>\u200B"},
+   "풍오라" : {en : "Harvest Fiora"}, // "Harvest Maid Fiora"
+   "세라프" : {en : "Sherana <br>\u200B"},
+   "에밀리" : {en : "Emily <br>\u200B"},
+   "안젤리카" : {en : "Anjelica <br>\u200B"},
+   "신미나" : {en : "Spring Minayomi"}, // "True Moon Minayomi"
+   "렌" : {en : "Lotus <br>\u200B"},
+   "스즈란" : {en : "Lillane <br>\u200B"},
+   "스타샤" : {en : "Sasha <br>\u200B"},
+   "신바알" : {en : "Bride Baal"},
+   "이치카" : {en : "Ichika <br>\u200B"},
+   "앨즈루" : {en : "Wonder Chizuru"}, // "Wonderland Chizuru"
+   "앨루루"	 : {en : "Wonder Lulu"}, // "Wonderland Lulu"
+   "베리스" : {en : "Bayliss <br>\u200B"},
+   "냥루루" : {en : "LazyCat Lulu"},
+   "신츠키" : {en : "Spring Ritsuki"}, // "True Moon Ritsuki"
+   "신이블" : {en : "Bride Iblis"},
+   "신사탄" : {en : "Bride Satan"},
+   "유메" : {en : "Yume <br>\u200B"}, // "SakuyaYume"
+   "미루" : {en : "Miru <br>\u200B"},
+   "카나" : {en : "Kana <br>\u200B"},
+   "신빨강" : {en : "RedQixi Asida"},
+   "신파랑" : {en : "BlueQixi Asina"},
+   "수밀레" : {en : "Summer Milae"}, // "Summer Saint Milae"	
+   "수엘리" : {en : "Summer Noel"},
+   "수르티아" : {en : "Summer Aridya"},
+   "적나나" : {en : "Chosen Nana"}, // "Chosen One Nana"
+   "키베루" : {en : "Geneva <br>\u200B"},
+   "로오나" : {en : "Hween Leona"}, // "Knight in Training Leona"
+   "로티아" : {en : "Hween Lotiya"}, // "BloodSucker Lotiya"
+   "바니카" : {en : "Bunny Aiko"}, // "Sexmas Bunny Aiko"
+   "크즈카" : {en : "Xmas Shizuka"}, // "Christmax Fox Shizuka"
+   "우사기" : {en : "Usagi <br>\u200B"}, // "Usagihime"
+   "절살루" : {en : "Elegance Salucia"}, // "Elegance Personified Salucia"
+   "용란" : {en : "Dragon Lana"}, // "Dragon Dancer Lana"
+   "코바알" : {en : "Cocoa Baal"}, // "Sweet Cocoa Baal"
+   "코이블" : {en : "Cocoa Iblis"}, // "Pure Cocoa Iblis"
+   "코사탄" : {en : "Cocoa Satan"}, // "Killer Cocoa Satan"
+   "배이린" : {en : "Doctor Irene"}, // "Corrupt Doctor Irene"
+   "간뷰" : {en : "Nurse Caesar"}, // "Tsundere Nurse Caesar"
+   "뷰지안" : {en : "Magical Juneau"}, // "Magical Maiden Juneau"
+   "마브리" : {en : "Magical Britney"}, // "Magical Maiden Britney"
+   "수야네" : {en : "Summer Ayane"},
+   "수바알" : {en : "Summer Baal"},
+   "수오라" : {en : "Summer Fiora"},
+   "수이카" : {en : "Summer Aiko"},
+   "해란" : {en : "Pirate Lana"}, // "Go Getter Lana"
+   "해나나" : {en : "Pirate Nana"}, // "Salty Sea Cat Nana"
+   "천사기" : {en : "Seraph Usagi"}, // "Sexy Seraph Usagihime"
+   "악미루" : {en : "Demon Miru"}, // "Demon Kitty Annin Miru"
+   "뇨로" : {en : "Nyoro <br>\u200B"},
+   "할야네" : {en : "Hween Ayane"}, // "Pumkin Witch Ayane"
+   "할쿠" : {en : "Hween Shiro"}, // "Naughty Trixie Shiro"
+   "크르티아" : {en : "Xmas Aridya"}, // "Snow Fantasy Aridya"
+   "크이블" : {en : "Xmas Iblis"}, // "Sexmas Caroler Iblis"
+   "신릴리" : {en : "Xmas Evie"}, // "Sexmas Evie"
+   "셀리나" : {en : "Salina <br>\u200B"},
+   "이나스" : {en : "Inase <br>\u200B"},
+   "카디아" : {en : "Cartilla <br>\u200B"},
+   "나나미" : {en : "Nanami <br>\u200B"},
+   "가엘리" : {en : "Singer Noel"}, // "Glittering Songstress Noel"
+   "돌스미나" : {en : "Agent Mesmiia"}, // "Idol Agent Mesmiia"
+   "안젤라" : {en : "Angelina <br>\u200B"},
+   "춘즈란" : {en : "Sensual Lillane"}, // "Sensual Bunny Lillane"
+   "익루루" : {en : "Lingerie Lulu"}, // "Lingerie Lolita Lulu"
+   "불타라" : {en : "Lingerie Tyrella"}, // "Delusional Rival Tyrella"
+   "라냐" : {en : "Lelya <br>\u200B"},
+   "관나나" : {en : "Agent Nana"},
+   "수즈루" : {en : "Summer Chizuru"},
+   "수살루" : {en : "Summer Salucia"},
+   "수저" : {en : "Summer Caesar"},
+   "수사탄" : {en : "Summer Satan"},
+   "헌미나" : {en : "Hunter Minayomi"}, // "Apex Hunter Minayomi"
+   "요이키" : {en : "Oniyoiki <br>\u200B"},
+   "곤즈카" : {en : "Drunken Shizuka"}, // "Drunken Feaster Shizuka"
+   "츠바키" : {en : "Tsubaki <br>\u200B"},
 };
 
 //---------------------------------------------------------------------------

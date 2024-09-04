@@ -56,7 +56,7 @@ function makeComp(list) {
                   <div id="el${idx}" class="element${ch.element} ch_border z-4"></div>
                </div>
                <div id="cd-max${idx}" class="shd-container"><div id="shd${idx}" class="shd"></div></div>
-               <div class="text-mini">${ch.name}</div>
+               <div class="text-mini">${t(ch.name)}</div>
             </div>
             <img id="def${idx}" class="act_btn" onclick="do_def(${idx})" src="${address}/images/icons/btn_down.png">
             <div class="act_btn" style="height:2.5rem;">
@@ -165,10 +165,10 @@ function endGame() {
    updateAll();
 
    const msg = [];
-   msg.push(`${comp[0].name} ${comp[1].name} ${comp[2].name} ${comp[3].name} ${comp[4].name}`);
-   msg.push(`${t("구속")} : ${bondList[0]} ${bondList[1]} ${bondList[2]} ${bondList[3]} ${bondList[4]} `)
+   msg.push(`${t(comp[0].name)}, ${t(comp[1].name)}, ${t(comp[2].name)}, ${t(comp[3].name)}, ${t(comp[4].name)}`);
+   msg.push(`${t("구속")} : ${bondList[0]}, ${bondList[1]}, ${bondList[2]}, ${bondList[3]}, ${bondList[4]}`);
    msg.push(`${t("허수턴")} : ${scarecrowTurn}`);
-   msg.push(`${t("13턴딜")} : ${dmg13.toLocaleString()}`)
+   msg.push(`${t("13턴딜")} : ${dmg13.toLocaleString()}`);
 
    const cmd = [];
    for(let i = 0; i < command.length; i++) {

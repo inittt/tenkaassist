@@ -46,7 +46,7 @@ function getCharactersWithCondition(element, role, rarity, search) {
                <img id="chk_${id}" src="${address}/images/checkmark.png" class="chked z-3" style="display:${chk_option}">
                <div class="element${element} ch_img ch_border z-4"></div>
             </div>
-            <div class="text-mini">${name}</div>
+            <div class="text-mini">${t(name)}</div>
          </div>
       `);
    }
@@ -88,7 +88,7 @@ function updateSelected() {
                   ${liberationList.includes(name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                   <div class="element${element} ch_img ch_border z-4"></div>
                </div>
-               <div class="text-mini">${name}</div>
+               <div class="text-mini">${t(name)}</div>
             </div>
          `);
       }
