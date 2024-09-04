@@ -114,7 +114,7 @@ function t_d(str) {
    if (lang == "ko") return str;
    if (lang == "en") {
       const tmp = removeLastCharacter(str);
-      if (tmp in translate) return translate[tmp].en;
+      if (tmp in translate) return translate[tmp].en.replace(" <br>\u200B", "");
    }
    return str;
 }
