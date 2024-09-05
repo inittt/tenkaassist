@@ -406,7 +406,7 @@ const translate = {
    "모모" : {en : "Momo <br>\u200B"},
    "파야" : {en : "Faya <br>\u200B"},
    "뷰저" : {en : "Caesar <br>\u200B"},
-   "산타카" : {en : "Xmax Aiko"}, // "Dark Christmas Aiko"
+   "산타카" : {en : "Xmas Aiko"}, // "Dark Christmas Aiko"
    "크란" : {en : "Xmas Lana"}, // "Xmas Dwarf Queen Lana"
    "구릴리" : {en : "Evie <br>\u200B"},
    "카시피나" : {en : "Karina <br>\u200B"},
