@@ -47,6 +47,8 @@ function setCompNum(data) {
    document.getElementById("allcomp").innerText = data.length+"개";
    document.getElementById("dealok").innerText = data.filter(i => i.ranking < 90).length+"개";
    document.getElementById("dealno").innerText = data.filter(i => i.ranking >= 90).length+"개";
+   document.getElementById("dealok1").innerText = data.filter(i => i.vote > 0).length+"개";
+   document.getElementById("dealno1").innerText = data.filter(i => i.ranking <= 0).length+"개";
 }
 
 function drawGraph(data) {
