@@ -237,6 +237,18 @@ function addAnyCh() {
    for(let e = 0; e < 5; e++) for(let r = 0; r < 5; r++) 
          chJSON.data.push(anyCh(el[e]+ro[r], e, r));
 }
+
+function findEnIncludes(str) {
+   const result = new Set();
+   const lowerStr = str.toLowerCase();
+   for (let key in translate) {
+     if (translate[key].en.toLowerCase().includes(lowerStr)) {
+       result.add(key);
+     }
+   }
+   return result;
+ }
+
 function anyCh(name, el, ro) {
    if (el == null) el = 9;
    if (ro == null) ro = 9;

@@ -417,7 +417,7 @@ const translate = {
    "세라프" : {en : "Sherana <br>\u200B"},
    "에밀리" : {en : "Emily <br>\u200B"},
    "안젤리카" : {en : "Anjelica <br>\u200B"},
-   "신미나" : {en : "Spring Minayomi"}, // "True Moon Minayomi"
+   "신미나" : {en : "NewYear Minayomi"}, // "True Moon Minayomi"
    "렌" : {en : "Lotus <br>\u200B"},
    "스즈란" : {en : "Lillane <br>\u200B"},
    "스타샤" : {en : "Sasha <br>\u200B"},
@@ -427,7 +427,7 @@ const translate = {
    "앨루루"	 : {en : "Wonder Lulu"}, // "Wonderland Lulu"
    "베리스" : {en : "Bayliss <br>\u200B"},
    "냥루루" : {en : "LazyCat Lulu"},
-   "신츠키" : {en : "Spring Ritsuki"}, // "True Moon Ritsuki"
+   "신츠키" : {en : "NewYear Ritsuki"}, // "True Moon Ritsuki"
    "신이블" : {en : "Bride Iblis"},
    "신사탄" : {en : "Bride Satan"},
    "유메" : {en : "Yume <br>\u200B"}, // "SakuyaYume"
