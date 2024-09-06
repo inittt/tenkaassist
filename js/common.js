@@ -489,10 +489,10 @@ const translate = {
    "곤즈카" : {en : "Drunken Shizuka"}, // "Drunken Feaster Shizuka"
    "츠바키" : {en : "Tsubaki <br>\u200B"},
 
-   "아이카" : {en : "Aiko"},
-   "미나요미" : {en : "Minayomi"},
-   "나프라라" : {en : "Nafrala"},
-   "토타라" : {en : "Tyrella"},
+   "아이카" : {en : "Aiko <br>\u200B"},
+   "미나요미" : {en : "Minayomi <br>\u200B"},
+   "나프라라" : {en : "Nafrala <br>\u200B"},
+   "토타라" : {en : "Tyrella <br>\u200B"},
 };
 
 //---------------------------------------------------------------------------
