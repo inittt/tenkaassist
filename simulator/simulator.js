@@ -146,11 +146,10 @@ function do_def(idx) {
 
 let scarecrowTurn = 99;
 function endAct() {
-   if (boss.hp <= 0 && scarecrowTurn > GLOBAL_TURN) scarecrowTurn = GLOBAL_TURN;
-
    if (isAllActed()) {
       for(let i = 0; i < 5; i++) comp[i].turnover();
       nextTurn();
+      if (boss.hp <= 0 && scarecrowTurn > GLOBAL_TURN-1) scarecrowTurn = GLOBAL_TURN-1;
       if (boss.hp <= 0 && GLOBAL_TURN >= 14) {
          GLOBAL_TURN--;
          return endGame();
