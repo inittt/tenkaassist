@@ -271,7 +271,7 @@ function isValidComp(ids) {
    }
    // 수이블 리더
    if (comp[0].id == 10042) {
-      for(let i = 1; i < 5; i++) if (comp[i].role != 0) return false;
+      for(let i = 1; i < 5; i++) if (comp[i].role != 0 && comp[i].role != 1) return false;
       return true;
    }
    // 수앨리 리더
@@ -290,6 +290,6 @@ function isValidComp(ids) {
    if (comp.find(i => i.id == 10009 || i.id == 10083)) return true;
    // 5번 에밀리
    if (comp[4].id == 10063) return true;
-   
+
    return false;
 }
