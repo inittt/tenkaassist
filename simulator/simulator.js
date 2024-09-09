@@ -95,9 +95,9 @@ function start(compIds) {
    for(const id of compIds) {
       const tmp = chJSON.data.filter(ch => ch.id === id)[0];
       if (liberationList.includes(tmp.name))
-         comp.push(new Champ(tmp.id, tmp.name, Math.floor(tmp.hp*COEF), Math.floor(tmp.atk*COEF*1.1), tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
+         comp.push(new Champ(tmp.id, tmp.name, Math.ceil(tmp.hp*COEF), Math.ceil(tmp.atk*COEF*1.1), tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
       else
-         comp.push(new Champ(tmp.id, tmp.name, Math.floor(tmp.hp*COEF), Math.floor(tmp.atk*COEF), tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
+         comp.push(new Champ(tmp.id, tmp.name, Math.ceil(tmp.hp*COEF), Math.ceil(tmp.atk*COEF), tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
    }
    comp[0].isLeader = true;
    for(let i = 0; i < 5; i++) {
