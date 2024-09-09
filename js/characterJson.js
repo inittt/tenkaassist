@@ -263,15 +263,10 @@ function isValidComp(ids) {
    if (ids.length != 5) return false;
    const comp = ids.map(id => getCharacter(id));
 
-   // 힐러
-   if (comp.find(i => i.role == 1)) return true;
-   // 아이카, 유메
-   if (comp.find(i => i.id == 10009 || i.id == 10083)) return true;
-   // 5번 에밀리
-   if (comp[4].id == 10063) return true;
-   // 수앨리 리더
-   if (comp[0].id == 10091) {
-      for(let i = 1; i < 5; i++) if (comp[i].role != 2 && comp[i].role != 4) return false;
+   
+   // 놀라이티 리더
+   if (comp[0].id == 10022) {
+      for(let i = 1; i < 5; i++) if (comp[i].role == 1) return false;
       return true;
    }
    // 수이블 리더
@@ -279,9 +274,9 @@ function isValidComp(ids) {
       for(let i = 1; i < 5; i++) if (comp[i].role != 0) return false;
       return true;
    }
-   // 놀라이티 리더
-   if (comp[0].id == 10022) {
-      for(let i = 1; i < 5; i++) if (comp[i].role == 1) return false;
+   // 수앨리 리더
+   if (comp[0].id == 10091) {
+      for(let i = 1; i < 5; i++) if (comp[i].role != 2 && comp[i].role != 4) return false;
       return true;
    }
    // 노엘리 리더
@@ -289,5 +284,12 @@ function isValidComp(ids) {
    // 구릴리 리더
    if (comp[0].id == 10054) return true;
 
+   // 힐러
+   if (comp.find(i => i.role == 1)) return true;
+   // 아이카, 유메
+   if (comp.find(i => i.id == 10009 || i.id == 10083)) return true;
+   // 5번 에밀리
+   if (comp[4].id == 10063) return true;
+   
    return false;
 }
