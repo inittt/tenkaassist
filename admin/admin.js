@@ -44,9 +44,9 @@ function setCompGraph() {
    }).catch(e => {});
 }
 function setCompNum(data) {
-   document.getElementById("allcomp").innerText = data.length+"개";
-   document.getElementById("dealok").innerText = data.filter(i => i.ranking < 90).length+"개";
-   document.getElementById("dealok1").innerText = data.filter(i => i.vote > 0).length+"개";
+   document.getElementById("allcomp").innerText = data.length;
+   document.getElementById("dealok").innerText = data.filter(i => i.ranking < 90).length;
+   document.getElementById("dealok1").innerText = data.filter(i => i.vote > 0).length;
 }
 
 function drawGraph(data) {
