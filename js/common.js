@@ -486,7 +486,7 @@ const translate = {
    "요이키" : {en : "Oniyoiki <br>\u200B"},
    "곤즈카" : {en : "Drunken Shizuka"}, // "Drunken Feaster Shizuka"
    "츠바키" : {en : "Tsubaki <br>\u200B"},
-   "아메" : {en : "Amethyst <br>\u200B"},
+   "아메" : {en : "Amethystina <br>\u200B"},
    "바야네" : {en : "Bunny Ayane"},
    "바이블" : {en : "Bunny Iblis"},
 
