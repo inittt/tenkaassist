@@ -110,6 +110,11 @@ function t(str) {
    if (lang == "en" && (str in translate)) return translate[str].en;
    return str;
 }
+function t2(str) {
+   if (lang == "ko") return str;
+   if (lang == "en" && (str in translate)) return translate[str].en.replace(" <br>\u200B", "");
+   return str;
+}
 function t_d(str) {
    if (lang == "ko") return str;
    if (lang == "en") {
