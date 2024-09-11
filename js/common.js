@@ -119,10 +119,8 @@ function t_d(str) {
    return str;
 }
 function removeLastCharacter(str) {
-   if (str.length === 0) {
-       return str; // 문자열이 비어 있으면 그대로 반환
-   }
-   return str.slice(0, -1); // 문자열의 마지막 문자를 제외한 부분을 반환
+   if (str.length === 0) return str;
+   return str.slice(0, -1);
 }
 
 const translate = {
@@ -488,6 +486,9 @@ const translate = {
    "요이키" : {en : "Oniyoiki <br>\u200B"},
    "곤즈카" : {en : "Drunken Shizuka"}, // "Drunken Feaster Shizuka"
    "츠바키" : {en : "Tsubaki <br>\u200B"},
+   "아메" : {en : "Amethyst <br>\u200B"},
+   "바야네" : {en : "Bunny Ayane"},
+   "바이블" : {en : "Bunny Iblis"},
 
    "아이카" : {en : "Aiko <br>\u200B"},
    "레오나" : {en : "Leona <br>\u200B"},
