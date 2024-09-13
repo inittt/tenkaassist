@@ -294,7 +294,7 @@ function loadBlockNDeck(pg) {
 let progress = 0;
 function backtrack0(startIndex, selectedEntities, possibleDeck) {
    let half = Math.round(possibleDeck.length / 2);
-   for(let i = half; i >= startIndex; i--) {
+   for(let i = half-1; i >= startIndex; i--) {
       setTimeout(() => {
          let usedNumbers = new Set();
          let entity = possibleDeck[i];
