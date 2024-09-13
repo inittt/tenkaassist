@@ -1,6 +1,8 @@
 const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
-const possibleDeck = [];
+const limit_dummy = Number(params.get('dummy') == null ? 99 : params.get('dummy'));
+const limit_13t = Number(params.get('dmg13t') == null ? 0 : params.get('dmg13t'));
+const possible1 = [], possible2 = [];
 let allCombinations = [];
 let isDataLoaded = false, sort = 0, mod = 0, cc, isCalculating = false;
 const curHeader = 5;
@@ -72,7 +74,7 @@ function getAllCompsFromServer() {
          return;
       }
       setPossible(res.data);
-      makeBlock();
+      makeBlock(sort == 2 ? possible2 : possible1);
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
       cc.innerHTML = `<div class="block">${t("데이터 로드 실패")}</div>`;
@@ -85,26 +87,29 @@ function setPossible(data) {
       d.compstr = compList.slice();
       if (compList.every(item => haveList.includes(item) || isAny(item))) {
          const bool = compList.some(item => isAny(item));
-         if (!bool && Math.floor(d.ranking) == 99) d.ranking = 98;
-         if (!bool && d.recommend == 0) d.recommend = 1;
-         if (!bool && d.vote == 0) d.vote = 1;
-         possibleDeck.push(d);
+         if (!bool) {
+            if (Math.floor(d.ranking) == 99) d.ranking = 98;
+            if (d.recommend == 0) d.recommend = 1;
+            if (d.vote == 0) d.vote = 1;
+         }
+         if (d.ranking <= limit_dummy) possible1.push(d);
+         if (d.vote >= limit_13t) possible2.push(d);
       }
    }
 }
-function makeBlock() {
+function makeBlock(possibleDeck) {
    page = 0;
    bundleCnt = 0;
    allCombinations.length = 0;
    isEndOfDeck = false;
 
-   if (mod == 0) makeBlockAllDeck();
+   if (mod == 0) makeBlockAllDeck(possibleDeck);
    else {
       isCalculating = true;
       deckCnt = mod+1;
       progress = 0;
       cc.innerHTML = `${t("계산중")}...0.00%`;
-      backtrack0(0, []);
+      backtrack0(0, [], possibleDeck);
    }
 }
 
@@ -122,7 +127,7 @@ function init() {
 
 let deckCnt, bundleCnt = 0, page = 0, isEndOfDeck = false;
 
-function makeBlockAllDeck() {
+function makeBlockAllDeck(possibleDeck) {
    cc.innerHTML = "";
 
    allCombinations = [...possibleDeck];
@@ -287,9 +292,9 @@ function loadBlockNDeck(pg) {
 
 /* 백트래킹 함수 -----------------------------------------------------------*/
 let progress = 0;
-function backtrack0(startIndex, selectedEntities) {
+function backtrack0(startIndex, selectedEntities, possibleDeck) {
    let half = Math.round(possibleDeck.length/2);
-   for(let i = startIndex; i < half; i++) {
+   for(let i = half; i >= startIndex; i--) {
       setTimeout(() => {
          let usedNumbers = new Set();
          let entity = possibleDeck[i];
@@ -304,15 +309,15 @@ function backtrack0(startIndex, selectedEntities) {
          if (canUseEntity) {
             for (let num of tempUsedNumbers) usedNumbers.add(num);
             selectedEntities.push(entity);
-            backtrack(i+1, selectedEntities, usedNumbers);
+            backtrack(i+1, selectedEntities, usedNumbers, possibleDeck);
             selectedEntities.pop();
             for (let num of tempUsedNumbers) usedNumbers.delete(num);
          }
-         updateProgress();
+         updateProgress(possibleDeck);
          if (progress == possibleDeck.length) makeBlockNDeck();
       }, 0);
    }
-   for(let i = possibleDeck.length-1; i >= half; i--) {
+   for(let i = half; i < possibleDeck.length; i++) {
       setTimeout(() => {
          let usedNumbers = new Set();
          let entity = possibleDeck[i];
@@ -327,11 +332,11 @@ function backtrack0(startIndex, selectedEntities) {
          if (canUseEntity) {
             for (let num of tempUsedNumbers) usedNumbers.add(num);
             selectedEntities.push(entity);
-            backtrack(i+1, selectedEntities, usedNumbers);
+            backtrack(i+1, selectedEntities, usedNumbers, possibleDeck);
             selectedEntities.pop();
             for (let num of tempUsedNumbers) usedNumbers.delete(num);
          }
-         updateProgress();
+         updateProgress(possibleDeck);
          if (progress == possibleDeck.length) makeBlockNDeck();
       }, 0);
    };
@@ -341,7 +346,7 @@ function copy(a) {
    return JSON.parse(JSON.stringify(a));
 }
 
-function backtrack(startIndex, selectedEntities, usedNumbers) {
+function backtrack(startIndex, selectedEntities, usedNumbers, possibleDeck) {
    if (selectedEntities.length === deckCnt) {allCombinations.push([...selectedEntities]); return;}
 
    for (let i = startIndex; i < possibleDeck.length; i++) {
@@ -364,7 +369,7 @@ function backtrack(startIndex, selectedEntities, usedNumbers) {
    }
 }
 
-function updateProgress() {
+function updateProgress(possibleDeck) {
    const per = ((++progress)/possibleDeck.length*100).toFixed(2);
    cc.innerHTML = `&nbsp;&nbsp;${t("계산중")}...${per}%`;
 }

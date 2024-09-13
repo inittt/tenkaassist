@@ -8,13 +8,43 @@ document.addEventListener("DOMContentLoaded", function() {
       getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, searchInput.value);
    })
    getCharactersWithCondition(null, null, checkRarityN = 3, "");
-   
-   const toggleButton = document.getElementById('srInclude');
-   toggleButton.addEventListener('click', () => {
-      isOn = toggleButton.classList.toggle('leaderOn');
-      toggleButton.classList.toggle('leaderOff', !isOn);
+
+   const toggleButton2 = document.getElementById('set_option');
+   toggleButton2.addEventListener('click', () => {
+      isOn = toggleButton2.classList.toggle('leaderOn');
+      toggleButton2.classList.toggle('leaderOff', !isOn);
+      if (isOn) document.getElementById("suggest_option").style.display = "flex";
+      else document.getElementById("suggest_option").style.display = "none";
    });
+
+   // 추천덱 조건 드랍박스
+   // 구속 드랍박스
+   for(let i = 0; i < 2; i++) {
+      const dropdownBtn = document.getElementById(`btn${i}`);
+      const dropdownContent = document.getElementById(`drop${i}`);
+      dropdownBtn.addEventListener("click", function() {
+         dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+      });
+      const radios = document.querySelectorAll(`.dropdown-content input[name='b${i}']`);
+      radios.forEach(function(option) {
+         option.addEventListener("click", function() {
+            if (i == 0) dropdownBtn.innerText = `${this.value}${t("턴")}`;
+            else if (i == 1) dropdownBtn.innerText = `${formatNumber2(this.value)}`;
+            const spanElement = document.createElement('span');
+            spanElement.classList.add('absolute-right');
+            spanElement.innerHTML = '▼'
+            dropdownBtn.appendChild(spanElement);
+            dropdownContent.style.display = "none";
+         });
+      });
+   }
 });
+
+function formatNumber2(value) {
+   if (typeof value == "string") value = Number(value);
+   if (lang != "ko") return (value / 1000000000).toFixed(0) + ' B';
+   else return (value / 100000000).toFixed(0) + '억';
+}
 
 
 function getCharactersWithCondition(element, role, rarity, search) {
@@ -57,12 +87,16 @@ function getCharactersWithCondition(element, role, rarity, search) {
 // 검색 버튼 누를시
 function searchDeck() {
    const go = [...selected];
-   if (isOn) for(const ch of chJSON.data) {
+   for(const ch of chJSON.data) {
       if (ch.rarity == 3) continue;
       if (go.indexOf(ch.id) == -1) go.push(ch.id);
    }
    if (go.length < 1) return alert(t("하나 이상의 캐릭터를 선택해 주세요"));
-   location.href = `${address}/make/?list=${go}`;
+
+   const dummy = document.querySelector('input[name="b0"]:checked').value;
+   const dmg13t = document.querySelector('input[name="b1"]:checked').value;
+
+   location.href = `${address}/make/?list=${go}&dummy=${dummy}&dmg13t=${dmg13t}`;
 }
 
 function resizeButton() {

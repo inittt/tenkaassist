@@ -292,7 +292,8 @@ const translate = {
 
    // 보유 캐릭터
    "보유 캐릭터" : {en : "Owned"},
-   "SR이하 포함" : {en : "Includes below SSR"},
+   "조건" : {en : "Option"},
+   "SR이하 포함" : {en : "add SR▽"},
    "보유중인 캐릭터를 선택해 주세요" : {en : "Select from your owned characters"},
    "로그인 된 경우 동기화 가능" : {en : "Syncing available when logged in"},
    "보유 캐릭터를 가져오시겠습니까?" : {en : "Do you want to retrieve your owned characters?"},
