@@ -362,7 +362,7 @@ function backtrack(startIndex, selectedEntities, usedNumbers, possibleDeck) {
       if (canUseEntity) {
          for (let num of tempUsedNumbers) usedNumbers.add(num);
          selectedEntities.push(entity);
-         backtrack(i+1, selectedEntities, usedNumbers);
+         backtrack(i+1, selectedEntities, usedNumbers, possibleDeck);
          selectedEntities.pop();
          for (let num of tempUsedNumbers) usedNumbers.delete(num);
       }
