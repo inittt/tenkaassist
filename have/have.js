@@ -96,7 +96,7 @@ function searchDeck() {
    const dummy = document.querySelector('input[name="b0"]:checked').value;
    const dmg13t = document.querySelector('input[name="b1"]:checked').value;
 
-   location.href = `${address}/make/?list=${go}&dummy=${dummy}&dmg13t=${dmg13t}`;
+   location.href = `${address}/make/?dummy=${dummy}&dmg13t=${dmg13t}&list=${go}`;
 }
 
 function resizeButton() {
