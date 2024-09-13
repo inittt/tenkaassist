@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function() {
          else if ("3개" === this.value) {mod = 2; titleBoxText.innerHTML = t("추천덱") + " - 3";}
          else if ("4개" === this.value) {mod = 3; titleBoxText.innerHTML = t("추천덱") + " - 4";}
          else {mod = 0; titleBoxText.innerHTML = t("추천덱") + " - 1";}
-         makeBlock();
+         makeBlock(sort == 2 ? possible2 : possible1);
       });
    });
 
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function() {
          sort = 0;
          if ("13턴(5)" === this.value) sort = 1;
          else if ("13턴(1)" === this.value) sort = 2;
-         makeBlock();
+         makeBlock(sort == 2 ? possible2 : possible1);
       });
    });
 
@@ -109,7 +109,6 @@ function makeBlock(possibleDeck) {
       deckCnt = mod+1;
       progress = 0;
       cc.innerHTML = `${t("계산중")}...0.00%`;
-      console.log(possibleDeck);
       backtrack0(0, [], possibleDeck);
    }
 }
