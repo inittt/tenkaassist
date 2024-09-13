@@ -109,6 +109,7 @@ function makeBlock(possibleDeck) {
       deckCnt = mod+1;
       progress = 0;
       cc.innerHTML = `${t("계산중")}...0.00%`;
+      console.log(possibleDeck);
       backtrack0(0, [], possibleDeck);
    }
 }
@@ -293,7 +294,7 @@ function loadBlockNDeck(pg) {
 /* 백트래킹 함수 -----------------------------------------------------------*/
 let progress = 0;
 function backtrack0(startIndex, selectedEntities, possibleDeck) {
-   let half = Math.round(possibleDeck.length/2);
+   let half = Math.round(possibleDeck.length / 2);
    for(let i = half; i >= startIndex; i--) {
       setTimeout(() => {
          let usedNumbers = new Set();
