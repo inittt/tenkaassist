@@ -143,7 +143,8 @@ const translate = {
    // 조합목록
    "홈" : {en : "Home"},
    "조합" : {en : "Team"},
-   "허수+" : {en : "dummy+"},
+   "허수+(5) " : {en : "dummy+"},
+   "허수+(5)" : {en : "dummy+(5)"},
    "13턴딜" : {en : "13t dmg"},
    "13턴딜(5)" : {en : "13t dmg(5)"},
    "13턴딜(1)" : {en : "13t dmg(1)"},
@@ -151,7 +152,7 @@ const translate = {
    "13턴(1)" : {en : "13t (1)"},
    "최신등록순" : {en : "newest"},
    "최신수정순" : {en : "recent"},
-   "총 덱 개수" : {en : "total cnt"},
+   "총 덱 개수" : {en : "total count"},
    "턴" : {en: "t"},
    "로드 중..." : {en: "Loading..."},
    "네트워크 응답이 올바르지 않습니다." : {en: "The network response is not correct"},

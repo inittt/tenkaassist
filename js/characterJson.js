@@ -133,10 +133,10 @@ const chJSON = { data : [
 {ok : false, id : 10016, rarity : 2, fullname : "천재 여군사 브리트니", name : "브리트니", element : 3, role : 4},
 {ok : true, id : 10036, rarity : 2, hp:1376035, atk:169181, cd:4, atkMag:0, ultMag:0, fullname : "슬라임 퀸 나프라라", name : "나프라라", element : 2, role : 2},
 {ok : true, id : 10038, rarity : 2, hp:920309, atk:252885, cd:5, atkMag:100, ultMag:721, fullname : "마법소녀 토타라", name : "토타라", element : 3, role : 0},
-{ok : false, id : 10041, rarity : 2, fullname : "길드 간판 소녀 호타루", name : "호타루", element : 1, role : 1},
+{ok : true, id : 10041, rarity : 2, hp:1006229, atk:243585, cd:5, atkMag:0, ultMag:0, fullname : "길드 간판 소녀 호타루", name : "호타루", element : 1, role : 1},
 {ok : false, id : 10046, rarity : 2, fullname : "날카로운 가시 가벨", name : "가벨", element : 2, role : 0},
 {ok : false, id : 10051, rarity : 2, fullname : "최후의 은룡 프리실라", name : "프리실라", element : 4, role : 4},
-{ok : false, id : 10055, rarity : 2, fullname : "엘프 댄서 타노시아", name : "타노시아", element : 3, role : 3},
+{ok : true, id : 10055, rarity : 2, hp:942454, atk:247128, cd:3, atkMag:0, ultMag:0, fullname : "엘프 댄서 타노시아", name : "타노시아", element : 3, role : 3},
 {ok : false, id : 10061, rarity : 2, fullname : "단지처 티아스", name : "티아스", element : 0, role : 2},
 
 {ok : false, id : 10801, rarity : 1, fullname : "카두케우스 군단 간호사장 아이린", name : "아이린", element : 3, role : 1},
