@@ -49,6 +49,19 @@ function setCompNum(data) {
    document.getElementById("dealok1").innerText = data.filter(i => i.vote > 0).length;
 }
 
+function initPW() {
+   const name = document.getElementById("initPW").value;
+   request(`${server}/users/initPassword/${name}`, {
+      method: "PUT",
+   }).then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   }).then(res => {
+      if (!res.success) return alert(res.msg);
+      return alert("성공");
+   }).catch(e => {});
+}
+
 function drawGraph(data) {
    const dateCount = {}; // 날짜별 개수를 세기 위한 객체
 
