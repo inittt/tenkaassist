@@ -50,8 +50,7 @@ function setCompNum(data) {
 }
 
 function initPW() {
-   const name = document.getElementById("initPW").value;
-   request(`${server}/users/initPassword/${name}`, {
+   request(`${server}/users/initPassword/${document.getElementById("initPW").value}`, {
       method: "PUT",
    }).then(response => {
       if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
