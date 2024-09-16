@@ -124,6 +124,7 @@ function do_ult(idx) {
    for(let i = 0; i < 5; i++) comp[i].isHealed = false;
    endAct();
    updateAll();
+   overflowed = false;
 }
 function do_atk(idx) {
    if (comp[idx].isActed) return;
@@ -133,6 +134,7 @@ function do_atk(idx) {
    for(let i = 0; i < 5; i++) comp[i].isHealed = false;
    endAct();
    updateAll();
+   overflowed = false;
 }
 function do_def(idx) {
    if (comp[idx].isActed) return;
@@ -142,6 +144,7 @@ function do_def(idx) {
    for(let i = 0; i < 5; i++) comp[i].isHealed = false;
    endAct();
    updateAll();
+   overflowed = false;
 }
 
 let scarecrowTurn = 99;
@@ -239,8 +242,9 @@ function updateAll() {
    }
    getdiv("turn").innerHTML = `TURN ${GLOBAL_TURN}`;
    
-   if (lastDmg >= overflowDmg) getdiv("deal").style.color = "red";
-   else getdiv("deal").style.color = "white";
+   if (overflowed) {
+      getdiv("deal").style.color = "red";
+   } else getdiv("deal").style.color = "white";
 
    getdiv("deal").innerHTML = `${t("공격데미지")} : ${Math.ceil(lastDmg).toLocaleString()}`;
    getdiv("deal_add").innerHTML = `${t("추가데미지")} : ${Math.ceil(lastAddDmg).toLocaleString()}`;
