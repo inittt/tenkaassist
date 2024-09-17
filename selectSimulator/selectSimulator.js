@@ -107,7 +107,7 @@ function updateSelected() {
          let id = champ.id, name = champ.name, element = champ.element, role = champ.role;
          let roleImg = isAny(id) ? "" : `<img src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">`;
          innerArray.push(`
-            <div class="character" onclick="clickedSel(this, ${id})" style="margin:0.2rem;">
+            <div class="character" draggable="true" onclick="clickedSel(this, ${id})" ondragstart="chDragStart(event, ${id})" ondrop="chDrop(event, ${id})" ondragover="chDragOver(event)" style="margin:0.2rem;">
                <div style="margin:0.2rem;">
                   <img src="${address}/images/characters/cs${id}_0_0.webp" class="img z-1" alt="">
                   ${roleImg}
@@ -176,6 +176,26 @@ function setBond(num) {
    }
 }
 
+// 드래그앤드랍 순서 변경
+function chDragStart(event, id) {
+   event.dataTransfer.setData("text/plain", id);
+}
+
+function chDrop(event, id) {
+   event.preventDefault();
+   const draggedId = event.dataTransfer.getData("text/plain");
+   const draggedIndex = selected.indexOf(Number(draggedId));
+   const dropIndex = selected.indexOf(id);
+   if (draggedIndex > -1 && dropIndex > -1) {
+      selected.splice(draggedIndex, 1);
+      selected.splice(dropIndex, 0, Number(draggedId));
+      updateSelected();
+   }
+}
+
+function chDragOver(event) {
+   event.preventDefault();
+}
 
 /* input:radio 버튼해제 로직 --------------------------------------------------*/
 function checkElement(num) {
