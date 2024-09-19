@@ -1,6 +1,5 @@
-const ch_5 = [], ch_1 = [];
-let loading = true, radioValue = 0, sort = 0;
-let checkElementN, checkRoleN, checkRarityN;
+let server_data;
+let isloading = true, radioValue = 0, mod = 0, sort = 0;
 
 request(`${server}/comps/getAll`, {
    method: "GET",
@@ -9,88 +8,93 @@ request(`${server}/comps/getAll`, {
    return response.json();
 }).then(res => {
    if (!res.success) return alert(res.msg);
-   setData(res.data);
-   getCharactersWithCondition(null, null, null, "");
-   loading = false;
+   server_data = res.data;
+   setData();
 }).catch(e => {});
-
-function setData(data) {
-   data.sort((a, b) => b.recommend - a.recommend);
-   const sortedList1k5 = data.slice(0, 1000);
-   for(let c of sortedList1k5) {
-      const ids = c.compstr.split(" ").map(Number);
-      for(let id of ids) {
-         const now = ch_5.find(i => i.id == id);
-         if (now == undefined) ch_5.push({id:id, cnt:1});
-         else now.cnt++;
-      }
-   }
-   ch_5.sort((a, b) => b.cnt - a.cnt);
-
-   data.sort((a, b) => b.vote - a.vote);
-   const sortedList1k1 = data.slice(0, 1000);
-   for(let c of sortedList1k1) {
-      const ids = c.compstr.split(" ").map(Number);
-      for(let id of ids) {
-         const now = ch_1.find(i => i.id == id);
-         if (now == undefined) ch_1.push({id:id, cnt:1});
-         else now.cnt++;
-      }
-   }
-   ch_1.sort((a, b) => b.cnt - a.cnt);
-}
 
 document.addEventListener("DOMContentLoaded", function() {
    const dropdownBtn = document.getElementById("dropdownBtn");
-   const dropdownContent = document.querySelector(".dropdown-content");
-
-   const searchInput = document.getElementById('searchInput');
-   searchInput.addEventListener('input', function() {
-      getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, searchInput.value);
-   })
+   const dropdownBtn2 = document.getElementById("dropdownBtn2");
+   const dropdownContent = document.getElementById("dropdown-content");
+   const dropdownContent2 = document.getElementById("dropdown-content2");
 
    dropdownBtn.addEventListener("click", function() {
-      if (loading) return;
+      if (isloading) return;
       dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
    });
- 
-   const radios = document.querySelectorAll(".dropdown-content input[type='radio']");
-   radios.forEach(function(option) {
+   dropdownBtn2.addEventListener("click", function() {
+      if (isloading) return;
+     dropdownContent2.style.display = dropdownContent2.style.display === "block" ? "none" : "block";
+   });
+
+   const options = document.querySelectorAll(".dropdown-content input[type='radio'][name='options']");
+   options.forEach(function(option) {
       option.addEventListener("change", function() {
-         document.getElementById('characterContainer').innerHTML = "";
-         dropdownBtn.innerText = `${t(this.value)}`;
+         dropdownBtn.innerText = t(`${this.value}`);
          const spanElement = document.createElement('span');
          spanElement.classList.add('absolute-right');
          spanElement.innerHTML = '▼'
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
+         if ("리더" === this.value) mod = 1;
+         else if ("파츠" === this.value) mod = 2;
+         else mod = 0;
+         setData();
+      });
+   });
+
+   const options2 = document.querySelectorAll(".dropdown-content input[type='radio'][name='options2']");
+   options2.forEach(function(option) {
+      option.addEventListener("change", function() {
+         dropdownBtn2.innerText = t(`${this.value}`);
+         const spanElement = document.createElement('span');
+         spanElement.classList.add('absolute-right');
+         spanElement.innerHTML = '▼'
+         dropdownBtn2.appendChild(spanElement);
+         dropdownContent2.style.display = "none";
+
          sort = 0;
          if ("1구" === this.value) sort = 1;
-         getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, searchInput.value);
+         setData();
       });
    });
 });
 
-function getCharactersWithCondition(element, role, rarity, search) {
+function setData() {
+   isloading = true;
+   const res = [];
+   const data = JSON.parse(JSON.stringify(server_data));
+   if (sort == 1) data.sort((a, b) => b.vote - a.vote);
+   else data.sort((a, b) => b.recommend - a.recommend);
+   const sortedList = data.slice(0, 1000);
+
+   for(let c of sortedList) {
+      const ids = c.compstr.split(" ").map(Number);
+      if (mod == 1) {
+         const now = res.find(i => i.id == ids[0]);
+         if (now == undefined) ch_5.push({id: ids[0], cnt: 1});
+         else now.cnt++;
+      } else if (mod == 2) for(let i = 1; i < 5; i++) {
+         const now = res.find(i => i.id == ids[i]);
+         if (now == undefined) ch_5.push({id: ids[i], cnt: 1});
+         else now.cnt++;
+      } else for(let id of ids) {
+         const now = res.find(i => i.id == id);
+         if (now == undefined) ch_5.push({id: id, cnt: 1});
+         else now.cnt++;
+      }
+   }
+   setCharacters(res);
+}
+
+function setCharacters(curSortList) {
    const characterContainer = document.getElementById("characterContainer");
    characterContainer.innerHTML = t("로드 중...");
 
-   search = fixName(search);
-   const dataArray = chJSON.data;
-   const enNames = findEnIncludes(search);
-   const filteredData = dataArray.filter(function(obj) { 
-      let b1 = true, b2 = true, b3 = true, b4 = true;
-      if (element != null) b1 = (obj.element === element); 
-      if (role != null) b2 = (obj.role === role); 
-      if (rarity != null) b3 = (obj.rarity === rarity);
-      if (search != "") b4 = (obj.name.includes(search) || obj.fullname.includes(search) || enNames.has(obj.name));
-      return b1 && b2 && b3 && b4;
-   });
    let innerArray = [];
-   const curSortList = sort == 1 ? ch_1 : ch_5;
    for(const ch of curSortList) {
-      const champ = filteredData.find(item => item.id === ch.id);
+      const champ = chJSON.data.find(item => item.id === ch.id);
       if (champ == undefined) continue;
       let id = champ.id, name = champ.name, element = champ.element, role = champ.role;
       if (isAny(id)) continue;
@@ -107,38 +111,9 @@ function getCharactersWithCondition(element, role, rarity, search) {
       `);
    }
    characterContainer.innerHTML = innerArray.join("");
+   isloading = false;
 }
 
-function init() {
-   // 라디오 버튼 초기화
-   var rds = document.querySelectorAll(".dropdown-content input[type='radio']");
-   rds.forEach(function(radio) {radio.checked = false;});
-   document.getElementById('option1').checked = true;
-}
-
-/* input:radio 버튼해제 로직 --------------------------------------------------*/
-function checkElement(num) {
-   var obj = document.querySelectorAll('input[type="radio"][name="element"]');
-   if (checkElementN === num) {
-       obj[num].checked = false;
-       checkElementN = null;
-   } else checkElementN = num;
-   getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, document.getElementById('searchInput').value);
-}
-function checkRole(num) {
-   var obj = document.querySelectorAll('input[type="radio"][name="role"]');
-   if (checkRoleN === num) {
-       obj[num].checked = false;
-       checkRoleN = null;
-   } else checkRoleN = num;
-   getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, document.getElementById('searchInput').value);
-}
-function checkRarity(num) {
-   var obj = document.querySelectorAll('input[type="radio"][name="rarity"]');
-   const reversedObj = Array.from(obj).reverse(); 
-   if (checkRarityN === num) {
-      reversedObj[num].checked = false;
-      checkRarityN = null;
-   } else checkRarityN = num;
-   getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, document.getElementById('searchInput').value);
+function clickedCh(id) {
+   // 페이지 이동 로직
 }

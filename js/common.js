@@ -385,12 +385,6 @@ const translate = {
    // 회원가입
    "닉네임" : {en : "Nickname"},
    "회원가입 성공" : {en : "Registration successful"},
-
-   // 통계
-   "통계" : {en : "Stats"},
-   "통계 (TOP 1k)" : {en : "Stats (TOP 1k)"},
-   "5구" : {en : "Bond 5"},
-   "1구" : {en : "Bond 1"},
    
    // 캐릭터명
    "바알" : {en : "Baal <br>\u200B"},
@@ -571,6 +565,16 @@ const translate = {
    "세실" : {en : "Mareyl <br>\u200B"},
    "무무" : {en : "Mu-Mu <br>\u200B"},
    "안야" : {en : "Anya <br>\u200B"},
+
+   
+   // 통계
+   "전체" : {en : "All"},
+   "리더" : {en : "Leader"},
+   "파츠" : {en : "Parts"},
+   "통계" : {en : "Stats"},
+   "5구" : {en : "Bond 5"},
+   "1구" : {en : "Bond 1"},
+   "상위 1k 개만 집계됩니다" : {en : "Only the top 1k are counted."},
 };
 
 //---------------------------------------------------------------------------
