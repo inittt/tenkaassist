@@ -73,16 +73,13 @@ function setData() {
       const ids = c.compstr.split(" ").map(Number);
       if (mod == 1) {
          const now = res.find(i => i.id == ids[0]);
-         if (now == undefined) res.push({id: ids[0], cnt: 1});
-         else now.cnt++;
-      } else if (mod == 2) for(let i = 1; i < 5; i++) {
-         const now = res.find(i => i.id == ids[i]);
-         if (now == undefined) res.push({id: ids[i], cnt: 1});
-         else now.cnt++;
+         if (now == undefined) res.push({id: ids[0], cnt: 1}); else now.cnt++;
+      } else if (mod == 2) for(let pos = 1; pos < 5; pos++) {
+         const now = res.find(i => i.id == ids[pos]);
+         if (now == undefined) res.push({id: ids[pos], cnt: 1}); else now.cnt++;
       } else for(let id of ids) {
          const now = res.find(i => i.id == id);
-         if (now == undefined) res.push({id: id, cnt: 1});
-         else now.cnt++;
+         if (now == undefined) res.push({id: id, cnt: 1}); else now.cnt++;
       }
    }
    res.sort((a, b) => b.cnt - a.cnt);
