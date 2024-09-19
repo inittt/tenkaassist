@@ -108,7 +108,7 @@ function updateSelected() {
          let id = champ.id, name = champ.name, element = champ.element, role = champ.role;
          let roleImg = isAny(id) ? "" : `<img src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">`;
          innerArray.push(`
-            <div class="character" data-id="${id}" draggable="true" onclick="clickedSel(this, ${id})" ontouchstart="chTouchStart(event)" ontouchmove="chTouchMove(event)" ontouchend="chTouchEnd(event)" ondragstart="chDragStart(event)" ondrop="chDrop(event)" ondragover="chDragOver(event)" style="margin:0.2rem;">
+            <div class="character" data-id="${id}" draggable="true" onclick="clickedSel(this, ${id})" ontouchstart="chDragStart(event.touches[0].target)" ontouchend="chTouchEnd(event)" ondragstart="chDragStart(event.target)" ondrop="chDrop(event.target)" ondragover="chDragOver(event)" style="margin:0.2rem;">
                <div style="margin:0.2rem;">
                   <img src="${address}/images/characters/cs${id}_0_0.webp" class="img z-1" alt="">
                   ${roleImg}
@@ -178,14 +178,13 @@ function setBond(num) {
 }
 
 // 드래그앤드랍 순서 변경
-function chDragStart(event) {
-   draggedId = Number(event.target.closest('.character').dataset.id);
+function chDragStart(target) {
+   draggedId = Number(target.closest('.character').dataset.id);
 }
 
-function chDrop(event) {
-   event.preventDefault();
+function chDrop(target) {
    const draggedIndex = selected.indexOf(draggedId);
-   const dropIndex = selected.indexOf(Number(event.target.closest('.character').dataset.id));
+   const dropIndex = selected.indexOf(Number(target.closest('.character').dataset.id));
    if (draggedIndex > -1 && dropIndex > -1) {
       selected.splice(draggedIndex, 1);
       selected.splice(dropIndex, 0, draggedId);
@@ -198,25 +197,9 @@ function chDragOver(event) {
    event.preventDefault();
 }
 
-function chTouchStart(event) {
-   draggedId = Number(event.touches[0].target.closest('.character').dataset.id);
-}
-
-function chTouchMove(event) {
-   event.preventDefault();
-}
-
 function chTouchEnd(event) {
-   const draggedIndex = selected.indexOf(draggedId);
    const touch = event.changedTouches[0];
-   const dropDiv = document.elementFromPoint(touch.clientX, touch.clientY).closest('.character');
-   const dropIndex = selected.indexOf(Number(dropDiv.dataset.id));
-   if (draggedIndex > -1 && dropIndex > -1) {
-      selected.splice(draggedIndex, 1);
-      selected.splice(dropIndex, 0, draggedId);
-      updateSelected();
-   }
-   draggedId = null;
+   chDrop(document.elementFromPoint(touch.clientX, touch.clientY));
 }
 
 /* input:radio 버튼해제 로직 --------------------------------------------------*/
