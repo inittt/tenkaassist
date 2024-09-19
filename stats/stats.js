@@ -1,5 +1,5 @@
 const ch_5 = [], ch_1 = [];
-let loading = true, radioValue = 0;
+let loading = true, radioValue = 0, sort = 0;
 let checkElementN, checkRoleN, checkRarityN;
 
 request(`${server}/comps/getAll`, {
@@ -10,7 +10,7 @@ request(`${server}/comps/getAll`, {
 }).then(res => {
    if (!res.success) return alert(res.msg);
    setData(res.data);
-   getCharactersWithCondition(null, null, null, "")
+   getCharactersWithCondition(null, null, null, "");
    loading = false;
 }).catch(e => {});
 
