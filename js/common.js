@@ -56,13 +56,21 @@ function loadCSS(url) {
 
 // 딜량 문자열로 변환
 function formatNumber(value) {
-   if (lang != "ko") {
+   if (lang == "en") {
       if (value >= 1000000000) { // 10억 이상
          return (value / 1000000000).toFixed(2) + 'B';
       } else if (value >= 1000000) { // 100만 이상
          return (value / 1000000).toFixed(0) + 'M';
       } else {
          return value.toString(); // B나 M 단위가 아닌 경우 그대로 반환
+      }
+   } else if (lang == "cn") {
+      if (value >= 100000000) { // 1억 이상
+         return (value / 100000000).toFixed(2) + '亿';
+      } else if (value >= 10000) { // 1만 이상
+         return (value / 10000).toFixed(0) + '万';
+      } else {
+         return value.toString(); // 만이나 억 단위가 아닌 경우 그대로 반환
       }
    } else {
       if (value >= 100000000) { // 1억 이상
@@ -108,11 +116,13 @@ const lang = localStorage.getItem("lang");
 function t(str) {
    if (lang == "ko") return str;
    if (lang == "en" && (str in translate)) return translate[str].en;
+   if (lang == "cn" && (str in translate)) return translate[str].cn;
    return str;
 }
 function t2(str) {
    if (lang == "ko") return str;
    if (lang == "en" && (str in translate)) return translate[str].en.replace(" <br>\u200B", "");
+   if (lang == "cn" && (str in translate)) return translate[str].cn.replace(" <br>\u200B", "");
    return str;
 }
 function t_d(str) {
@@ -120,6 +130,10 @@ function t_d(str) {
    if (lang == "en") {
       const tmp = removeLastCharacter(str);
       if (tmp in translate) return translate[tmp].en.replace(" <br>\u200B", "");
+   }
+   if (lang == "cn") {
+      const tmp = removeLastCharacter(str);
+      if (tmp in translate) return translate[tmp].cn.replace(" <br>\u200B", "");
    }
    return str;
 }
@@ -129,7 +143,7 @@ function removeLastCharacter(str) {
 }
 
 const translate = {
-   // 헤더
+   // 헤더 Header
    "조합목록" : {en : "List"},
    "조합검색" : {en : "Search"},
    "조합등록" : {en : "Register"},
@@ -140,7 +154,7 @@ const translate = {
    "로그아웃" : {en : "LogOut"},
    "로그인" : {en : "LogIn"},
 
-   // 조합목록
+   // 조합목록 List
    "홈" : {en : "Home"},
    "조합" : {en : "Team"},
    "허수+(5) " : {en : "dummy+"},
@@ -153,16 +167,16 @@ const translate = {
    "최신등록순" : {en : "newest"},
    "최신수정순" : {en : "recent"},
    "총 덱 개수" : {en : "total count"},
-   "턴" : {en: "t"},
+   "턴" : {en: "t"}, // turn
    "로드 중..." : {en: "Loading..."},
    "네트워크 응답이 올바르지 않습니다." : {en: "The network response is not correct"},
    "데이터 로드 실패" : {en: "Data load failed"},
    "더이상 조합이 없습니다" : {en : "There are no more teams"},
    "덱개수 로드 실패" : {en : "Count load failed"},
 
-   // 시뮬레이터 선택
-   "캐릭선택" : {en : "Select"},
-   "1구속" : {en : "Set 1"},
+   // 시뮬레이터 선택 selectSimulator
+   "캐릭선택" : {en : "Select"}, // select characters
+   "1구속" : {en : "Set 1"}, // set bond 1
    "화속성" : {en : "Fire"},
    "수속성" : {en : "Water"},
    "풍속성" : {en : "Wind"},
@@ -174,13 +188,13 @@ const translate = {
    "서포터" : {en : "Supporter"},
    "디스럽터" : {en : "Obstructer"},
    "검색" : {en : "Search"},
-   "시작" : {en : "GO"},
+   "시작" : {en : "GO"}, // start
    "캐릭터를 선택해 추가해 주세요" : {en : "Select a character to add"},
    "5개의 캐릭터를 선택해주세요" : {en : "Five characters are needed"},
    "5개까지 선택 가능합니다" : {en : "Up to 5 characters can be selected"},
 
 
-   // 시뮬레이터
+   // 시뮬레이터 Simulator
    "리셋" : {en : "reset"},
    "공격데미지" : {en : "Basic"},
    "추가데미지" : {en : "Addition"},
@@ -259,16 +273,16 @@ const translate = {
    "초기화" : {en : "init"},
    "삭제" : {en : "del"},
    "행동 순서" : {en : "Order of Actions"},
-   "등록 : " : {en : "Add : "},
-   "수정 : " : {en : "Edit : "},
+   "등록 : " : {en : "Add : "}, // add date
+   "수정 : " : {en : "Edit : "}, // edit date
    "신고하시겠습니까?" : {en : "Do you want to report this?"},
    "신고 10회 누적으로 삭제되었습니다" : {en : "Deleted after 10 reports"},
    "신고 성공" : {en : "Report Successful"},
-   "현재 누적" : {en : "Current"},
-   "회" : {en : "reports"},
-   "평" : {en : "A"},
-   "궁" : {en : "U"},
-   "방" : {en : "D"},
+   "현재 누적" : {en : "Current"}, // current report count
+   "회" : {en : "reports"}, // count
+   "평" : {en : "A"}, // attack
+   "궁" : {en : "U"}, // ultimate
+   "방" : {en : "D"}, // defense
 
    // 조합등록
    "조합 등록" : {en : "Register Team"},
@@ -372,6 +386,11 @@ const translate = {
    "닉네임" : {en : "Nickname"},
    "회원가입 성공" : {en : "Registration successful"},
 
+   // 통계
+   "통계" : {en : "Stats"},
+   "통계 (TOP 1k)" : {en : "Stats (TOP 1k)"},
+   "5구" : {en : "Bond 5"},
+   "1구" : {en : "Bond 1"},
    
    // 캐릭터명
    "바알" : {en : "Baal <br>\u200B"},

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>TenkaAssist - 통계</title>
+   <meta name="description" content="tenkaAssist">
+   <script src="../js/common.js"></script>
+   <link rel="stylesheet" href="../css/common.css" type = "text/css">
+   <link rel="stylesheet" href="./stats.css" type = "text/css">
+   <script src="./stats.js"></script>
+   <script src="../js/characterJson.js"></script>
+</head>
+<body onload="init()">
+   <script src="../js/header.js"></script>
+   <div class="main-container bg-dark">
+      <div class="block">
+         <div class="margin-left titleblock">
+            <span id="titleboxText" class="titlebox">통계 (TOP 1k)</span>
+            <div class="dropdown">
+               <button id="dropdownBtn">5구<span class="absolute-right">▼</span></button>
+               <div class="dropdown-content">
+                  <input type="radio" id="option1" name="options" value="5구" checked>
+                  <label id="r1" class="sortLabel" for="option1">5구</label>
+                  <input type="radio" id="option2" name="options" value="1구">
+                  <label id="r2" class="sortLabel" for="option2">1구</label>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="block flex">
+         <label class="c-radio"><input type="radio" name="element" value="0" onclick="checkElement(0)"><span id="e-0">화속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="1" onclick="checkElement(1)"><span id="e-1">수속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="2" onclick="checkElement(2)"><span id="e-2">풍속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="3" onclick="checkElement(3)"><span id="e-3">광속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="4" onclick="checkElement(4)"><span id="e-4">암속성</span></label>
+      </div>
+      <div class="block flex">
+         <label class="c-radio"><input type="radio" name="role" value="0" onclick="checkRole(0)"><span id="r-0">딜러</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="1" onclick="checkRole(1)"><span id="r-1">힐러</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="2" onclick="checkRole(2)"><span id="r-2">탱커</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="3" onclick="checkRole(3)"><span id="r-3">서포터</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="4" onclick="checkRole(4)"><span id="r-4">디스럽터</span></label>
+      </div>
+      <div class="block flex">
+         <label class="c-radio"><input type="radio" name="rarity" value="3" onclick="checkRarity(3)" checked><span>SSR</span></label>
+         <label class="c-radio"><input type="radio" name="rarity" value="2" onclick="checkRarity(2)"><span>SR</span></label>
+         <label class="c-radio"><input type="radio" name="rarity" value="1" onclick="checkRarity(1)"><span>R</span></label>
+         <label class="c-radio"><input type="radio" name="rarity" value="0" onclick="checkRarity(0)"><span>N</span></label>
+         <input id="searchInput" type="text" class="searchInput" placeholder="검색">
+      </div>
+      <div class="block flex" id="characterContainer">
+         
+      </div>
+   </div>
+</body>
+<script>
+   document.getElementById("titleboxText").innerText = t("통계 (TOP 1k)");
+   document.getElementById("dropdownBtn").innerHTML = t("5구") + `<span class="absolute-right">▼</span>`;
+   document.getElementById("r1").innerText = t("5구");
+   document.getElementById("r2").innerText = t("1구");
+   document.title = "TenkaAssist - " + t("통계");
+
+   document.getElementById("searchInput").placeholder = t("검색");
+
+   document.getElementById("e-0").innerText = t("화속성");
+   document.getElementById("e-1").innerText = t("수속성");
+   document.getElementById("e-2").innerText = t("풍속성");
+   document.getElementById("e-3").innerText = t("광속성");
+   document.getElementById("e-4").innerText = t("암속성");
+   
+   document.getElementById("r-0").innerText = t("딜러");
+   document.getElementById("r-1").innerText = t("힐러");
+   document.getElementById("r-2").innerText = t("탱커");
+   document.getElementById("r-3").innerText = t("서포터");
+   document.getElementById("r-4").innerText = t("디스럽터");
+</script>
+</html>

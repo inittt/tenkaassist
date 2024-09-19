@@ -42,7 +42,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function formatNumber2(value) {
    if (typeof value == "string") value = Number(value);
-   if (lang != "ko") return (value / 1000000000).toFixed(0) + ' B';
+   if (lang == "en") return (value / 1000000000).toFixed(0) + ' B';
+   else if (lang == "cn") return (value / 100000000).toFixed(0) + '亿';
    else return (value / 100000000).toFixed(0) + '억';
 }
 
