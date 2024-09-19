@@ -25,6 +25,7 @@ function setData(data) {
          else now.cnt++;
       }
    }
+   ch_5.sort((a, b) => b.cnt - a.cnt);
 
    data.sort((a, b) => b.vote - a.vote);
    const sortedList1k1 = data.slice(0, 1000);
@@ -36,11 +37,17 @@ function setData(data) {
          else now.cnt++;
       }
    }
+   ch_1.sort((a, b) => b.cnt - a.cnt);
 }
 
 document.addEventListener("DOMContentLoaded", function() {
    const dropdownBtn = document.getElementById("dropdownBtn");
    const dropdownContent = document.querySelector(".dropdown-content");
+
+   const searchInput = document.getElementById('searchInput');
+   searchInput.addEventListener('input', function() {
+      getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, searchInput.value);
+   })
 
    dropdownBtn.addEventListener("click", function() {
       if (loading) return;
@@ -60,6 +67,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
          sort = 0;
          if ("1구" === this.value) sort = 1;
+         getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, searchInput.value);
       });
    });
 });
