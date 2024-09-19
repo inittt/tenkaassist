@@ -85,6 +85,7 @@ function setData() {
          else now.cnt++;
       }
    }
+   res.sort((a, b) => b.cnt - a.cnt);
    setCharacters(res);
 }
 
