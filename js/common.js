@@ -574,7 +574,7 @@ const translate = {
    "통계" : {en : "Stats"},
    "5구" : {en : "Bond 5"},
    "1구" : {en : "Bond 1"},
-   "13턴딜 상위 1k 개만 집계됩니다" : {en : "Only the top 1k of the 13t dmg are counted."},
+   "13턴딜 상위 1k 개만 집계" : {en : "Only the top 1k of the 13t dmg are counted."},
 };
 
 //---------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+const curHeader = 8;
 let server_data;
 let isloading = true, radioValue = 0, mod = 0, sort = 0;
 
@@ -113,5 +114,6 @@ function setCharacters(curSortList) {
 }
 
 function clickedCh(id) {
-   // 페이지 이동 로직
+   if (mod == 2) window.open(`${address}/search/?list=${id}&leader=${id}`, '_blank');
+   else window.open(`${address}/search/?list=${id}`, '_blank');
 }
