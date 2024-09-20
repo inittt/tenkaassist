@@ -19,9 +19,7 @@
          <div class="margin-left titleblock">
             <span id="titlebox" class="titlebox">시뮬레이터</span>
             <button id="resetBtn" class="button" onclick="refresh()" style="height:2rem; margin-left:1rem;">리셋</button>
-            <!--
-            <div class="inquiry" onclick="inquiry()">문의</div> 
-            -->
+            <button id="guide" class="leaderButton leaderOff option_btn1" style="display:none">가이드</button>
          </div>
       </div>
       <div id="simulator" class="block">
@@ -37,7 +35,7 @@
          <div id="deal_dot" style="width:100%; text-align: center;"></div>
          <div id="deal_ref" style="width:100%; text-align: center;"></div>
          <div id="comp" class="comp-sim"></div>
-         <button class="logoutBtn" onclick="loadBefore()">undo</button>
+         <button class="logoutBtn" onclick="loadBefore(); decActNum()">undo</button>
       </div>
    </div>
    <div id="console" class="console no-scrollbar" style="display:none" onclick="close_console()"></div>
@@ -46,5 +44,6 @@
    document.title = "TenkaAssist - " + t("시뮬레이터");
    document.getElementById("titlebox").innerText = t("시뮬레이터");
    document.getElementById("resetBtn").innerText = t("리셋");
+   document.getElementById("guide").innerText = t("가이드");
 </script>
 </html>

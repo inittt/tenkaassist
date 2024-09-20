@@ -2,6 +2,7 @@ const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list'), idList = chIds.split(",").map(Number);
 const bond = params.get('bond'), bondList = bond == null ? [5, 5, 5, 5, 5] : bond.split(",").map(Number);
 const curHeader = 6;
+let isOn = false, actNum = 0, commandList;
 
 document.addEventListener("DOMContentLoaded", function() {
    getdiv("bossBuffBtn").innerHTML = `
@@ -23,7 +24,33 @@ document.addEventListener("DOMContentLoaded", function() {
       }
    }
    setComp();
+
+   const guideBtn = document.getElementById('guide');
+   guideBtn.addEventListener('click', () => {
+      isOn = guideBtn.classList.toggle('leaderOn');
+      guideBtn.classList.toggle('leaderOff', !isOn);
+
+      updateGuide();
+   });
+   // 가이드 표시를 위한 행동순서 로드
+   request(`${server}/comps/getCompByCompstr/${chIds}`, {
+      method: "GET",
+   }).then(response => {
+      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
+      return response.json();
+   }).then(res => {
+      if (!res.success || res.data == null) return;
+      guideBtn.style.display = 'block';
+      commandList = extractActions(res.data.description);
+
+   }).catch(e => {
+      console.log(t("데이터 로드 실패"), e);
+   })
 });
+
+function extractActions(data) {
+   return data.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
+}
 function refresh() {location.reload();}
 function setComp() {
    if (idList.length != 5) return alert(t("캐릭터의 수가 5개가 아닙니다"));
@@ -123,6 +150,7 @@ function do_ult(idx) {
    comp[idx].ultimate();
    for(let i = 0; i < 5; i++) comp[i].isHealed = false;
    endAct();
+   actNum++;
    updateAll();
    overflowed = false;
 }
@@ -133,6 +161,7 @@ function do_atk(idx) {
    comp[idx].attack();
    for(let i = 0; i < 5; i++) comp[i].isHealed = false;
    endAct();
+   actNum++;
    updateAll();
    overflowed = false;
 }
@@ -143,9 +172,11 @@ function do_def(idx) {
    comp[idx].defense();
    for(let i = 0; i < 5; i++) comp[i].isHealed = false;
    endAct();
+   actNum++;
    updateAll();
    overflowed = false;
 }
+function decActNum() {actNum--;}
 
 let scarecrowTurn = 99;
 function endAct() {
@@ -224,7 +255,23 @@ function isAllActed() {
    return true;
 }
 
+function updateGuide() {
+   for(let i = 0; i < 5; i++) {
+      getdiv(`ult${i}`).classList.remove("guide-now");
+      getdiv(`el${i}`).classList.remove("guide-now");
+      getdiv(`def${i}`).classList.remove("guide-now");
+   }
+   if (isOn && commandList[actNum] != undefined) {
+      const guide_idx = Number(commandList[actNum][0])-1;
+      const guide_act = commandList[actNum][1];
+      if (guide_act == "평") getdiv(`el${guide_idx}`).classList.add("guide-now");
+      else if (guide_act == "궁") getdiv(`ult${guide_idx}`).classList.add("guide-now");
+      else if (guide_act == "방") getdiv(`def${guide_idx}`).classList.add("guide-now");
+   }
+}
+
 function updateAll() {
+   updateGuide();
    for(let i = 0; i < 5; i++) {
       updateCdBar(i);
       updateShdBar(i);
