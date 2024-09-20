@@ -176,7 +176,7 @@ function do_def(idx) {
    updateAll();
    overflowed = false;
 }
-function decActNum() {actNum--;}
+function decActNum() {actNum--; updateGuide();}
 
 let scarecrowTurn = 99;
 function endAct() {
