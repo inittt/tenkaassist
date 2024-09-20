@@ -262,7 +262,7 @@ function updateGuide() {
       getdiv(`def${i}`).classList.remove("guide-now");
    }
    if (commandList[actNum] != undefined) {
-      const guide_idx = Number(commandList[actNum][0]);
+      const guide_idx = Number(commandList[actNum][0])-1;
       const guide_act = commandList[actNum][1];
       if (guide_act == "평") getdiv(`el${guide_idx}`).classList.add("guide-now");
       else if (guide_act == "궁") getdiv(`ult${guide_idx}`).classList.add("guide-now");
