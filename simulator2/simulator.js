@@ -255,21 +255,23 @@ function isAllActed() {
    return true;
 }
 
-function updateAll() {
-   if (isOn) {
-      for(let i = 0; i < 5; i++) {
-         getdiv(`ult${i}`).classList.remove("guide-now");
-         getdiv(`el${i}`).classList.remove("guide-now");
-         getdiv(`def${i}`).classList.remove("guide-now");
-      }
-      if (commandList[actNum] != undefined) {
-         const guide_idx = Number(commandList[actNum][0]);
-         const guide_act = commandList[actNum][1];
-         if (guide_act == "평") getdiv(`el${i}`).classList.add("guide-now");
-         else if (guide_act == "궁") getdiv(`ult${i}`).classList.add("guide-now");
-         else if (guide_act == "방") getdiv(`def${i}`).classList.add("guide-now");
-      }
+function updateGuide() {
+   for(let i = 0; i < 5; i++) {
+      getdiv(`ult${i}`).classList.remove("guide-now");
+      getdiv(`el${i}`).classList.remove("guide-now");
+      getdiv(`def${i}`).classList.remove("guide-now");
    }
+   if (commandList[actNum] != undefined) {
+      const guide_idx = Number(commandList[actNum][0]);
+      const guide_act = commandList[actNum][1];
+      if (guide_act == "평") getdiv(`el${guide_idx}`).classList.add("guide-now");
+      else if (guide_act == "궁") getdiv(`ult${guide_idx}`).classList.add("guide-now");
+      else if (guide_act == "방") getdiv(`def${guide_idx}`).classList.add("guide-now");
+   }
+}
+
+function updateAll() {
+   if (isOn) updateGuide();
 
    for(let i = 0; i < 5; i++) {
       updateCdBar(i);
