@@ -150,5 +150,14 @@ body {
 }
 
 .guide-now {
-   border-color:white;
+   animation: blink 1s infinite;
+}
+
+@keyframes blink {
+   0%, 100% {
+       border-color: #916a00; /* 깜박임 전 상태 */
+   }
+   50% {
+       border-color: #ffbc03; /* 깜박임 색상 */
+   }
 }
