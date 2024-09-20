@@ -256,13 +256,12 @@ function isAllActed() {
 }
 
 function updateGuide() {
-   if (!isOn) return;
    for(let i = 0; i < 5; i++) {
       getdiv(`ult${i}`).classList.remove("guide-now");
       getdiv(`el${i}`).classList.remove("guide-now");
       getdiv(`def${i}`).classList.remove("guide-now");
    }
-   if (commandList[actNum] != undefined) {
+   if (isOn && commandList[actNum] != undefined) {
       const guide_idx = Number(commandList[actNum][0])-1;
       const guide_act = commandList[actNum][1];
       if (guide_act == "평") getdiv(`el${guide_idx}`).classList.add("guide-now");
@@ -272,6 +271,7 @@ function updateGuide() {
 }
 
 function updateAll() {
+   updateGuide();
    for(let i = 0; i < 5; i++) {
       updateCdBar(i);
       updateShdBar(i);
