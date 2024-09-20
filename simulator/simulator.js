@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function() {
       return response.json();
    }).then(res => {
       if (!res.success || res.data == null) return;
-      guideBtn.style.display = 'block';
+      if (res.data.recommand > 0) guideBtn.style.display = 'block';
       commandList = extractActions(res.data.description);
 
    }).catch(e => {
