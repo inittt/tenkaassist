@@ -256,6 +256,7 @@ function isAllActed() {
 }
 
 function updateGuide() {
+   if (!isOn) return;
    for(let i = 0; i < 5; i++) {
       getdiv(`ult${i}`).classList.remove("guide-now");
       getdiv(`el${i}`).classList.remove("guide-now");
@@ -271,8 +272,6 @@ function updateGuide() {
 }
 
 function updateAll() {
-   if (isOn) updateGuide();
-
    for(let i = 0; i < 5; i++) {
       updateCdBar(i);
       updateShdBar(i);
