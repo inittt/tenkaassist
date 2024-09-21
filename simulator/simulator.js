@@ -148,28 +148,23 @@ function do_ult(idx) {
    saveCur();
    command.push(`${idx+1}궁`);
    comp[idx].ultimate();
-   for(let i = 0; i < 5; i++) comp[i].isHealed = false;
-   endAct();
-   actNum++;
-   updateAll();
-   overflowed = false;
+   act_after();
 }
 function do_atk(idx) {
    if (comp[idx].isActed) return;
    saveCur();
    command.push(`${idx+1}평`);
    comp[idx].attack();
-   for(let i = 0; i < 5; i++) comp[i].isHealed = false;
-   endAct();
-   actNum++;
-   updateAll();
-   overflowed = false;
+   act_after();
 }
 function do_def(idx) {
    if (comp[idx].isActed) return;
    saveCur();
    command.push(`${idx+1}방`);
    comp[idx].defense();
+   act_after();
+}
+function act_after() {
    for(let i = 0; i < 5; i++) comp[i].isHealed = false;
    endAct();
    actNum++;
