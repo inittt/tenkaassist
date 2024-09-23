@@ -32,6 +32,8 @@ document.addEventListener('DOMContentLoaded', function() {
          <div id="h-lang-list" class="h-lang-list">
             <div class="h-lang-btn" onclick="setLang('ko')">한국어</div>
             <div class="h-lang-btn" onclick="setLang('en')">English</div>
+            <div class="h-lang-btn" onclick="setLang('sc')">简体中文</div>
+            <div class="h-lang-btn" onclick="setLang('tc')">繁體中文</div>
          </div>
       </div>
       <div id="userInfo" class="user-info margin-left margin-right"></div>
