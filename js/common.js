@@ -132,15 +132,15 @@ function t_d(str) {
    if (lang == "ko") return str;
    if (lang == "en") {
       const tmp = removeLastCharacter(str);
-      if (tmp in translate) return translate[tmp].en;
+      if (tmp in translate) return translate[tmp].en+" Team";
    }
    if (lang == "sc") {
       const tmp = removeLastCharacter(str);
-      if (tmp in translate) return translate[tmp].sc;
+      if (tmp in translate) return translate[tmp].sc+"队";
    }
    if (lang == "tc") {
       const tmp = removeLastCharacter(str);
-      if (tmp in translate) return translate[tmp].tc;
+      if (tmp in translate) return translate[tmp].tc+"隊";
    }
    return str;
 }
