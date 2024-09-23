@@ -340,7 +340,8 @@ function show_simple(idx) {
 }
 
 function show_console(idx) {
-   const str = get_buff_all(idx);
+   let str = get_buff_all(idx);
+   if (lang != "ko") str = str.replaceAll(" : ", "");
    document.getElementById("console").innerHTML = str;
    document.getElementById("console").style.display = "block";
    

@@ -244,7 +244,7 @@ const translate = {
    "버프상세" : {en : "Buff Details", sc : "状态详情", tc : "狀態詳情"},
    "의" : {en : "'s", sc : "的", tc : "的"},
    "공" : {en : "atk", sc : "攻击力", tc : "攻擊力"},
-   "만큼" : {en : "after", sc : "经过", tc : "經過"},
+   "만큼" : {en : "", sc : "", tc : ""},
    "상시" : {en : "always", sc : "永远", tc : "永遠"},
 
    "평시" : {en : "when basic attack,", sc : "普通攻击时,", tc : "普通攻擊時,"},
@@ -273,7 +273,7 @@ const translate = {
    "최대" : {en : "max", sc : "最大", tc : "最大"},
    "미발동" : {en : "inactive", sc : "未生效", tc : "未生效"},
    "에게" : {en : " get", sc : "获得", tc : "獲得"},
-   "부여" : {en : "gain", sc : "获得", tc : "獲得"},
+   "부여" : {en : "", sc : "", tc : ""},
    "타깃" : {en : "target", sc : "目标", tc : "目標"},
 
    // 조합상세
