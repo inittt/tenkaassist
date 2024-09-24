@@ -174,7 +174,7 @@ const translate = {
    "최신등록순" : {en : "newest", sc : "最新", tc : "最新"},
    "최신수정순" : {en : "recent", sc : "最近", tc : "最近"},
    "총 덱 개수" : {en : "total count", sc : "总数", tc : "總數"},
-   "턴" : {en : "t", sc : "回合", tc : "回合"}, // turn
+   "턴" : {en : "t", sc : "t", tc : "t"}, // turn
    "로드 중..." : {en : "Loading...", sc : "读取中...", tc : "讀取中..."},
    "네트워크 응답이 올바르지 않습니다." : {en : "The network response is not correct", sc : "网络回应不正确", tc : "網路回應不正確"},
    "데이터 로드 실패" : {en : "Data load failed", sc : "数据读取失败", tc : "數據讀取失敗"},
