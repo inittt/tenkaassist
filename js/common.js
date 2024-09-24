@@ -57,37 +57,21 @@ function loadCSS(url) {
 // 딜량 문자열로 변환
 function formatNumber(value) {
    if (lang == "en") {
-      if (value >= 1000000000) { // 10억 이상
-         return (value / 1000000000).toFixed(2) + 'B';
-      } else if (value >= 1000000) { // 100만 이상
-         return (value / 1000000).toFixed(0) + 'M';
-      } else {
-         return value.toString(); // B나 M 단위가 아닌 경우 그대로 반환
-      }
+      if (value >= 1000000000) return (value / 1000000000).toFixed(2) + 'B';
+      else if (value >= 1000000) return (value / 1000000).toFixed(0) + 'M';
+      else return value.toString();
    } else if (lang == "sc") {
-      if (value >= 100000000) { // 1억 이상
-         return (value / 100000000).toFixed(2) + '亿';
-      } else if (value >= 10000) { // 1만 이상
-         return (value / 10000).toFixed(0) + '万';
-      } else {
-         return value.toString(); // 만이나 억 단위가 아닌 경우 그대로 반환
-      }
+      if (value >= 100000000) return (value / 100000000).toFixed(2) + '亿';
+      else if (value >= 10000) return (value / 10000).toFixed(0) + '万';
+      else return value.toString();
    } else if (lang == "tc") {
-      if (value >= 100000000) { // 1억 이상
-         return (value / 100000000).toFixed(2) + '億';
-      } else if (value >= 10000) { // 1만 이상
-         return (value / 10000).toFixed(0) + '萬';
-      } else {
-         return value.toString(); // 만이나 억 단위가 아닌 경우 그대로 반환
-      }
+      if (value >= 100000000) return (value / 100000000).toFixed(2) + '億';
+      else if (value >= 10000) return (value / 10000).toFixed(0) + '萬';
+      else return value.toString();
    } else {
-      if (value >= 100000000) { // 1억 이상
-         return (value / 100000000).toFixed(2) + '억';
-      } else if (value >= 10000) { // 1만 이상
-         return (value / 10000).toFixed(0) + '만';
-      } else {
-         return value.toString(); // 만이나 억 단위가 아닌 경우 그대로 반환
-      }
+      if (value >= 100000000) return (value / 100000000).toFixed(2) + '억';
+      else if (value >= 10000) return (value / 10000).toFixed(0) + '만';
+      else return value.toString();
    }
 }
 
