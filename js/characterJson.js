@@ -241,13 +241,13 @@ function addAnyCh() {
          chJSON.data.push(anyCh(el[e]+ro[r], e, r));
 }
 
-function findEnIncludes(str) {
+function findExIncludes(str) {
    const result = new Set();
    const lowerStr = str.toLowerCase();
    for (let key in translate) {
-     if (translate[key].en.toLowerCase().includes(lowerStr)) {
-       result.add(key);
-     }
+     if (translate[key].en.toLowerCase().includes(lowerStr)) result.add(key);
+     else if (translate[key].sc.includes(str)) result.add(key);
+     else if (translate[key].tc.includes(str)) result.add(key);
    }
    return result;
  }

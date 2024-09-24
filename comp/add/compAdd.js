@@ -17,19 +17,19 @@ function getCharactersWithCondition(element, role, rarity, search) {
 
    search = fixName(search);
    const dataArray = chJsonList;
-   const enNames = findEnIncludes(search);
+   const exNames = findExIncludes(search);
    const filteredData = dataArray.filter(function(obj) { 
       let b1 = true, b2 = true, b3 = true, b4 = true;
       if (element != null) b1 = (obj.element === element); 
       if (role != null) b2 = (obj.role === role); 
       if (rarity != null) b3 = (obj.rarity === rarity); 
-      if (search != "") b4 = (obj.name.includes(search) || obj.fullname.includes(search) || enNames.has(obj.name));
+      if (search != "") b4 = (obj.name.includes(search) || obj.fullname.includes(search) || exNames.has(obj.name));
       return b1 && b2 && b3 && b4;
    });
    let innerArray = [];
    for(const champ of filteredData) {
       let id = champ.id, name = champ.name, element = champ.element, role = champ.role;
-      let chk_option = "none", opacity = `style="opacity:1"`;
+      let chk_option = "none";
       let roleImg = `<img id="el_${id}" src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">`;
       if (selected.includes(id) && !isAny(id)) chk_option = "block";
       if (isAny(id)) {opacity = `style="opacity:0"`; roleImg = "";}

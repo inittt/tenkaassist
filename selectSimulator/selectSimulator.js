@@ -48,13 +48,13 @@ function getCharactersWithCondition(element, role, rarity, search) {
 
    search = fixName(search);
    const dataArray = chJsonList;
-   const enNames = findEnIncludes(search);
+   const exNames = findExIncludes(search);
    const filteredData = dataArray.filter(function(obj) { 
       let b1 = true, b2 = true, b3 = true, b4 = true;
       if (element != null) b1 = (obj.element === element); 
       if (role != null) b2 = (obj.role === role); 
       if (rarity != null) b3 = (obj.rarity === rarity); 
-      if (search != "") b4 = (obj.name.includes(search) || obj.fullname.includes(search) || enNames.has(obj.name));
+      if (search != "") b4 = (obj.name.includes(search) || obj.fullname.includes(search) || exNames.has(obj.name));
       return b1 && b2 && b3 && b4;
    });
    let innerArray = [];
