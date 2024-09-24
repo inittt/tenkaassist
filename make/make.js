@@ -33,11 +33,10 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
-         const titleBoxText = document.getElementById('titleBoxText');
-         if ("2개" === this.value) {mod = 1; titleBoxText.innerHTML = t("추천덱") + " - 2";}
-         else if ("3개" === this.value) {mod = 2; titleBoxText.innerHTML = t("추천덱") + " - 3";}
-         else if ("4개" === this.value) {mod = 3; titleBoxText.innerHTML = t("추천덱") + " - 4";}
-         else {mod = 0; titleBoxText.innerHTML = t("추천덱") + " - 1";}
+         if ("2개" === this.value) mod = 1;
+         else if ("3개" === this.value) mod = 2;
+         else if ("4개" === this.value) mod = 3;
+         else mod = 0;
          makeBlock(sort == 2 ? possible2 : possible1);
       });
    });
