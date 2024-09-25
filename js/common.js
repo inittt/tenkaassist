@@ -554,7 +554,7 @@ const translate = {
    "징벌천사" : {en : "Punishment", sc : "惩戒天使", tc : "懲戒天使"},
    "복음천사" : {en : "Bliss", sc : "福音天使", tc : "福音天使"},
    "몰리" : {en : "Molly", sc : "茉莉", tc : "茉莉"},
-   "시험3호" : {en : "prototype", sc : "试作机三号", tc : "試作機三"},
+   "시험3호" : {en : "prototype", sc : "试作机三号", tc : "試作機三號"},
    "세실" : {en : "Mareyl", sc : "赛希", tc : "賽希"},
    "무무" : {en : "MuMu", sc : "穆穆", tc : "穆穆"},
    "안야" : {en : "Anya", sc : "安雅", tc : "安雅"},

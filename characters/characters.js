@@ -99,7 +99,7 @@ function updateSelected() {
                   ${liberationList.includes(t(name)) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                   <div class="element${element} ch_img ch_border z-4"></div>
                </div>
-               <div class="text-mini">${name}</div>
+               <div class="text-mini">${t(name)}</div>
             </div>
          `);
       }
