@@ -101,16 +101,7 @@ function drawGraph(data) {
          responsive: false, // 차트가 반응형으로 설정
          maintainAspectRatio: false, // 종횡비 유지 비활성화
          scales: {
-            x: {
-               ticks: {
-                  callback: function(value) {
-                     const date = new Date(value);
-                     const previousDate = new Date(this.getLabelForValue(value - 1));
-                     // 이전 월과 다르면 해당 월을 표시
-                     if (date.getMonth() !== previousDate.getMonth()) return date.toLocaleString('default', { month: 'long' });
-                     else return '';
-                  }, color: 'white',
-               },title: {color:'white',},grid: {color:'dimgray',}},
+            x: {type: 'time',time: {unit: 'month'}, color: 'white',title: {color:'white',},grid: {color:'dimgray',}},
             y: {ticks: {color:'white',beginAtZero: true},title: {color:'white',},grid: {color:'dimgray',}}
          },
          plugins: {legend: {labels: {color: 'white'}}
