@@ -68,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function setData() {
+   document.getElementById("characterContainer").innerHTML = t("로드 중...");
    isloading = true;
    const res = [];
    const data = JSON.parse(JSON.stringify(server_data));
@@ -93,9 +94,6 @@ function setData() {
 }
 
 function setCharacters(curSortList) {
-   const characterContainer = document.getElementById("characterContainer");
-   characterContainer.innerHTML = t("로드 중...");
-
    let innerArray = [];
    for(const ch of curSortList) {
       const champ = chJSON.data.find(item => item.id === ch.id);
@@ -114,7 +112,7 @@ function setCharacters(curSortList) {
          </div>
       `);
    }
-   characterContainer.innerHTML = innerArray.join("");
+   document.getElementById("characterContainer").innerHTML = innerArray.join("");
    isloading = false;
 }
 

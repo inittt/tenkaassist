@@ -73,6 +73,10 @@ function drawGraph(data) {
 
    // 날짜와 개수를 배열로 변환
    const labels = Object.keys(dateCount), counts = Object.values(dateCount);
+   // 점의 개수에 따라 차트의 가로 길이 계산
+   const pointCount = labels.length; // 총 점의 개수
+   const chartWidth = pointCount * 0.2; // 각 점의 너비를 0.2rem으로 설정
+   document.getElementById('myChart').style.width = `${chartWidth}rem`; // 차트 캔버스의 너비 설정
 
    // Chart.js를 사용하여 그래프 그리기
    const ctx = document.getElementById('myChart').getContext('2d');
@@ -99,10 +103,20 @@ function drawGraph(data) {
          scales: {
             x: {
                ticks: {
-                  callback: function(value, index) {
+                  callback: function(value) {
                      const date = new Date(value);
-                     // 월의 첫 번째 날에만 월 이름을 표시
-                     return date.getDate() === 1 ? date.toLocaleString('default', { month: 'long' }) : '';
+                     // 현재 날짜가 월의 첫 번째 날이고, 이전 월과 다르면 해당 월을 표시
+                     if (date.getDate() === 1) {
+                         return date.toLocaleString('default', { month: 'long' });
+                     } else {
+                         // 이전 값과 비교하여 월이 같으면 빈 문자열을 반환
+                         const previousDate = new Date(this.getLabelForValue(value - 1)); // 이전 날짜 가져오기
+                         if (date.getMonth() !== previousDate.getMonth()) {
+                             return date.toLocaleString('default', { month: 'long' });
+                         } else {
+                             return '';
+                         }
+                     }
                   },
                   color: 'white',
                },title: {color:'white',},grid: {color:'dimgray',}},
