@@ -566,6 +566,8 @@ const translate = {
    "5구" : {en : "Bond 5", sc : "5絆", tc : "5絆"},
    "1구" : {en : "Bond 1", sc : "1絆", tc : "1絆"},
    "13턴딜 상위 1k 개만 집계" : {en : "Only the top 1k based on 13t dmg are counted", sc : "仅统计基于13回合伤害的前一千个", tc : "僅統計基於13回合傷害的前一千個"},
+   "캐릭터" : {en : "Character", sc : "角色", tc : "角色"},
+   
    // 시뮬레이터
    "가이드" : {en : "Guide", sc : "指南", tc : "指南"},
 };

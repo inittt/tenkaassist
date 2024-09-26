@@ -75,3 +75,36 @@
   margin-left:auto;
   right: 0.5rem;
 }
+
+.character-tab {
+  font-size:1.3rem;
+  margin: 0;
+  font-weight: bold;
+  padding:0.5rem;
+}
+
+.character-tab-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#characterContainer {
+  border-radius:0 0 0.2rem 0.2rem;
+  margin-top:0rem;
+}
+#description-box {
+  font-size:0.8rem;
+  padding:0;
+  margin: 0;
+  margin-left:1rem;
+}
+
+.stats-tab {
+  margin-bottom: 0;
+  border-radius:0.2rem 0.2rem 0 0;
+}
+
+#stats-site-tab {
+  display:none;
+}

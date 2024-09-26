@@ -95,36 +95,10 @@ function drawGraph(data) {
       },
       options: {
          scales: {
-            x: {
-               ticks: {
-                  color:'white',
-               },
-               title: {
-                  color:'white',
-               },
-               grid: {
-                  color:'dimgray',
-               }
-            },
-            y: {
-               ticks: {
-                  color:'white',
-                  beginAtZero: true
-               },
-               title: {
-                  color:'white',
-               },
-               grid: {
-                  color:'dimgray',
-               }
-            }
+            x: {ticks: {color:'white',},title: {color:'white',},grid: {color:'dimgray',}},
+            y: {ticks: {color:'white',beginAtZero: true},title: {color:'white',},grid: {color:'dimgray',}}
          },
-         plugins: {
-            legend: {
-                labels: {
-                    color: 'white' // 범례 폰트 색상
-                }
-            }
+         plugins: {legend: {labels: {color: 'white'}}
         }
       }
    });

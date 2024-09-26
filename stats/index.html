@@ -17,35 +17,54 @@
       <div class="block">
          <div class="margin-left titleblock">
             <span id="titleboxText" class="titlebox">통계</span>
-            <div style="margin-left:auto;">
-               <div class="dropdown">
-                  <button id="dropdownBtn">전체<span class="absolute-right">▼</span></button>
-                  <div id="dropdown-content" class="dropdown-content">
-                     <input type="radio" id="option1" name="options" value="전체" checked>
-                     <label id="t1" class="sortLabel" for="option1">전체</label>
-                     <input type="radio" id="option2" name="options" value="리더">
-                     <label id="t2" class="sortLabel" for="option2">리더</label>
-                     <input type="radio" id="option3" name="options" value="파츠">
-                     <label id="t3" class="sortLabel" for="option3">파츠</label>
+         </div>
+      </div>
+      <div id="stats-ch-tab">
+         <div class="block stats-tab">
+            <div class="character-tab-container">
+               <span id="character-tab" class="character-tab">캐릭터</span>
+               <div style="display: flex; gap:0.2rem;">
+                  <div class="dropdown">
+                     <button id="dropdownBtn">전체<span class="absolute-right">▼</span></button>
+                     <div id="dropdown-content" class="dropdown-content">
+                        <input type="radio" id="option1" name="options" value="전체" checked>
+                        <label id="t1" class="sortLabel" for="option1">전체</label>
+                        <input type="radio" id="option2" name="options" value="리더">
+                        <label id="t2" class="sortLabel" for="option2">리더</label>
+                        <input type="radio" id="option3" name="options" value="파츠">
+                        <label id="t3" class="sortLabel" for="option3">파츠</label>
+                     </div>
                   </div>
-               </div>
-               <div class="dropdown">
-                  <button id="dropdownBtn2">5구<span class="absolute-right">▼</span></button>
-                  <div id="dropdown-content2" class="dropdown-content">
-                     <input type="radio" id="option2-1" name="options2" value="5구" checked>
-                     <label id="sc" class="sortLabel" for="option2-1">5구</label>
-                     <input type="radio" id="option2-2" name="options2" value="1구">
-                     <label id="d13-5" class="sortLabel" for="option2-2">1구</label>
+                  <div class="dropdown">
+                     <button id="dropdownBtn2">5구<span class="absolute-right">▼</span></button>
+                     <div id="dropdown-content2" class="dropdown-content">
+                        <input type="radio" id="option2-1" name="options2" value="5구" checked>
+                        <label id="sc" class="sortLabel" for="option2-1">5구</label>
+                        <input type="radio" id="option2-2" name="options2" value="1구">
+                        <label id="d13-5" class="sortLabel" for="option2-2">1구</label>
+                     </div>
                   </div>
                </div>
             </div>
+            <p id="description-box">
+               13턴딜 상위 1k 개만 집계
+            </p>
+         </div>
+         <div class="block flex" id="characterContainer">
+         
          </div>
       </div>
-      <p id="description-box" style="font-size:0.8rem; padding:0; margin: 0; margin-left:1rem;">
-         13턴딜 상위 1k 개만 집계
-      </p>
-      <div class="block flex" id="characterContainer">
-         
+      <div id="stats-site-tab">
+         <div class="block">
+            <div class="margin-left titleblock"><span id="titleboxText" class="titlebox">admin Page</span> </div>
+            <div>유저 수 : <span id="userCnt"></span></div>
+            <div style="overflow-x: auto;">
+               <canvas id="myChart" width="100%" height="40rem"></canvas>
+            </div>
+            <div>총 개수 : <span id="allcomp"></span></div>
+            <div>개수(5) : <span id="dealok"></span></div>
+            <div>개수(1) : <span id="dealok1"></span></div>
+         </div>
       </div>
    </div>
 </body>
@@ -58,6 +77,7 @@
    document.getElementById("dropdownBtn2").innerHTML = `${t("5구")}<span class="absolute-right">▼</span>`;
    document.getElementById("sc").innerText = t("5구");
    document.getElementById("d13-5").innerText = t("1구");
+   document.getElementById("character-tab").innerText = t("캐릭터");
    document.getElementById("description-box").innerText = t("13턴딜 상위 1k 개만 집계");
 
    document.title = "TenkaAssist - " + t("통계");
