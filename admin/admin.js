@@ -98,10 +98,20 @@ function drawGraph(data) {
          }]
       },
       options: {
-         responsive: false, // 차트가 반응형으로 설정
+         responsive: false, // 차트가 반응형으로 설정X
          maintainAspectRatio: false, // 종횡비 유지 비활성화
          scales: {
-            x: {type: 'time',time: {unit: 'month'}, color: 'white',title: {color:'white',},grid: {color:'dimgray',}},
+            x: {
+               ticks: {
+                  callback: function(value, index, values) {
+                     const date = new Date(value);
+                     // 이전 레이블과 비교하여 월이 다를 때만 반환
+                     if (index === 0 || new Date(values[index - 1]).getMonth() !== date.getMonth()) {
+                         return date.toLocaleString('default', { month: 'long' });
+                     }
+                     return ''; // 같은 월에서는 빈 문자열 반환
+                  }, color: 'white',
+               },title: {color:'white',},grid: {color:'dimgray',}},
             y: {ticks: {color:'white',beginAtZero: true},title: {color:'white',},grid: {color:'dimgray',}}
          },
          plugins: {legend: {labels: {color: 'white'}}
