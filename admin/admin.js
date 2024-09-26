@@ -94,15 +94,17 @@ function drawGraph(data) {
          }]
       },
       options: {
+         responsive: true, // 차트가 반응형으로 설정
+         maintainAspectRatio: false, // 종횡비 유지 비활성화
          scales: {
             x: {
                ticks: {
                   callback: function(value, index) {
                      const date = new Date(value);
                      // 월의 첫 번째 날에만 월 이름을 표시
-                     return index % 30 === 0 ? date.toLocaleString('default', { month: 'long' }) : '';
-                 },
-                 color: 'white',
+                     return date.getDate() === 1 ? date.toLocaleString('default', { month: 'long' }) : '';
+                  },
+                  color: 'white',
                },title: {color:'white',},grid: {color:'dimgray',}},
             y: {ticks: {color:'white',beginAtZero: true},title: {color:'white',},grid: {color:'dimgray',}}
          },
