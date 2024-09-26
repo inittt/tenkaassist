@@ -381,6 +381,11 @@ button:hover {
    margin-left: auto;
 }
 
+.my-chart {
+   height:40rem;
+   width:100%;
+}
+
 
 /*header css*/
 header {
