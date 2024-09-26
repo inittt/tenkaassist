@@ -98,7 +98,7 @@ function drawGraph(data) {
          }]
       },
       options: {
-         responsive: true, // 차트가 반응형으로 설정
+         responsive: false, // 차트가 반응형으로 설정
          maintainAspectRatio: false, // 종횡비 유지 비활성화
          scales: {
             x: {
