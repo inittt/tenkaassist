@@ -89,13 +89,21 @@ function drawGraph(data) {
                fill: false,
                pointBackgroundColor: 'rgba(75, 192, 192, 1)', // 꼭지점 원의 배경색
                pointBorderColor: 'rgba(75, 192, 192, 1)', // 꼭지점 원의 테두리색
-               pointRadius: 3, // 꼭지점 원의 반지름 크기
-               pointHoverRadius: 5 // 꼭지점 원의 호버 시 반지름 크기
+               pointRadius: 0, // 꼭지점 원의 반지름 크기
+               pointHoverRadius: 0 // 꼭지점 원의 호버 시 반지름 크기
          }]
       },
       options: {
          scales: {
-            x: {ticks: {color:'white',},title: {color:'white',},grid: {color:'dimgray',}},
+            x: {
+               ticks: {
+                  callback: function(value, index) {
+                     const date = new Date(value);
+                     // 월의 첫 번째 날에만 월 이름을 표시
+                     return index % 30 === 0 ? date.toLocaleString('default', { month: 'long' }) : '';
+                 },
+                 color: 'white',
+               },title: {color:'white',},grid: {color:'dimgray',}},
             y: {ticks: {color:'white',beginAtZero: true},title: {color:'white',},grid: {color:'dimgray',}}
          },
          plugins: {legend: {labels: {color: 'white'}}
