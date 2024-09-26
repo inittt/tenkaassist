@@ -71,8 +71,20 @@ function drawGraph(data) {
       else dateCount[date] = 1;
    });
 
-   // 날짜와 개수를 배열로 변환
-   const labels = Object.keys(dateCount), counts = Object.values(dateCount);
+   // 모든 날짜 범위를 가져오기
+   const startDate = new Date(Math.min(...data.map(item => new Date(addNineHours(item.create_at).split(' ')[0]))));
+   const endDate = new Date(Math.max(...data.map(item => new Date(addNineHours(item.create_at).split(' ')[0]))));
+
+   // 날짜별 개수를 담을 배열 생성
+   const labels = [];
+   const counts = [];
+
+   // 모든 날짜를 순회
+   for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+      const dateString = d.toISOString().split('T')[0]; // yyyy-mm-dd 형식으로 변환
+      labels.push(dateString); // 날짜를 labels에 추가
+      counts.push(dateCount[dateString] || 0); // 해당 날짜의 개수를 counts에 추가 (없으면 0)
+   }
 
    // Chart.js를 사용하여 그래프 그리기
    const ctx = document.getElementById('myChart').getContext('2d');
