@@ -76,7 +76,8 @@ function drawGraph(data) {
    // 점의 개수에 따라 차트의 가로 길이 계산
    const pointCount = labels.length; // 총 점의 개수
    const chartWidth = pointCount * 0.3; // 각 점의 너비를 0.3rem으로 설정
-   document.getElementById('chart-container').style.width = `${chartWidth}rem`; // 차트 캔버스의 너비 설정
+   const chartContainer = document.getElementById('chart-container');
+   chartContainer.style.width = `${chartWidth}rem`; // 차트 캔버스의 너비 설정
 
    // Chart.js를 사용하여 그래프 그리기
    const ctx = document.getElementById('myChart').getContext('2d');
@@ -108,6 +109,8 @@ function drawGraph(data) {
         }
       }
    });
+
+   chartContainer.scrollLeft = chartContainer.scrollWidth;
 }
 
 // 문자열을 Date 객체로 변환하는 함수 (yy/mm/dd 형식 처리)
