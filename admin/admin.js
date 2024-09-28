@@ -95,27 +95,13 @@ function drawGraph(data) {
                pointBorderColor: 'rgba(75, 192, 192, 1)', // 꼭지점 원의 테두리색
                pointRadius: 0, // 꼭지점 원의 반지름 크기
                pointHoverRadius: 0, // 꼭지점 원의 호버 시 반지름 크기
-               hitRadius: 3,
          }]
       },
       options: {
          responsive: false, // 차트가 반응형으로 설정X
          maintainAspectRatio: false, // 종횡비 유지 비활성화
          scales: {
-            x: {
-               ticks: {
-                  callback: function(value, index, values) {
-                     // 문자열을 Date 객체로 변환
-                     const date = parseCustomDate(this.getLabelForValue(value));
-                     const previousDate = index > 0 ? parseCustomDate(this.getLabelForValue(values[index - 1].value)) : null;
-
-                     // 이전 값과 월이 다르면 표시
-                     if (!previousDate || date.getMonth() !== previousDate.getMonth()) {
-                         return date.toLocaleString('default', { month: 'long' });
-                     }
-                     return '';
-                  }, color: 'white',
-               },title: {color:'white',},grid: {color:'dimgray',}},
+            x: {ticks: {color:'white',},title: {color:'white',},grid: {color:'dimgray',}},
             y: {ticks: {color:'white',beginAtZero: true},title: {color:'white',},grid: {color:'dimgray',}}
          },
          plugins: {legend: {labels: {color: 'white'}}
