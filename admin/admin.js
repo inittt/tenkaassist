@@ -94,7 +94,8 @@ function drawGraph(data) {
                pointBackgroundColor: 'rgba(75, 192, 192, 1)', // 꼭지점 원의 배경색
                pointBorderColor: 'rgba(75, 192, 192, 1)', // 꼭지점 원의 테두리색
                pointRadius: 0, // 꼭지점 원의 반지름 크기
-               pointHoverRadius: 0 // 꼭지점 원의 호버 시 반지름 크기
+               pointHoverRadius: 0, // 꼭지점 원의 호버 시 반지름 크기
+               hitRadius: 3,
          }]
       },
       options: {
