@@ -20,6 +20,12 @@
             <span id="titleboxText" class="titlebox">통계</span>
          </div>
       </div>
+      <div id="stats-radio-container" style="margin:0.5rem 1rem 0.2rem 1rem;">
+         <input type="radio" id="radio-character" name="stats-radio" value="character" checked>
+         <label id="tab-ch" for="radio-character" class="stats-label">캐릭터</label>
+         <input type="radio" id="radio-site" name="stats-radio" value="site">
+         <label id="tab-site" for="radio-site" class="stats-label">사이트</label>
+      </div>
       <div id="stats-ch-tab">
          <div class="block stats-tab">
             <div class="character-tab-container">
@@ -56,15 +62,19 @@
          </div>
       </div>
       <div id="stats-site-tab">
-         <div class="block">
-            <div class="margin-left titleblock"><span id="titleboxText" class="titlebox">admin Page</span> </div>
-            <div>유저 수 : <span id="userCnt"></span></div>
-            <div style="overflow-x: auto;">
-               <canvas id="myChart" width="100%" height="40rem"></canvas>
+         <div class="block stats-tab">
+            <div><span id="user-cnt">유저 수 : </span><span id="userCnt"></span></div>
+            <div id="chart" style="overflow-x:auto; margin:0.5rem 0 0.5rem 0;">
+               <div id="chart-container" style="width:100%;">
+                  <canvas id="myChart" style="height:20rem; min-width:100%;"></canvas>
+               </div>
             </div>
-            <div>총 개수 : <span id="allcomp"></span></div>
-            <div>개수(5) : <span id="dealok"></span></div>
-            <div>개수(1) : <span id="dealok1"></span></div>
+            <div><span id="deck-cnt">총 덱 개수 : </span><span id="allcomp"></span></div>
+            <!--
+            <div><span>dummy(5) : </span><span id="dealok"></span></div>
+            <div><span>13t(5) : </span><span id="dealok"></span></div>
+            <div><span>13t(1) : </span><span id="dealok1"></span></div>
+            -->
          </div>
       </div>
    </div>
@@ -81,6 +91,12 @@
    document.getElementById("character-tab").innerText = t("캐릭터");
    document.getElementById("description-box").innerText = t("13턴딜 상위 1k 개만 집계");
    document.getElementById("characterContainer").innerHTML = t("로드 중...");
+
+   
+   document.getElementById("tab-ch").innerText = t("캐릭터");
+   document.getElementById("tab-site").innerText = t("사이트");
+   document.getElementById("user-cnt").innerText = t("유저 수")+" : ";
+   document.getElementById("deck-cnt").innerText = t("총 덱 개수")+" : ";
 
    document.title = "TenkaAssist - " + t("통계");
 </script>

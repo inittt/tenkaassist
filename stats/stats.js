@@ -11,9 +11,6 @@ request(`${server}/comps/getAll`, {
    if (!res.success) return alert(res.msg);
    server_data = res.data;
    setData();
-   
-   drawGraph(res.data);
-   setCompNum(res.data);
 }).catch(e => {});
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -65,6 +62,23 @@ document.addEventListener("DOMContentLoaded", function() {
    });
 
    setUserCnt();
+
+   const tab = document.querySelectorAll("input[type='radio'][name='stats-radio']");
+   const character_tab = document.getElementById("stats-ch-tab");
+   const site_tab = document.getElementById("stats-site-tab");
+   tab.forEach(function(option) {
+      option.addEventListener("change", function() {
+         if ("character" === this.value) {
+            character_tab.style.display="block";
+            site_tab.style.display="none";
+         } else if ("site" === this.value) {
+            character_tab.style.display="none";
+            site_tab.style.display="block";
+            drawGraph(server_data);
+            setCompNum(server_data);
+         }
+      });
+   });
 });
 
 function setData() {
@@ -134,8 +148,8 @@ function setUserCnt() {
 }
 function setCompNum(data) {
    document.getElementById("allcomp").innerText = data.length;
-   document.getElementById("dealok").innerText = data.filter(i => i.ranking < 90).length;
-   document.getElementById("dealok1").innerText = data.filter(i => i.vote > 0).length;
+   // document.getElementById("dealok").innerText = data.filter(i => i.ranking < 90).length;
+   // document.getElementById("dealok1").innerText = data.filter(i => i.vote > 0).length;
 }
 
 function drawGraph(data) {
@@ -150,6 +164,11 @@ function drawGraph(data) {
 
    // 날짜와 개수를 배열로 변환
    const labels = Object.keys(dateCount), counts = Object.values(dateCount);
+   // 점의 개수에 따라 차트의 가로 길이 계산
+   const pointCount = labels.length; // 총 점의 개수
+   const chartWidth = pointCount * 0.3; // 각 점의 너비를 0.3rem으로 설정
+   const chartContainer = document.getElementById('chart-container');
+   chartContainer.style.width = `${chartWidth}rem`; // 차트 캔버스의 너비 설정
 
    // Chart.js를 사용하여 그래프 그리기
    const ctx = document.getElementById('myChart').getContext('2d');
@@ -166,17 +185,24 @@ function drawGraph(data) {
                fill: false,
                pointBackgroundColor: 'rgba(75, 192, 192, 1)', // 꼭지점 원의 배경색
                pointBorderColor: 'rgba(75, 192, 192, 1)', // 꼭지점 원의 테두리색
-               pointRadius: 3, // 꼭지점 원의 반지름 크기
-               pointHoverRadius: 5 // 꼭지점 원의 호버 시 반지름 크기
+               pointRadius: 0, // 꼭지점 원의 반지름 크기
+               pointHoverRadius: 0, // 꼭지점 원의 호버 시 반지름 크기
+               yAxisID: 'y', // 왼쪽 Y축에 연결
          }]
       },
       options: {
+         responsive: false, // 차트가 반응형으로 설정X
+         maintainAspectRatio: false, // 종횡비 유지 비활성화
          scales: {
             x: {ticks: {color:'white',},title: {color:'white',},grid: {color:'dimgray',}},
-            y: {ticks: {color:'white',beginAtZero: true},title: {color:'white',},grid: {color:'dimgray',}}
+            y: {ticks: {color:'white',beginAtZero: true},title: {color:'white',},grid: {color:'dimgray',},position:'right',},
          },
-         plugins: {legend: {labels: {color: 'white'}}
-        }
+         plugins: {legend: {labels: {color: 'white'}}},
+         animation: {
+            onComplete: () => {
+               document.getElementById("chart").scrollLeft = chartContainer.scrollWidth;
+            }
+         }
       }
    });
 }

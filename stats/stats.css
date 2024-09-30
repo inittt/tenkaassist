@@ -101,10 +101,32 @@
 }
 
 .stats-tab {
+  margin-top:0;
   margin-bottom: 0;
   border-radius:0.2rem 0.2rem 0 0;
 }
 
 #stats-site-tab {
+  margin-top:0;
   display:none;
+}
+
+#stats-radio-container input[type="radio"] {
+  display:none;
+}
+
+#stats-radio-container input[type="radio"] + label {
+  cursor:pointer;
+  color:#828282;
+  border-radius: 0.2rem 0.2rem 0 0;
+  border:0.1rem solid rgb(86, 85, 107);
+  border-bottom:0;
+  padding:0.3rem;
+  background-color: #1f232b;
+}
+#stats-radio-container input[type="radio"]:checked + label {
+  font-weight:bold;
+  color:white;
+  border-color:white;
+  background-color: #373d4b;
 }
