@@ -148,8 +148,8 @@ function setUserCnt() {
 }
 function setCompNum(data) {
    document.getElementById("allcomp").innerText = data.length;
-   document.getElementById("dealok").innerText = data.filter(i => i.ranking < 90).length;
-   document.getElementById("dealok1").innerText = data.filter(i => i.vote > 0).length;
+   // document.getElementById("dealok").innerText = data.filter(i => i.ranking < 90).length;
+   // document.getElementById("dealok1").innerText = data.filter(i => i.vote > 0).length;
 }
 
 function drawGraph(data) {
@@ -196,10 +196,12 @@ function drawGraph(data) {
             x: {ticks: {color:'white',},title: {color:'white',},grid: {color:'dimgray',}},
             y: {ticks: {color:'white',beginAtZero: true},title: {color:'white',},grid: {color:'dimgray',}}
          },
-         plugins: {legend: {labels: {color: 'white'}}
-        }
+         plugins: {legend: {labels: {color: 'white'}}},
+         animation: {
+            onComplete: () => {
+               chartContainer.scrollLeft = chartContainer.scrollWidth;
+            }
+         }
       }
    });
-
-   chartContainer.scrollLeft = chartContainer.scrollWidth;
 }
