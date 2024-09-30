@@ -187,6 +187,7 @@ function drawGraph(data) {
                pointBorderColor: 'rgba(75, 192, 192, 1)', // 꼭지점 원의 테두리색
                pointRadius: 0, // 꼭지점 원의 반지름 크기
                pointHoverRadius: 0, // 꼭지점 원의 호버 시 반지름 크기
+               yAxisID: 'y', // 왼쪽 Y축에 연결
          }]
       },
       options: {
@@ -200,7 +201,9 @@ function drawGraph(data) {
                position: 'right',
                ticks: { color: 'white' },
                title: { color: 'white' },
-               grid: { color: 'dimgray' }
+               grid: { color: 'dimgray' },
+               min: 0, // 최소값
+               max: Math.max(...counts) // 최대값은 데이터의 최대 개수
             }
          },
          plugins: {legend: {labels: {color: 'white'}}},
