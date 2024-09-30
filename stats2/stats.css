@@ -115,7 +115,7 @@
   display:none;
 }
 
-input[type="radio"] + label {
+#stats-radio-container input[type="radio"] + label {
   cursor:pointer;
   color:#828282;
   border-radius: 0.2rem 0.2rem 0 0;
@@ -124,7 +124,7 @@ input[type="radio"] + label {
   padding:0.3rem;
   background-color: #1f232b;
 }
-input[type="radio"]:checked + label {
+#stats-radio-container input[type="radio"]:checked + label {
   font-weight:bold;
   color:white;
   border-color:white;

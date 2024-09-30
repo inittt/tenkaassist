@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function() {
       option.addEventListener("change", function() {
          if ("character" === this.value) {
             character_tab.style.display="block";
-            site_tab.style.display="none";
+            site_tab.style.display="hidden";
          } else if ("site" === this.value) {
             character_tab.style.display="none";
             site_tab.style.display="block";
