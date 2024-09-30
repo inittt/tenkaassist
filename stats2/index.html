@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>TenkaAssist - 통계</title>
+   <meta name="description" content="tenkaAssist">
+   <script src="../js/common.js"></script>
+   <link rel="stylesheet" href="../css/common.css" type = "text/css">
+   <link rel="stylesheet" href="./stats.css" type = "text/css">
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <script src="./stats.js"></script>
+   <script src="../js/characterJson.js"></script>
+</head>
+<body>
+   <script src="../js/header.js"></script>
+   <div class="main-container bg-dark">
+      <div class="block">
+         <div class="margin-left titleblock">
+            <span id="titleboxText" class="titlebox">통계</span>
+         </div>
+      </div>
+      <div id="stats-radio-container" style="margin:0.5rem 1rem 0.2rem 1rem;">
+         <input type="radio" id="radio-character" name="stats-radio" value="character" checked>
+         <label id="tab-ch" for="radio-character" class="stats-label">캐릭터</label>
+         <input type="radio" id="radio-site" name="stats-radio" value="site">
+         <label id="tab-site" for="radio-site" class="stats-label">사이트</label>
+      </div>
+      <div id="stats-ch-tab">
+         <div class="block stats-tab">
+            <div class="character-tab-container">
+               <span id="character-tab" class="character-tab">캐릭터</span>
+               <div style="display: flex; gap:0.2rem;">
+                  <div class="dropdown">
+                     <button id="dropdownBtn">전체<span class="absolute-right">▼</span></button>
+                     <div id="dropdown-content" class="dropdown-content">
+                        <input type="radio" id="option1" name="options" value="전체" checked>
+                        <label id="t1" class="sortLabel" for="option1">전체</label>
+                        <input type="radio" id="option2" name="options" value="리더">
+                        <label id="t2" class="sortLabel" for="option2">리더</label>
+                        <input type="radio" id="option3" name="options" value="파츠">
+                        <label id="t3" class="sortLabel" for="option3">파츠</label>
+                     </div>
+                  </div>
+                  <div class="dropdown">
+                     <button id="dropdownBtn2">5구<span class="absolute-right">▼</span></button>
+                     <div id="dropdown-content2" class="dropdown-content">
+                        <input type="radio" id="option2-1" name="options2" value="5구" checked>
+                        <label id="sc" class="sortLabel" for="option2-1">5구</label>
+                        <input type="radio" id="option2-2" name="options2" value="1구">
+                        <label id="d13-5" class="sortLabel" for="option2-2">1구</label>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <p id="description-box">
+               13턴딜 상위 1k 개만 집계
+            </p>
+         </div>
+         <div class="block flex" id="characterContainer">
+            로드 중...
+         </div>
+      </div>
+      <div id="stats-site-tab">
+         <div class="block stats-tab">
+            <div><span id="user-cnt">유저 수 : </span><span id="userCnt"></span></div>
+            <div style="overflow-x:auto; margin:0.5rem 0 0.5rem 0;">
+               <div id="chart-container" style="width:100%;">
+                  <canvas id="myChart" style="height:20rem; min-width:100%;"></canvas>
+               </div>
+            </div>
+            <div><span id="deck-cnt">총 덱 개수 : </span><span id="allcomp"></span></div>
+            <!--
+            <div><span>dummy(5) : </span><span id="dealok"></span></div>
+            <div><span>13t(5) : </span><span id="dealok"></span></div>
+            <div><span>13t(1) : </span><span id="dealok1"></span></div>
+            -->
+         </div>
+      </div>
+   </div>
+</body>
+<script>
+   document.getElementById("titleboxText").innerText = t("통계");
+   document.getElementById("dropdownBtn").innerHTML = `${t("전체")}<span class="absolute-right">▼</span>`;
+   document.getElementById("t1").innerText = t("전체");
+   document.getElementById("t2").innerText = t("리더");
+   document.getElementById("t3").innerText = t("파츠");
+   document.getElementById("dropdownBtn2").innerHTML = `${t("5구")}<span class="absolute-right">▼</span>`;
+   document.getElementById("sc").innerText = t("5구");
+   document.getElementById("d13-5").innerText = t("1구");
+   document.getElementById("character-tab").innerText = t("캐릭터");
+   document.getElementById("description-box").innerText = t("13턴딜 상위 1k 개만 집계");
+   document.getElementById("characterContainer").innerHTML = t("로드 중...");
+
+   
+   document.getElementById("tab-ch").innerText = t("캐릭터");
+   document.getElementById("tab-site").innerText = t("사이트");
+   document.getElementById("user-cnt").innerText = t("유저 수")+" : ";
+   document.getElementById("deck-cnt").innerText = t("총 덱 개수")+" : ";
+
+   document.title = "TenkaAssist - " + t("통계");
+</script>
+</html>

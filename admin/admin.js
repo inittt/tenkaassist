@@ -112,12 +112,3 @@ function drawGraph(data) {
 
    chartContainer.scrollLeft = chartContainer.scrollWidth;
 }
-
-// 문자열을 Date 객체로 변환하는 함수 (yy/mm/dd 형식 처리)
-function parseCustomDate(dateString) {
-   const [datePart, timePart] = dateString.split(' ');
-   const [year, month, day] = datePart.split('/').map(Number);
-   const [hour, minute, second] = timePart.split(':').map(Number);
-   // 날짜를 Date 객체로 변환 (20xx년도 기준으로)
-   return new Date(2000 + year, month - 1, day, hour, minute, second);
-}
