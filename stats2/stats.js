@@ -199,10 +199,7 @@ function drawGraph(data) {
          plugins: {legend: {labels: {color: 'white'}}},
          animation: {
             onComplete: () => {
-               // 차트 애니메이션 완료 후 스크롤 이동
-               requestAnimationFrame(() => {
-                  chartContainer.scrollLeft = chartContainer.scrollWidth;
-               });
+               chartContainer.scrollLeft = `${chartWidth}rem`;
             }
          }
       }
