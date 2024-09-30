@@ -11,9 +11,6 @@ request(`${server}/comps/getAll`, {
    if (!res.success) return alert(res.msg);
    server_data = res.data;
    setData();
-   
-   drawGraph(res.data);
-   setCompNum(res.data);
 }).catch(e => {});
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -73,10 +70,12 @@ document.addEventListener("DOMContentLoaded", function() {
       option.addEventListener("change", function() {
          if ("character" === this.value) {
             character_tab.style.display="block";
-            site_tab.style.display="hidden";
+            site_tab.style.display="none";
          } else if ("site" === this.value) {
             character_tab.style.display="none";
             site_tab.style.display="block";
+            drawGraph(server_data);
+            setCompNum(server_data);
          }
       });
    });
