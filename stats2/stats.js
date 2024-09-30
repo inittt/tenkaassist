@@ -197,11 +197,9 @@ function drawGraph(data) {
             y: {ticks: {color:'white',beginAtZero: true},title: {color:'white',},grid: {color:'dimgray',}}
          },
          plugins: {legend: {labels: {color: 'white'}}},
-         animation: {
-            onComplete: () => {
-               chartContainer.scrollLeft = chartContainer.scrollWidth;
-            }
-         }
       }
    });
+   // 차트를 강제로 업데이트한 후 스크롤 이동
+   myChart.update();
+   chartContainer.scrollLeft = chartContainer.scrollWidth;
 }
