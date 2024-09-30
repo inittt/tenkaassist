@@ -194,7 +194,14 @@ function drawGraph(data) {
          maintainAspectRatio: false, // 종횡비 유지 비활성화
          scales: {
             x: {ticks: {color:'white',},title: {color:'white',},grid: {color:'dimgray',}},
-            y: {ticks: {color:'white',beginAtZero: true},title: {color:'white',},grid: {color:'dimgray',}}
+            y: {ticks: {color:'white',beginAtZero: true},title: {color:'white',},grid: {color:'dimgray',}},
+            y1: {
+               type: 'linear',
+               position: 'right',
+               ticks: { color: 'white' },
+               title: { color: 'white' },
+               grid: { color: 'dimgray' }
+            }
          },
          plugins: {legend: {labels: {color: 'white'}}},
          animation: {
