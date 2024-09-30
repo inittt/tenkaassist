@@ -199,7 +199,7 @@ function drawGraph(data) {
          plugins: {legend: {labels: {color: 'white'}}},
          animation: {
             onComplete: () => {
-               chartContainer.scrollLeft = `${chartWidth}rem`;
+               document.getElementById("chart").scrollLeft = chartContainer.scrollWidth;
             }
          }
       }
