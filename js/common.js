@@ -569,7 +569,7 @@ const translate = {
    "13턴딜 상위 1k 개만 집계" : {en : "Only the top 1k based on 13t dmg are counted", sc : "仅统计基于13回合伤害的前一千个", tc : "僅統計基於13回合傷害的前一千個"},
    "캐릭터" : {en : "Character", sc : "角色", tc : "角色"},
    "사이트" : {en : "Site", sc : "网站", tc : "網站"},
-   "유저 수" : {en : "User cnt", sc : "用户数", tc : "使用者數"},
+   "유저 수" : {en : "User count", sc : "用户数", tc : "使用者數"},
    "조합개수" : {en : "Team count", sc : "队数", tc : "隊數"}
 };
 

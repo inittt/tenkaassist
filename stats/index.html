@@ -29,7 +29,7 @@
       <div id="stats-ch-tab">
          <div class="block stats-tab">
             <div class="character-tab-container">
-               <span id="character-tab" class="character-tab">캐릭터</span>
+               <span id="character-tab" class="character-tab"></span>
                <div style="display: flex; gap:0.2rem;">
                   <div class="dropdown">
                      <button id="dropdownBtn">전체<span class="absolute-right">▼</span></button>
@@ -68,8 +68,8 @@
                   <canvas id="myChart" style="height:20rem; min-width:100%;"></canvas>
                </div>
             </div>
-            <div><span id="user-cnt">유저 수 : </span><span id="userCnt"></span></div>
-            <div><span id="deck-cnt">총 덱 개수 : </span><span id="allcomp"></span></div>
+            <div style="margin:0.5rem"><span id="user-cnt">유저 수 : </span><span id="userCnt"></span></div>
+            <div style="margin:0.5rem"><span id="deck-cnt">조합개수 : </span><span id="allcomp"></span></div>
             <!--
             <div><span>dummy(5) : </span><span id="dealok"></span></div>
             <div><span>13t(5) : </span><span id="dealok"></span></div>
@@ -88,7 +88,6 @@
    document.getElementById("dropdownBtn2").innerHTML = `${t("5구")}<span class="absolute-right">▼</span>`;
    document.getElementById("sc").innerText = t("5구");
    document.getElementById("d13-5").innerText = t("1구");
-   document.getElementById("character-tab").innerText = t("캐릭터");
    document.getElementById("description-box").innerText = t("13턴딜 상위 1k 개만 집계");
    document.getElementById("characterContainer").innerHTML = t("로드 중...");
 
@@ -96,7 +95,7 @@
    document.getElementById("tab-ch").innerText = t("캐릭터");
    document.getElementById("tab-site").innerText = t("사이트");
    document.getElementById("user-cnt").innerText = t("유저 수")+" : ";
-   document.getElementById("deck-cnt").innerText = t("총 덱 개수")+" : ";
+   document.getElementById("deck-cnt").innerText = t("조합개수")+" : ";
 
    document.title = "TenkaAssist - " + t("통계");
 </script>
