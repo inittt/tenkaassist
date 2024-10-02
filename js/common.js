@@ -260,6 +260,7 @@ const translate = {
    "에게" : {en : " get", sc : "获得", tc : "獲得"},
    "부여" : {en : "", sc : "", tc : ""},
    "타깃" : {en : "target", sc : "目标", tc : "目標"},
+   "힐" : {en : "recovery", sc : "回复", tc : "回復"}, 
 
    // 조합상세
    "체험하기" : {en : "test", sc : "测试", tc : "測試"},
