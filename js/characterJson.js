@@ -1,4 +1,4 @@
-const liberationList = ["바알", "사탄", "이블리스", "살루시아", "란", "루루", "밀레", "섹돌", "치즈루"];
+const liberationList = ["바알", "사탄", "이블리스", "살루시아", "란", "루루", "밀레", "섹돌", "치즈루", "노엘리", "페바알"];
 const chJSON = { data : [
 {ok : true, id : 10001, rarity : 3, hp:962383, atk:254657, cd:3, atkMag:100, ultMag:503, fullname : "마왕 바알", name : "바알", element : 0, role : 0},
 {ok : true, id : 10002, rarity : 3, hp:1384007, atk:177152, cd:3, atkMag:100, ultMag:0, fullname : "마왕 사탄", name : "사탄", element : 4, role : 2},
@@ -8,7 +8,7 @@ const chJSON = { data : [
 {ok : true, id : 10006, rarity : 3, hp:984084, atk:248899, cd:4, atkMag:0, ultMag:0, fullname : "파스제국의 공주 루루", name : "루루", element : 2, role : 1},
 {ok : true, id : 10007, rarity : 3, hp:939796, atk:260414, cd:4, atkMag:100, ultMag:514, fullname : "대천사 성녀 밀레", name : "밀레", element : 3, role : 0},
 {ok : true, id : 10008, rarity : 3, hp:938024, atk:261300, cd:4, atkMag:100, ultMag:100, fullname : "마도인형 KS-Ⅷ", name : "섹돌", element : 4, role : 0},
-{ok : false, id : 10017, rarity : 3, hp:942010, atk:259971, cd:3, atkMag:50, ultMag:211, fullname : "광란의 페스티벌 바알", name : "페바알", element : 4, role : 0},
+{ok : true, id : 10017, rarity : 3, hp:942010, atk:259971, cd:3, atkMag:50, ultMag:257, fullname : "광란의 페스티벌 바알", name : "페바알", element : 4, role : 0},
 {ok : true, id : 10018, rarity : 3, hp:1583304, atk:187339, cd:3, atkMag:100, ultMag:0, fullname : "고대의 용자 울타", name : "울타", element : 2, role : 2},
 {ok : true, id : 10019, rarity : 3, hp:945996, atk:259086, cd:4, atkMag:100, ultMag:514, fullname : "현대 용자 칸다 아야네", name : "아야네", element : 3, role : 0},
 {ok : true, id : 10020, rarity : 3, hp:914995, atk:267943, cd:3, atkMag:100, ultMag:397, fullname : "미래의 용자 무엘라", name : "무엘라", element : 2, role : 4},
@@ -17,7 +17,7 @@ const chJSON = { data : [
 {ok : true, id : 10023, rarity : 3, hp:1220583, atk:221441, cd:4, atkMag:75, ultMag:0, fullname : "부사수 벨레트", name : "벨레트", element : 0, role : 2},
 {ok : true, id : 10024, rarity : 3, hp:948654, atk:284773, cd:4, atkMag:100, ultMag:514, fullname : "네크로맨서 여왕 엘리자베스", name : "엘자", element : 4, role : 0},
 {ok : true, id : 10025, rarity : 3, hp:1217926, atk:201068, cd:6, atkMag:0, ultMag:0, fullname : "아이돌 이블리스", name : "아이블", element : 1, role : 4},
-{ok : false, id : 10026, rarity : 3, hp:979655, atk:250228, cd:6, atkMag:0, ultMag:0, fullname : "아이돌 블랙앤화이트 노엘리", name : "노엘리", element : 0, role : 3},
+{ok : true, id : 10026, rarity : 3, hp:979655, atk:250228, cd:6, atkMag:0, ultMag:0, fullname : "아이돌 블랙앤화이트 노엘리", name : "노엘리", element : 0, role : 3},
 {ok : true, id : 10027, rarity : 3, hp:1522186, atk:160766, cd:3, atkMag:80, ultMag:0, fullname : "부활한 바니걸 사탄", name : "바니사탄", element : 3, role : 2},
 {ok : true, id : 10028, rarity : 3, hp:954411, atk:256871, cd:4, atkMag:100, ultMag:514, fullname : "다시 태어난 치즈루", name : "치즈루", element : 2, role : 0},
 {ok : true, id : 10029, rarity : 3, hp:980984, atk:275472, cd:4, atkMag:100, ultMag:576, fullname : "여름날 시즈카", name : "수즈카", element : 1, role : 0},
