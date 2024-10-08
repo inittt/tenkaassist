@@ -74,3 +74,31 @@
    min-height:1.9rem;
    width:4rem;
  }
+
+ 
+.goSearchButton {
+  font-size:1rem;
+  height:2.5rem;
+  margin-left:auto;
+  border: 2px solid transparent;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 0.3rem;
+  padding: 0.3rem 0.6rem;
+  background-color: #007BFF;
+  color:white;
+}
+
+.goSearchButton:hover {
+  background-color: #004a9a;
+  border-color:white;
+}
+
+@media (max-width: 420px) {
+  #characterSearchBtn {display:none;}
+  #characterSearchBtn2 {display:block;}
+}
+@media (min-width: 420px) {
+  #characterSearchBtn {display:block;}
+  #characterSearchBtn2 {display:none;}
+}

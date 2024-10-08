@@ -300,6 +300,7 @@ const translate = {
    "기여자" : {en : "Contributors", sc : "贡献者", tc : "貢獻者"},
 
    // 보유 캐릭터
+   "보유" : {en : "Owned", sc : "已拥有", tc : "已擁有"},
    "보유 캐릭터" : {en : "Owned", sc : "已拥有", tc : "已擁有"},
    "조건" : {en : "Option", sc : "选项", tc : "選項"},
    "SR이하 포함" : {en : "add SR▽", sc : "新增 SR▽", tc : "新增 SR▽"},
