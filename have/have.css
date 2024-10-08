@@ -94,11 +94,11 @@
   border-color:white;
 }
 
-@media (max-width: 420px) {
+@media (max-width: 768px) {
   #characterSearchBtn {display:none;}
   #characterSearchBtn2 {display:block;}
 }
-@media (min-width: 420px) {
+@media (min-width: 768px) {
   #characterSearchBtn {display:block;}
   #characterSearchBtn2 {display:none;}
 }
