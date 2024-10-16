@@ -122,6 +122,8 @@ const chJSON = { data : [
 {ok : true, id : 10044, rarity : 3, hp:914109, atk:295402, cd:4, atkMag:0, ultMag:0, fullname : "점술사 아메시스트", name : "아메", element : 4, role : 3},
 {ok : true, id : 10150, rarity : 3, hp:996485, atk:271044, cd:4, atkMag:100, ultMag:514, fullname : "용자 바니걸 칸다 아야네", name : "바야네", element : 3, role : 0},
 {ok : true, id : 10151, rarity : 3, hp:986299, atk:273701, cd:4, atkMag:0, ultMag:0, fullname : "섹시 바니걸 이블리스", name : "바이블", element : 2, role : 3},
+// {ok : true, id : 10152, rarity : 3, hp:937139, atk:288316, cd:4, atkMag:0, ultMag:0, fullname : "치유의 별 수잔", name : "수잔", element : 4, role : 1},
+// {ok : true, id : 10153, rarity : 3, hp:930053, atk:290530, cd:3, atkMag:100, ultMag:0, fullname : "순수한 살의 사탄", name : "농탄", element : 4, role : 0},
 
 {ok : true, id : 10009, rarity : 2, hp:959283, atk:242699, cd:4, atkMag:0, ultMag:0, fullname : "마도 메이드 아이카", name : "아이카", element : 4, role : 3},
 {ok : false, id : 10010, rarity : 2, fullname : "성기사단장 레오나", name : "레오나", element : 1, role : 2},
