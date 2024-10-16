@@ -505,6 +505,8 @@ const translate = {
    "아메" : {en : "Amethystina", sc : "占星", tc : "占星"},
    "바야네" : {en : "Bg.Ayane", sc : "兔勇", tc : "兔勇"},
    "바이블" : {en : "Bg.Iblis", sc : "兔伊", tc : "兔伊"},
+   "수잔" : {en : "Susan", sc : "苏珊", tc : "蘇珊"},
+   "농탄" : {en : "H.Satan", sc : "小撒旦", tc : "小撒旦"},
 
    "아이카" : {en : "Aiko", sc : "艾可", tc : "艾可"},
    "레오나" : {en : "Leona", sc : "雷欧娜", tc : "雷歐娜"},
