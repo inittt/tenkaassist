@@ -58,8 +58,8 @@ function setComp() {
       const champ = getCharacter(id);
       if (champ == undefined || champ == null) return alert(t("캐릭터 정보가 잘못되었습니다"));
    }
-   boss.maxHp = 10854389981;
-   //boss.maxHp = 5063653034;
+   //boss.maxHp = 10854389981;
+   boss.maxHp = 5063653034;
    makeComp(idList);
    start(idList);
 }
