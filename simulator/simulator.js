@@ -46,7 +46,26 @@ document.addEventListener("DOMContentLoaded", function() {
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
    })
+
+   request(`${server}/users/isAdmin`, {
+      method: "GET",
+   }).then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   }).then(res => {
+      if (res.success) document.getElementById("autoBtn").style.display = "block";
+   }).catch(e => {});
 });
+
+function auto() {
+   for(let i = 0; i < commandList.length; i++) {
+      const guide_idx = Number(commandList[actNum][0])-1;
+      const guide_act = commandList[actNum][1];
+      if (guide_act == "평") do_act(guide_idx);
+      else if (guide_act == "궁") do_ult(guide_idx);
+      else if (guide_act == "방") do_def(guide_idx);
+   }
+}
 
 function extractActions(data) {
    return data.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();

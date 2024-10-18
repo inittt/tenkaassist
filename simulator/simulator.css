@@ -160,3 +160,7 @@ body {
    0%, 100% {border-color: #9a7100;}
    50% { border-color: #ffbb00;}
 }
+
+#autoBtn {
+   display:none;
+}
