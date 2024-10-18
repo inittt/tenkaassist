@@ -61,7 +61,7 @@ function auto() {
    for(let i = 0; i < commandList.length; i++) {
       const guide_idx = Number(commandList[actNum][0])-1;
       const guide_act = commandList[actNum][1];
-      if (guide_act == "평") do_act(guide_idx);
+      if (guide_act == "평") do_atk(guide_idx);
       else if (guide_act == "궁") do_ult(guide_idx);
       else if (guide_act == "방") do_def(guide_idx);
    }
