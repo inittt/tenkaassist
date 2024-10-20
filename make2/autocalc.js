@@ -47,19 +47,22 @@ function autoCalc(idList, command, bondList) {
    }
 
    function do_ult(idx) {
-      if (comp[idx].isActed || comp[i].curCd > 0) return false;
+      if (comp[idx].isActed || comp[idx].curCd > 0) return false;
       comp[idx].ultimate();
       act_after();
+      return true;
    }
    function do_atk(idx) {
       if (comp[idx].isActed) return false;
       comp[idx].attack();
       act_after();
+      return true;
    }
    function do_def(idx) {
       if (comp[idx].isActed) return false;
       comp[idx].defense();
       act_after();
+      return true;
    }
    function act_after() {
       for(let i = 0; i < 5; i++) comp[i].isHealed = false;

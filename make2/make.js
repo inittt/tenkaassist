@@ -48,6 +48,10 @@ document.addEventListener("DOMContentLoaded", function() {
          if ("2개" === this.value) mod = 1;
          else if ("3개" === this.value) mod = 2;
          else if ("4개" === this.value) mod = 3;
+
+         console.log(possible1);
+         console.log(possible2);
+         console.log(possible3);
          
          makeBlockByModNSort();
       });
@@ -101,16 +105,12 @@ function getAllCompsFromServer() {
    })
 }
 function setPossible(data) {
+   console.log("setPossible 호출");
    for(let d of data) {
       const compList = d.compstr.split(" ").map(Number);
       d.compstr = compList.slice();
       if (compList.every(item => haveList.includes(item) || isAny(item))) {
-         const bool = compList.some(item => isAny(item));
-         if (bool) continue
-
-         if (Math.floor(d.ranking) == 99) d.ranking = 98;
-         if (d.recommend == 0) d.recommend = 1;
-         if (d.vote == 0) d.vote = 1;
+         if (compList.some(item => isAny(item))) continue
 
          if (d.ranking <= limit_dummy) possible1.push(d);
          if (d.vote >= limit_13t) possible2.push(d);
@@ -118,17 +118,18 @@ function setPossible(data) {
          const indexes = compList.map(item => haveList.indexOf(item)), bonds = [];
          for(let i = 0; i < 5; i++) bonds.push(bondList[indexes[i]]);
 
-         const calc13t = autoCalc(compList, d.description, bonds);
-         d.fit13t = calc13t;
+         d.fit13t = autoCalc(compList, d.description, bonds);
          if (bonds.every(item => item === 1)) d.fit13t = Math.max(d.fit13t, d.vote);
          if (bonds.every(item => item === 5)) d.fit13t = Math.max(d.fit13t, d.recommend);
 
-         if (calc13t >= limit_fit) possible3.push(d);
+         if (d.fit13t >= limit_fit) possible3.push(d);
+         console.log("가능한 조합 발견");
       }
    }
    
    makeBlockByModNSort();
 }
+
 function makeBlock(possibleDeck) {
    page = 0;
    bundleCnt = 0;
