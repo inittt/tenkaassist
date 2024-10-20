@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function() {
       });
    });
 
+   console.log("dom 로드 완료");
    getAllCompsFromServer();
 });
 
@@ -75,7 +76,6 @@ function makeBlockByModNSort() {
 }
 
 function getAllCompsFromServer() {
-   console.log("서버로부터 데이터 가져오기");
    request(`${server}/comps/getAll`, {
       method: "GET",
    }).then(response => {
@@ -83,11 +83,9 @@ function getAllCompsFromServer() {
       return response.json();
    }).then(res => {
       if (!res.success) {
-         console.log("응답 상태가 error임")
          cc.innerHTML = `<div class="block">${res.msg}</div>`
          return;
       }
-      console.log("가능한 조합 세팅시작1");
       setPossible(res.data);
       makeBlockByModNSort();
    }).catch(e => {
@@ -96,7 +94,6 @@ function getAllCompsFromServer() {
    })
 }
 function setPossible(data) {
-   console.log("가능한 조합 세팅시작2");
    const haveList = chIds.slice().split(",").map(Number);
    const bondList = chBonds.slice().split(",").map(Number);
    for(let d of data) {
@@ -110,28 +107,18 @@ function setPossible(data) {
          if (d.recommend == 0) d.recommend = 1;
          if (d.vote == 0) d.vote = 1;
 
-         console.log("가능한덱 발견");
-         if (d.ranking <= limit_dummy) {
-            possible1.push(d);
-            console.log("허수+ 세팅");
-         }
-         if (d.vote >= limit_13t) {
-            possible2.push(d);
-            console.log("13t(1) 세팅");
-         }
+         if (d.ranking <= limit_dummy) possible1.push(d);
+         if (d.vote >= limit_13t) possible2.push(d);
 
          const indexes = compList.map(item => haveList.indexOf(item)), bonds = [];
          for(let i = 0; i < 5; i++) bonds.push(bondList[indexes[i]]);
-         console.log(compList);
-         console.log(d.description.length > 10);
-         console.log(bonds);
 
          const calc13t = autoCalc(compList, d.description, bonds);
          d.fit13t = calc13t;
-         if (calc13t >= limit_fit) {
-            possible3.push(d);
-            console.log("맞춤 세팅");
-         }
+         if (bonds.every(item => item === 1)) d.fit13t = Math.max(d.fit13t, d.vote);
+         if (bonds.every(item => item === 5)) d.fit13t = Math.max(d.fit13t, d.recommend);
+
+         if (calc13t >= limit_fit) possible3.push(d);
       }
    }
 }
