@@ -15,7 +15,7 @@ const haveList = chIds.slice().split(",").map(Number);
 const bondList = chBonds.slice().split(",").map(Number);
 for(let i = 0; i < haveList.length; i++) {
    if (haveList[i] == null || bondList[i] == null) continue;
-   bondMap.add(haveList[i], bondList[i]);
+   bondMap.set(haveList[i], bondList[i]);
 }
 
 document.addEventListener("DOMContentLoaded", function() {
