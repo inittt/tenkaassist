@@ -10,6 +10,14 @@ let allCombinations = [];
 let isDataLoaded = false, sort = 0, mod = 0, cc, isCalculating = false;
 const curHeader = 5;
 
+const bondMap = new Map();
+const haveList = chIds.slice().split(",").map(Number);
+const bondList = chBonds.slice().split(",").map(Number);
+for(let i = 0; i < haveList.length; i++) {
+   if (haveList[i] == null || bondList[i] == null) continue;
+   bondMap.add(haveList[i], bondList[i]);
+}
+
 document.addEventListener("DOMContentLoaded", function() {
    var dropdownBtn = document.getElementById("dropdownBtn");
    var dropdownBtn2 = document.getElementById("dropdownBtn2");
@@ -87,15 +95,12 @@ function getAllCompsFromServer() {
          return;
       }
       setPossible(res.data);
-      makeBlockByModNSort();
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
       cc.innerHTML = `<div class="block">${t("데이터 로드 실패")}</div>`;
    })
 }
 function setPossible(data) {
-   const haveList = chIds.slice().split(",").map(Number);
-   const bondList = chBonds.slice().split(",").map(Number);
    for(let d of data) {
       const compList = d.compstr.split(" ").map(Number);
       d.compstr = compList.slice();
@@ -121,6 +126,8 @@ function setPossible(data) {
          if (calc13t >= limit_fit) possible3.push(d);
       }
    }
+   
+   makeBlockByModNSort();
 }
 function makeBlock(possibleDeck) {
    page = 0;
@@ -169,6 +176,16 @@ function makeBlockAllDeck(possibleDeck) {
    loadBlockAllDeck(page++);
 }
 
+function numToBond(num) {
+   switch(num) {
+      case 1: return "Ⅰ";
+      case 2: return "Ⅱ";
+      case 3: return "Ⅲ";
+      case 4: return "Ⅳ";
+      default: return "Ⅴ";
+   }
+}
+
 function loadBlockAllDeck(pg) {
    for(let i = pg*10; i < pg*10+10; i++) {
       const comp = allCombinations[i];
@@ -196,7 +213,7 @@ function loadBlockAllDeck(pg) {
             <div class="character" style="margin:0.2rem;">
                <div style="margin:0.2rem;">
                   <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-                  ${isAny(ch.id) ? "" : `<img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">`}
+                  ${isAny(ch.id) ? "" : `<div class="bond-icon z-2">${numToBond(bondMap.get(ch.id))}</div>`}
                   ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                   <div class="element${ch.element} ch_border z-4"></div>
                </div>
@@ -298,7 +315,7 @@ function loadBlockNDeck(pg) {
                <div class="character" style="margin:0.2rem;">
                   <div style="margin:0.2rem;">
                      <img src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-                     ${isAny(ch.id) ? "" : `<img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">`}
+                     ${isAny(ch.id) ? "" : `<div class="bond-icon z-2">${numToBond(bondMap.get(ch.id))}</div>`}
                      ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                      <div class="element${ch.element} ch_border z-4"></div>
                   </div>
