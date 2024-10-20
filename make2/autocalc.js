@@ -51,6 +51,7 @@ function autoCalc(idList, command, bondList) {
          else if (guide_act == "궁") {if (!do_ult(guide_idx)) return 0;}
          else if (guide_act == "방") {if (!do_def(guide_idx)) return 0;}
       }
+      return dmg13;
    }
 
    function do_ult(idx) {
