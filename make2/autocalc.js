@@ -45,11 +45,11 @@ function autoCalc(idList, command, bondList) {
 
    function auto() {
       for(let i = 0; i < 13*5; i++) {
-         const guide_idx = Number(commandList[actNum][0])-1;
-         const guide_act = commandList[actNum][1];
-         if (guide_act == "평") if (!do_atk(guide_idx)) return 0;
-         else if (guide_act == "궁") if (!do_ult(guide_idx)) return 0;
-         else if (guide_act == "방") if (!do_def(guide_idx)) return 0;
+         const guide_idx = Number(commandList[i][0])-1;
+         const guide_act = commandList[i][1];
+         if (guide_act == "평") {if (!do_atk(guide_idx)) return 0;}
+         else if (guide_act == "궁") {if (!do_ult(guide_idx)) return 0;}
+         else if (guide_act == "방") {if (!do_def(guide_idx)) return 0;}
       }
       return dmg13;
    }

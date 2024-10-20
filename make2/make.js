@@ -172,12 +172,16 @@ function makeBlockAllDeck(possibleDeck) {
 }
 
 function numToBond(num) {
-   switch(num) {
-      case 1: return "Ⅰ";
-      case 2: return "Ⅱ";
-      case 3: return "Ⅲ";
-      case 4: return "Ⅳ";
-      default: return "Ⅴ";
+   if (sort == 0 || sort == 1) return "Ⅴ";
+   else if (sort == 2) return "Ⅰ";
+   else if (sort == 3) {
+      switch(num) {
+         case 1: return "Ⅰ";
+         case 2: return "Ⅱ";
+         case 3: return "Ⅲ";
+         case 4: return "Ⅳ";
+         default: return "Ⅴ";
+      }
    }
 }
 
