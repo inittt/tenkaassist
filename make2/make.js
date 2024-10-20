@@ -93,6 +93,7 @@ function getAllCompsFromServer() {
    })
 }
 function setPossible(data) {
+   console.log("가능한 조합 세팅시작");
    const haveList = chIds.slice().split(",").map(Number);
    const bondList = chBonds.slice().split(",").map(Number);
    for(let d of data) {
@@ -105,15 +106,28 @@ function setPossible(data) {
             if (d.recommend == 0) d.recommend = 1;
             if (d.vote == 0) d.vote = 1;
          }
-         if (d.ranking <= limit_dummy) possible1.push(d);
-         if (d.vote >= limit_13t) possible2.push(d);
+         console.log("가능한덱 발견");
+         if (d.ranking <= limit_dummy) {
+            possible1.push(d);
+            console.log("허수+ 세팅");
+         }
+         if (d.vote >= limit_13t) {
+            possible2.push(d);
+            console.log("13t(1) 세팅");
+         }
 
          const indexes = compList.map(item => haveList.indexOf(item)), bonds = [];
          for(let i = 0; i < 5; i++) bonds.push(bondList[indexes[i]]);
+         console.log(compList);
+         console.log(d.description.length > 10);
+         console.log(bonds);
 
          const calc13t = autoCalc(compList, d.description, bonds);
          d.fit13t = calc13t;
-         if (calc13t >= limit_fit) possible3.push(d);
+         if (calc13t >= limit_fit) {
+            possible3.push(d);
+            console.log("맞춤 세팅");
+         }
       }
    }
 }
