@@ -40,18 +40,22 @@ function autoCalc(idList, command, bondList) {
       for(let i = 0; i < 5; i++) comp[i].passive();
       for(let i = 0; i < 5; i++) comp[i].turnstart();
 
-      return auto();
+      auto();
+      return dmg13;
    }
 
    function auto() {
       for(let i = 0; i < 13*5; i++) {
          const guide_idx = Number(commandList[i][0])-1;
          const guide_act = commandList[i][1];
-         if (guide_act == "평") {if (!do_atk(guide_idx)) return 0;}
-         else if (guide_act == "궁") {if (!do_ult(guide_idx)) return 0;}
-         else if (guide_act == "방") {if (!do_def(guide_idx)) return 0;}
+         if (guide_act == "평") {
+            if (!do_atk(guide_idx)) {dmg13 = 0; return;}
+         } else if (guide_act == "궁") {
+            if (!do_ult(guide_idx)) {dmg13 = 0; return;}
+         } else if (guide_act == "방") {
+            if (!do_def(guide_idx)) {dmg13 = 0; return;}
+         }
       }
-      return boss.maxHp - boss.hp;
    }
 
    function do_ult(idx) {
