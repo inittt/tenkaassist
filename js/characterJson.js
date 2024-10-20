@@ -207,7 +207,6 @@ function fixName(txt) {
       case "수색돌": return "수섹돌";
       case "졸류": return "아르티아";
       case "산타란": return "크란";
-      case "릴리": return "구릴리";
       case "신나요미": return "신미나";
       case "수앨리": return "수엘리";
       case "수졸류": return "수르티아";
@@ -216,7 +215,6 @@ function fixName(txt) {
       case "크졸류": return "크르티아";
       case "엘루루": return "앨루루";
       case "엘즈루": return "앨즈루";
-      case "엘리자베스": return "엘자";
       case "몬미나": return "헌미나";
       case "호야네": return "할야네";
       default: return txt;
