@@ -158,6 +158,7 @@ function makeBlockAllDeck(possibleDeck) {
 
    if (sort == 1) allCombinations.sort((a, b) => b.recommend - a.recommend);
    else if (sort == 2) allCombinations.sort((a, b) => b.vote - a.vote);
+   else if (sort == 3) allCombinations.sort((a, b) => b.fit13t - a.fit13t);
    else allCombinations.sort((a, b) => a.ranking - b.ranking);
 
    loadBlockAllDeck(page++);
@@ -179,7 +180,7 @@ function loadBlockAllDeck(pg) {
 
       const stringArr = [];
       const id = comp.id, name = comp.name, compstr = comp.compstr;
-      const ranking = comp.ranking, recommend = comp.recommend, vote = comp.vote;
+      const ranking = comp.ranking, recommend = comp.recommend, vote = comp.vote, fit13t = comp.fit13t;
       stringArr.push(`<div class="comp-box">`);
       stringArr.push(`<div class="comp-order">#${++bundleCnt}</div>`)
       stringArr.push(`<div class="comp-name">${t_d(name)}</div><div class="comp-deck">`);
@@ -202,6 +203,7 @@ function loadBlockAllDeck(pg) {
       switch(sort) {
          case 1 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`; break;
          case 2 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(vote)}`; break;
+         case 3 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(fit13t)}`; break;
          default : last = `<i class="fa-solid fa-skull"></i> ${typeof ranking === 'number' ? ranking.toFixed(0) : ranking}${t("턴")}`;
       } stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 
