@@ -11,6 +11,7 @@ let isDataLoaded = false, sort = 0, mod = 0, cc, isCalculating = false;
 const curHeader = 5;
 
 document.addEventListener("DOMContentLoaded", function() {
+   init();
    var dropdownBtn = document.getElementById("dropdownBtn");
    var dropdownBtn2 = document.getElementById("dropdownBtn2");
    var dropdownContent = document.getElementById("dropdown-content");
