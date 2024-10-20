@@ -111,7 +111,7 @@ function setPossible(data) {
          const indexes = compList.map(item => haveList.indexOf(item)), bonds = [];
          for(let i = 0; i < 5; i++) bonds.push(bondList[indexes[i]]);
 
-         const calc13t = autoCalc(compList, bonds);
+         const calc13t = autoCalc(compList, d.description, bonds);
          d.fit13t = calc13t;
          if (calc13t >= limit_fit) possible3.push(d);
       }
@@ -284,7 +284,7 @@ function loadBlockNDeck(pg) {
       for(const comp of bundle) {
          const stringArr = [];
          const id = comp.id, name = comp.name, compstr = comp.compstr;
-         const ranking = comp.ranking, recommend = comp.recommend, vote = comp.vote;
+         const ranking = comp.ranking, recommend = comp.recommend, vote = comp.vote, fit13t = comp.fit13t;
          stringArr.push(`<div class="comp-box"><div class="comp-deck">`);
 
          for(const cid of compstr) {
@@ -304,6 +304,7 @@ function loadBlockNDeck(pg) {
          let last;
          if (sort == 1) last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`;
          else if (sort == 2) last = `<i class="fa-solid fa-burst"></i> ${formatNumber(vote)}`;
+         else if (sort == 2) last = `<i class="fa-solid fa-burst"></i> ${formatNumber(fit13t)}`;
          else last = `<i class="fa-solid fa-skull"></i> ${typeof ranking === 'number' ? ranking.toFixed(0) : ranking}${t("턴")}`;
          stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 

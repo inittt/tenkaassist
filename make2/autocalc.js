@@ -1,14 +1,15 @@
-function autoCalc(idList, bondList) {
-   let actNum = 0, commandList = curComp.description.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
+function autoCalc(idList, command, bondList) {
+   if (command.length < 10) return 0;
+   let actNum = 0, commandList = command.description.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
 
-   if (idList.length != 5) return -1;
+   if (idList.length != 5) return 0;
    boss.maxHp = 10854389981;
    start(idList);
 
    // functions
 
    function start(compIds) {
-      if (new Set(compIds).size !== compIds.length) return -1;
+      if (new Set(compIds).size !== compIds.length) return 0;
 
       // init
       GLOBAL_TURN = 1; comp = []; dmg13 = 0;
@@ -25,7 +26,7 @@ function autoCalc(idList, bondList) {
       comp[0].isLeader = true;
       for(let i = 0; i < 5; i++) {
          comp[i] = setDefault(comp[i], bondList[i]);
-         if (comp[i] == undefined || comp[i] == null) return -1;
+         if (comp[i] == undefined || comp[i] == null) return 0;
       }
       comp[0].leader();
       for(let i = 0; i < 5; i++) comp[i].passive();
@@ -38,9 +39,9 @@ function autoCalc(idList, bondList) {
       for(let i = 0; i < 13*5; i++) {
          const guide_idx = Number(commandList[actNum][0])-1;
          const guide_act = commandList[actNum][1];
-         if (guide_act == "평") if (!do_atk(guide_idx)) return -1;
-         else if (guide_act == "궁") if (!do_ult(guide_idx)) return -1;
-         else if (guide_act == "방") if (!do_def(guide_idx)) return -1;
+         if (guide_act == "평") if (!do_atk(guide_idx)) return 0;
+         else if (guide_act == "궁") if (!do_ult(guide_idx)) return 0;
+         else if (guide_act == "방") if (!do_def(guide_idx)) return 0;
       }
       return dmg13;
    }
