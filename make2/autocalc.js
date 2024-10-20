@@ -1,6 +1,14 @@
 function autoCalc(idList, command, bondList) {
    if (command.length < 10) return 0;
+
+   console.log(idList)
+   console.log(command)
+   console.log(bondList)
+
    let actNum = 0, commandList = command.description.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
+
+   console.log(idList.length);
+
 
    if (idList.length != 5) return 0;
    boss.maxHp = 10854389981;

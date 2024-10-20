@@ -48,10 +48,6 @@ document.addEventListener("DOMContentLoaded", function() {
          if ("2개" === this.value) mod = 1;
          else if ("3개" === this.value) mod = 2;
          else if ("4개" === this.value) mod = 3;
-
-         console.log(possible1);
-         console.log(possible2);
-         console.log(possible3);
          
          makeBlockByModNSort();
       });
@@ -76,7 +72,6 @@ document.addEventListener("DOMContentLoaded", function() {
       });
    });
 
-   console.log("dom 로드 완료");
    getAllCompsFromServer();
 });
 
@@ -105,7 +100,6 @@ function getAllCompsFromServer() {
    })
 }
 function setPossible(data) {
-   console.log("setPossible 호출");
    for(let d of data) {
       const compList = d.compstr.split(" ").map(Number);
       d.compstr = compList.slice();
