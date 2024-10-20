@@ -36,10 +36,10 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
+         mod = 0;
          if ("2개" === this.value) mod = 1;
          else if ("3개" === this.value) mod = 2;
          else if ("4개" === this.value) mod = 3;
-         else mod = 0;
          
          makeBlockByModNSort();
       });
@@ -75,6 +75,7 @@ function makeBlockByModNSort() {
 }
 
 function getAllCompsFromServer() {
+   console.log("서버로부터 데이터 가져오기");
    request(`${server}/comps/getAll`, {
       method: "GET",
    }).then(response => {
@@ -82,6 +83,7 @@ function getAllCompsFromServer() {
       return response.json();
    }).then(res => {
       if (!res.success) {
+         console.log("응답 상태가 error임")
          cc.innerHTML = `<div class="block">${res.msg}</div>`
          return;
       }
