@@ -326,6 +326,7 @@ const translate = {
    "2개": {en : "2 team", sc : "队伍2", tc : "隊伍2"},
    "3개": {en : "3 team", sc : "队伍3", tc : "隊伍3"},
    "4개": {en : "4 team", sc : "队伍4", tc : "隊伍4"},
+   "맞춤" : {en : "fit", sc : "合适", tc : "合適"},
    "서버로부터 데이터 로드 중...": {en : "Loading data from the server...", sc : "正在从服务器加载数据...", tc : "正在從伺服器加載數據..."},
    "계산중": {en : "Calculating", sc : "计算中", tc : "計算中"},
 

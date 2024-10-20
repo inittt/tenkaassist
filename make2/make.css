@@ -1,0 +1,103 @@
+.dropdown {
+  width:6rem;
+  position: relative;
+  display: inline-block;
+  margin-left:auto;
+}
+
+.dropdown-content {
+  padding-top:0.2rem;
+  box-sizing:border-box;
+  border:2px solid black;
+  display: none;
+  position: absolute;
+  background-color: white;
+  width:6rem;
+  z-index: 5;
+}
+
+.dropdown-content input[type="radio"] {
+  text-align: center;
+  display: none;
+  height:100%;
+}
+
+.dropdown-content input[type="checkbox"] {
+  text-align: center;
+  display: none;
+  height:100%;
+}
+
+.dropdown-content label {
+  height:1.5rem;
+  font-size:0.9rem;
+  color:black;
+  display: block;
+  padding: 1rem, 1rem;
+  text-align: center;
+  cursor:pointer;
+}
+
+.dropdown-content label:hover {
+  background-color: #ddd;
+}
+
+#dropdownBtn {
+  left:auto;
+  display: flex;
+  align-items: center;
+  box-sizing:border-box;
+  border:2px solid black;
+  border-radius: 0.2rem;
+  width:6rem;
+  padding: 0.3rem 0.6rem;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+}
+
+#dropdownBtn2 {
+  left:auto;
+  display: flex;
+  align-items: center;
+  box-sizing:border-box;
+  border:2px solid black;
+  border-radius: 0.2rem;
+  width:6rem;
+  padding: 0.3rem 0.6rem;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+}
+
+.absolute-right {
+  font-size: 1.1rem;
+  margin-left:auto;
+  right: 0.5rem;
+}
+
+#compcontainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+.deckBundle {
+  margin:0.5rem;
+  padding: 0;
+  border-radius: 0.2rem;
+  border: 2px solid white;
+  flex: 1 1 calc(50% - 20px);
+}
+.newP {
+  margin:0.3rem;
+}
+.target {
+  width: 100%;
+  height: 200px;
+  background-color: transparent;
+  line-height: 200px;
+}
+@media (max-width: 768px) {
+  .deckBundle {
+      flex: 1 1 100%; /* 화면이 작을 때 가로 길이를 100%로 */
+  }
+}
