@@ -5,7 +5,7 @@ function autoCalc(idList, command, bondList) {
    console.log(command)
    console.log(bondList)
 
-   let actNum = 0, commandList = command.description.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
+   let actNum = 0, commandList = command.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
 
    console.log(idList.length);
 
