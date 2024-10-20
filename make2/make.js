@@ -85,6 +85,7 @@ function getAllCompsFromServer() {
          cc.innerHTML = `<div class="block">${res.msg}</div>`
          return;
       }
+      console.log("가능한 조합 세팅시작1");
       setPossible(res.data);
       makeBlockByModNSort();
    }).catch(e => {
@@ -93,7 +94,7 @@ function getAllCompsFromServer() {
    })
 }
 function setPossible(data) {
-   console.log("가능한 조합 세팅시작");
+   console.log("가능한 조합 세팅시작2");
    const haveList = chIds.slice().split(",").map(Number);
    const bondList = chBonds.slice().split(",").map(Number);
    for(let d of data) {
@@ -101,11 +102,12 @@ function setPossible(data) {
       d.compstr = compList.slice();
       if (compList.every(item => haveList.includes(item) || isAny(item))) {
          const bool = compList.some(item => isAny(item));
-         if (!bool) {
-            if (Math.floor(d.ranking) == 99) d.ranking = 98;
-            if (d.recommend == 0) d.recommend = 1;
-            if (d.vote == 0) d.vote = 1;
-         }
+         if (bool) continue
+
+         if (Math.floor(d.ranking) == 99) d.ranking = 98;
+         if (d.recommend == 0) d.recommend = 1;
+         if (d.vote == 0) d.vote = 1;
+
          console.log("가능한덱 발견");
          if (d.ranking <= limit_dummy) {
             possible1.push(d);
