@@ -20,7 +20,30 @@
             <span id="titleBox" class="titlebox">보유</span>
             <button class="icon-btn i-save" onclick="setHave()"><img class="icon" src="../images/icons/ico-save.svg"></button>
             <button class="icon-btn i-load" onclick="synchro()"><img class="icon" src="../images/icons/ico-load.svg"></button>
-            <button id="set_option" class="leaderButton leaderOff option_btn1">조건설정</button>
+            <!--<button id="set_option" class="leaderButton leaderOff option_btn1">조건설정</button>-->
+            <div class="select_dropdown">
+               <div class="dropdown">
+                  <button id="btn2" class="dropdown-btn">0억<span class="absolute-right">▼</span></button>
+                  <div id="drop2" class="dropdown-content">
+                     <input type="radio" id="b21" name="b2" value="9000000000">
+                     <label id="l_b21" for="b21">9000000000</label>
+                     <input type="radio" id="b22" name="b2" value="8000000000">
+                     <label id="l_b22" for="b22">8000000000</label>
+                     <input type="radio" id="b23" name="b2" value="7000000000">
+                     <label id="l_b23" for="b23">7000000000</label>
+                     <input type="radio" id="b24" name="b2" value="6000000000">
+                     <label id="l_b24" for="b24">6000000000</label>
+                     <input type="radio" id="b25" name="b2" value="5000000000">
+                     <label id="l_b25" for="b25">5000000000</label>
+                     <input type="radio" id="b26" name="b2" value="4000000000">
+                     <label id="l_b26" for="b26">4000000000</label>
+                     <input type="radio" id="b27" name="b2" value="3000000000">
+                     <label id="l_b27" for="b27">3000000000</label>
+                     <input type="radio" id="b28" name="b2" value="0" checked>
+                     <label id="l_b28" for="b28">0</label>
+                  </div>
+               </div>
+            </div>
             <button id="characterSearchBtn2" class="goSearchButton" onclick="searchDeck()">검색</button>
          </div>
       </div>
@@ -61,6 +84,7 @@
                </div>
             </div>
          </div>
+         <!--
          <div class="select_dropdown">
             <span id="select_13t_fit">맞춤 : </span>
             <div class="dropdown">
@@ -85,6 +109,7 @@
                </div>
             </div>
          </div>
+         -->
       </div>
       <div class="block">
          <div class="margin-left titleblock" style="min-height:5.2rem;">
