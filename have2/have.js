@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
    // 추천덱 조건 드랍박스
    // 구속 드랍박스
-   for(let i = 0; i < 2; i++) {
+   for(let i = 0; i < 3; i++) {
       const dropdownBtn = document.getElementById(`btn${i}`);
       const dropdownContent = document.getElementById(`drop${i}`);
       dropdownBtn.addEventListener("click", function() {
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function() {
       radios.forEach(function(option) {
          option.addEventListener("click", function() {
             if (i == 0) dropdownBtn.innerText = `${this.value}${t("턴")}`;
-            else if (i == 1) dropdownBtn.innerText = `${formatNumber2(this.value)}`;
+            else dropdownBtn.innerText = `${formatNumber2(this.value)}`;
             const spanElement = document.createElement('span');
             spanElement.classList.add('absolute-right');
             spanElement.innerHTML = '▼'
@@ -96,8 +96,9 @@ function searchDeck() {
 
    const dummy = document.querySelector('input[name="b0"]:checked').value;
    const dmg13t = document.querySelector('input[name="b1"]:checked').value;
+   const fit13t = document.querySelector('input[name="b2"]:checked').value;
 
-   location.href = `${address}/make2/?dummy=${dummy}&dmg13t=${dmg13t}&list=${go}&bond=${b}`;
+   location.href = `${address}/make2/?dummy=${dummy}&dmg13t=${dmg13t}&fit13t=${fit13t}&list=${go}&bond=${b}`;
 }
 
 function resizeButton() {

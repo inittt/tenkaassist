@@ -24,8 +24,8 @@
             <button id="characterSearchBtn2" class="goSearchButton" onclick="searchDeck()">검색</button>
          </div>
       </div>
-      <div id="suggest_option" class="block suggest_option">
-         <div class="select_dropdown">
+      <div id="suggest_option" class="block suggest_option flex">
+         <div class="select_dropdown" style="display:none;">
             <span><i class="fa-solid fa-skull" style="height:1rem;"></i> : </span>
             <div class="dropdown">
                <button id="btn0" class="dropdown-btn">99턴<span class="absolute-right">▼</span></button>
@@ -43,7 +43,7 @@
                </div>
             </div>
          </div>
-         <div class="select_dropdown">
+         <div class="select_dropdown" style="display:none;">
             <span id="select_13t_dmg">13턴딜(1) : </span>
             <div class="dropdown">
                <button id="btn1" class="dropdown-btn">0억<span class="absolute-right">▼</span></button>
@@ -58,6 +58,30 @@
                   <label id="l_b14" for="b14">1000000000</label>
                   <input type="radio" id="b15" name="b1" value="0" checked>
                   <label id="l_b15" for="b15">0</label>
+               </div>
+            </div>
+         </div>
+         <div class="select_dropdown">
+            <span id="select_13t_fit">맞춤 : </span>
+            <div class="dropdown">
+               <button id="btn2" class="dropdown-btn">0억<span class="absolute-right">▼</span></button>
+               <div id="drop2" class="dropdown-content">
+                  <input type="radio" id="b21" name="b2" value="9000000000">
+                  <label id="l_b21" for="b21">9000000000</label>
+                  <input type="radio" id="b22" name="b2" value="8000000000">
+                  <label id="l_b22" for="b22">8000000000</label>
+                  <input type="radio" id="b23" name="b2" value="7000000000">
+                  <label id="l_b23" for="b23">7000000000</label>
+                  <input type="radio" id="b24" name="b2" value="6000000000">
+                  <label id="l_b24" for="b24">6000000000</label>
+                  <input type="radio" id="b25" name="b2" value="5000000000">
+                  <label id="l_b25" for="b25">5000000000</label>
+                  <input type="radio" id="b26" name="b2" value="4000000000">
+                  <label id="l_b26" for="b26">4000000000</label>
+                  <input type="radio" id="b27" name="b2" value="3000000000">
+                  <label id="l_b27" for="b27">3000000000</label>
+                  <input type="radio" id="b28" name="b2" value="0" checked>
+                  <label id="l_b28" for="b28">0</label>
                </div>
             </div>
          </div>
@@ -102,6 +126,7 @@
    document.getElementById("titleBox").innerText = t("보유");
    document.getElementById("set_option").innerText = t("조건");
    document.getElementById("select_13t_dmg").innerText = t("13턴딜(1)")+" : ";
+   document.getElementById("select_13t_fit").innerText = t("13턴딜")+" : ";
 
    document.getElementById("btn0").innerHTML = `99${t("턴")}<span class="absolute-right">▼</span>`;
    document.getElementById("l_b01").innerText = `15${t("턴")}`;
@@ -111,13 +136,14 @@
    document.getElementById("l_b05").innerText = `99${t("턴")}`;
    
    document.getElementById("btn1").innerHTML = `${formatNumber2(0)}<span class="absolute-right">▼</span>`;
-   // document.getElementById("l_b11").innerText = formatNumber2(4000000000);
-   // document.getElementById("l_b12").innerText = formatNumber2(3000000000);
-   // document.getElementById("l_b13").innerText = formatNumber2(2000000000);
-   // document.getElementById("l_b14").innerText = formatNumber2(1000000000);
-   // document.getElementById("l_b15").innerText = formatNumber2(0);
    for(let i = 1; i < 6; i++) {
       const set13t = document.getElementById(`l_b1${i}`);
+      let val = set13t.innerText;
+      set13t.innerText = formatNumber2(val);
+   }
+   document.getElementById("btn2").innerHTML = `${formatNumber2(0)}<span class="absolute-right">▼</span>`;
+   for(let i = 1; i < 9; i++) {
+      const set13t = document.getElementById(`l_b2${i}`);
       let val = set13t.innerText;
       set13t.innerText = formatNumber2(val);
    }

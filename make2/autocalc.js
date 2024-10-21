@@ -1,5 +1,5 @@
 function autoCalc(idList, command, bondList) {
-   if (command.length < 10) return 0;
+   if (command == null || command.length < 10) return 0;
 
    console.log(idList)
    console.log(command)
