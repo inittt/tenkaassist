@@ -68,6 +68,7 @@ function getCharactersWithCondition(element, role, rarity, search) {
    let innerArray = [];
    for(const champ of filteredData) {
       let id = champ.id, name = champ.name, element = champ.element, role = champ.role;
+      let bond = selectedBond[selected.indexOf(id)];
       let chk_option = "none";
       if (isAny(id)) continue;
       if (selected.includes(id)) chk_option = "block";
@@ -77,7 +78,7 @@ function getCharactersWithCondition(element, role, rarity, search) {
                <img id="img_${id}" src="${address}/images/characters/cs${id}_0_0.webp" class="img z-1" alt="">
                <img id="el_${id}" src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">
                ${liberationList.includes(name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
-               <div id="chk_${id}" class="have-chked z-3" style="display:${chk_option}"></div>
+               <div id="chk_${id}" class="have-chked z-3" style="display:${chk_option}">${numToBond(bond)}</div>
                <div class="element${element} ch_img ch_border z-4"></div>
             </div>
             <div class="text-mini">${t(name)}</div>
@@ -212,10 +213,16 @@ function synchro() {
       return response.json();
    }).then(res => {
       if (!res.success) return alert(res.msg);
-      if (res.data == null || res.data.length == 0) return;
+      if (res.data[0] == null || res.data[0].length == 0) return;
+      if (res.data[1] == null || res.data[1].length == 0) {
+         let len = res.data[0].split(" ").length;
+         res.data[1] = Array(len).fill(1).join(" ");
+      }
       
       selected.length = 0;
-      for(const cid of res.data.split(" ").map(Number)) selected.push(cid);
+      selectedBond.length = 0;
+      for(const cid of res.data[0].split(" ").map(Number)) selected.push(cid);
+      for(const cbond of res.data[1].split(" ").map(Number)) selectedBond.push(cbond);
       updateSelected();
       resizeButton();
       getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, document.getElementById('searchInput').value);
@@ -228,7 +235,7 @@ function setHave() {
    if (selected.length == 0) return alert(t("저장할 캐릭터가 없습니다"));
    else {
       if (!confirm(t("현재 캐릭터를 저장하시겠습니까?"))) return;
-      request(`${server}/users/set/have/${selected.join(" ")}`, {
+      request(`${server}/users/set/have/${selected.join(" ")}/${selectedBond.join(" ")}`, {
          method: "PUT",
       }).then(response => {
          if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));

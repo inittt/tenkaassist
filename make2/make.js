@@ -7,7 +7,7 @@ const limit_13t = Number(params.get('dmg13t') == null ? 0 : params.get('dmg13t')
 const limit_fit = 4000000000;
 const possible1 = [], possible2 = [], possible3 = [];
 let allCombinations = [];
-let isDataLoaded = false, sort = 0, mod = 0, cc, isCalculating = false;
+let isDataLoaded = false, sort = 3, mod = 0, cc, isCalculating = false;
 const curHeader = 5;
 
 const bondMap = new Map();
@@ -147,7 +147,7 @@ function init() {
    rds.forEach(function(radio) {radio.checked = false;});
    rds2.forEach(function(radio) {radio.checked = false;});
    document.getElementById('option1').checked = true;
-   document.getElementById('option2-1').checked = true;
+   document.getElementById('option2-4').checked = true;
 }
 
 /* 덱 만들기 함수 --------------------------------------------------------------------*/
@@ -325,7 +325,7 @@ function loadBlockNDeck(pg) {
          let last;
          if (sort == 1) last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`;
          else if (sort == 2) last = `<i class="fa-solid fa-burst"></i> ${formatNumber(vote)}`;
-         else if (sort == 2) last = `<i class="fa-solid fa-burst"></i> ${formatNumber(fit13t)}`;
+         else if (sort == 3) last = `<i class="fa-solid fa-burst"></i> ${formatNumber(fit13t)}`;
          else last = `<i class="fa-solid fa-skull"></i> ${typeof ranking === 'number' ? ranking.toFixed(0) : ranking}${t("턴")}`;
          stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 

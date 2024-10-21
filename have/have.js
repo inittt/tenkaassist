@@ -192,10 +192,10 @@ function synchro() {
       return response.json();
    }).then(res => {
       if (!res.success) return alert(res.msg);
-      if (res.data == null || res.data.length == 0) return;
+      if (res.data[0] == null || res.data.length[0] == 0) return;
       
       selected.length = 0;
-      for(const cid of res.data.split(" ").map(Number)) selected.push(cid);
+      for(const cid of res.data[0].split(" ").map(Number)) selected.push(cid);
       updateSelected();
       resizeButton();
       getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, document.getElementById('searchInput').value);
@@ -208,7 +208,7 @@ function setHave() {
    if (selected.length == 0) return alert(t("저장할 캐릭터가 없습니다"));
    else {
       if (!confirm(t("현재 캐릭터를 저장하시겠습니까?"))) return;
-      request(`${server}/users/set/have/${selected.join(" ")}`, {
+      request(`${server}/users/set/have/${selected.join(" ")}/-`, {
          method: "PUT",
       }).then(response => {
          if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
