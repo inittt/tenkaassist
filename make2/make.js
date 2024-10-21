@@ -93,7 +93,13 @@ function getAllCompsFromServer() {
          cc.innerHTML = `<div class="block">${res.msg}</div>`
          return;
       }
-      setTimeout(setPossible(res.data), 0);
+      let count = 0;
+      const waitBox = document.getElementById("wait");
+      const intervalId = setInterval(() => {
+         count += 1; // 카운트 증가
+         waitBox.innerText = count; // div의 텍스트 업데이트
+      }, 1000); // 1000ms = 1초
+      setTimeout(setPossible(res.data, intervalId), 0);
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
       cc.innerHTML = `<div class="block">${t("데이터 로드 실패")}</div>`;
@@ -117,10 +123,9 @@ function setPossible(data) {
          if (bonds.every(item => item === 5)) d.fit13t = Math.max(d.fit13t, d.recommend);
 
          if (d.fit13t >= limit_fit) possible3.push(d);
-         console.log("가능한 조합 발견");
       }
    }
-   
+   clearInterval(intervalId);
    makeBlockByModNSort();
 }
 

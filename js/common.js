@@ -328,6 +328,7 @@ const translate = {
    "4개": {en : "4 team", sc : "队伍4", tc : "隊伍4"},
    "맞춤" : {en : "fit", sc : "合适", tc : "合適"},
    "서버로부터 데이터 로드 중...": {en : "Loading data from the server...", sc : "正在从服务器加载数据...", tc : "正在從伺服器加載數據..."},
+   "구속에 따른 데미지 계산 중...": {en : "Calculating damage based on bond...", sc : "根据羁绊计算伤害中...", tc : "根據羈絆計算傷害中..."},
    "계산중": {en : "Calculating", sc : "计算中", tc : "計算中"},
 
    // 설정

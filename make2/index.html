@@ -51,7 +51,10 @@
          </div>
       </div>
       <div id="compcontainer">
-         <div id="defaultBox" class="block">서버로부터 데이터 로드 중...</div>
+         <div class="block">
+            <span id="defaultBox">구속에 따른 데미지 계산 중...</span>
+            (<span id="wait"></span><span>sec</span>)
+         </div>
       </div>
       <div class="target" id="observer"></div>
    </div>
@@ -69,7 +72,7 @@
    document.getElementById("d13-5").innerText = t("13턴딜(5)");
    document.getElementById("d13-1").innerText = t("13턴딜(1)");
    document.getElementById("d13-fit").innerText = t("맞춤");
-   document.getElementById("defaultBox").innerText = t("서버로부터 데이터 로드 중...");
+   document.getElementById("defaultBox").innerText = t("구속에 따른 데미지 계산 중...");
 
 </script>
 </html>
