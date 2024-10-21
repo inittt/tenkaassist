@@ -112,9 +112,11 @@ function setPossible(data) {
          const indexes = compList.map(item => haveList.indexOf(item)), bonds = [];
          for(let i = 0; i < 5; i++) bonds.push(bondList[indexes[i]]);
 
-         d.fit13t = autoCalc(compList, d.description, bonds);
-         if (bonds.every(item => item === 1)) d.fit13t = Math.max(d.fit13t, d.vote);
-         if (bonds.every(item => item === 5)) d.fit13t = Math.max(d.fit13t, d.recommend);
+         if (bonds.every(item => item === 5)) d.fit13t = d.recommend;
+         else {
+            d.fit13t = autoCalc(compList, d.description, bonds);
+            if (bonds.every(item => item === 1)) d.fit13t = Math.max(d.fit13t, d.vote);
+         }
 
          if (d.fit13t >= limit_fit) possible3.push(d);
       }
