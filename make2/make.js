@@ -136,7 +136,8 @@ function makeBlock(possibleDeck) {
       deckCnt = mod+1;
       progress = 0;
       cc.innerHTML = `${t("계산중")}...0.00%`;
-      backtrack0(0, [], possibleDeck);
+      if (possibleDeck.length < deckCnt) cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
+      else backtrack0(0, [], possibleDeck);
    }
 }
 
