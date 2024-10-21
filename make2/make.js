@@ -93,7 +93,7 @@ function getAllCompsFromServer() {
          cc.innerHTML = `<div class="block">${res.msg}</div>`
          return;
       }
-      setPossible(res.data);
+      setTimeout(setPossible(res.data), 0);
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
       cc.innerHTML = `<div class="block">${t("데이터 로드 실패")}</div>`;
