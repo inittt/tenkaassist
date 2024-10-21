@@ -23,7 +23,7 @@
             <button id="set_option" class="leaderButton leaderOff option_btn1" style="display:none">조건설정</button>
             <div class="select_dropdown">
                <div class="dropdown">
-                  <button id="btn2" class="dropdown-btn">0억<span class="absolute-right">▼</span></button>
+                  <button id="btn2" class="dropdown-btn" style="height:1rem;">0억<span class="absolute-right">▼</span></button>
                   <div id="drop2" class="dropdown-content">
                      <input type="radio" id="b21" name="b2" value="9000000000">
                      <label id="l_b21" for="b21">9000000000</label>
@@ -151,7 +151,7 @@
    document.getElementById("titleBox").innerText = t("보유");
    document.getElementById("set_option").innerText = t("조건");
    document.getElementById("select_13t_dmg").innerText = t("13턴딜(1)")+" : ";
-   document.getElementById("select_13t_fit").innerText = t("13턴딜")+" : ";
+   //document.getElementById("select_13t_fit").innerText = t("13턴딜")+" : ";
 
    document.getElementById("btn0").innerHTML = `99${t("턴")}<span class="absolute-right">▼</span>`;
    document.getElementById("l_b01").innerText = `15${t("턴")}`;
