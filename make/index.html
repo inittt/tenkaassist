@@ -10,6 +10,8 @@
    <link rel="stylesheet" href="./make.css" type = "text/css">
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
    <script src="../js/characterJson.js"></script>
+   <script src="../simulator/calculator.js"></script>
+   <script src="./autocalc.js"></script>
    <script src="./make.js"></script>
 </head>
 <body onload="init()">
@@ -32,10 +34,12 @@
                      <label id="t4" class="sortLabel" for="option4">4개</label>
                   </div>
                </div>
-               <div class="dropdown">
-                  <button id="dropdownBtn2">허수+(5) <span class="absolute-right">▼</span></button>
+               <div class="dropdown" style="display:none;">
+                  <button id="dropdownBtn2">맞춤<span class="absolute-right">▼</span></button>
                   <div id="dropdown-content2" class="dropdown-content">
-                     <input type="radio" id="option2-1" name="options2" value="허수+(5) " checked>
+                     <input type="radio" id="option2-4" name="options2" value="맞춤" checked>
+                     <label id="d13-fit" class="sortLabel" for="option2-4">맞춤</label>
+                     <input type="radio" id="option2-1" name="options2" value="허수+(5) ">
                      <label id="sc" class="sortLabel" for="option2-1">허수+(5)</label>
                      <input type="radio" id="option2-2" name="options2" value="13턴(5)">
                      <label id="d13-5" class="sortLabel" for="option2-2">13턴(5)</label>
@@ -47,7 +51,10 @@
          </div>
       </div>
       <div id="compcontainer">
-         <div id="defaultBox" class="block">서버로부터 데이터 로드 중...</div>
+         <div class="block">
+            <span id="defaultBox">구속에 따른 데미지 계산 중...</span><br>
+            (<span id="wait">대기 시간은 몇 분 정도 걸릴 수 있습니다.</span>)
+         </div>
       </div>
       <div class="target" id="observer"></div>
    </div>
@@ -60,11 +67,13 @@
    document.getElementById("t2").innerText = t("2개");
    document.getElementById("t3").innerText = t("3개");
    document.getElementById("t4").innerText = t("4개");
-   document.getElementById("dropdownBtn2").innerHTML = `${t("허수+(5) ")}<span class="absolute-right">▼</span>`;
+   document.getElementById("dropdownBtn2").innerHTML = `${t("맞춤")}<span class="absolute-right">▼</span>`;
    document.getElementById("sc").innerText = t("허수+(5)");
    document.getElementById("d13-5").innerText = t("13턴딜(5)");
    document.getElementById("d13-1").innerText = t("13턴딜(1)");
-   document.getElementById("defaultBox").innerText = t("서버로부터 데이터 로드 중...");
+   document.getElementById("d13-fit").innerText = t("맞춤");
+   document.getElementById("defaultBox").innerText = t("구속에 따른 데미지 계산 중...");
+   document.getElementById("wait").innerText = t("대기 시간은 몇 분 정도 걸릴 수 있습니다.");
 
 </script>
 </html>

@@ -1,22 +1,11 @@
 const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
-const chBonds = params.get('bond');
 const limit_dummy = Number(params.get('dummy') == null ? 99 : params.get('dummy'));
 const limit_13t = Number(params.get('dmg13t') == null ? 0 : params.get('dmg13t'));
-const limit_fit = Number(params.get('fit13t') == null ? 0 : params.get('fit13t'));
-
-const possible1 = [], possible2 = [], possible3 = [];
+const possible1 = [], possible2 = [];
 let allCombinations = [];
-let isDataLoaded = false, sort = 3, mod = 0, cc, isCalculating = false;
+let isDataLoaded = false, sort = 0, mod = 0, cc, isCalculating = false;
 const curHeader = 5;
-
-const bondMap = new Map();
-const haveList = chIds.slice().split(",").map(Number);
-const bondList = chBonds.slice().split(",").map(Number);
-for(let i = 0; i < haveList.length; i++) {
-   if (haveList[i] == null || bondList[i] == null) continue;
-   bondMap.set(haveList[i], bondList[i]);
-}
 
 document.addEventListener("DOMContentLoaded", function() {
    var dropdownBtn = document.getElementById("dropdownBtn");
@@ -44,12 +33,11 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
-         mod = 0;
          if ("2개" === this.value) mod = 1;
          else if ("3개" === this.value) mod = 2;
          else if ("4개" === this.value) mod = 3;
-         
-         makeBlockByModNSort();
+         else mod = 0;
+         makeBlock(sort == 2 ? possible2 : possible1);
       });
    });
 
@@ -66,21 +54,12 @@ document.addEventListener("DOMContentLoaded", function() {
          sort = 0;
          if ("13턴(5)" === this.value) sort = 1;
          else if ("13턴(1)" === this.value) sort = 2;
-         else if ("맞춤" === this.value) sort = 3;
-
-         makeBlockByModNSort();
+         makeBlock(sort == 2 ? possible2 : possible1);
       });
    });
 
    getAllCompsFromServer();
 });
-
-function makeBlockByModNSort() {
-   if (sort == 0) makeBlock(possible1);
-   else if (sort == 1) makeBlock(possible1);
-   else if (sort == 2) makeBlock(possible2);
-   else if (sort == 3) makeBlock(possible3);
-}
 
 function getAllCompsFromServer() {
    request(`${server}/comps/getAll`, {
@@ -93,37 +72,30 @@ function getAllCompsFromServer() {
          cc.innerHTML = `<div class="block">${res.msg}</div>`
          return;
       }
-      setTimeout(setPossible(res.data), 0);
+      setPossible(res.data);
+      makeBlock(sort == 2 ? possible2 : possible1);
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
       cc.innerHTML = `<div class="block">${t("데이터 로드 실패")}</div>`;
    })
 }
 function setPossible(data) {
+   const haveList = chIds.slice().split(",").map(Number);
    for(let d of data) {
       const compList = d.compstr.split(" ").map(Number);
       d.compstr = compList.slice();
       if (compList.every(item => haveList.includes(item) || isAny(item))) {
-         if (compList.some(item => isAny(item))) continue
-
+         const bool = compList.some(item => isAny(item));
+         if (!bool) {
+            if (Math.floor(d.ranking) == 99) d.ranking = 98;
+            if (d.recommend == 0) d.recommend = 1;
+            if (d.vote == 0) d.vote = 1;
+         }
          if (d.ranking <= limit_dummy) possible1.push(d);
          if (d.vote >= limit_13t) possible2.push(d);
-
-         const indexes = compList.map(item => haveList.indexOf(item)), bonds = [];
-         for(let i = 0; i < 5; i++) bonds.push(bondList[indexes[i]]);
-
-         if (bonds.every(item => item === 5)) d.fit13t = d.recommend;
-         else {
-            d.fit13t = autoCalc(compList, d.description, bonds);
-            if (bonds.every(item => item === 1)) d.fit13t = Math.max(d.fit13t, d.vote);
-         }
-
-         if (d.fit13t >= limit_fit) possible3.push(d);
       }
    }
-   makeBlockByModNSort();
 }
-
 function makeBlock(possibleDeck) {
    page = 0;
    bundleCnt = 0;
@@ -136,8 +108,7 @@ function makeBlock(possibleDeck) {
       deckCnt = mod+1;
       progress = 0;
       cc.innerHTML = `${t("계산중")}...0.00%`;
-      if (possibleDeck.length < deckCnt) cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
-      else backtrack0(0, [], possibleDeck);
+      backtrack0(0, [], possibleDeck);
    }
 }
 
@@ -148,7 +119,7 @@ function init() {
    rds.forEach(function(radio) {radio.checked = false;});
    rds2.forEach(function(radio) {radio.checked = false;});
    document.getElementById('option1').checked = true;
-   document.getElementById('option2-4').checked = true;
+   document.getElementById('option2-1').checked = true;
 }
 
 /* 덱 만들기 함수 --------------------------------------------------------------------*/
@@ -166,24 +137,9 @@ function makeBlockAllDeck(possibleDeck) {
 
    if (sort == 1) allCombinations.sort((a, b) => b.recommend - a.recommend);
    else if (sort == 2) allCombinations.sort((a, b) => b.vote - a.vote);
-   else if (sort == 3) allCombinations.sort((a, b) => b.fit13t - a.fit13t);
    else allCombinations.sort((a, b) => a.ranking - b.ranking);
 
    loadBlockAllDeck(page++);
-}
-
-function numToBond(num) {
-   if (sort == 0 || sort == 1) return "Ⅴ";
-   else if (sort == 2) return "Ⅰ";
-   else if (sort == 3) {
-      switch(num) {
-         case 1: return "Ⅰ";
-         case 2: return "Ⅱ";
-         case 3: return "Ⅲ";
-         case 4: return "Ⅳ";
-         default: return "Ⅴ";
-      }
-   }
 }
 
 function loadBlockAllDeck(pg) {
@@ -202,7 +158,7 @@ function loadBlockAllDeck(pg) {
 
       const stringArr = [];
       const id = comp.id, name = comp.name, compstr = comp.compstr;
-      const ranking = comp.ranking, recommend = comp.recommend, vote = comp.vote, fit13t = comp.fit13t;
+      const ranking = comp.ranking, recommend = comp.recommend, vote = comp.vote;
       stringArr.push(`<div class="comp-box">`);
       stringArr.push(`<div class="comp-order">#${++bundleCnt}</div>`)
       stringArr.push(`<div class="comp-name">${t_d(name)}</div><div class="comp-deck">`);
@@ -213,7 +169,7 @@ function loadBlockAllDeck(pg) {
             <div class="character" style="margin:0.2rem;">
                <div style="margin:0.2rem;">
                   <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-                  ${isAny(ch.id) ? "" : `<div class="bond-icon z-2">${numToBond(bondMap.get(ch.id))}</div>`}
+                  ${isAny(ch.id) ? "" : `<img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">`}
                   ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                   <div class="element${ch.element} ch_border z-4"></div>
                </div>
@@ -225,7 +181,6 @@ function loadBlockAllDeck(pg) {
       switch(sort) {
          case 1 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`; break;
          case 2 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(vote)}`; break;
-         case 3 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(fit13t)}`; break;
          default : last = `<i class="fa-solid fa-skull"></i> ${typeof ranking === 'number' ? ranking.toFixed(0) : ranking}${t("턴")}`;
       } stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 
@@ -255,11 +210,6 @@ function makeBlockNDeck() {
    else if (sort == 2) allCombinations.sort((a, b) => {
       let sumA = a.reduce((sum, item) => sum + (item.vote || 0), 0);
       let sumB = b.reduce((sum, item) => sum + (item.vote || 0), 0);
-      return sumB - sumA;
-   });
-   else if (sort == 3) allCombinations.sort((a, b) => {
-      let sumA = a.reduce((sum, item) => sum + (item.fit13t || 0), 0);
-      let sumB = b.reduce((sum, item) => sum + (item.fit13t || 0), 0);
       return sumB - sumA;
    });
    else allCombinations.sort((a, b) => {
@@ -300,13 +250,12 @@ function loadBlockNDeck(pg) {
 
       if (sort == 1) bundle.sort((a, b) => b.recommend - a.recommend);
       else if (sort == 2) bundle.sort((a, b) => b.vote - a.vote);
-      else if (sort == 3) bundle.sort((a, b) => b.fit13t - a.fit13t);
       else bundle.sort((a, b) => a.ranking - b.ranking);
 
       for(const comp of bundle) {
          const stringArr = [];
          const id = comp.id, name = comp.name, compstr = comp.compstr;
-         const ranking = comp.ranking, recommend = comp.recommend, vote = comp.vote, fit13t = comp.fit13t;
+         const ranking = comp.ranking, recommend = comp.recommend, vote = comp.vote;
          stringArr.push(`<div class="comp-box"><div class="comp-deck">`);
 
          for(const cid of compstr) {
@@ -315,7 +264,7 @@ function loadBlockNDeck(pg) {
                <div class="character" style="margin:0.2rem;">
                   <div style="margin:0.2rem;">
                      <img src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-                     ${isAny(ch.id) ? "" : `<div class="bond-icon z-2">${numToBond(bondMap.get(ch.id))}</div>`}
+                     ${isAny(ch.id) ? "" : `<img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">`}
                      ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                      <div class="element${ch.element} ch_border z-4"></div>
                   </div>
@@ -326,7 +275,6 @@ function loadBlockNDeck(pg) {
          let last;
          if (sort == 1) last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`;
          else if (sort == 2) last = `<i class="fa-solid fa-burst"></i> ${formatNumber(vote)}`;
-         else if (sort == 3) last = `<i class="fa-solid fa-burst"></i> ${formatNumber(fit13t)}`;
          else last = `<i class="fa-solid fa-skull"></i> ${typeof ranking === 'number' ? ranking.toFixed(0) : ranking}${t("턴")}`;
          stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 

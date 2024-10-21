@@ -70,21 +70,6 @@
   cursor: pointer;
 }
 
-.bond-icon {
-  font-size:0.7rem;
-  text-align:center;
-  
-  border-top-right-radius: 0.3rem;
-  border-bottom-left-radius: 0.3rem;
-  position:absolute;
-  right:0.2rem;
-  top:0.2rem;
-  width:1rem;
-  height:1rem;
-  color:white;
-  background-color: rgba(0, 0, 0, 0.7);
-}
-
 .absolute-right {
   font-size: 1.1rem;
   margin-left:auto;

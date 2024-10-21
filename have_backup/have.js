@@ -2,7 +2,6 @@ let checkElementN, checkRoleN, checkRarityN, isOn = false;
 const curHeader = 5;
 
 const selected = [];
-const selectedBond = [];
 document.addEventListener("DOMContentLoaded", function() {
    const searchInput = document.getElementById('searchInput');
    searchInput.addEventListener('input', function() {
@@ -20,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
    // 추천덱 조건 드랍박스
    // 구속 드랍박스
-   for(let i = 0; i < 3; i++) {
+   for(let i = 0; i < 2; i++) {
       const dropdownBtn = document.getElementById(`btn${i}`);
       const dropdownContent = document.getElementById(`drop${i}`);
       dropdownBtn.addEventListener("click", function() {
@@ -30,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
       radios.forEach(function(option) {
          option.addEventListener("click", function() {
             if (i == 0) dropdownBtn.innerText = `${this.value}${t("턴")}`;
-            else dropdownBtn.innerText = `${formatNumber2(this.value)}`;
+            else if (i == 1) dropdownBtn.innerText = `${formatNumber2(this.value)}`;
             const spanElement = document.createElement('span');
             spanElement.classList.add('absolute-right');
             spanElement.innerHTML = '▼'
@@ -68,7 +67,6 @@ function getCharactersWithCondition(element, role, rarity, search) {
    let innerArray = [];
    for(const champ of filteredData) {
       let id = champ.id, name = champ.name, element = champ.element, role = champ.role;
-      let bond = selectedBond[selected.indexOf(id)];
       let chk_option = "none";
       if (isAny(id)) continue;
       if (selected.includes(id)) chk_option = "block";
@@ -78,7 +76,7 @@ function getCharactersWithCondition(element, role, rarity, search) {
                <img id="img_${id}" src="${address}/images/characters/cs${id}_0_0.webp" class="img z-1" alt="">
                <img id="el_${id}" src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">
                ${liberationList.includes(name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
-               <div id="chk_${id}" class="have-chked z-3" style="display:${chk_option}">${numToBond(bond)}</div>
+               <img id="chk_${id}" src="${address}/images/checkmark.png" class="chked z-3" style="display:${chk_option}">
                <div class="element${element} ch_img ch_border z-4"></div>
             </div>
             <div class="text-mini">${t(name)}</div>
@@ -91,14 +89,12 @@ function getCharactersWithCondition(element, role, rarity, search) {
 // 검색 버튼 누를시
 function searchDeck() {
    const go = [...selected];
-   const b = [...selectedBond];
    if (go.length < 1) return alert(t("하나 이상의 캐릭터를 선택해 주세요"));
 
    const dummy = document.querySelector('input[name="b0"]:checked').value;
    const dmg13t = document.querySelector('input[name="b1"]:checked').value;
-   const fit13t = document.querySelector('input[name="b2"]:checked').value;
 
-   location.href = `${address}/make2/?dummy=${dummy}&dmg13t=${dmg13t}&fit13t=${fit13t}&list=${go}&bond=${b}`;
+   location.href = `${address}/make/?dummy=${dummy}&dmg13t=${dmg13t}&list=${go}`;
 }
 
 function resizeButton() {
@@ -117,12 +113,11 @@ function updateSelected() {
       for(let chId of selected) {
          let champ = getCharacter(chId);
          let id = champ.id, name = champ.name, element = champ.element, role = champ.role;
-         let bond = selectedBond[selected.indexOf(id)];
          innerArray.push(`
             <div class="character" onclick="clickedSel(this, ${id})" style="margin:0.2rem;">
                <div style="margin:0.2rem;">
                   <img src="${address}/images/characters/cs${id}_0_0.webp" class="img z-1" alt="">
-                  <div class="bond-icon z-2">${numToBond(bond)}</div>
+                  <img src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">
                   ${liberationList.includes(name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                   <div class="element${element} ch_img ch_border z-4"></div>
                </div>
@@ -133,30 +128,16 @@ function updateSelected() {
       div.innerHTML = innerArray.join("");
    }
 }
-function numToBond(num) {
-   switch(num) {
-      case 1: return "Ⅰ";
-      case 2: return "Ⅱ";
-      case 3: return "Ⅲ";
-      case 4: return "Ⅳ";
-      default: return "Ⅴ";
-   }
-}
 
 // 클릭하면 체크표시 활성/비활성화, 리스트에 추가/제거
 function clickedCh(id) {
-   let index = selected.indexOf(id);
-   if (index === -1) {
-      selected.push(id);
-      selectedBond.push(1);
-      document.getElementById(`chk_${id}`).style.display = "block";
-      document.getElementById(`chk_${id}`).innerText = numToBond(1);
-   } else if (selectedBond[index] == 5) {
-      selected.splice(index, 1);
-      selectedBond.splice(index, 1);
+   if (selected.includes(id)) {
+      let index = selected.indexOf(id);
+      if (index !== -1) selected.splice(index, 1);
       document.getElementById(`chk_${id}`).style.display = "none";
    } else {
-      document.getElementById(`chk_${id}`).innerText = numToBond(++selectedBond[index]);
+      selected.push(id);
+      document.getElementById(`chk_${id}`).style.display = "block";
    }
    updateSelected();
    resizeButton();
@@ -165,15 +146,12 @@ function clickedCh(id) {
 // 검색창의 캐릭 클릭시 제거
 function clickedSel(div, id) {
    let index = selected.indexOf(id);
-   if (index !== -1) {
-      selected.splice(index, 1);
-      selectedBond.splice(index, 1);
-   }
+   if (index !== -1) selected.splice(index, 1);
 
    let chk = document.getElementById(`chk_${id}`);
    if (chk != null) chk.style.display = "none";
 
-   updateSelected();
+   updateSelected()
    resizeButton();
 }
 
@@ -214,16 +192,10 @@ function synchro() {
       return response.json();
    }).then(res => {
       if (!res.success) return alert(res.msg);
-      if (res.data[0] == null || res.data[0].length == 0) return;
-      if (res.data[1] == null || res.data[1].length == 0) {
-         let len = res.data[0].split(" ").length;
-         res.data[1] = Array(len).fill(1).join(" ");
-      }
+      if (res.data[0] == null || res.data.length[0] == 0) return;
       
       selected.length = 0;
-      selectedBond.length = 0;
       for(const cid of res.data[0].split(" ").map(Number)) selected.push(cid);
-      for(const cbond of res.data[1].split(" ").map(Number)) selectedBond.push(cbond);
       updateSelected();
       resizeButton();
       getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, document.getElementById('searchInput').value);
@@ -236,7 +208,7 @@ function setHave() {
    if (selected.length == 0) return alert(t("저장할 캐릭터가 없습니다"));
    else {
       if (!confirm(t("현재 캐릭터를 저장하시겠습니까?"))) return;
-      request(`${server}/users/set/have/${selected.join(" ")}/${selectedBond.join(" ")}`, {
+      request(`${server}/users/set/have/${selected.join(" ")}/-`, {
          method: "PUT",
       }).then(response => {
          if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
