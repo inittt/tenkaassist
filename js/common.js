@@ -310,11 +310,24 @@ const translate = {
    "저장할 캐릭터가 없습니다": {en : "No characters to save", sc : "没有要保存的角色", tc : "沒有要保存的角色"},
    "현재 캐릭터를 저장하시겠습니까?": {en : "Do you want to save the current character?", sc : "您要保存当前角色吗？", tc : "您要保存當前角色嗎？"},
    "저장되었습니다": {en : "Saved successfully", sc : "保存成功", tc : "儲存成功"},
+   "로그인 후 이용가능합니다": {en : "Login is required to use this service.", sc : "登录后方可使用.", tc:"登入後方可使用."},
+   "팀 추천 기능은 하루 한 번만 이용가능합니다": {en : "The team suggestion feature is available only once a day.", sc : "团队推荐功能每天只能使用一次.", tc : "團隊推薦功能每天只能使用一次."},
 
    // 로그인
    "아이디": {en : "username", sc : "用户名", tc : "用戶名"},
    "비밀번호": {en : "password", sc : "密码", tc : "密碼"},
    "회원가입": {en : "Sign Up", sc : "注册", tc : "註冊"},
+   "아이디를 입력해주세요": {en: "Please enter your ID.",sc: "请输入您的ID。",tc: "請輸入您的ID。"},
+   "비밀번호를 입력해주세요": {en: "Please enter your password.",sc: "请输入您的密码。",tc: "請輸入您的密碼。"},
+   "별명을 입력해주세요": {en: "Please enter your nickname.",sc: "请输入您的昵称。",tc: "請輸入您的暱稱。"},
+   "아이디는 4자 이상 10자 이하여야 합니다": {en: "ID must be between 4 and 10 characters long.",sc: "ID必须在4到10个字符之间。",tc: "ID必須在4到10個字符之間。"},
+   "아이디는 영문자와 숫자만 포함되어야 합니다": {en: "ID must contain only letters and numbers.",sc: "ID只能包含字母和数字。",tc: "ID只能包含字母和數字。"},
+   "비밀번호는 8자 이상 16자 이하여야 합니다": {en: "Password must be between 8 and 16 characters long.",sc: "密码必须在8到16个字符之间。",tc: "密碼必須在8到16個字符之間。"},
+   "별명은 특수문자와 공백을 제외한 2-8자여야 합니다": {en: "Nickname must be 2 to 8 characters long, excluding special characters and spaces.",sc: "昵称必须是2到8个字符，不包括特殊字符和空格。",tc: "暱稱必須是2到8個字符，並且不能包含特殊字符和空格。"},
+   "중복된 아이디가 존재합니다.": {en: "Duplicate ID exists.",sc: "已存在重复的ID。",tc: "已存在重複的ID。"},
+   "중복된 별명이 존재합니다.": {en: "Duplicate nickname exists.",sc: "已存在重复的昵称。",tc: "已存在重複的暱稱。"},
+   "유효하지 않은 아이디 혹은 비밀번호입니다.": {en: "Invalid ID or password.",sc: "无效的ID或密码。",tc: "無效的ID或密碼。"},
+   "기존 비밀번호가 틀립니다": {en: "The existing password is incorrect.",sc: "原密码不正确。",tc: "原密碼不正確。"},
 
    // 추천덱
    "덱": {en : "team", sc : "队伍", tc : "隊伍"},

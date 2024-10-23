@@ -27,7 +27,7 @@ function loginStart(formData) {
       if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
    }).then(res => {
-      if (!res.success) alert(res.msg);
+      if (!res.success) alert(t(res.msg));
       else {
          let data = res.data;
          // 사용자명을 local에 저장

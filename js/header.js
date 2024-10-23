@@ -53,21 +53,21 @@ document.addEventListener('DOMContentLoaded', function() {
    let userInfo = document.getElementById("userInfo");
    let button = `<button class="submitBtn" onclick="goLogin()">${t("로그인")}</button>`;
    request(`${server}/users/me`, {
-         method: "GET",
-      }).then(response => {
-         if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
-         return response.json();
-      }).then(res => {
-         if (!res.success) userInfo.innerHTML = button;
-         else {
-            //let option = `<button class="margin-left optionBtn" onclick="goOption()">설정</button>`;
-            let option = `<img class="icon-gear" src="${address}/images/icons/gear.svg" onclick="goOption()">`
-            let logout = `<button class="logoutBtn" onclick="logout()">${t("로그아웃")}</button>`;
-            userInfo.innerHTML =  res.data + option + logout;
-         }
-      }).catch(error => {
-         userInfo.innerHTML = button;
-      });
+      method: "GET",
+   }).then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   }).then(res => {
+      if (!res.success) userInfo.innerHTML = button;
+      else {
+         //let option = `<button class="margin-left optionBtn" onclick="goOption()">설정</button>`;
+         let option = `<img class="icon-gear" src="${address}/images/icons/gear.svg" onclick="goOption()">`
+         let logout = `<button class="logoutBtn" onclick="logout()">${t("로그아웃")}</button>`;
+         userInfo.innerHTML =  res.data + option + logout;
+      }
+   }).catch(error => {
+      userInfo.innerHTML = button;
+   });
 
    checkAndAssign('curHeader', 0);
    if (curHeader != 0) {

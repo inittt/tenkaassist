@@ -83,14 +83,14 @@ function makeBlockByModNSort() {
 }
 
 function getAllCompsFromServer() {
-   request(`${server}/comps/getAll`, {
+   request(`${server}/comps/getAllWithCommand`, {
       method: "GET",
    }).then(response => {
       if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
    }).then(res => {
       if (!res.success) {
-         cc.innerHTML = `<div class="block">${res.msg}</div>`
+         cc.innerHTML = `<div class="block">${t(res.msg)}</div>`
          return;
       }
       setTimeout(setPossible(res.data), 0);

@@ -45,7 +45,7 @@
             if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
             return response.json();
         }).then(res => {
-            if (!res.success) alert(res.msg);
+            if (!res.success) alert(t(res.msg));
             else {
                 localStorage.setItem("jwtToken", "");
                 alert(t("비밀번호 변경 완료. 다시 로그인해 주세요"));

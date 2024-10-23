@@ -40,8 +40,8 @@ document.addEventListener("DOMContentLoaded", function() {
       return response.json();
    }).then(res => {
       if (!res.success || res.data == null) return;
-      if (res.data.description.length > 10) guideBtn.style.display = 'block';
-      commandList = extractActions(res.data.description);
+      if (res.data.length > 10) guideBtn.style.display = 'block';
+      commandList = extractActions(res.data);
 
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
