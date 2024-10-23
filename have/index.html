@@ -23,7 +23,7 @@
             <button id="set_option" class="leaderButton leaderOff option_btn1" style="display:none">조건설정</button>
             <div class="select_dropdown">
                <div class="dropdown">
-                  <button id="btn2" class="dropdown-btn" style="height:2rem;">0억<span class="absolute-right">▼</span></button>
+                  <button id="btn2" class="dropdown-btn" style="height:2rem;">40억<span class="absolute-right">▼</span></button>
                   <div id="drop2" class="dropdown-content">
                      <input type="radio" id="b21" name="b2" value="9000000000">
                      <label id="l_b21" for="b21">9000000000</label>
@@ -35,11 +35,11 @@
                      <label id="l_b24" for="b24">6000000000</label>
                      <input type="radio" id="b25" name="b2" value="5000000000">
                      <label id="l_b25" for="b25">5000000000</label>
-                     <input type="radio" id="b26" name="b2" value="4000000000">
+                     <input type="radio" id="b26" name="b2" value="4000000000" checked>
                      <label id="l_b26" for="b26">4000000000</label>
                      <input type="radio" id="b27" name="b2" value="3000000000">
                      <label id="l_b27" for="b27">3000000000</label>
-                     <input type="radio" id="b28" name="b2" value="0" checked>
+                     <input type="radio" id="b28" name="b2" value="0">
                      <label id="l_b28" for="b28">0</label>
                   </div>
                </div>
@@ -166,7 +166,7 @@
       let val = set13t.innerText;
       set13t.innerText = formatNumber2(val);
    }
-   document.getElementById("btn2").innerHTML = `${formatNumber2(0)}<span class="absolute-right">▼</span>`;
+   document.getElementById("btn2").innerHTML = `${formatNumber2(4000000000)}<span class="absolute-right">▼</span>`;
    for(let i = 1; i < 9; i++) {
       const set13t = document.getElementById(`l_b2${i}`);
       let val = set13t.innerText;

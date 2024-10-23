@@ -74,6 +74,16 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById(`h-${curHeader}`).classList.add("h-cur");
       document.getElementById(`h-${curHeader}`).classList.add("txt-bold");
    }
+
+   request(`${server}/users/isAdmin`, {
+      method: "GET",
+   }).then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   }).then(res => {
+      if (!res.success) return;
+      headerSide.innerHTML += `<a class="h-line" href="${address}/admin/">${t("admin")}</a>`;
+   }).catch(error => {});
 });
 
 function goMain() {
