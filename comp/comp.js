@@ -116,6 +116,7 @@ function goTest() {
 }
 
 function setCommand(str) {
+   if (str == null) return "";
    for(let i = 2; i < 101; i++) {
       str = str.replace(`${i}턴`, `</br>${i}턴`);
    }
