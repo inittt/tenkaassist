@@ -288,7 +288,7 @@ const translate = {
    "회복수단이 없는 조합입니다" : {en : "This team has no recovery options", sc : "", tc : ""},
    "등록 성공" : {en : "Register Successful", sc : "这队伍没有治疗能力", tc : "這隊伍沒有治療能力"},
    "조합 등록 실패" : {en : "Team registration failed", sc : "隊伍登記失敗", tc : "队伍登记失败"},
-   "데미지 측정을 하지 않거나 13턴 데미지(5)가 50억 미만인 조합은 주기적으로 삭제됩니다": {en: "Teams that do not measure damage or have 13t dmg(5) below 5 billion will be periodically deleted.",sc: "未进行伤害测量或13回合伤害(5)低于50亿的团队将定期删除.",tc: "未進行傷害測量或13回合傷害(5)低於50億的團隊將定期刪除."},
+   "데미지 측정을 하지 않거나 13턴 데미지(5)가 40억 미만인 조합은 주기적으로 삭제됩니다": {en: "Teams that do not measure damage or have 13t dmg(5) below 4 billion will be periodically deleted.",sc: "未进行伤害测量或13回合伤害(5)低于40亿的团队将定期删除.",tc: "未進行傷害測量或13回合傷害(5)低於40億的團隊將定期刪除."},
    
    // 조합검색 - 캐릭터
    "리더" : {en : "Leader", sc : "队长", tc : "隊長"},

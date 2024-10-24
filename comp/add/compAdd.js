@@ -70,7 +70,7 @@ function registerDeck() {
       if (!res.success) return alert(res.msg);
       alert(
          t("등록 성공")+"\n\n"+
-         t("데미지 측정을 하지 않거나 13턴 데미지(5)가 50억 미만인 조합은 주기적으로 삭제됩니다")
+         t("데미지 측정을 하지 않거나 13턴 데미지(5)가 40억 미만인 조합은 주기적으로 삭제됩니다")
       );
       location.href = `${address}/comp/?id=${res.data}`
    }).catch(e => {
