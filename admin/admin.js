@@ -20,7 +20,7 @@ function showPage() {
 }
 
 function setRemoveCnt() {
-   request(`${server}/users/getRemoveCnt`, {
+   request(`${server}/comps/getRemoveCnt`, {
       method: "GET",
    }).then(response => {
       if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
