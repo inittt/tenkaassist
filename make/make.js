@@ -83,7 +83,7 @@ function makeBlockByModNSort() {
 }
 
 function getAllCompsFromServer() {
-   request(`${server}/comps/getAllWithCommand`, {
+   request(`${server}/comps/getAllWithCommand/${chIds}`, {
       method: "GET",
    }).then(response => {
       if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
