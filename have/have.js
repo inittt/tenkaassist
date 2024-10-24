@@ -90,7 +90,6 @@ function getCharactersWithCondition(element, role, rarity, search) {
 
 // 검색 버튼 누를시
 function searchDeck() {
-return alert("현재 사용 불가");
    request(`${server}/users/me`, {
       method: "GET",
    }).then(response => {
