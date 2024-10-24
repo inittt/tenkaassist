@@ -141,9 +141,9 @@ function start(compIds) {
    for(const id of compIds) {
       const tmp = chJSON.data.filter(ch => ch.id === id)[0];
       if (liberationList.includes(tmp.name))
-         comp.push(new Champ(tmp.id, tmp.name, Math.ceil(tmp.hp*COEF*1.1), Math.ceil(tmp.atk*COEF*1.1), tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
+         comp.push(new Champ(tmp.id, tmp.name, Math.floor(tmp.hp*COEF*1.1), Math.floor(tmp.atk*COEF*1.1), tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
       else
-         comp.push(new Champ(tmp.id, tmp.name, Math.ceil(tmp.hp*COEF), Math.ceil(tmp.atk*COEF), tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
+         comp.push(new Champ(tmp.id, tmp.name, Math.floor(tmp.hp*COEF), Math.floor(tmp.atk*COEF), tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
    }
    comp[0].isLeader = true;
    for(let i = 0; i < 5; i++) {
@@ -307,11 +307,11 @@ function updateAll() {
       getdiv("deal").style.color = "red";
    } else getdiv("deal").style.color = "white";
 
-   getdiv("deal").innerHTML = `${t("공격데미지")} : ${Math.ceil(lastDmg).toLocaleString()}`;
-   getdiv("deal_add").innerHTML = `${t("추가데미지")} : ${Math.ceil(lastAddDmg).toLocaleString()}`;
-   getdiv("deal_atv").innerHTML = `${t("발동데미지")} : ${Math.ceil(lastAtvDmg).toLocaleString()}`;
-   getdiv("deal_dot").innerHTML = `${t("도트데미지")} : ${Math.ceil(lastDotDmg).toLocaleString()}`;
-   getdiv("deal_ref").innerHTML = `${t("반격데미지")} : ${Math.ceil(lastRefDmg).toLocaleString()}`;
+   getdiv("deal").innerHTML = `${t("공격데미지")} : ${Math.floor(lastDmg).toLocaleString()}`;
+   getdiv("deal_add").innerHTML = `${t("추가데미지")} : ${Math.floor(lastAddDmg).toLocaleString()}`;
+   getdiv("deal_atv").innerHTML = `${t("발동데미지")} : ${Math.floor(lastAtvDmg).toLocaleString()}`;
+   getdiv("deal_dot").innerHTML = `${t("도트데미지")} : ${Math.floor(lastDotDmg).toLocaleString()}`;
+   getdiv("deal_ref").innerHTML = `${t("반격데미지")} : ${Math.floor(lastRefDmg).toLocaleString()}`;
    getdiv("simulator").style.fontSize = "1rem";
    updateProgressBar(boss.hp, boss.maxHp);
 }
@@ -331,7 +331,7 @@ function updateProgressBar(hp, maxhp) {
    const percentage = ((hp / maxhp) * 100) > 0 ? ((hp / maxhp) * 100) : 0;
    const bossHpText = document.getElementById("boss-hp");
    progressBar.style.width = percentage > 100 ? "100%" : `${percentage}%`;
-   bossHpText.innerHTML = `${Math.ceil(hp).toLocaleString()} (${Math.ceil(percentage*100)/100}%)`;
+   bossHpText.innerHTML = `${Math.floor(hp).toLocaleString()} (${Math.floor(percentage*100)/100}%)`;
 }
 
 function getdiv(id) {return document.getElementById(id);}
