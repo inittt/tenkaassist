@@ -237,7 +237,7 @@ function endGame() {
 
 function saveBond1() {
    const cmd = [];
-   for(let i = 0; i < 13; i++) {
+   for(let i = 0; i < 13*5; i++) {
       if (i%5 == 0) {
          if (Math.floor(i/5)+1 < 10) cmd.push(" ");
          cmd.push(`${Math.floor(i/5)+1}턴 : `);
