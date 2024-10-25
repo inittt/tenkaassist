@@ -35,6 +35,10 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function makeCompBlock(comp) {
+   if (comp.recommend == 0) {
+      if (comp.vote != 0) document.getElementById("command-bond").innerText = `(${t("1구")})`;
+   } else document.getElementById("command-bond").innerText = `(${t("5구")})`;
+
    const id = comp.id, name = comp.name, compstr = comp.compstr;
    const description = comp.description, ranking = comp.ranking, vote = comp.vote;
    const recommend = comp.recommend, creator = comp.creator, updater = comp.updater;

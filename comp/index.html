@@ -40,8 +40,9 @@
          <div id="dmg13-1" style="margin:0.5rem;"></div>
       </div>
       <div class="block">
-         <p id="ch-order" class="fs-1_3 margin-left">
-            행동 순서 (5구)
+         <p class="fs-1_3 margin-left">
+            <span id="ch-order">행동 순서</span>
+            <span id="command-bond"></span>
          </p><hr>
          <div id="description" style="width:100%; min-height:5rem;">
 
@@ -54,6 +55,6 @@
    document.getElementById("testBtn").innerText = t("체험하기");
    document.getElementById("initDmgBtn").innerText = t("초기화");
    document.getElementById("deleteBtn").innerText = t("삭제");
-   document.getElementById("ch-order").innerText = `${t("행동 순서")} (${t("5구")})`;
+   document.getElementById("ch-order").innerText = `${t("행동 순서")}`;
 </script>
 </html>
