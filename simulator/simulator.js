@@ -236,10 +236,23 @@ function endGame() {
 }
 
 function saveBond1() {
+   const cmd = [];
+   for(let i = 0; i < 13; i++) {
+      if (i%5 == 0) {
+         if (Math.floor(i/5)+1 < 10) cmd.push(" ");
+         cmd.push(`${Math.floor(i/5)+1}턴 : `);
+      }
+      cmd.push(command[i]);
+      cmd.push((i+1)%5 == 0 ? "\n" : " > "); 
+   }
+   const command_tmp = cmd.join("");
+
+
    const formData = new FormData();
    formData.append("name", `${comp[0].name}덱`);
    formData.append("compstr", chIds);
    formData.append("dmg13", dmg13);
+   formData.append("command", command_tmp);
    request(`${server}/comps/setPower1`, {
       method: "POST",
       body: formData
