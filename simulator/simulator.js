@@ -54,8 +54,50 @@ document.addEventListener("DOMContentLoaded", function() {
       return response.json();
    }).then(res => {
       if (res.success) document.getElementById("autoBtn").style.display = "block";
+
+      keyboardClick();
    }).catch(e => {});
 });
+
+function keyboardClick() {
+   let arrowUpPressed = false;
+   let arrowDownPressed = false;
+
+   document.addEventListener("keydown", function(event) {
+      // 방향키가 눌렸는지 확인
+      if (event.key === "ArrowUp") arrowUpPressed = true;
+      else if (event.key === "ArrowDown") arrowDownPressed = true;
+
+      if (arrowUpPressed) {
+         // 위쪽 방향키 + 숫자키 조합 처리
+         switch(event.key) {
+               case "1":document.getElementById("ult0").click();break;
+               case "2":document.getElementById("ult1").click();break;
+               case "3":document.getElementById("ult2").click();break;
+               case "4":document.getElementById("ult3").click();break;
+               case "5":document.getElementById("ult4").click();break;
+         }
+      } else if (arrowDownPressed) {
+         // 아래쪽 방향키 + 숫자키 조합 처리
+         switch(event.key) {
+               case "1":document.getElementById("def0").click();break;
+               case "2":document.getElementById("def1").click();break;
+               case "3":document.getElementById("def2").click();break;
+               case "4":document.getElementById("def3").click();break;
+               case "5":document.getElementById("def4").click();break;
+         }
+      } else {
+         // 숫자키만 눌렸을 때 처리
+         switch(event.key) {
+               case "1":document.getElementById("atk0").click();break;
+               case "2":document.getElementById("atk1").click();break;
+               case "3":document.getElementById("atk2").click();break;
+               case "4":document.getElementById("atk3").click();break;
+               case "5":document.getElementById("atk4").click();break;
+         }
+      }
+   });
+}
 
 function auto() {
    for(let i = 0; i < commandList.length; i++) {
