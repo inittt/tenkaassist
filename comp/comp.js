@@ -79,11 +79,9 @@ function makeCompBlock(comp) {
       const dmg13t_b1 = autoCalc(compstr.split(" ").map(Number), description, [1,1,1,1,1]);
       if (dmg13t_b1 > 1) {
          const formData = new FormData();
-         formData.append("name", `${name}덱`);
-         formData.append("compstr", compstr);
+         formData.append("compId", id);
          formData.append("dmg13", dmg13t_b1);
-         formData.append("command", "");
-         request(`${server}/comps/setPower1`, {
+         request(`${server}/comps/setPower1Auto`, {
             method: "POST",
             body: formData
          }).then(response => {
