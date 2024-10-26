@@ -82,7 +82,7 @@ function makeCompBlock(comp) {
          formData.append("name", `${name}덱`);
          formData.append("compstr", compstr);
          formData.append("dmg13", dmg13t_b1);
-         formData.append("command", null);
+         formData.append("command", "");
          request(`${server}/comps/setPower1`, {
             method: "POST",
             includeJwtToken: false,

@@ -33,7 +33,7 @@ function request(url, options) {
        headers: {}
    };
 
-   // jwtToken이 필요할 경우에만 추가, 그렇지 않으면 null 설정
+   // jwtToken이 필요할 경우에만 헤더에 추가
    if (options && options.includeJwtToken !== false) {
        defaultOptions.headers.jwtToken = localStorage.getItem('jwtToken');
    }
