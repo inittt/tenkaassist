@@ -567,6 +567,8 @@ header {
    .comp-time {width:100%;}
    .comp-order {width:100%;}
 }
+@media (max-width: 500px) {#nick-box {display:none;}}
+@media (min-width: 500px) {#nick-box {display:block;}}
 @media (min-width: 576px) {
    .main-container {max-width: 540px; padding: 4rem 1rem 1rem 1rem;}
    .comp-time {width:5rem;}
