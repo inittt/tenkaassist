@@ -36,8 +36,6 @@ function request(url, options) {
    // jwtToken이 필요할 경우에만 추가, 그렇지 않으면 null 설정
    if (options && options.includeJwtToken !== false) {
        defaultOptions.headers.jwtToken = localStorage.getItem('jwtToken');
-   } else {
-       defaultOptions.headers.jwtToken = null; // includeJwtToken이 false일 경우 null 설정
    }
 
    // 나머지 options와 합치기
