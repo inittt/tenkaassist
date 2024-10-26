@@ -30,12 +30,17 @@ setFavicon(faviconUrl);
 
 function request(url, options) {
    const defaultOptions = {
-      headers: {
-         //'Content-Type': 'application/json',
-         'jwtToken': `${localStorage.getItem('jwtToken')}`
-      }
+       headers: {}
    };
+
+   // jwtToken이 필요할 경우에만 추가
+   if (options && options.includeJwtToken !== false) {
+       defaultOptions.headers.jwtToken = localStorage.getItem('jwtToken');
+   }
+
+   // 나머지 options와 합치기
    options = { ...defaultOptions, ...options };
+
    return fetch(url, options); // 원본 fetch 함수를 호출합니다.
 }
 
