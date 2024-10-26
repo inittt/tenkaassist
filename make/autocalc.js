@@ -44,6 +44,7 @@ function autoCalc(idList, command, bondList) {
    }
 
    function auto() {
+      if (commandList.length < 13*5) return 0;
       for(let i = 0; i < 13*5; i++) {
          const guide_idx = Number(commandList[i][0])-1;
          const guide_act = commandList[i][1];
