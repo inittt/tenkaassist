@@ -82,6 +82,7 @@ function makeCompBlock(comp) {
          formData.append("name", `${name}덱`);
          formData.append("compstr", compstr);
          formData.append("dmg13", dmg13t_b1);
+         formData.append("command", null);
          request(`${server}/comps/setPower1`, {
             method: "POST",
             includeJwtToken: false,
@@ -90,7 +91,7 @@ function makeCompBlock(comp) {
             if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
             document.getElementById('dmg13-1').innerHTML = `<i class="fa-solid fa-burst"></i> ${formatNumber(dmg13t_b1)} (1)`;
             return response.json();
-         }).then(res => {}).catch(e => {})
+         }).then(res => {}).catch(e => {console.log("error : ", e)})
       }
    }
 }
