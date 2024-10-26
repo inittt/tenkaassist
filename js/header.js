@@ -61,9 +61,10 @@ document.addEventListener('DOMContentLoaded', function() {
       if (!res.success) userInfo.innerHTML = button;
       else {
          //let option = `<button class="margin-left optionBtn" onclick="goOption()">설정</button>`;
+         let name_box = `<span style="overflow-x: hidden; white-space: nowrap;">${res.data}</span>`
          let option = `<img class="icon-gear" src="${address}/images/icons/gear.svg" onclick="goOption()">`
          let logout = `<button class="logoutBtn" onclick="logout()">${t("로그아웃")}</button>`;
-         userInfo.innerHTML =  res.data + option + logout;
+         userInfo.innerHTML =  name_box + option + logout;
       }
    }).catch(error => {
       userInfo.innerHTML = button;
