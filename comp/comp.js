@@ -77,18 +77,20 @@ function makeCompBlock(comp) {
 
    if (description != null && description.length > 10 && vote == 0) {
       const dmg13t_b1 = autoCalc(compstr.split(" ").map(Number), description, [1,1,1,1,1]);
-      const formData = new FormData();
-      formData.append("name", `${name}덱`);
-      formData.append("compstr", compstr);
-      formData.append("dmg13", dmg13t_b1);
-      request(`${server}/comps/setPower1`, {
-         method: "POST",
-         body: formData
-      }).then(response => {
-         if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
-         document.getElementById('dmg13-1').innerHTML = `<i class="fa-solid fa-burst"></i> ${formatNumber(dmg13t_b1)} (1)`;
-         return response.json();
-      }).then(res => {}).catch(e => {})
+      if (dmg13t_b1 > 1) {
+         const formData = new FormData();
+         formData.append("name", `${name}덱`);
+         formData.append("compstr", compstr);
+         formData.append("dmg13", dmg13t_b1);
+         request(`${server}/comps/setPower1`, {
+            method: "POST",
+            body: formData
+         }).then(response => {
+            if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+            document.getElementById('dmg13-1').innerHTML = `<i class="fa-solid fa-burst"></i> ${formatNumber(dmg13t_b1)} (1)`;
+            return response.json();
+         }).then(res => {}).catch(e => {})
+      }
    }
 }
 
