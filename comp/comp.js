@@ -85,7 +85,6 @@ function makeCompBlock(comp) {
          formData.append("command", "");
          request(`${server}/comps/setPower1`, {
             method: "POST",
-            includeJwtToken: false,
             body: formData
          }).then(response => {
             if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
