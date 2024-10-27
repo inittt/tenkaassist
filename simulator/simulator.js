@@ -60,9 +60,10 @@ document.addEventListener("DOMContentLoaded", function() {
    }).catch(e => {});
 });
 
+
+let arrowUpPressed = false;
+let arrowDownPressed = false;
 function keyboardClick() {
-   let arrowUpPressed = false;
-   let arrowDownPressed = false;
 
    document.addEventListener("keydown", function(event) {
       // 방향키가 눌렸는지 확인
@@ -97,6 +98,11 @@ function keyboardClick() {
                case "5":document.getElementById("atk4").click();break;
          }
       }
+   });
+   // keyup 이벤트 처리
+   document.addEventListener("keyup", function(event) {
+      if (event.key.toLowerCase() === "z") arrowUpPressed = false;
+      else if (event.key.toLowerCase() === "x") arrowDownPressed = false;
    });
 }
 
