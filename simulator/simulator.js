@@ -272,7 +272,7 @@ function endGame() {
    const command_tmp = cmd.join("");
    console.log(command_tmp);
    
-   if (isValidComp(idList) && bondList.every(e => e == 5)) saveBond5(command_tmp);
+   if (isValidComp(idList) && bondList.every(e => e == 5) && scarecrowTurn <= 50) saveBond5(command_tmp);
    
    savedData.length = 0;
    alert(msg.join("\n"));
