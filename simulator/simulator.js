@@ -206,7 +206,7 @@ function start(compIds) {
 }
 
 function do_ult(idx) {
-   if (comp[idx].isActed) return;
+   if (comp[idx].isActed || comp[idx].curCd > 0) return;
    saveCur();
    command.push(`${idx+1}궁`);
    comp[idx].ultimate();
