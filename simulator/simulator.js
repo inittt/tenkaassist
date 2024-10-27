@@ -66,8 +66,8 @@ function keyboardClick() {
 
    document.addEventListener("keydown", function(event) {
       // 방향키가 눌렸는지 확인
-      if (event.key === "ArrowUp") arrowUpPressed = true;
-      else if (event.key === "ArrowDown") arrowDownPressed = true;
+      if (event.key.toLowerCase() == "z") arrowUpPressed = true;
+      else if (event.key.toLowerCase() == "x") arrowDownPressed = true;
 
       if (arrowUpPressed) {
          // 위쪽 방향키 + 숫자키 조합 처리
