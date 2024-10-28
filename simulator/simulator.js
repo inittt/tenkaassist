@@ -70,7 +70,7 @@ function keyboardClick() {
       if (event.key.toLowerCase() == "z") arrowUpPressed = true;
       else if (event.key.toLowerCase() == "x") arrowDownPressed = true;
 
-      if (arrowUpPressed) {
+      if (arrowUpPressed && comp[idx].curCd <= 0) {
          // 위쪽 방향키 + 숫자키 조합 처리
          switch(event.key) {
                case "1":document.getElementById("ult0").click();break;
