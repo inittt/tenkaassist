@@ -70,14 +70,24 @@ function keyboardClick() {
       if (event.key.toLowerCase() == "z") arrowUpPressed = true;
       else if (event.key.toLowerCase() == "x") arrowDownPressed = true;
 
-      if (arrowUpPressed && comp[idx].curCd <= 0) {
+      if (arrowUpPressed) {
          // 위쪽 방향키 + 숫자키 조합 처리
          switch(event.key) {
-               case "1":document.getElementById("ult0").click();break;
-               case "2":document.getElementById("ult1").click();break;
-               case "3":document.getElementById("ult2").click();break;
-               case "4":document.getElementById("ult3").click();break;
-               case "5":document.getElementById("ult4").click();break;
+               case "1":
+                  if (comp[0].curCd > 0) document.getElementById("ult0").click();
+                  else document.getElementById("atk0").click();break;
+               case "2":
+                  if (comp[1].curCd > 0) document.getElementById("ult1").click();
+                  else document.getElementById("atk1").click();break;
+               case "3":
+                  if (comp[2].curCd > 0) document.getElementById("ult2").click();
+                  else document.getElementById("atk2").click();break;
+               case "4":
+                  if (comp[3].curCd > 0) document.getElementById("ult3").click();
+                  else document.getElementById("atk3").click();break;
+               case "5":
+                  if (comp[4].curCd > 0) document.getElementById("ult4").click();
+                  else document.getElementById("atk4").click();break;
          }
       } else if (arrowDownPressed) {
          // 아래쪽 방향키 + 숫자키 조합 처리
