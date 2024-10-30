@@ -5,6 +5,7 @@ if (params.get('hitAll') != null && params.get('hitAll') == "false") hitAll = fa
 const curHeader = 6;
 let isOn = false, actNum = 0, commandList;
 
+window.onload = init;
 function init() {
    document.getElementById("hitAllChkBox").checked = hitAll;
 }
@@ -13,8 +14,6 @@ document.addEventListener("DOMContentLoaded", function() {
       <img class="circleImg" onclick="show_simple(-1)" src="${address}/images/icons/describe.png">
       <img class="circleImg" onclick="show_console(-1)" src="${address}/images/icons/star.png">
    `;
-
-   
 
    const chNameList = [];
    for(let id of idList) {
