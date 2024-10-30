@@ -295,7 +295,6 @@ function endGame() {
 }
 
 function saveBond1() {
-   if (dmg13 <= 1000000000) return;
    const cmd = [];
    for(let i = 0; i < 13*5; i++) {
       if (i%5 == 0) {
