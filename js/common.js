@@ -207,6 +207,7 @@ const translate = {
    "캐릭터 세팅에 문제가 발생": {en : "There is a problem with the character setup", sc : "角色设置出现问题", tc : "角色設定出現問題"},
    "구속": {en : "bond", sc : "羁绊", tc : "羈絆"},
    "허수턴": {en : "turns", sc : "回合", tc : "回合"},
+   "매턴 전체피격 (기본값)": {en : "All allies are hit every turn (default)", sc:"每回合我方全部受到攻击 (默认值)", tc:"每回合我方全部受到攻擊 (預設值)"},
 
 
    "버프요약" : {en : "Buff Summary", sc : "状态列表", tc : "狀態列表"},

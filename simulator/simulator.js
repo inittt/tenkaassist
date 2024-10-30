@@ -1,14 +1,21 @@
 const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list'), idList = chIds.split(",").map(Number);
 const bond = params.get('bond'), bondList = bond == null ? [5, 5, 5, 5, 5] : bond.split(",").map(Number);
+if (params.get('hitAll') != null && params.get('hitAll') == "false") hitAll = false;
 const curHeader = 6;
 let isOn = false, actNum = 0, commandList;
 
+function init() {
+   document.getElementById("hitAllChkBox").checked = hitAll;
+}
 document.addEventListener("DOMContentLoaded", function() {
    getdiv("bossBuffBtn").innerHTML = `
       <img class="circleImg" onclick="show_simple(-1)" src="${address}/images/icons/describe.png">
       <img class="circleImg" onclick="show_console(-1)" src="${address}/images/icons/star.png">
    `;
+
+   
+
    const chNameList = [];
    for(let id of idList) {
       const ch = chJSON.data.filter(item => item.id == id);
@@ -60,6 +67,15 @@ document.addEventListener("DOMContentLoaded", function() {
    }).catch(e => {});
 });
 
+function redirectOnCheck() {
+   const url = new URL(window.location.href);
+   const params = url.searchParams;
+
+   params.set('hitAll', hitAll ? "false" : "true");
+
+   // 변경된 URL로 리다이렉트
+   window.location.href = url.toString().replace(/%2C/g, ',');
+ }
 
 let arrowUpPressed = false;
 let arrowDownPressed = false;
@@ -295,6 +311,7 @@ function endGame() {
 }
 
 function saveBond1() {
+   if (!hitAll) return;
    const cmd = [];
    for(let i = 0; i < 13*5; i++) {
       if (i%5 == 0) {
@@ -320,7 +337,9 @@ function saveBond1() {
       return response.json();
    }).then(res => {}).catch(e => {})
 }
+
 function saveBond5(command_tmp) {
+   if (!hitAll) return;
    const formData = new FormData();
    formData.append("name", `${comp[0].name}덱`);
    formData.append("compstr", chIds);

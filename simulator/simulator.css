@@ -164,3 +164,16 @@ body {
 #autoBtn {
    display:none;
 }
+
+#hitAllChkBox {
+   width:0.9rem;
+   height:0.9rem;
+   cursor: pointer;
+}
+
+.hitAllContainer {
+   display: flex;
+   align-items: center;
+   border:1px solid gray;
+   border-radius: 0.2rem;
+}

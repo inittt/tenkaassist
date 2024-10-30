@@ -94,7 +94,7 @@ function getBondList() {
 // 시작 버튼 누를시
 function startSimulator() {
    if (selected.length != 5) return alert(t("5개의 캐릭터를 선택해주세요"));
-   location.href = `${address}/simulator/?list=${selected}&bond=${getBondList()}`
+   location.href = `${address}/simulator/?list=${selected}&bond=${getBondList()}&hitAll=true`;
 }
 
 // 검색창에 선택된 캐릭터 이미지 띄우기

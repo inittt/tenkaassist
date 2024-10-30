@@ -12,7 +12,7 @@
    <script src="./calculator.js"></script>
    <script src="./simulator.js"></script>
 </head>
-<body class="no-scrollbar">
+<body class="no-scrollbar" onload="init()">
    <script src="../js/header.js"></script>
    <div id="main-sim" class="main-container bg-dark">
       <div id="title-sim" class="block">
@@ -29,6 +29,10 @@
             <div id="boss" class="progress-bar"></div>
          </div>
          <div id="bossBuffBtn"></div>
+         <span class="hitAllContainer">
+            <input type="checkbox" id="hitAllChkBox" onchange="redirectOnCheck()" checked>&nbsp;
+            <span id="hitAllTxt" style="font-size:0.8rem; padding-right:0.2rem;">매턴 전체피격 (기본값)</span>
+         </span>
          <div id="turn" style="margin-top : 1rem; width:100%; text-align: center;"></div>
          <div id="deal" style="width:100%; text-align: center;"></div>
          <div id="deal_add" style="width:100%; text-align: center;"></div>
@@ -46,5 +50,6 @@
    document.getElementById("titlebox").innerText = t("시뮬레이터");
    document.getElementById("resetBtn").innerText = t("리셋");
    document.getElementById("guide").innerText = t("가이드");
+   document.getElementById("hitAllTxt").innerText = t("매턴 전체피격 (기본값)");
 </script>
 </html>
