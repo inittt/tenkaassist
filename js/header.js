@@ -99,7 +99,7 @@ function goOption() {
 
 function logout() {
    localStorage.setItem("jwtToken", null);
-   location.reload();
+   location.href = `${address}/`;
 }
 
 function showLang() {
