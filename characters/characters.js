@@ -2,6 +2,7 @@ let checkElementN, checkRoleN, checkRarityN, isOn = false;
 const curHeader = 2;
 
 const selected = [];
+const banList = [];
 document.addEventListener("DOMContentLoaded", function() {
    const searchInput = document.getElementById('searchInput');
    searchInput.addEventListener('input', function() {
@@ -47,9 +48,10 @@ function getCharactersWithCondition(element, role, rarity, search) {
    let innerArray = [];
    for(const champ of filteredData) {
       let id = champ.id, name = champ.name, element = champ.element, role = champ.role;
-      let chk_option = "none";
+      let chk_option = "none", ban_option = "none";
       if (isAny(id)) continue;
       if (selected.includes(id)) chk_option = "block";
+      else if (banList.includes(id)) ban_option = "block";
       innerArray.push(`
          <div class="character" onclick="clickedCh(${id})" style="margin:0.2rem;">
             <div style="margin:0.2rem;">
@@ -57,6 +59,7 @@ function getCharactersWithCondition(element, role, rarity, search) {
                <img id="el_${id}" src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">
                ${liberationList.includes(name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                <img id="chk_${id}" src="${address}/images/checkmark.png" class="chked z-3" style="display:${chk_option}">
+               <img id="ban_${id}" src="${address}/images/banmark.png" class="chked z-3" style="display:${ban_option}">
                <div class="element${element} ch_img ch_border z-4"></div>
             </div>
             <div class="text-mini">${t(name)}</div>
@@ -71,8 +74,12 @@ function searchDeck() {
    if (selected.length > 5) return alert(t("5개까지 선택 가능합니다"));
    if (selected.length < 1) return alert(t("하나 이상의 캐릭터를 선택해 주세요"));
    if (isOn){
-      location.href = `${address}/search/?list=${selected}&leader=${selected[0]}`;
-   } else location.href = `${address}/search/?list=${selected}`;
+      if (banList.length == 0) location.href = `${address}/search/?list=${selected}&leader=${selected[0]}`;
+      else location.href = `${address}/search/?list=${selected}&ban=${banList}&leader=${selected[0]}`;
+   } else  {
+      if (banList.length == 0) location.href = `${address}/search/?list=${selected}`;
+      else location.href = `${address}/search/?list=${selected}&ban=${banList}`;
+   }
 }
 
 function resizeButton() {
@@ -105,6 +112,28 @@ function updateSelected() {
       }
       div.innerHTML = innerArray.join("");
    }
+
+   const div2 = document.getElementById("banCh");
+   if (banList.length == 0) div2.innerHTML = "";
+   else {
+      let innerArray = [];
+      for(let chId of banList) {
+         let champ = getCharacter(chId);
+         let id = champ.id, name = champ.name, element = champ.element, role = champ.role;
+         innerArray.push(`
+            <div class="character" onclick="clickedSel(this, ${id})" style="margin:0.2rem;">
+               <div style="margin:0.2rem;">
+                  <img src="${address}/images/characters/cs${id}_0_0.webp" class="img z-1" alt="">
+                  <img src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">
+                  ${liberationList.includes(t(name)) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
+                  <div class="element${element} ch_img ch_border z-4"></div>
+               </div>
+               <div class="text-mini">${t(name)}</div>
+            </div>
+         `);
+      }
+      div2.innerHTML = innerArray.join("");
+   }
 }
 
 // 클릭하면 체크표시 활성/비활성화, 리스트에 추가/제거
@@ -112,7 +141,15 @@ function clickedCh(id) {
    if (selected.includes(id)) {
       let index = selected.indexOf(id);
       if (index !== -1) selected.splice(index, 1);
+      
+      banList.push(id);
       document.getElementById(`chk_${id}`).style.display = "none";
+      document.getElementById(`ban_${id}`).style.display = "block";
+   } else if (banList.includes(id)) {
+      let index = banList.indexOf(id);
+      if (index !== -1) banList.splice(index, 1);
+
+      document.getElementById(`ban_${id}`).style.display = "none";
    } else {
       selected.push(id);
       document.getElementById(`chk_${id}`).style.display = "block";
@@ -123,11 +160,18 @@ function clickedCh(id) {
 
 // 검색창의 캐릭 클릭시 제거
 function clickedSel(div, id) {
-   let index = selected.indexOf(id);
-   if (index !== -1) selected.splice(index, 1);
+   let index1 = selected.indexOf(id), index2 = banList.indexOf(id);
+   if (index1 !== -1) {
+      selected.splice(index1, 1);
 
-   let image = document.getElementById(`img_${id}`);
-   if (image != null) document.getElementById(`chk_${id}`).style.display = "none";
+      let image = document.getElementById(`img_${id}`);
+      if (image != null) document.getElementById(`chk_${id}`).style.display = "none";
+   } else if (index2 !== -1) {
+      banList.splice(index2, 1);
+
+      let image = document.getElementById(`img_${id}`);
+      if (image != null) document.getElementById(`ban_${id}`).style.display = "none";
+   }
 
    updateSelected()
    resizeButton();
