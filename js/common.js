@@ -369,7 +369,7 @@ const translate = {
 
    // 전지역모집
    "첫글자 입력" : {en : "Initial search", sc : "内部搜索", tc : "內部搜尋"},
-   "태그조합당 SR 비율" : {en : "SR ratio by tag combination", sc : "标签组合SR机率", tc : "標籤組合SR機率"},
+   "SR 등장확률" : {en : "SR Appearance Rate", sc : "SR 出现率", tc : "SR 出現率"},
    "화속성" : {en : "Fire", sc : "火属性", tc : "火屬性"},
    "수속성" : {en : "Water", sc : "水属性", tc : "水屬性"}, 
    "풍속성" : {en : "Wind", sc : "风属性", tc : "風屬性"}, 

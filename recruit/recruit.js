@@ -49,38 +49,41 @@ const recruitJson = {
       {id:10055, cur:"", per:0, name:"타노시아", rarity:"SR", tags:"광속성 서포터 야인 미유 정예 회복"},
 
       // NR
-      {id:10801, cur:"", per:0, name:"아이린", rarity:"NR", tags:"광속성 힐러 인간 표준체형 거유 회복"},
-      {id:10802, cur:"", per:0, name:"나나", rarity:"NR", tags:"풍속성 딜러 마족 작은체형 빈유 데미지"},
-      {id:10803, cur:"", per:0, name:"아이리스", rarity:"NR", tags:"화속성 딜러 야인 작은체형 빈유 데미지 전투 범위공격"},
-      {id:10804, cur:"", per:0, name:"도라", rarity:"NR", tags:"풍속성 탱커 야인 표준체형 미유 보호 방어 생존력"},
-      {id:10805, cur:"", per:0, name:"세바스", rarity:"NR", tags:"암속성 디스럽터 마족 표준체형 미유 방해"},
-      {id:10806, cur:"", per:0, name:"마를렌", rarity:"NR", tags:"수속성 힐러 야인 표준체형 미유 회복"},
-      {id:10807, cur:"", per:0, name:"유이", rarity:"NR", tags:"화속성 딜러 인간 작은체형 거유 데미지 전투"},
-      {id:10808, cur:"", per:0, name:"소라카", rarity:"NR", tags:"암속성 디스럽터 야인 표준체형 미유 쇠약"},
-      {id:10813, cur:"", per:0, name:"이아", rarity:"NR", tags:"광속성 힐러 인간 작은체형 빈유 회복"},
-      {id:10901, cur:"", per:0, name:"사이렌", rarity:"NR", tags:"암속성 탱커 인간 표준체형 미유 병사 보호 방어"},
-      {id:10902, cur:"", per:0, name:"페트라", rarity:"NR", tags:"광속성 딜러 인간 표준체형 빈유 병사 데미지 범위공격"},
-      {id:10903, cur:"", per:0, name:"프레이", rarity:"NR", tags:"광속성 탱커 마족 표준체형 미유 병사 보호 방어"},
-      {id:10904, cur:"", per:0, name:"마누엘라", rarity:"NR", tags:"암속성 딜러 마족 표준체형 미유 병사 데미지"},
-      {id:10905, cur:"", per:0, name:"키쿄", rarity:"NR", tags:"화속성 디스럽터 인간 표준체형 미유 병사 쇠약"},
-      {id:10906, cur:"", per:0, name:"카에데", rarity:"NR", tags:"풍속성 힐러 인간 표준체형 미유 병사 회복"},
-      {id:10907, cur:"", per:0, name:"올라", rarity:"NR", tags:"풍속성 딜러 야인 표준체형 미유 병사 데미지"},
-      {id:10908, cur:"", per:0, name:"콜레트", rarity:"NR", tags:"수속성 딜러 야인 작은체형 빈유 병사 데미지 폭발력"},
-      {id:10909, cur:"", per:0, name:"샤린", rarity:"NR", tags:"화속성 탱커 인간 표준체형 미유 병사 보호 방어 범위공격"},
-      {id:10910, cur:"", per:0, name:"마티나", rarity:"NR", tags:"광속성 탱커 인간 표준체형 미유 병사 보호 방어 생존력"},
-      {id:10911, cur:"", per:0, name:"클레어", rarity:"NR", tags:"광속성 힐러 인간 표준체형 미유 병사 회복"},
-      {id:10912, cur:"", per:0, name:"로라", rarity:"NR", tags:"수속성 디스럽터 마족 작은체형 미유 병사 회복 쇠약 생존력"},
-      {id:10913, cur:"", per:0, name:"미르노", rarity:"NR", tags:"풍속성 탱커 야인 표준체형 거유 병사 보호 방어 방해"},
-      {id:10914, cur:"", per:0, name:"라미아", rarity:"NR", tags:"화속성 디스럽터 마족 표준체형 미유 병사 방해 쇠약"},
-      {id:10915, cur:"", per:0, name:"하피", rarity:"NR", tags:"풍속성 디스럽터 마족 표준체형 미유 병사 방해 쇠약"},
-      {id:10916, cur:"", per:0, name:"안나", rarity:"NR", tags:"화속성 탱커 인간 표준체형 미유 병사 보호 방어"},
-      {id:10917, cur:"", per:0, name:"브란", rarity:"NR", tags:"풍속성 딜러 인간 표준체형 미유 병사 데미지 방어"},
-      {id:10918, cur:"", per:0, name:"노노카", rarity:"NR", tags:"수속성 딜러 인간 표준체형 미유 병사 데미지 폭발력"},
-      {id:10919, cur:"", per:0, name:"징벌천사", rarity:"NR", tags:"수속성 탱커 병사 생존력"},
-      {id:10920, cur:"", per:0, name:"복음천사", rarity:"NR", tags:"수속성 힐러 병사"},
-      {id:10922, cur:"", per:0, name:"3호", rarity:"NR", tags:"광속성 딜러 작은체형 미유 병사 데미지 생존력"},
-      {id:10923, cur:"", per:0, name:"세실", rarity:"NR", tags:"풍속성 딜러 야인 표준체형 거유 병사 데미지 폭발력"},
-      {id:10924, cur:"", per:0, name:"무무", rarity:"NR", tags:"암속성 디스럽터 표준체형 미유 병사 보호 방해 생존력"},
+      {id:10801, cur:"", per:0, name:"아이린", rarity:"R", tags:"광속성 힐러 인간 표준체형 거유 회복"},
+      {id:10802, cur:"", per:0, name:"나나", rarity:"R", tags:"풍속성 딜러 마족 작은체형 빈유 데미지"},
+      {id:10803, cur:"", per:0, name:"아이리스", rarity:"R", tags:"화속성 딜러 야인 작은체형 빈유 데미지 전투 범위공격"},
+      {id:10804, cur:"", per:0, name:"도라", rarity:"R", tags:"풍속성 탱커 야인 표준체형 미유 보호 방어 생존력"},
+      {id:10805, cur:"", per:0, name:"세바스", rarity:"R", tags:"암속성 디스럽터 마족 표준체형 미유 방해"},
+      {id:10806, cur:"", per:0, name:"마를렌", rarity:"R", tags:"수속성 힐러 야인 표준체형 미유 회복"},
+      {id:10807, cur:"", per:0, name:"유이", rarity:"R", tags:"화속성 딜러 인간 작은체형 거유 데미지 전투"},
+      {id:10808, cur:"", per:0, name:"소라카", rarity:"R", tags:"암속성 디스럽터 야인 표준체형 미유 쇠약"},
+      {id:10813, cur:"", per:0, name:"이아", rarity:"R", tags:"광속성 힐러 인간 작은체형 빈유 회복"},
+
+      {id:10901, cur:"", per:0, name:"사이렌", rarity:"N", tags:"암속성 탱커 인간 표준체형 미유 병사 보호 방어"},
+      {id:10902, cur:"", per:0, name:"페트라", rarity:"N", tags:"광속성 딜러 인간 표준체형 빈유 병사 데미지 범위공격"},
+      {id:10903, cur:"", per:0, name:"프레이", rarity:"N", tags:"광속성 탱커 마족 표준체형 미유 병사 보호 방어"},
+      {id:10904, cur:"", per:0, name:"마누엘라", rarity:"N", tags:"암속성 딜러 마족 표준체형 미유 병사 데미지"},
+      {id:10905, cur:"", per:0, name:"키쿄", rarity:"N", tags:"화속성 디스럽터 인간 표준체형 미유 병사 쇠약"},
+      {id:10906, cur:"", per:0, name:"카에데", rarity:"N", tags:"풍속성 힐러 인간 표준체형 미유 병사 회복"},
+      {id:10907, cur:"", per:0, name:"올라", rarity:"N", tags:"풍속성 딜러 야인 표준체형 미유 병사 데미지"},
+      {id:10908, cur:"", per:0, name:"콜레트", rarity:"N", tags:"수속성 딜러 야인 작은체형 빈유 병사 데미지 폭발력"},
+      {id:10909, cur:"", per:0, name:"샤린", rarity:"N", tags:"화속성 탱커 인간 표준체형 미유 병사 보호 방어 범위공격"},
+      {id:10910, cur:"", per:0, name:"마티나", rarity:"N", tags:"광속성 탱커 인간 표준체형 미유 병사 보호 방어 생존력"},
+      {id:10911, cur:"", per:0, name:"클레어", rarity:"N", tags:"광속성 힐러 인간 표준체형 미유 병사 회복"},
+      {id:10912, cur:"", per:0, name:"로라", rarity:"N", tags:"수속성 디스럽터 마족 작은체형 미유 병사 회복 쇠약 생존력"},
+      {id:10913, cur:"", per:0, name:"미르노", rarity:"N", tags:"풍속성 탱커 야인 표준체형 거유 병사 보호 방어 방해"},
+      {id:10914, cur:"", per:0, name:"라미아", rarity:"N", tags:"화속성 디스럽터 마족 표준체형 미유 병사 방해 쇠약"},
+      {id:10915, cur:"", per:0, name:"하피", rarity:"N", tags:"풍속성 디스럽터 마족 표준체형 미유 병사 방해 쇠약"},
+      {id:10916, cur:"", per:0, name:"안나", rarity:"N", tags:"화속성 탱커 인간 표준체형 미유 병사 보호 방어"},
+      {id:10917, cur:"", per:0, name:"브란", rarity:"N", tags:"풍속성 딜러 인간 표준체형 미유 병사 데미지 방어"},
+      {id:10918, cur:"", per:0, name:"노노카", rarity:"N", tags:"수속성 딜러 인간 표준체형 미유 병사 데미지 폭발력"},
+      {id:10919, cur:"", per:0, name:"징벌천사", rarity:"N", tags:"수속성 탱커 병사 생존력"},
+      {id:10920, cur:"", per:0, name:"복음천사", rarity:"N", tags:"수속성 힐러 병사"},
+      {id:10921, cur:"", per:0, name:"몰리", rarity:"N", tags:"수속성 딜러 작은체형 병사 데미지"},
+      {id:10922, cur:"", per:0, name:"3호", rarity:"N", tags:"광속성 딜러 작은체형 미유 병사 데미지 생존력"},
+      {id:10923, cur:"", per:0, name:"세실", rarity:"N", tags:"풍속성 딜러 야인 표준체형 거유 병사 데미지 폭발력"},
+      {id:10924, cur:"", per:0, name:"무무", rarity:"N", tags:"암속성 디스럽터 표준체형 미유 병사 보호 방해 생존력"},
+      {id:10933, cur:"", per:0, name:"안야", rarity:"N", tags:"풍속성 디스럽터 병사"},
    ]
 };
 const tagMap = new Map([
@@ -93,6 +96,7 @@ const tagMap = new Map([
 ]);
 
 document.addEventListener("DOMContentLoaded", function() {
+   if (lang != "ko") document.getElementById("tagSearch").style.display = "none";
    const checkboxes = document.querySelectorAll('input[name="tag"]');
    checkboxes.forEach(function(chkbox) {chkbox.addEventListener('change', function() {
       if (chkbox.checked == true && selectedTag.length > 4) return chkbox.checked = false;
@@ -100,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function() {
       if (chkbox.checked == true && (chkbox.value == '방어' || chkbox.value == '방해')) {
          document.getElementById('b1').classList.remove('dup');
          document.getElementById('b2').classList.remove('dup');
-      } 
+      }
       getResult();
    });});
 
@@ -191,10 +195,19 @@ function getResult() {
 function findSRPercent(list) {
    const ch_array = filteredData(list);
    if (ch_array.length == 0) return 0;
-   const len = ch_array.length;
-   let SRCnt = 0;
-   for(const ch of ch_array) if (ch.rarity == 'SR') SRCnt++;
-   return SRCnt / len;
+   let SRCnt = 0, total = 0;
+   for(const ch of ch_array) {
+      if (ch.rarity == 'SR') {SRCnt++; total++;}
+      if (ch.rarity == 'R') total += 10;
+      if (ch.rarity == 'N') total += 30;
+   }
+   return SRCnt / total;
+}
+
+function decimalPercent(num) {
+   if (num >= 100) return num.toFixed(0);
+   else if (num >= 10) return num.toFixed(1);
+   else return num.toFixed(2);
 }
 
 function findSSR(list) {
@@ -241,12 +254,12 @@ function makeSRBlock(list) {
    if (list.length == 0) {box.innerHTML = ""; return;}
    
    const str = [];
-   str.push(`<p style="font-weight:bold;">&nbsp;${t("태그조합당 SR 비율")}</p>`)
+   str.push(`<p style="font-weight:bold;">&nbsp;${t("SR 등장확률")}</p>`)
    for(const ch of list) {
       if (ch.per == 0) continue;
       str.push(`
          <div style="margin:0.5rem; display:flex; flex-wrap:wrap; justify-content: space-around">
-            <div width:"3rem;">${Math.floor(ch.per*100)}%</div>
+            <div width:"3rem;">${decimalPercent(ch.per*100)}%</div>
             <div style="width:14rem;">${getTranslatedTags(ch.cur)}</div>
          </div>
       `)
