@@ -1,5 +1,6 @@
 const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
+const banList = params.get('ban');
 const leaderId = params.get('leader');
 const curHeader = 2;
 let page = 0, sort = 0, curData = [], isLoading = false;
@@ -48,10 +49,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function getComps(sort) {
    document.getElementById('compcontainer').innerHTML = "";
-   if (leaderId == null) url = `${server}/comps/search/${sort}/${chIds}`;
-   else {
+   if (leaderId == null) {
+      if (banList == null || banList.length == 0) url = `${server}/comps/search/${sort}/${chIds}`;
+      else url = `${server}/comps/searchEx/${sort}/${chIds}/${banList}`;
+   } else {
       const leader = getCharacter(Number(leaderId));
-      url = `${server}/comps/searchWithLeader/${sort}/${chIds}/${leader.name}덱`;
+      if (banList == null || banList.length == 0)
+         url = `${server}/comps/searchWithLeader/${sort}/${chIds}/${leader.name}덱`;
+      else
+         url = `${server}/comps/searchWithLeaderEx/${sort}/${chIds}/${banList}/${leader.name}덱`;
    }
 
    request(url, {
