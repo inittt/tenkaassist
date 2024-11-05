@@ -79,11 +79,11 @@ const recruitJson = {
       {id:10918, cur:"", per:0, name:"노노카", rarity:"N", tags:"수속성 딜러 인간 표준체형 미유 병사 데미지 폭발력"},
       {id:10919, cur:"", per:0, name:"징벌천사", rarity:"N", tags:"수속성 탱커 병사 생존력"},
       {id:10920, cur:"", per:0, name:"복음천사", rarity:"N", tags:"수속성 힐러 병사"},
-      {id:10921, cur:"", per:0, name:"몰리", rarity:"N", tags:"수속성 딜러 작은체형 병사 데미지"},
+      {id:10921, cur:"", per:0, name:"몰리", rarity:"N", tags:"인간 수속성 빈유 딜러 작은체형 병사 데미지"},
       {id:10922, cur:"", per:0, name:"3호", rarity:"N", tags:"광속성 딜러 작은체형 미유 병사 데미지 생존력"},
       {id:10923, cur:"", per:0, name:"세실", rarity:"N", tags:"풍속성 딜러 야인 표준체형 거유 병사 데미지 폭발력"},
       {id:10924, cur:"", per:0, name:"무무", rarity:"N", tags:"암속성 디스럽터 표준체형 미유 병사 보호 방해 생존력"},
-      {id:10933, cur:"", per:0, name:"안야", rarity:"N", tags:"풍속성 디스럽터 병사"},
+      {id:10933, cur:"", per:0, name:"안야", rarity:"N", tags:"인간 풍속성 디스럽터 병사"},
    ]
 };
 const tagMap = new Map([
