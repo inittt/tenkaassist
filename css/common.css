@@ -543,6 +543,7 @@ header {
    height:1.3rem;
    vertical-align: middle;
    margin-left:0.5rem;
+   margin-right:0.5rem;
    cursor:pointer;
 }
 .icon-btn {
