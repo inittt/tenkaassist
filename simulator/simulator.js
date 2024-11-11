@@ -266,7 +266,7 @@ function act_after() {
 }
 function decActNum() {actNum--; updateGuide();}
 
-let scarecrowTurn = 99;
+let scarecrowTurn = 99, isEnd = false;
 function endAct() {
    if (isAllActed()) {
       for(let i = 0; i < 5; i++) comp[i].turnover();
@@ -274,7 +274,8 @@ function endAct() {
       if (boss.hp <= 0 && scarecrowTurn > GLOBAL_TURN-1) scarecrowTurn = GLOBAL_TURN-1;
       if (boss.hp <= 0 && GLOBAL_TURN >= 14) {
          GLOBAL_TURN--;
-         return endGame();
+         if (!isEnd) {endGame(); isEnd = true;}
+         GLOBAL_TURN++;
       }
       if (GLOBAL_TURN == 14 && isValidComp(idList) && bondList.every(e => e == 1)) saveBond1();
       for(let i = 0; i < 5; i++) comp[i].turnstart();
@@ -282,7 +283,7 @@ function endAct() {
 }
 
 function endGame() {
-   for(let c of comp) c.isActed = true;
+   //for(let c of comp) c.isActed = true;
    updateAll();
 
    const msg = [];
@@ -404,6 +405,7 @@ function updateAll() {
    getdiv("deal_ref").innerHTML = `${t("반격데미지")} : ${Math.floor(lastRefDmg).toLocaleString()}`;
    getdiv("simulator").style.fontSize = "1rem";
    updateProgressBar(boss.hp, boss.maxHp);
+   getdiv("cumulative-dmg").innerHTML = (boss.maxHp - Math.floor(boss.hp)).toLocaleString();
 }
 function updateCdBar(i) {
    const cdBar = getdiv(`cd${i}`);
