@@ -5,7 +5,7 @@ const server = "https://port-0-tenkafuma-assistant-server-1272llx2xidhk.sel5.clo
 const noImg = `${address}/images/default.jpg`;
 
 // 삭제할것---------------------------------
-location.href = `${address}/serverFix/`;
+//location.href = `${address}/serverFix/`;
 //------------------------------------------
 
 // 새로운 아이콘을 추가
