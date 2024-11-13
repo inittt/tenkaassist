@@ -263,6 +263,7 @@ function act_after() {
    actNum++;
    updateAll();
    overflowed = false;
+   atvOverflowed = false;
 }
 function decActNum() {actNum--; updateGuide();}
 
@@ -397,6 +398,9 @@ function updateAll() {
    if (overflowed) {
       getdiv("deal").style.color = "red";
    } else getdiv("deal").style.color = "white";
+   if (atvOverflowed) {
+      getdiv("deal_atv").style.color = "red";
+   } else getdiv("deal_atv").style.color = "white";
 
    getdiv("deal").innerHTML = `${t("공격데미지")} : ${Math.floor(lastDmg).toLocaleString()}`;
    getdiv("deal_add").innerHTML = `${t("추가데미지")} : ${Math.floor(lastAddDmg).toLocaleString()}`;
