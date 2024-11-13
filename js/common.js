@@ -536,6 +536,8 @@ const translate = {
    "바이블" : {en : "Bg.Iblis", sc : "兔伊", tc : "兔伊"},
    "수잔" : {en : "Susan", sc : "苏珊", tc : "蘇珊"},
    "농탄" : {en : "H.Satan", sc : "小撒旦", tc : "小撒旦"},
+   "메나미" : {en : "M.Nanami", sc : "女仆奈美", tc : "女僕奈美"},
+   "메섹돌" : {en : "M.KS-Ⅷ", sc : "女仆机", tc : "女僕K"},
 
    "아이카" : {en : "Aiko", sc : "艾可", tc : "艾可"},
    "레오나" : {en : "Leona", sc : "雷欧娜", tc : "雷歐娜"},
