@@ -146,7 +146,7 @@ function setCommand(str) {
       res.push(list[i]);
       if ((i+1)%5 == 0) res.push("<br>");
       else res.push(" > ");
-      if (i+1 > list.length) break;
+      if (i > list.length) break;
    }
    let str2 = res.join("");
    str2 = str2.replaceAll("턴", t("턴"));
