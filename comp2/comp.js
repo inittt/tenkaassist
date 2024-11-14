@@ -142,11 +142,12 @@ function setCommand(str) {
    let turn = 0;
    const res = [];
    for(let i = 0; i < 50*5; i++) {
+      if (list.length <= i) break;
+
       if (i%5 == 0) res.push(`${++turn}턴 : `);
       res.push(list[i]);
       if ((i+1)%5 == 0) res.push("<br>");
       else res.push(" > ");
-      if (i > list.length) break;
    }
    let str2 = res.join("");
    str2 = str2.replaceAll("턴", t("턴"));
