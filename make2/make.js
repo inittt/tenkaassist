@@ -115,7 +115,7 @@ async function fetchJsonFromGitHub(owner, repo, branch, filePath) {
 function getAllCompsFromServer() {
    fetchJsonFromGitHub('inittt', 'tenkaassist_data', 'main', 'data/data.json')
    .then(data => {
-      if (!data || !data.success) { // data.success를 체크해야 합니다.
+      if (data == null || data.length == 0) {
          cc.innerHTML = `<div class="block">${t("데이터 로드 실패")}</div>`;
          return;
       }
