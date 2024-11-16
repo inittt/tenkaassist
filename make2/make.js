@@ -89,8 +89,7 @@ function getAllCompsFromServer() {
             cc.innerHTML = `<div class="block">${t("데이터 로드 실패")}</div>`;
             return;
          }
-         const unzip = JSON.parse(new TextDecoder().decode(pako.inflate(data)));
-         setPossible(unzip);
+         setPossible(data);
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
       cc.innerHTML = `<div class="block">${t("데이터 로드 실패")}</div>`;
@@ -101,23 +100,25 @@ async function fetchJsonFromGitHub(owner, repo, branch, filePath) {
    const url = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filePath}`;
    
    try {
-   // fetch로 데이터를 가져옴
-   const response = await fetch(url);
-   
-   // 응답이 성공적이지 않으면 에러를 던짐
-   if (!response.ok) {
-      throw new Error('Network response was not ok');
-   }
-   
-   // 응답 데이터를 JSON으로 파싱
-   const data = await response.json();
-   
-   // 가져온 데이터를 사용
-   console.log('Fetched JSON data:', data);
-   
-   return data;  // 원하는 변수에 저장
+      // fetch로 데이터를 가져옴
+      const response = await fetch(url);
+      
+      // 응답이 성공적이지 않으면 에러를 던짐
+      if (!response.ok) {
+         throw new Error('Network response was not ok');
+      }
+      
+      const compressedData = new Uint8Array(response);
+      // pako를 사용하여 Gzip 압축 해제
+      const decompressedData = pako.inflate(compressedData);
+      // 압축 해제된 데이터를 바로 JSON 객체로 변환
+      return JSON.parse(new TextDecoder().decode(decompressedData));
+
+      // 응답 데이터를 JSON으로 파싱
+      const data = await response.json();
+      return data;  // 원하는 변수에 저장
    } catch (error) {
-   console.error('Error fetching JSON from GitHub:', error);
+      console.error('Error fetching JSON from GitHub:', error);
    }
 }
 
