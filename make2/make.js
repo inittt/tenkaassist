@@ -89,7 +89,8 @@ function getAllCompsFromServer() {
             cc.innerHTML = `<div class="block">${t("데이터 로드 실패")}</div>`;
             return;
          }
-         setTimeout(() => setPossible(data), 0);
+         const unzip = JSON.parse(new TextDecoder().decode(pako.inflate(data)));
+         setPossible(unzip);
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
       cc.innerHTML = `<div class="block">${t("데이터 로드 실패")}</div>`;
