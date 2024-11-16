@@ -83,29 +83,45 @@ function makeBlockByModNSort() {
 }
 
 function getAllCompsFromServer() {
-   request(`${server}/comps/getAllWithCommand/${chIds}`, {
-      method: "GET",
-   }).then(response => {
-      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
-      return response.json();
-   }).then(res => {
-      if (!res.success) {
-         cc.innerHTML = `<div class="block">${t(res.msg)}</div>`
-         return;
-      }
-      maxDataLen = res.data.length;
-      const dataList = chunkData(res.data, 100);
-      for(let dl of dataList) requestAnimationFrame(() => setPossible(dl));
+   fetchJsonFromGitHub('inittt', 'tenkaassist_data', 'main', 'data/data.json')
+   .then(data => {
+         if (!data || !data.success) { // data.success를 체크해야 합니다.
+            cc.innerHTML = `<div class="block">${t("데이터 로드 실패")}</div>`;
+            return;
+         }
+         setTimeout(() => setPossible(data), 0);
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
       cc.innerHTML = `<div class="block">${t("데이터 로드 실패")}</div>`;
-   })
+   });
+}
+// GitHub raw URL에서 JSON 데이터를 가져오는 함수
+async function fetchJsonFromGitHub(owner, repo, branch, filePath) {
+   const url = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filePath}`;
+   
+   try {
+   // fetch로 데이터를 가져옴
+   const response = await fetch(url);
+   
+   // 응답이 성공적이지 않으면 에러를 던짐
+   if (!response.ok) {
+      throw new Error('Network response was not ok');
+   }
+   
+   // 응답 데이터를 JSON으로 파싱
+   const data = await response.json();
+   
+   // 가져온 데이터를 사용
+   console.log('Fetched JSON data:', data);
+   
+   return data;  // 원하는 변수에 저장
+   } catch (error) {
+   console.error('Error fetching JSON from GitHub:', error);
+   }
 }
 
-let dataLen = 0, maxDataLen;
 function setPossible(data) {
    for(let d of data) {
-      dataLen++;
       const compList = d.compstr.split(" ").map(Number);
       d.compstr = compList.slice();
       if (compList.every(item => haveList.includes(item) || isAny(item))) {
@@ -126,16 +142,8 @@ function setPossible(data) {
          if (d.fit13t >= limit_fit) possible3.push(d);
       }
    }
-   if (dataLen == maxDataLen) makeBlockByModNSort();
+   makeBlockByModNSort();
 }
-
-function chunkData(data, chunkSize) {
-   const chunks = [];
-   for (let i = 0; i < data.length; i += chunkSize) {
-     chunks.push(data.slice(i, i + chunkSize));
-   }
-   return chunks;
- }
 
 function makeBlock(possibleDeck) {
    page = 0;
@@ -359,7 +367,7 @@ let progress = 0;
 function backtrack0(startIndex, selectedEntities, possibleDeck) {
    let half = Math.round(possibleDeck.length / 2);
    for(let i = half-1; i >= startIndex; i--) {
-      requestAnimationFrame(() => {
+      setTimeout(() => {
          let usedNumbers = new Set();
          let entity = possibleDeck[i];
          let canUseEntity = true;
@@ -379,10 +387,10 @@ function backtrack0(startIndex, selectedEntities, possibleDeck) {
          }
          updateProgress(possibleDeck);
          if (progress == possibleDeck.length) makeBlockNDeck();
-      });
+      }, 0);
    }
    for(let i = half; i < possibleDeck.length; i++) {
-      requestAnimationFrame(() => {
+      setTimeout(() => {
          let usedNumbers = new Set();
          let entity = possibleDeck[i];
          let canUseEntity = true;
@@ -402,7 +410,7 @@ function backtrack0(startIndex, selectedEntities, possibleDeck) {
          }
          updateProgress(possibleDeck);
          if (progress == possibleDeck.length) makeBlockNDeck();
-      });
+      }, 0);
    };
 }
 

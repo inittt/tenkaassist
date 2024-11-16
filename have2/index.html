@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>TenkaAssist - 보유 캐릭터</title>
+   <meta name="description" content="tenkaAssist">
+   <script src="../js/common.js"></script>
+   <link rel="stylesheet" href="../css/common.css" type = "text/css">
+   <link rel="stylesheet" href="./have.css" type = "text/css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+   <script src="../js/characterJson.js"></script>
+   <script src="./have.js"></script>
+</head>
+<body>
+   <script src="../js/header.js"></script>
+   <div class="main-container bg-dark">
+      <div class="block">
+         <div class="margin-left titleblock">
+            <span id="titleBox" class="titlebox">보유</span>
+            <button class="icon-btn i-save" onclick="setHave()"><img class="icon" src="../images/icons/ico-save.svg"></button>
+            <button class="icon-btn i-load" onclick="synchro()"><img class="icon" src="../images/icons/ico-load.svg"></button>
+            <button id="set_option" class="leaderButton leaderOff option_btn1" style="display:none">조건설정</button>
+            <div class="select_dropdown">
+               <div class="dropdown">
+                  <button id="btn2" class="dropdown-btn" style="height:2rem;">40억<span class="absolute-right">▼</span></button>
+                  <div id="drop2" class="dropdown-content">
+                     <input type="radio" id="b21" name="b2" value="9000000000">
+                     <label id="l_b21" for="b21">9000000000</label>
+                     <input type="radio" id="b22" name="b2" value="8000000000">
+                     <label id="l_b22" for="b22">8000000000</label>
+                     <input type="radio" id="b23" name="b2" value="7000000000">
+                     <label id="l_b23" for="b23">7000000000</label>
+                     <input type="radio" id="b24" name="b2" value="6000000000">
+                     <label id="l_b24" for="b24">6000000000</label>
+                     <input type="radio" id="b25" name="b2" value="5000000000">
+                     <label id="l_b25" for="b25">5000000000</label>
+                     <input type="radio" id="b26" name="b2" value="4000000000" checked>
+                     <label id="l_b26" for="b26">4000000000</label>
+                     <input type="radio" id="b27" name="b2" value="3000000000">
+                     <label id="l_b27" for="b27">3000000000</label>
+                     <input type="radio" id="b28" name="b2" value="0">
+                     <label id="l_b28" for="b28">0</label>
+                  </div>
+               </div>
+            </div>
+            <button id="characterSearchBtn2" class="goSearchButton" onclick="searchDeck()">검색</button>
+         </div>
+      </div>
+      <div id="suggest_option" class="block suggest_option flex">
+         <div class="select_dropdown" style="display:none;">
+            <span><i class="fa-solid fa-skull" style="height:1rem;"></i> : </span>
+            <div class="dropdown">
+               <button id="btn0" class="dropdown-btn">99턴<span class="absolute-right">▼</span></button>
+               <div id="drop0" class="dropdown-content">
+                  <input type="radio" id="b01" name="b0" value="15">
+                  <label id="l_b01" for="b01">15턴</label>
+                  <input type="radio" id="b02" name="b0" value="20">
+                  <label id="l_b02" for="b02">20턴</label>
+                  <input type="radio" id="b03" name="b0" value="25">
+                  <label id="l_b03" for="b03">25턴</label>
+                  <input type="radio" id="b04" name="b0" value="30">
+                  <label id="l_b04" for="b04">30턴</label>
+                  <input type="radio" id="b05" name="b0" value="99" checked>
+                  <label id="l_b05" for="b05">99턴</label>
+               </div>
+            </div>
+         </div>
+         <div class="select_dropdown" style="display:none;">
+            <span id="select_13t_dmg">13턴딜(1) : </span>
+            <div class="dropdown">
+               <button id="btn1" class="dropdown-btn">0억<span class="absolute-right">▼</span></button>
+               <div id="drop1" class="dropdown-content">
+                  <input type="radio" id="b11" name="b1" value="4000000000">
+                  <label id="l_b11" for="b11">4000000000</label>
+                  <input type="radio" id="b12" name="b1" value="3000000000">
+                  <label id="l_b12" for="b12">3000000000</label>
+                  <input type="radio" id="b13" name="b1" value="2000000000">
+                  <label id="l_b13" for="b13">2000000000</label>
+                  <input type="radio" id="b14" name="b1" value="1000000000">
+                  <label id="l_b14" for="b14">1000000000</label>
+                  <input type="radio" id="b15" name="b1" value="0" checked>
+                  <label id="l_b15" for="b15">0</label>
+               </div>
+            </div>
+         </div>
+         <!--
+         <div class="select_dropdown">
+            <span id="select_13t_fit">맞춤 : </span>
+            <div class="dropdown">
+               <button id="btn2" class="dropdown-btn">0억<span class="absolute-right">▼</span></button>
+               <div id="drop2" class="dropdown-content">
+                  <input type="radio" id="b21" name="b2" value="9000000000">
+                  <label id="l_b21" for="b21">9000000000</label>
+                  <input type="radio" id="b22" name="b2" value="8000000000">
+                  <label id="l_b22" for="b22">8000000000</label>
+                  <input type="radio" id="b23" name="b2" value="7000000000">
+                  <label id="l_b23" for="b23">7000000000</label>
+                  <input type="radio" id="b24" name="b2" value="6000000000">
+                  <label id="l_b24" for="b24">6000000000</label>
+                  <input type="radio" id="b25" name="b2" value="5000000000">
+                  <label id="l_b25" for="b25">5000000000</label>
+                  <input type="radio" id="b26" name="b2" value="4000000000">
+                  <label id="l_b26" for="b26">4000000000</label>
+                  <input type="radio" id="b27" name="b2" value="3000000000">
+                  <label id="l_b27" for="b27">3000000000</label>
+                  <input type="radio" id="b28" name="b2" value="0" checked>
+                  <label id="l_b28" for="b28">0</label>
+               </div>
+            </div>
+         </div>
+         -->
+      </div>
+      <div class="block">
+         <div class="margin-left titleblock" style="min-height:5.2rem;">
+            <div id="selectedCh" class="flex">
+               보유중인 캐릭터를 선택해 주세요<br>
+               (로그인 된 경우 동기화 가능)
+            </div>
+            <button id="characterSearchBtn" class="button characterSearchBtn" onclick="searchDeck()">검색</button>
+         </div>
+      </div>
+      <div class="block flex">
+         <label class="c-radio"><input type="radio" name="element" value="0" onclick="checkElement(0)"><span id="e-0">화속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="1" onclick="checkElement(1)"><span id="e-1">수속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="2" onclick="checkElement(2)"><span id="e-2">풍속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="3" onclick="checkElement(3)"><span id="e-3">광속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="4" onclick="checkElement(4)"><span id="e-4">암속성</span></label>
+      </div>
+      <div class="block flex">
+         <label class="c-radio"><input type="radio" name="role" value="0" onclick="checkRole(0)"><span id="r-0">딜러</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="1" onclick="checkRole(1)"><span id="r-1">힐러</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="2" onclick="checkRole(2)"><span id="r-2">탱커</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="3" onclick="checkRole(3)"><span id="r-3">서포터</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="4" onclick="checkRole(4)"><span id="r-4">디스럽터</span></label>
+      </div>
+      <div class="block flex">
+         <label class="c-radio"><input type="radio" name="rarity" value="3" onclick="checkRarity(3)" checked><span>SSR</span></label>
+         <label class="c-radio"><input type="radio" name="rarity" value="2" onclick="checkRarity(2)"><span>SR</span></label>
+         <label class="c-radio"><input type="radio" name="rarity" value="1" onclick="checkRarity(1)"><span>R</span></label>
+         <label class="c-radio"><input type="radio" name="rarity" value="0" onclick="checkRarity(0)"><span>N</span></label>
+         <input id="searchInput" type="text" class="searchInput" placeholder="검색">
+      </div>
+      <div class="block flex" id="characterContainer">
+         
+      </div>
+   </div>
+</body>
+<script>
+   document.title = "TenkaAssist - " + t("보유 캐릭터");
+   document.getElementById("titleBox").innerText = t("보유");
+   document.getElementById("set_option").innerText = t("조건");
+   document.getElementById("select_13t_dmg").innerText = t("13턴딜(1)")+" : ";
+   //document.getElementById("select_13t_fit").innerText = t("13턴딜")+" : ";
+
+   document.getElementById("btn0").innerHTML = `99${t("턴")}<span class="absolute-right">▼</span>`;
+   document.getElementById("l_b01").innerText = `15${t("턴")}`;
+   document.getElementById("l_b02").innerText = `20${t("턴")}`;
+   document.getElementById("l_b03").innerText = `25${t("턴")}`;
+   document.getElementById("l_b04").innerText = `30${t("턴")}`;
+   document.getElementById("l_b05").innerText = `99${t("턴")}`;
+   
+   document.getElementById("btn1").innerHTML = `${formatNumber2(0)}<span class="absolute-right">▼</span>`;
+   for(let i = 1; i < 6; i++) {
+      const set13t = document.getElementById(`l_b1${i}`);
+      let val = set13t.innerText;
+      set13t.innerText = formatNumber2(val);
+   }
+   document.getElementById("btn2").innerHTML = `${formatNumber2(4000000000)}<span class="absolute-right">▼</span>`;
+   for(let i = 1; i < 9; i++) {
+      const set13t = document.getElementById(`l_b2${i}`);
+      let val = set13t.innerText;
+      set13t.innerText = formatNumber2(val);
+   }
+   
+   
+   document.getElementById("selectedCh").innerHTML = `${t("보유중인 캐릭터를 선택해 주세요")}<br>(${t("로그인 된 경우 동기화 가능")})`;
+   document.getElementById("characterSearchBtn").innerText = t(" 검색").trim();
+   document.getElementById("characterSearchBtn2").innerText = t(" 검색").trim();
+   document.getElementById("searchInput").placeholder = t("검색");
+
+   document.getElementById("e-0").innerText = t("화속성");
+   document.getElementById("e-1").innerText = t("수속성");
+   document.getElementById("e-2").innerText = t("풍속성");
+   document.getElementById("e-3").innerText = t("광속성");
+   document.getElementById("e-4").innerText = t("암속성");
+   
+   document.getElementById("r-0").innerText = t("딜러");
+   document.getElementById("r-1").innerText = t("힐러");
+   document.getElementById("r-2").innerText = t("탱커");
+   document.getElementById("r-3").innerText = t("서포터");
+   document.getElementById("r-4").innerText = t("디스럽터");
+</script>
+</html>
