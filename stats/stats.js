@@ -38,7 +38,7 @@ fetchJsonFromGitHub('inittt', 'tenkaassist_data', 'main', 'data/data.json')
       throw new Error('네트워크 응답이 올바르지 않습니다.');
       return;
    }
-   server_data = res.data;
+   server_data = data;
    setData();
 }).catch(e => {
    console.log(t("데이터 로드 실패"), e);
