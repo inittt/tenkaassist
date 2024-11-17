@@ -86,22 +86,29 @@ async function fetchJsonFromGitHub(owner, repo, branch, filePath) {
    const url = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filePath}`;
 
    try {
-       // fetch로 데이터를 가져옴
-       const response = await fetch(url);
-   
-       // 응답이 성공적이지 않으면 에러를 던짐
-       if (!response.ok) {
-           throw new Error('Network response was not ok');
-       }
-   
-       // 응답을 JSON 형식으로 바로 변환
-       const jsonData = await response.json();
-   
-       return jsonData;
-   
+      // fetch로 데이터를 가져옴
+      const response = await fetch(url);
+
+      // 응답이 성공적이지 않으면 에러를 던짐
+      if (!response.ok) {
+         throw new Error('Network response was not ok');
+      }
+
+      // 응답을 arrayBuffer로 받아옴 (응답 body는 스트림 형태)
+      const buffer = await response.arrayBuffer();
+
+      // pako를 사용하여 Gzip 압축 해제
+      const compressedData = new Uint8Array(buffer);
+      const decompressedData = pako.inflate(compressedData);
+
+      // 압축 해제된 데이터를 바로 JSON 객체로 변환
+      const jsonData = JSON.parse(new TextDecoder().decode(decompressedData));
+
+      return jsonData;
+
    } catch (error) {
-       console.error('Error fetching JSON from GitHub:', error);
-       return null;  // 오류 발생 시 null을 반환
+      console.error('Error fetching JSON from GitHub:', error);
+      return null;  // 오류 발생 시 null을 반환
    }
 }
 
