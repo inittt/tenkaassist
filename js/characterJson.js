@@ -225,6 +225,7 @@ function fixName(txt) {
 
 addAnyCh();
 function addAnyCh() {
+   return;
    chJSON.data.push(anyCh("아무거나", null, null));
    chJSON.data.push(anyCh("화속성", 0, null));
    chJSON.data.push(anyCh("수속성", 1, null));
