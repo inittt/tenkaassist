@@ -355,7 +355,6 @@ const translate = {
    "맞춤" : {en : "fit", sc : "合适", tc : "合適"},
    "서버로부터 데이터 로드 중...": {en : "Loading data from the server...", sc : "正在从服务器加载数据...", tc : "正在從伺服器加載數據..."},
    "구속에 따른 데미지 계산 중...": {en : "Calculating damage based on bond...", sc : "根据羁绊计算伤害中...", tc : "根據羈絆計算傷害中..."},
-   "대기 시간은 몇 분 정도 걸릴 수 있습니다.": {en : "The waiting time may take a few minutes.", sc : "等待时间可能需要几分钟.", tc : "等待時間可能需要幾分鐘."},
    "계산중": {en : "Calculating", sc : "计算中", tc : "計算中"},
    "데이터는 KST기준 6시간마다 갱신됩니다": {en : "Data is updated every 6 hours(KST)", sc : "数据每6小时根据KST更新时间", tc : "資料每6小時根據KST更新"},
 
