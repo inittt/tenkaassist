@@ -128,7 +128,7 @@ function makeBlock() {
       deckCnt = mod+1;
       backtrackCounter = possible.length;
       cc.innerHTML = `<div class="block">${t("계산중")}...0.00%</div>`;
-      if (possible.length < deckCnt*5) {
+      if (possible.length < deckCnt) {
          cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
          isCalculating = false;
       } else backtrack0(0);
