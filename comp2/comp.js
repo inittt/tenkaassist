@@ -58,6 +58,10 @@ document.addEventListener("DOMContentLoaded", function() {
          });
       });
    }
+   if (cur_command != null && cur_command.length > 10) {
+      const fitDmg = autoCalc(compstr.split(" ").map(Number), cur_command, getBondList());
+      document.getElementById('fit-dmg').innerHTML = `${formatNumber(fitDmg)}`;
+   }
 });
 
 function makeCompBlock(comp) {
@@ -98,7 +102,6 @@ function makeCompBlock(comp) {
 
    document.getElementById('scarecrow').innerHTML = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}${t("턴")}`;
    document.getElementById('dmg13').innerHTML = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)} (5)`;
-   document.getElementById('fit-dmg').innerHTML = `${formatNumber(recommend)}`;
    document.getElementById('dmg13-1').innerHTML = `<i class="fa-solid fa-burst"></i> ${formatNumber(vote)} (1)`;
 
    document.getElementById('description').innerHTML = setCommand(description).trim();
