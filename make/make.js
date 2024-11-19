@@ -6,7 +6,6 @@ const limit_13t = Number(params.get('dmg13t') == null ? 0 : params.get('dmg13t')
 const limit_fit = Number(params.get('fit13t') == null ? 0 : params.get('fit13t'));
 
 const possible = [];
-let allCombinations = [];
 let isDataLoaded = false, mod = 0, cc, isCalculating = true;
 const curHeader = 5;
 
@@ -116,10 +115,11 @@ function setPossible() {
    } else setTimeout(() => setPossible(), 16);
 }
 
+let maxHeap;
 function makeBlock() {
    page = 0;
    bundleCnt = 0;
-   allCombinations.length = 0;
+   maxHeap = new MaxHeap();
    isEndOfDeck = false;
 
    if (mod == 0) makeBlockAllDeck();
@@ -149,15 +149,13 @@ let deckCnt, bundleCnt = 0, page = 0, isEndOfDeck = false;
 function makeBlockAllDeck() {
    cc.innerHTML = "";
 
-   allCombinations = [...possible];
-   if (allCombinations.length == 0) {
+   if (possible.length == 0) {
       cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
       isCalculating = false;
       return;
    }
 
-   allCombinations.sort((a, b) => b.fit13t - a.fit13t);
-
+   possible.sort((a, b) => b.fit13t - a.fit13t);
    loadBlockAllDeck(page++);
 }
 
@@ -173,7 +171,7 @@ function numToBond(num) {
 
 function loadBlockAllDeck(pg) {
    for(let i = pg*10; i < pg*10+10; i++) {
-      const comp = allCombinations[i];
+      const comp = possible[i];
       if (comp == undefined || comp == null) {
          isEndOfDeck = true;
 
@@ -222,25 +220,20 @@ function loadBlockAllDeck(pg) {
 function makeBlockNDeck() {
    cc.innerHTML = "";
    
-   if (allCombinations.length == 0) {
+   if (maxHeap.size() == 0) {
       cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
       isCalculating = false;
       return;
    }
-
-   allCombinations.sort((a, b) => {
-      let sumA = a.reduce((sum, item) => sum + (item.fit13t || 0), 0);
-      let sumB = b.reduce((sum, item) => sum + (item.fit13t || 0), 0);
-      return sumB - sumA;
-   });
 
    loadBlockNDeck(page++);
    isCalculating = false;
 }
 
 function loadBlockNDeck(pg) {
-   for(let i = pg*6; i < pg*6+6; i++) {
-      const bundle = allCombinations[i];
+   const curList = getNDeckPage(pg);
+   for(let i = 0; i < 6; i++) {
+      const bundle = curList[i];
       if (bundle == undefined || bundle == null) {
          isEndOfDeck = true;
 
@@ -334,7 +327,7 @@ function copy(a) {
 }
 
 function backtrack(startIndex, selectedEntities, usedNumbers) {
-   if (selectedEntities.length === deckCnt) {allCombinations.push([...selectedEntities]); return;}
+   if (selectedEntities.length === deckCnt) {maxHeap.push([...selectedEntities]); return;}
 
    for (let i = startIndex; i < possible.length; i++) {
       let entity = possible[i];
@@ -375,3 +368,68 @@ document.addEventListener('DOMContentLoaded', function() {
    }, { threshold: 0.1 }); // div가 10% 보일 때 트리거
    observer.observe(observerDiv);
 });
+
+
+//-------------------------------------------------------------
+// 정렬 메소드
+class MaxHeap {
+   constructor() {this.heap = [];}
+   parent(i) {return Math.floor((i - 1) / 2);}
+   leftChild(i) {return 2 * i + 1;}
+   rightChild(i) {return 2 * i + 2;}
+
+   pop() {
+      if (this.heap.length === 0) return null;
+      if (this.heap.length === 1) return this.heap.pop();
+      
+      const root = this.heap[0];
+      this.heap[0] = this.heap.pop();
+      this.heapify(0);
+      return root;
+   }
+
+   push(item) {
+      this.heap.push(item);
+      let index = this.heap.length - 1;
+      while (index > 0 && this.getSum(this.heap[this.parent(index)]) < this.getSum(this.heap[index])) {
+         [this.heap[this.parent(index)], this.heap[index]] = [this.heap[index], this.heap[this.parent(index)]];
+         index = this.parent(index);
+      }
+   }
+
+   heapify(i) {
+      let largest = i;
+      const left = this.leftChild(i);
+      const right = this.rightChild(i);
+      
+      if (left < this.heap.length && this.getSum(this.heap[left]) > this.getSum(this.heap[largest])) {
+         largest = left;
+      }
+      
+      if (right < this.heap.length && this.getSum(this.heap[right]) > this.getSum(this.heap[largest])) {
+         largest = right;
+      }
+      
+      if (largest !== i) {
+         [this.heap[i], this.heap[largest]] = [this.heap[largest], this.heap[i]];
+         this.heapify(largest);
+      }
+   }
+
+   getSum(item) {return item.reduce((sum, obj) => sum + (obj.fit13t || 0), 0);}
+   size() {return this.heap.length;}
+   getAll() {return this.heap;}
+}
+
+function getTopCombinationsByPage(itemsPerPage = 6) {
+   return function(page = 0) {
+      const result = [];
+
+      // 요청한 페이지 범위에 맞는 값들을 꺼냄
+      for (let i = 0; i < itemsPerPage; i++) result.push(maxHeap.pop());
+
+      return result;
+   };
+}
+
+const getNDeckPage = getTopCombinationsByPage(6);
