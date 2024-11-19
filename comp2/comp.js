@@ -2,7 +2,7 @@ let params = new URLSearchParams(window.location.search);
 let compId = params.get('id');
 
 const compIds_toTest = [];
-let curCommand = null;
+let isDataLoaded = false, curCommand = null, curCompstr = null;
 document.addEventListener("DOMContentLoaded", function() {
    // 조합 정보 세팅
    request(`${server}/comps/get/${compId}`, {
@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", function() {
       const dropdownBtn = document.getElementById(`btn${i}`);
       const dropdownContent = document.getElementById(`drop${i}`);
       dropdownBtn.addEventListener("click", function() {
+         if (!isDataLoaded) return;
          dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
       });
       const radios = document.querySelectorAll(`.dropdown-content input[name='b${i}']`);
@@ -58,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function setFitDmg() {
    if (curCommand != null && curCommand.length > 10) {
-      const fitDmg = autoCalc(compstr.split(" ").map(Number), curCommand, getBondList());
+      const fitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, getBondList());
       document.getElementById('fit-dmg').innerHTML = `${formatNumber(fitDmg)}`;
    }
 }
@@ -74,6 +75,7 @@ function makeCompBlock(comp) {
    const create_at = comp.create_at == null ? '-' : addNineHours(comp.create_at);
    const update_at = comp.update_at == null ? '-' : addNineHours(comp.update_at);
    curCommand = description;
+   curCompstr = compstr;
    
    document.title = `TenkaAssist - ${t_d(name)}`
    document.getElementById('titlebox').innerHTML = `${t_d(name)}`;
@@ -121,6 +123,7 @@ function makeCompBlock(comp) {
          }).then(res => {}).catch(e => {console.log("error : ", e)})
       }
    }
+   isDataLoaded = true;
 }
 
 // 구속력 리스트 리턴
