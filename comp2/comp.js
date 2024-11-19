@@ -32,6 +32,31 @@ document.addEventListener("DOMContentLoaded", function() {
       document.getElementById('deleteBtn').style.display = "block";
       document.getElementById('initDmgBtn').style.display = "inline";
    }).catch(e => {});
+
+   // 구속 드랍박스
+   for(let i = 0; i < 5; i++) {
+      const dropdownBtn = document.getElementById(`btn${i}`);
+      const dropdownContent = document.getElementById(`drop${i}`);
+      dropdownBtn.addEventListener("click", function() {
+         dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+      });
+      const radios = document.querySelectorAll(`.dropdown-content input[name='b${i}']`);
+      radios.forEach(function(option) {
+         option.addEventListener("click", function() {
+            dropdownBtn.innerText = `${this.value}`;
+            const spanElement = document.createElement('span');
+            spanElement.classList.add('absolute-right');
+            spanElement.innerHTML = '▼'
+            dropdownBtn.appendChild(spanElement);
+            dropdownContent.style.display = "none";
+
+            if (description != null && description.length > 10) {
+               const fitDmg = autoCalc(compstr.split(" ").map(Number), description, getBondList());
+               document.getElementById('fit-dmg').innerHTML = `${formatNumber(fitDmg)}`;
+            }
+         });
+      });
+   }
 });
 
 function makeCompBlock(comp) {
@@ -71,13 +96,15 @@ function makeCompBlock(comp) {
 
    document.getElementById('scarecrow').innerHTML = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}${t("턴")}`;
    document.getElementById('dmg13').innerHTML = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)} (5)`;
+   document.getElementById('fit-dmg').innerHTML = `${formatNumber(recommend)}`;
    document.getElementById('dmg13-1').innerHTML = `<i class="fa-solid fa-burst"></i> ${formatNumber(vote)} (1)`;
 
    document.getElementById('description').innerHTML = setCommand(description).trim();
 
-   if (description != null && description.length > 10 && vote == 0) {
+   if (description != null && description.length > 10) {
       const dmg13t_b1 = autoCalc(compstr.split(" ").map(Number), description, [1,1,1,1,1]);
-      if (dmg13t_b1 > 1) {
+
+      if (dmg13t_b1 > vote) {
          const formData = new FormData();
          formData.append("compId", id);
          formData.append("dmg13", dmg13t_b1);
@@ -86,31 +113,21 @@ function makeCompBlock(comp) {
             body: formData
          }).then(response => {
             if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
-            document.getElementById('dmg13-1').innerHTML = `<i class="fa-solid fa-burst"></i> ${formatNumber(dmg13t_b1)} (1)`;
+            document.getElementById('dmg13-1').innerHTML = `${formatNumber(dmg13t_b1)} (1)`;
             return response.json();
          }).then(res => {}).catch(e => {console.log("error : ", e)})
       }
    }
 }
 
-function reportComp() {
-   if (!confirm(t("신고하시겠습니까?"))) return;
-   request(`${server}/comps/report/${compId}`, {
-      method: "PUT",
-   }).then(response => {
-      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
-      return response.json();
-   }).then(res => {
-      if (!res.success) return alert(res.msg);
-      if (res.data > 10) {
-         alert(t("신고 10회 누적으로 삭제되었습니다"));
-         location.href=`${address}/index.html`;
-      } else {
-         alert(`${t("신고 성공")} (${t("현재 누적")} ${res.data}/10 ${t("회")})`);
-      }
-   }).catch(e => {
-      console.log(t("데이터 로드 실패"), e);
-   })
+// 구속력 리스트 리턴
+function getBondList() {
+   const b_arr = [];
+   for(let i = 0; i < 5; i++) {
+      const selectedRadio = document.querySelector(`input[name="b${i}"]:checked`);
+      b_arr.push(Number(selectedRadio.value));
+   }
+   return b_arr;
 }
 
 function deleteComp() {
@@ -138,23 +155,14 @@ function goTest() {
 
 function setCommand(str) {
    if (str == null) return "";
-   const list = str.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
-   let turn = 0;
-   const res = [];
-   for(let i = 0; i < 50*5; i++) {
-      if (list.length <= i) break;
-
-      if (i%5 == 0) res.push(`${++turn}턴 : `);
-      res.push(list[i]);
-      if ((i+1)%5 == 0) res.push("<br>");
-      else res.push(" > ");
+   for(let i = 2; i < 101; i++) {
+      str = str.replace(`${i}턴`, `</br>${i}턴`);
    }
-   let str2 = res.join("");
-   str2 = str2.replaceAll("턴", t("턴"));
-   str2 = str2.replaceAll("평", t("평"));
-   str2 = str2.replaceAll("궁", t("궁"));
-   str2 = str2.replaceAll("방", t("방"));
-   return str2;
+   str = str.replaceAll("턴", t("턴"));
+   str = str.replaceAll("평", t("평"));
+   str = str.replaceAll("궁", t("궁"));
+   str = str.replaceAll("방", t("방"));
+   return str;
 }
 
 function initDmg() {
