@@ -1,9 +1,8 @@
 let params = new URLSearchParams(window.location.search);
 let compId = params.get('id');
 
-let curRecommend;
 const compIds_toTest = [];
-let cur_command;
+let command = null;
 document.addEventListener("DOMContentLoaded", function() {
    // 조합 정보 세팅
    request(`${server}/comps/get/${compId}`, {
@@ -50,19 +49,19 @@ document.addEventListener("DOMContentLoaded", function() {
             spanElement.innerHTML = '▼'
             dropdownBtn.appendChild(spanElement);
             dropdownContent.style.display = "none";
-
-            if (cur_command != null && cur_command.length > 10) {
-               const fitDmg = autoCalc(compstr.split(" ").map(Number), cur_command, getBondList());
-               document.getElementById('fit-dmg').innerHTML = `${formatNumber(fitDmg)}`;
-            }
+            setFitDmg();
          });
       });
    }
-   if (cur_command != null && cur_command.length > 10) {
-      const fitDmg = autoCalc(compstr.split(" ").map(Number), cur_command, getBondList());
+   setFitDmg();
+});
+
+function setFitDmg() {
+   if (command != null && command.length > 10) {
+      const fitDmg = autoCalc(compstr.split(" ").map(Number), command, getBondList());
       document.getElementById('fit-dmg').innerHTML = `${formatNumber(fitDmg)}`;
    }
-});
+}
 
 function makeCompBlock(comp) {
    if (comp.recommend == 0) {
@@ -74,9 +73,8 @@ function makeCompBlock(comp) {
    const recommend = comp.recommend, creator = comp.creator, updater = comp.updater;
    const create_at = comp.create_at == null ? '-' : addNineHours(comp.create_at);
    const update_at = comp.update_at == null ? '-' : addNineHours(comp.update_at);
-   cur_command = description;
+   command = description;
    
-   curRecommend = recommend;
    document.title = `TenkaAssist - ${t_d(name)}`
    document.getElementById('titlebox').innerHTML = `${t_d(name)}`;
    const compbox = document.getElementById('comp-box-in');
