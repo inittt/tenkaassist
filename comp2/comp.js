@@ -2,7 +2,7 @@ let params = new URLSearchParams(window.location.search);
 let compId = params.get('id');
 
 const compIds_toTest = [];
-let isDataLoaded = false, curCommand = null, curCompstr = null;
+let isDataLoaded = true, curCommand = null, curCompstr = null;
 document.addEventListener("DOMContentLoaded", function() {
    // 조합 정보 세팅
    request(`${server}/comps/get/${compId}`, {
