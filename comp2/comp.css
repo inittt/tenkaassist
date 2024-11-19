@@ -127,9 +127,8 @@
    border-radius: 0.3rem;
 }
 
-
 .dropdown {
-   width:2.2rem;
+   width:2.9rem;
    position: relative;
    display: inline-block;
    margin-top:0.2rem;
@@ -143,7 +142,7 @@
    display: none;
    position: absolute;
    background-color: white;
-   width:2.2rem;
+   width:2.9rem;
    z-index: 5;
  }
  
@@ -180,8 +179,8 @@
    box-sizing:border-box;
    border:1px solid black;
    border-radius: 0.2rem;
-   width:2.2rem;
-   padding: 0.1rem 0.3rem;
+   width:2.9rem;
+   padding: 0.1rem 0.6rem;
    background-color: white;
    color: black;
    cursor: pointer;
