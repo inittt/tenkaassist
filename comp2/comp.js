@@ -54,7 +54,6 @@ document.addEventListener("DOMContentLoaded", function() {
          });
       });
    }
-   setFitDmg();
 });
 
 function setFitDmg() {
@@ -124,6 +123,7 @@ function makeCompBlock(comp) {
       }
    }
    isDataLoaded = true;
+   setFitDmg();
 }
 
 // 구속력 리스트 리턴
