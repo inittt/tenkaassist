@@ -1,8 +1,8 @@
 let params = new URLSearchParams(window.location.search);
 let compId = params.get('id');
 
-let curRecommend;
 const compIds_toTest = [];
+let isDataLoaded = true, curCommand = null, curCompstr = null;
 document.addEventListener("DOMContentLoaded", function() {
    // 조합 정보 세팅
    request(`${server}/comps/get/${compId}`, {
@@ -32,7 +32,36 @@ document.addEventListener("DOMContentLoaded", function() {
       document.getElementById('deleteBtn').style.display = "block";
       document.getElementById('initDmgBtn').style.display = "inline";
    }).catch(e => {});
+
+   // 구속 드랍박스
+   for(let i = 0; i < 5; i++) {
+      const dropdownBtn = document.getElementById(`btn${i}`);
+      const dropdownContent = document.getElementById(`drop${i}`);
+      dropdownBtn.addEventListener("click", function() {
+         if (!isDataLoaded) return;
+         dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+      });
+      const radios = document.querySelectorAll(`.dropdown-content input[name='b${i}']`);
+      radios.forEach(function(option) {
+         option.addEventListener("click", function() {
+            dropdownBtn.innerText = `${this.value}`;
+            const spanElement = document.createElement('span');
+            spanElement.classList.add('absolute-right');
+            spanElement.innerHTML = '▼'
+            dropdownBtn.appendChild(spanElement);
+            dropdownContent.style.display = "none";
+            setFitDmg();
+         });
+      });
+   }
 });
+
+function setFitDmg() {
+   if (curCommand != null && curCommand.length > 10) {
+      const fitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, getBondList());
+      document.getElementById('fit-dmg').innerHTML = `${formatNumber(fitDmg)}`;
+   }
+}
 
 function makeCompBlock(comp) {
    if (comp.recommend == 0) {
@@ -44,8 +73,9 @@ function makeCompBlock(comp) {
    const recommend = comp.recommend, creator = comp.creator, updater = comp.updater;
    const create_at = comp.create_at == null ? '-' : addNineHours(comp.create_at);
    const update_at = comp.update_at == null ? '-' : addNineHours(comp.update_at);
+   curCommand = description;
+   curCompstr = compstr;
    
-   curRecommend = recommend;
    document.title = `TenkaAssist - ${t_d(name)}`
    document.getElementById('titlebox').innerHTML = `${t_d(name)}`;
    const compbox = document.getElementById('comp-box-in');
@@ -75,9 +105,10 @@ function makeCompBlock(comp) {
 
    document.getElementById('description').innerHTML = setCommand(description).trim();
 
-   if (description != null && description.length > 10 && vote == 0) {
+   if (description != null && description.length > 10) {
       const dmg13t_b1 = autoCalc(compstr.split(" ").map(Number), description, [1,1,1,1,1]);
-      if (dmg13t_b1 > 1) {
+
+      if (dmg13t_b1 > vote) {
          const formData = new FormData();
          formData.append("compId", id);
          formData.append("dmg13", dmg13t_b1);
@@ -86,31 +117,23 @@ function makeCompBlock(comp) {
             body: formData
          }).then(response => {
             if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
-            document.getElementById('dmg13-1').innerHTML = `<i class="fa-solid fa-burst"></i> ${formatNumber(dmg13t_b1)} (1)`;
+            document.getElementById('dmg13-1').innerHTML = `${formatNumber(dmg13t_b1)} (1)`;
             return response.json();
          }).then(res => {}).catch(e => {console.log("error : ", e)})
       }
    }
+   isDataLoaded = true;
+   setFitDmg();
 }
 
-function reportComp() {
-   if (!confirm(t("신고하시겠습니까?"))) return;
-   request(`${server}/comps/report/${compId}`, {
-      method: "PUT",
-   }).then(response => {
-      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
-      return response.json();
-   }).then(res => {
-      if (!res.success) return alert(res.msg);
-      if (res.data > 10) {
-         alert(t("신고 10회 누적으로 삭제되었습니다"));
-         location.href=`${address}/index.html`;
-      } else {
-         alert(`${t("신고 성공")} (${t("현재 누적")} ${res.data}/10 ${t("회")})`);
-      }
-   }).catch(e => {
-      console.log(t("데이터 로드 실패"), e);
-   })
+// 구속력 리스트 리턴
+function getBondList() {
+   const b_arr = [];
+   for(let i = 0; i < 5; i++) {
+      const selectedRadio = document.querySelector(`input[name="b${i}"]:checked`);
+      b_arr.push(Number(selectedRadio.value));
+   }
+   return b_arr;
 }
 
 function deleteComp() {
