@@ -90,27 +90,15 @@ function getCharactersWithCondition(element, role, rarity, search) {
 
 // 검색 버튼 누를시
 function searchDeck() {
-   request(`${server}/users/me`, {
-      method: "GET",
-   }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
-      return response.json();
-   }).then(res => {
-      if (!res.success) alert(t("로그인 후 이용가능합니다"));
-      else {
-         const go = [...selected];
-         const b = [...selectedBond];
-         if (go.length < 1) return alert(t("하나 이상의 캐릭터를 선택해 주세요"));
+      const go = [...selected];
+      const b = [...selectedBond];
+      if (go.length < 1) return alert(t("하나 이상의 캐릭터를 선택해 주세요"));
 
-         const dummy = document.querySelector('input[name="b0"]:checked').value;
-         const dmg13t = document.querySelector('input[name="b1"]:checked').value;
-         const fit13t = document.querySelector('input[name="b2"]:checked').value;
+      const dummy = document.querySelector('input[name="b0"]:checked').value;
+      const dmg13t = document.querySelector('input[name="b1"]:checked').value;
+      const fit13t = document.querySelector('input[name="b2"]:checked').value;
 
-         location.href = `${address}/make2/?dummy=${dummy}&dmg13t=${dmg13t}&fit13t=${fit13t}&list=${go}&bond=${b}`;
-      }
-   }).catch(error => {
-      userInfo.innerHTML = button;
-   });
+      location.href = `${address}/make/?dummy=${dummy}&dmg13t=${dmg13t}&fit13t=${fit13t}&list=${go}&bond=${b}`;
 }
 
 function resizeButton() {
