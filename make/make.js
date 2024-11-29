@@ -95,10 +95,12 @@ function setPossible() {
       d.compstr = compList.slice();
 
       if (compList.every(item => haveList.includes(item))) {
+         if (d.recommend > 0 && limit_fit > d.recommend) continue;
+
          const indexes = compList.map(item => haveList.indexOf(item)), bonds = [];
          for (let j = 0; j < 5; j++) bonds.push(bondList[indexes[j]]);
 
-         if (bonds.every(item => item === 5)) d.fit13t = d.recommend;
+         if (bonds.every(item => item === 5) && d.recommend > 0) d.fit13t = d.recommend;
          else {
             d.fit13t = autoCalc(compList, d.description, bonds);
             if (bonds.every(item => item === 1)) d.fit13t = Math.max(d.fit13t, d.vote);
