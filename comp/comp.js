@@ -123,7 +123,25 @@ function makeCompBlock(comp) {
       }
    }
    isDataLoaded = true;
-   setFitDmg();
+
+   if (curCommand != null && curCommand.length > 10) {
+      const bondList_tmp = getBondList();
+      const fitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, bondList_tmp);
+      document.getElementById('fit-dmg').innerHTML = `${formatNumber(fitDmg)}`;
+      if (recommend > 0 && bondList_tmp.every(i => i == 5) && fitDmg != recommend) {
+         const formData = new FormData();
+         formData.append("compId", id);
+         formData.append("dmg13", fitDmg);
+         request(`${server}/comps/setPower5Auto`, {
+            method: "POST",
+            body: formData
+         }).then(response => {
+            if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+            document.getElementById('dmg13').innerHTML = `${formatNumber(fitDmg)} (5)`;
+            return response.json();
+         }).then(res => {}).catch(e => {console.log("error : ", e)})
+      }
+   }
 }
 
 // 구속력 리스트 리턴
