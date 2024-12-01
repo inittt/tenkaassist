@@ -27,9 +27,9 @@ function autoCalc(idList, command, bondList) {
       for(const id of compIds) {
          const tmp = chJSON.data.filter(ch => ch.id === id)[0];
          if (liberationList.includes(tmp.name))
-            comp.push(new Champ(tmp.id, tmp.name, Math.ceil(tmp.hp*COEF*1.1), Math.ceil(tmp.atk*COEF*1.1), tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
+            comp.push(new Champ(tmp.id, tmp.name, tmp.hp*1.1, tmp.atk*1.1, tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
          else
-            comp.push(new Champ(tmp.id, tmp.name, Math.ceil(tmp.hp*COEF), Math.ceil(tmp.atk*COEF), tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
+            comp.push(new Champ(tmp.id, tmp.name, tmp.hp, tmp.atk, tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
       }
       comp[0].isLeader = true;
       for(let i = 0; i < 5; i++) {

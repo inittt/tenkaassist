@@ -214,10 +214,11 @@ function start(compIds) {
    boss.buff = []; alltimeFunc.length = 0;
    for(const id of compIds) {
       const tmp = chJSON.data.filter(ch => ch.id === id)[0];
+      const coef_atk = COEF, coef_hp = COEF;
       if (liberationList.includes(tmp.name))
-         comp.push(new Champ(tmp.id, tmp.name, Math.floor(tmp.hp*COEF*1.1), Math.floor(tmp.atk*COEF*1.1), tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
+         comp.push(new Champ(tmp.id, tmp.name, tmp.hp*1.1, tmp.atk*1.1, tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag, coef_hp, coef_atk));
       else
-         comp.push(new Champ(tmp.id, tmp.name, Math.floor(tmp.hp*COEF), Math.floor(tmp.atk*COEF), tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
+         comp.push(new Champ(tmp.id, tmp.name, tmp.hp, tmp.atk, tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag, coef_hp, coef_atk));
    }
    comp[0].isLeader = true;
    for(let i = 0; i < 5; i++) {
