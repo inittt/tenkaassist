@@ -1,8 +1,6 @@
 const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const chBonds = params.get('bond');
-const limit_dummy = Number(params.get('dummy') == null ? 99 : params.get('dummy'));
-const limit_13t = Number(params.get('dmg13t') == null ? 0 : params.get('dmg13t'));
 const limit_fit = Number(params.get('fit13t') == null ? 0 : params.get('fit13t'));
 
 const possible = [];
