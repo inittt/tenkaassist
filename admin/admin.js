@@ -66,3 +66,15 @@ function removeInvalid() {
       return alert("성공");
    }).catch(e => {});
 }
+
+function refreshData() {
+   request(`${server}/comps/refreshData`, {
+      method: "GET",
+   }).then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   }).then(res => {
+      if (!res.success) return alert(res.msg);
+      return alert("성공");
+   }).catch(e => {});
+}
