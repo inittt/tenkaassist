@@ -1,6 +1,7 @@
 const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list'), idList = chIds.split(",").map(Number);
 const bond = params.get('bond'), bondList = bond == null ? [5, 5, 5, 5, 5] : bond.split(",").map(Number);
+const HP_MAX = 10854389981;
 if (params.get('hitAll') != null && params.get('hitAll') == "false") hitAll = false;
 const curHeader = 6;
 let isOn = false, actNum = 0, commandList;
@@ -151,7 +152,7 @@ function setComp() {
       const champ = getCharacter(id);
       if (champ == undefined || champ == null) return alert(t("캐릭터 정보가 잘못되었습니다"));
    }
-   boss.maxHp = 10854389981;
+   boss.maxHp = HP_MAX;
    //boss.maxHp = 5063653034;
    makeComp(idList);
    start(idList);
@@ -275,9 +276,7 @@ function endAct() {
       nextTurn();
       if (boss.hp <= 0 && scarecrowTurn > GLOBAL_TURN-1) scarecrowTurn = GLOBAL_TURN-1;
       if (boss.hp <= 0 && GLOBAL_TURN >= 14) {
-         GLOBAL_TURN--;
          if (!isEnd) {endGame(); isEnd = true;}
-         GLOBAL_TURN++;
       }
       if (GLOBAL_TURN == 14 && isValidComp(idList) && bondList.every(e => e == 1)) saveBond1();
       for(let i = 0; i < 5; i++) comp[i].turnstart();
@@ -289,7 +288,7 @@ function endGame() {
    updateAll();
 
    const msg = [];
-   msg.push(`${t(comp[0].name).replace(" <br>\u200B","")}, ${t(comp[1].name).replace(" <br>\u200B","")}, ${t(comp[2].name).replace(" <br>\u200B","")}, ${t(comp[3].name).replace(" <br>\u200B","")}, ${t(comp[4].name).replace(" <br>\u200B","")}`);
+   msg.push(`${t(comp[0].name)}, ${t(comp[1].name)}, ${t(comp[2].name)}, ${t(comp[3].name)}, ${t(comp[4].name)}`);
    msg.push(`${t("구속")} : ${bondList[0]}, ${bondList[1]}, ${bondList[2]}, ${bondList[3]}, ${bondList[4]}`);
    msg.push(`${t("허수턴")} : ${scarecrowTurn}`);
    msg.push(`${t("13턴딜")} : ${dmg13.toLocaleString()}`);
@@ -341,7 +340,7 @@ function saveBond1() {
 }
 
 function saveBond5(command_tmp) {
-   if (!hitAll) return;
+   if (!hitAll || boss.maxHp != HP_MAX) return;
    const formData = new FormData();
    formData.append("name", `${comp[0].name}덱`);
    formData.append("compstr", chIds);
