@@ -324,6 +324,7 @@ const translate = {
    "현재 캐릭터를 저장하시겠습니까?": {en : "Do you want to save the current character?", sc : "您要保存当前角色吗？", tc : "您要保存當前角色嗎？"},
    "저장되었습니다": {en : "Saved successfully", sc : "保存成功", tc : "儲存成功"},
    "로그인 후 이용가능합니다": {en : "Login is required to use this service.", sc : "登录后方可使用.", tc:"登入後方可使用."},
+   "로그인 되어있지 않음": {en : "You are not logged in", sc : "您未登录", tc : "您未登入"},
    "추천팀 기능은 하루 한 번만 이용가능합니다": {en : "The team suggestion feature is available only once a day.", sc : "团队推荐功能每天只能使用一次.", tc : "團隊推薦功能每天只能使用一次."},
 
    // 로그인

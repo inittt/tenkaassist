@@ -555,6 +555,7 @@ header {
 }
 .i-save {background-color: #24a01e;}
 .i-load {background-color: #e1562f;}
+.i-sort {background-color: #3a68ff;}
 .i-save:hover {background-color: #196c14; border-color:white;}
 .i-load:hover {background-color: #9b3b21; border-color:white;}
 

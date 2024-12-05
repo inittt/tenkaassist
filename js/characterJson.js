@@ -223,27 +223,6 @@ function fixName(txt) {
    }
 }
 
-addAnyCh();
-function addAnyCh() {
-   return;
-   chJSON.data.push(anyCh("아무거나", null, null));
-   chJSON.data.push(anyCh("화속성", 0, null));
-   chJSON.data.push(anyCh("수속성", 1, null));
-   chJSON.data.push(anyCh("풍속성", 2, null));
-   chJSON.data.push(anyCh("광속성", 3, null));
-   chJSON.data.push(anyCh("암속성", 4, null));
-   chJSON.data.push(anyCh("딜러", null, 0));
-   chJSON.data.push(anyCh("힐러", null, 1));
-   chJSON.data.push(anyCh("탱커", null, 2));
-   chJSON.data.push(anyCh("서포터", null, 3));
-   chJSON.data.push(anyCh("디스럽터", null, 4));
-
-   const el = ['화', '수', '풍', '광', '암'];
-   const ro = ['딜', '힐', '탱', '서폿', '디럽'];
-   for(let e = 0; e < 5; e++) for(let r = 0; r < 5; r++) 
-         chJSON.data.push(anyCh(el[e]+ro[r], e, r));
-}
-
 function findExIncludes(str) {
    const result = new Set();
    const lowerStr = str.toLowerCase();
