@@ -3,7 +3,6 @@ const curHeader = 3;
 
 const selected = [];
 const chJsonList = chJSON.data.slice();
-addAnyCh();
 document.addEventListener("DOMContentLoaded", function() {
    const searchInput = document.getElementById('searchInput');
    searchInput.addEventListener('input', function() {
