@@ -20,8 +20,7 @@ document.addEventListener("DOMContentLoaded", function() {
    const radios = document.querySelectorAll(`.dropdown-content input[name='b2']`);
    radios.forEach(function(option) {
       option.addEventListener("click", function() {
-         if (i == 0) dropdownBtn.innerText = `${this.value}${t("턴")}`;
-         else dropdownBtn.innerText = `${formatNumber2(this.value)}`;
+         dropdownBtn.innerText = `${formatNumber2(this.value)}`;
          const spanElement = document.createElement('span');
          spanElement.classList.add('absolute-right');
          spanElement.innerHTML = '▼'
