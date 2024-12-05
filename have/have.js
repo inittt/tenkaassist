@@ -10,35 +10,25 @@ document.addEventListener("DOMContentLoaded", function() {
    })
    getCharactersWithCondition(null, null, checkRarityN = 3, "");
 
-   const toggleButton2 = document.getElementById('set_option');
-   toggleButton2.addEventListener('click', () => {
-      isOn = toggleButton2.classList.toggle('leaderOn');
-      toggleButton2.classList.toggle('leaderOff', !isOn);
-      if (isOn) document.getElementById("suggest_option").style.display = "flex";
-      else document.getElementById("suggest_option").style.display = "none";
-   });
-
    // 추천덱 조건 드랍박스
    // 구속 드랍박스
-   for(let i = 0; i < 3; i++) {
-      const dropdownBtn = document.getElementById(`btn${i}`);
-      const dropdownContent = document.getElementById(`drop${i}`);
-      dropdownBtn.addEventListener("click", function() {
-         dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+   const dropdownBtn = document.getElementById(`btn2`);
+   const dropdownContent = document.getElementById(`drop2`);
+   dropdownBtn.addEventListener("click", function() {
+      dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+   });
+   const radios = document.querySelectorAll(`.dropdown-content input[name='b2']`);
+   radios.forEach(function(option) {
+      option.addEventListener("click", function() {
+         if (i == 0) dropdownBtn.innerText = `${this.value}${t("턴")}`;
+         else dropdownBtn.innerText = `${formatNumber2(this.value)}`;
+         const spanElement = document.createElement('span');
+         spanElement.classList.add('absolute-right');
+         spanElement.innerHTML = '▼'
+         dropdownBtn.appendChild(spanElement);
+         dropdownContent.style.display = "none";
       });
-      const radios = document.querySelectorAll(`.dropdown-content input[name='b${i}']`);
-      radios.forEach(function(option) {
-         option.addEventListener("click", function() {
-            if (i == 0) dropdownBtn.innerText = `${this.value}${t("턴")}`;
-            else dropdownBtn.innerText = `${formatNumber2(this.value)}`;
-            const spanElement = document.createElement('span');
-            spanElement.classList.add('absolute-right');
-            spanElement.innerHTML = '▼'
-            dropdownBtn.appendChild(spanElement);
-            dropdownContent.style.display = "none";
-         });
-      });
-   }
+   });
 });
 
 function formatNumber2(value) {
@@ -94,11 +84,8 @@ function searchDeck() {
       const b = [...selectedBond];
       if (go.length < 1) return alert(t("하나 이상의 캐릭터를 선택해 주세요"));
 
-      const dummy = document.querySelector('input[name="b0"]:checked').value;
-      const dmg13t = document.querySelector('input[name="b1"]:checked').value;
       const fit13t = document.querySelector('input[name="b2"]:checked').value;
-
-      location.href = `${address}/make/?dummy=${dummy}&dmg13t=${dmg13t}&fit13t=${fit13t}&list=${go}&bond=${b}`;
+      location.href = `${address}/make/?dummy=99&dmg13t=0&fit13t=${fit13t}&list=${go}&bond=${b}`;
 }
 
 function resizeButton() {
@@ -213,7 +200,7 @@ function synchro() {
       if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
    }).then(res => {
-      if (!res.success) return alert(res.msg);
+      if (!res.success) return alert(t(res.msg));
       if (res.data[0] == null || res.data[0].length == 0) return;
       if (res.data[1] == null || res.data[1].length == 0) {
          let len = res.data[0].split(" ").length;
@@ -248,4 +235,30 @@ function setHave() {
          return;
       });
    }
+}
+
+function sortHave() {
+   if (selected.length < 2) return;
+
+   const res = [];
+   for(let i = 0; i < selected.length; i++) {
+      let curId = selected[i], curBond = selectedBond[i];
+      const curCh = getCharacter(curId);
+      let curEl = curCh.element, curRo = curCh.role;
+      res.push({id : curId, el : curEl, ro : curRo, bond : curBond});
+   }
+   res.sort((a, b) => {
+      if (a.el !== b.el) return a.el - b.el;
+      if (a.ro !== b.ro) return a.ro - b.ro;
+      return a.id - b.id;
+   });
+
+   selected.length = 0;
+   selectedBond.length = 0;
+   for(let tmp of res) {
+      selected.push(tmp.id);
+      selectedBond.push(tmp.bond);
+   }
+
+   updateSelected();   
 }
