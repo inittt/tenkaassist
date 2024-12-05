@@ -1,0 +1,131 @@
+.dropdown {
+   width:4rem;
+   position: relative;
+   display: inline-block;
+   margin-top:0.2rem;
+   margin:0.2rem;
+ }
+ 
+ .dropdown-content {
+   padding-top:0.2rem;
+   box-sizing:border-box;
+   border:2px solid black;
+   display: none;
+   position: absolute;
+   background-color: white;
+   width:4rem;
+   z-index: 5;
+ }
+ 
+ .dropdown-content input[type="radio"] {
+   text-align: center;
+   display: none;
+   height:100%;
+ }
+
+ .dropdown-content label {
+   height:1.5rem;
+   font-size:0.9rem;
+   color:black;
+   display: block;
+   padding: 1rem, 1rem;
+   text-align: center;
+   cursor:pointer;
+ }
+ 
+ .dropdown-content label:hover {
+   background-color: #ddd;
+ }
+ 
+ .dropdown-btn {
+   position:relative;
+   display: flex;
+   align-items: center;
+   box-sizing:border-box;
+   border:1px solid black;
+   border-radius: 0.2rem;
+   width:4rem;
+   height:1.5rem;
+   padding: 0.1rem 0.6rem;
+   background-color: white;
+   color: black;
+   cursor: pointer;
+   font-weight:bold;
+   font-size:0.9rem;
+ }
+ .absolute-right {
+   position:absolute;
+   font-size: 1.1rem;
+   margin-left:auto;
+   right: 0.1rem;
+ }
+ .select_dropdown {
+  margin-left:0.5rem;
+  margin-right:0.5rem;
+ }
+
+ .suggest_option {
+   display:none;
+ }
+
+ .option_btn1 {
+   padding:0.3rem 0;
+   margin-left:0.5rem;
+   min-height:1.9rem;
+   width:4rem;
+ }
+
+ 
+.goSearchButton {
+  font-size:1rem;
+  height:2.5rem;
+  margin-left:auto;
+  border: 2px solid transparent;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 0.3rem;
+  padding: 0.3rem 0.6rem;
+  background-color: #007BFF;
+  color:white;
+}
+
+.goSearchButton:hover {
+  background-color: #004a9a;
+  border-color:white;
+}
+
+.copy-text {
+  font-size:0.9rem;
+  font-weight: bold;
+}
+
+.bond-icon {
+  font-size:0.7rem;
+  text-align:center;
+  
+  border-top-right-radius: 0.3rem;
+  border-bottom-left-radius: 0.3rem;
+  position:absolute;
+  right:0.2rem;
+  top:0.2rem;
+  width:1rem;
+  height:1rem;
+  color:white;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.have-chked {
+  text-align:center;
+  border-radius: 0.3rem;
+  position:absolute;
+  left:0.2rem;
+  top:0.2rem;
+  width:2.5rem;
+  height:2.5rem;
+  background-color: black;
+  color:white;
+  font-size:1.7rem;
+  font-weight:bold;
+  cursor: none;
+  display:none;
+}

@@ -553,6 +553,17 @@ header {
    margin: 0.3rem;
    border-radius: 0.3rem;;
 }
+.icon-copy-btn {
+   padding:0rem 0.3rem 0.3rem 0.3rem;
+   background-color: transparent;
+   cursor:pointer;
+}
+.icon-paste-btn {
+   padding:0rem 0.3rem 0.3rem 0.3rem;
+   margin-left:auto;
+   background-color: transparent;
+   cursor:pointer;
+}
 .i-save {background-color: #24a01e;}
 .i-load {background-color: #e1562f;}
 .i-sort {background-color: #3a68ff;}
