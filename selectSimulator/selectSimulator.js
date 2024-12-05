@@ -11,7 +11,6 @@ if (ch_ids != null) {
 }
 
 const chJsonList = chJSON.data.slice();
-addAnyCh();
 document.addEventListener("DOMContentLoaded", function() {
    const searchInput = document.getElementById('searchInput');
    searchInput.addEventListener('input', function() {
