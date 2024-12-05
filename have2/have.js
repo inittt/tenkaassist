@@ -88,7 +88,7 @@ function searchDeck() {
 // 코드 복사 누를시
 function setClipBoard() {
    if (selected.length < 1) return alert(t("하나 이상의 캐릭터를 선택해 주세요"));
-   const text1 = selected.toString(), text2 = selectedBond.toString();
+   const text1 = selected.map(n => n-10000).toString(), text2 = selectedBond.toString();
    const encodedText = btoa("tenkaassist:"+text1+":"+text2);
 
    navigator.clipboard.writeText(encodedText)
@@ -114,7 +114,10 @@ function setCopiedCharacters() {
    getClipboardText().then(encodedText => {
       if (!encodedText) return;
 
-      const decodedText = atob(encodedText).split(':');
+      let decodedText;
+      try {decodedText = atob(encodedText).split(':');}
+      catch(e) {return alert("올바르지 않은 코드입니다.");}
+
       if (decodedText[0] !== "tenkaassist") return alert("올바르지 않은 코드입니다.");
 
       const ch_list_tmp = decodedText[1].split(',').map(Number);
@@ -123,7 +126,7 @@ function setCopiedCharacters() {
       selected.length = 0;
       selectedBond.length = 0;
       
-      for (let n of ch_list_tmp) selected.push(n);
+      for (let n of ch_list_tmp) selected.push(n+10000);
       for (let n of bd_list_tmp) selectedBond.push(n);
 
       updateSelected();
