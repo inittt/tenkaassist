@@ -91,6 +91,9 @@ function setClipBoard() {
    const text1 = selected.map(n => (n-10000).toString(34)).join('y');
    const text2 = BigInt(selectedBond.join("")).toString(34);
    const encodedText = text1+"z"+text2;
+   console.log(text1);
+   console.log(text2);
+   console.log(encodedText);
 
    navigator.clipboard.writeText(encodedText)
    .then(() => {
