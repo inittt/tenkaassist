@@ -88,8 +88,9 @@ function searchDeck() {
 // 코드 복사 누를시
 function setClipBoard() {
    if (selected.length < 1) return alert(t("하나 이상의 캐릭터를 선택해 주세요"));
-   const text1 = selected.map(n => n-10000).toString(), text2 = selectedBond.join("");
-   const encodedText = btoa("tenkaassist:"+text1+":"+text2);
+   const text1 = selected.map(n => (n-10000).toString(34)).join('y');
+   const text2 = selectedBond.map(n => numToWord(n)).join('');
+   const encodedText = text1+"z"+text2;
 
    navigator.clipboard.writeText(encodedText)
    .then(() => {
@@ -97,6 +98,30 @@ function setClipBoard() {
    }).catch((error) => {
       alert("클립보드 복사 실패");
    });
+}
+
+function numToWord(num) {
+   let res;
+   switch(num) {
+      case 1 : res = Math.random() < 0.5 ? 'a' : 'f'; break;
+      case 2 : res = Math.random() < 0.5 ? 'b' : 'g'; break;
+      case 3 : res = Math.random() < 0.5 ? 'c' : 'h'; break;
+      case 4 : res = Math.random() < 0.5 ? 'd' : 'i'; break;
+      default : res = Math.random() < 0.5 ? 'e' : 'j'; break;
+   }
+   return Math.random() < 0.5 ? res : res.toUpperCase();
+}
+
+function wordToNum(word) {
+  const lowerWord = word.toLowerCase();
+  let num;
+  switch(lowerWord) {
+    case 'a': case 'f': return 1;
+    case 'b': case 'g': return 2;
+    case 'c': case 'h': return 3;
+    case 'd': case 'i': return 4;
+    default: return 5;
+  }
 }
 
 // 코드 붙여넣기 누를시
@@ -115,13 +140,15 @@ function setCopiedCharacters() {
       if (!encodedText) return;
 
       let decodedText;
-      try {decodedText = atob(encodedText).split(':');}
-      catch(e) {return alert("올바르지 않은 코드입니다.");}
+      try {
+         decodedText = encodedText.split('z');
+         if (decodedText.length != 2) return alert(t("올바르지 않은 코드입니다."));
+      } catch(e) {
+         return alert(t("올바르지 않은 코드입니다."));
+      }
 
-      if (decodedText[0] !== "tenkaassist") return alert("올바르지 않은 코드입니다.");
-
-      const ch_list_tmp = decodedText[1].split(',').map(Number);
-      const bd_list_tmp = decodedText[2].split("").map(Number);
+      const ch_list_tmp = decodedText[1].split('y').map(n => parseInt(n, 34);
+      const bd_list_tmp = decodedText[2].split("").map(n => wordToNum(n));
 
       selected.length = 0;
       selectedBond.length = 0;
