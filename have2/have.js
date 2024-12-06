@@ -126,8 +126,8 @@ function setCopiedCharacters() {
          return alert(t("올바르지 않은 코드입니다."));
       }
 
-      const ch_list_tmp = decodedText[1].split('y').map(n => parseInt(n, 34));
-      const bd_list_tmp = BigInt(parseInt(decodedText[2], 34)).toString().split("").map(n => Number(n));
+      const ch_list_tmp = decodedText[0].split('y').map(n => parseInt(n, 34));
+      const bd_list_tmp = BigInt(parseInt(decodedText[1], 34)).toString().split("").map(n => Number(n));
 
       selected.length = 0;
       selectedBond.length = 0;
