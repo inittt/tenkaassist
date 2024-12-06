@@ -6,11 +6,11 @@
    <title>TenkaAssist - 보유 캐릭터</title>
    <meta name="description" content="tenkaAssist">
    <script src="../js/common.js"></script>
-   <link rel="stylesheet" href="../css/common.css" type = "text/css">
-   <link rel="stylesheet" href="./have.css" type = "text/css">
+   <link rel="stylesheet" href="../css/common.css?v=1.1" type = "text/css">
+   <link rel="stylesheet" href="./have.css?v=1.1" type = "text/css">
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
    <script src="../js/characterJson.js"></script>
-   <script src="./have.js"></script>
+   <script src="./have.js?v=1.1"></script>
 </head>
 <body>
    <script src="../js/header.js"></script>
@@ -52,12 +52,21 @@
          </div>
       </div>
       <div class="block">
+         <div style="display: flex; justify-content: space-between;">
+            <div class="icon-copy-btn" onclick="setClipBoard()">
+               <img class="icon" src="../images/icons/ico-copy.svg" style="vertical-align: middle;" alt="copy">
+               <span id="copy-text" class="copy-text" style="vertical-align: middle;">복사</span>
+            </div>
+            <div class="icon-paste-btn" onclick="setCopiedCharacters()">
+               <img class="icon" src="../images/icons/ico-paste.svg" style="vertical-align: middle;" alt="paste">
+               <span id="paste-text" class="copy-text" style="vertical-align: middle;">붙여넣기</span>
+            </div>
+         </div>
          <div class="margin-left titleblock" style="min-height:5.2rem;">
             <div id="selectedCh" class="flex">
                보유중인 캐릭터를 선택해 주세요<br>
                (로그인 된 경우 동기화 가능)
             </div>
-            <button id="characterSearchBtn" class="button characterSearchBtn" onclick="searchDeck()">검색</button>
          </div>
       </div>
       <div class="block flex">
@@ -98,9 +107,11 @@
    }
    
    document.getElementById("selectedCh").innerHTML = `${t("보유중인 캐릭터를 선택해 주세요")}<br>(${t("로그인 된 경우 동기화 가능")})`;
-   document.getElementById("characterSearchBtn").innerText = t(" 검색").trim();
    document.getElementById("characterSearchBtn2").innerText = t(" 검색").trim();
    document.getElementById("searchInput").placeholder = t("검색");
+
+   document.getElementById("copy-text").innerText = t("코드복사");
+   document.getElementById("paste-text").innerText = t("붙여넣기");
 
    document.getElementById("e-0").innerText = t("화속성");
    document.getElementById("e-1").innerText = t("수속성");

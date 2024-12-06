@@ -10,8 +10,6 @@ document.addEventListener("DOMContentLoaded", function() {
    })
    getCharactersWithCondition(null, null, checkRarityN = 3, "");
 
-   // 추천덱 조건 드랍박스
-   // 구속 드랍박스
    const dropdownBtn = document.getElementById(`btn2`);
    const dropdownContent = document.getElementById(`drop2`);
    dropdownBtn.addEventListener("click", function() {
@@ -79,19 +77,76 @@ function getCharactersWithCondition(element, role, rarity, search) {
 
 // 검색 버튼 누를시
 function searchDeck() {
-      const go = [...selected];
-      const b = [...selectedBond];
-      if (go.length < 1) return alert(t("하나 이상의 캐릭터를 선택해 주세요"));
+   const go = [...selected];
+   const b = [...selectedBond];
+   if (go.length < 1) return alert(t("하나 이상의 캐릭터를 선택해 주세요"));
 
-      const fit13t = document.querySelector('input[name="b2"]:checked').value;
-      location.href = `${address}/make/?dummy=99&dmg13t=0&fit13t=${fit13t}&list=${go}&bond=${b}`;
+   const fit13t = document.querySelector('input[name="b2"]:checked').value;
+   location.href = `${address}/make/?dummy=99&dmg13t=0&fit13t=${fit13t}&list=${go}&bond=${b}`;
 }
 
-function resizeButton() {
-   // 선택한 캐릭터를 보여주는 box가 커지면 button의 높이도 따라 커짐
-   const btn = document.getElementById('characterSearchBtn');
-   const box = document.getElementById('selectedCh');
-   btn.style.height = `${box.offsetHeight}px`;
+// 코드 복사 누를시
+function setClipBoard() {
+   if (selected.length < 1) return alert(t("하나 이상의 캐릭터를 선택해 주세요"));
+   const text1 = selected.map(n => (n-10000).toString(34)).join('y');
+   const text2 = BigInt(selectedBond.join("")).toString(34);
+   const encodedText = text1+"z"+text2;
+
+   navigator.clipboard.writeText(encodedText)
+   .then(() => {
+      alert(t("코드가 클립보드에 복사되었습니다."));
+   }).catch((error) => {
+      alert(t("클립보드 복사 실패"));
+   });
+}
+
+// 코드 붙여넣기 누를시
+function setCopiedCharacters() {
+   async function getClipboardText() {
+      try {
+         const text = await navigator.clipboard.readText();
+         return text;
+      } catch (err) {
+         alert(t("클립보드에서 텍스트를 가져오는 데 실패했습니다"));
+      }
+   }
+
+   // 클립보드에서 텍스트 가져오기
+   getClipboardText().then(encodedText => {
+      if (!encodedText) return;
+
+      let decodedText;
+      try {
+         decodedText = encodedText.split('z');
+         if (decodedText.length != 2) return alert(t("올바르지 않은 코드입니다."));
+      } catch(e) {
+         return alert(t("올바르지 않은 코드입니다."));
+      }
+
+      const ch_list_tmp = decodedText[0].split('y').map(n => parseInt(n, 34));
+      const bd_list_tmp = parseBase(decodedText[1], 34).split("").map(n => Number(n));
+
+      if (ch_list_tmp.length != bd_list_tmp.length) return alert(t("올바르지 않은 코드입니다."));
+
+      selected.length = 0;
+      selectedBond.length = 0;
+      
+      for (let n of ch_list_tmp) selected.push(n+10000);
+      for (let n of bd_list_tmp) selectedBond.push(n);
+
+      updateSelected();
+   });
+}
+
+function parseBase(str, num) {
+   const alphabet = '0123456789abcdefghijklmnopqrstuvwxyz'.slice(0, num);
+   let result = BigInt(0);
+   for (let i = 0; i < str.length; i++) {
+       const char = str[i];
+       const value = alphabet.indexOf(char);
+       result = result * BigInt(34) + BigInt(value);
+   }
+   return result.toString();
 }
 
 // 검색창에 선택된 캐릭터 이미지 띄우기
@@ -145,7 +200,6 @@ function clickedCh(id) {
       document.getElementById(`chk_${id}`).innerText = numToBond(++selectedBond[index]);
    }
    updateSelected();
-   resizeButton();
 }
 
 // 검색창의 캐릭 클릭시 제거
@@ -160,7 +214,6 @@ function clickedSel(div, id) {
    if (chk != null) chk.style.display = "none";
 
    updateSelected();
-   resizeButton();
 }
 
 /* input:radio 버튼해제 로직 --------------------------------------------------*/
@@ -211,7 +264,6 @@ function synchro() {
       for(const cid of res.data[0].split(" ").map(Number)) selected.push(cid);
       for(const cbond of res.data[1].split(" ").map(Number)) selectedBond.push(cbond);
       updateSelected();
-      resizeButton();
       getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, document.getElementById('searchInput').value);
    }).catch(error => {
       return;

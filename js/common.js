@@ -326,6 +326,13 @@ const translate = {
    "로그인 후 이용가능합니다": {en : "Login is required to use this service.", sc : "登录后方可使用.", tc:"登入後方可使用."},
    "로그인 되어있지 않음": {en : "You are not logged in", sc : "您未登录", tc : "您未登入"},
    "추천팀 기능은 하루 한 번만 이용가능합니다": {en : "The team suggestion feature is available only once a day.", sc : "团队推荐功能每天只能使用一次.", tc : "團隊推薦功能每天只能使用一次."},
+   "클립보드에서 텍스트를 가져오는 데 실패했습니다" : {en : "Failed to retrieve text from clipboard.", sc : "未能从剪贴板获取文本。", tc : "無法從剪貼簿取得文字。"},
+   "올바르지 않은 코드입니다." : {en : "The code is invalid.", sc : "代码无效。", tc : "程式碼無效。"},
+   "코드가 클립보드에 복사되었습니다." : {en : "The code has been copied to the clipboard.", sc : "代码已复制到剪贴板。", tc : "程式碼已複製到剪貼簿。"},
+   "클립보드 복사 실패" : {en : "Failed to copy to clipboard.", sc : "无法复制到剪贴板。", tc : "無法複製到剪貼簿。"},
+   "코드복사" : {en : "Copy Code", sc : "复制代码", tc : "複製代碼"},
+   "붙여넣기" : {en : "Paste", sc : "粘贴", tc : "貼上"},
+
 
    // 로그인
    "아이디": {en : "username", sc : "用户名", tc : "用戶名"},

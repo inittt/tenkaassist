@@ -94,6 +94,11 @@
   border-color:white;
 }
 
+.copy-text {
+  font-size:0.9rem;
+  font-weight: bold;
+}
+
 .bond-icon {
   font-size:0.7rem;
   text-align:center;
@@ -123,13 +128,4 @@
   font-weight:bold;
   cursor: none;
   display:none;
-}
-
-@media (max-width: 768px) {
-  #characterSearchBtn {display:none;}
-  #characterSearchBtn2 {display:block;}
-}
-@media (min-width: 768px) {
-  #characterSearchBtn {display:block;}
-  #characterSearchBtn2 {display:none;}
 }
