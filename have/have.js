@@ -117,7 +117,7 @@ function setCopiedCharacters() {
 
       let decodedText;
       try {
-         decodedText = encodedText.split('z');
+         decodedText = encodedText.trim().split('z');
          if (decodedText.length != 2) return alert(t("올바르지 않은 코드입니다."));
       } catch(e) {
          return alert(t("올바르지 않은 코드입니다."));
