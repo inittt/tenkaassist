@@ -89,7 +89,7 @@ function searchDeck() {
 function setClipBoard() {
    if (selected.length < 1) return alert(t("하나 이상의 캐릭터를 선택해 주세요"));
    const text1 = selected.map(n => (n-10000).toString(34)).join('y');
-   const text2 = Number(selectedBond.join("")).toString(34);
+   const text2 = BigInt(selectedBond.join("")).toString(34);
    const encodedText = text1+"z"+text2;
 
    navigator.clipboard.writeText(encodedText)
@@ -124,7 +124,7 @@ function setCopiedCharacters() {
       }
 
       const ch_list_tmp = decodedText[1].split('y').map(n => parseInt(n, 34));
-      const bd_list_tmp = parseInt(decodedText[2], 34).toString().split("").map(n => Number(n));
+      const bd_list_tmp = BigInt(parseInt(decodedText[2], 34)).toString().split("").map(n => Number(n));
 
       selected.length = 0;
       selectedBond.length = 0;
