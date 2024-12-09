@@ -88,9 +88,9 @@ function searchDeck() {
 // 코드 복사 누를시
 function setClipBoard() {
    if (selected.length < 1) return alert(t("하나 이상의 캐릭터를 선택해 주세요"));
-   const text1 = selected.map(n => (n-10000).toString(34)).join('y');
-   const text2 = BigInt(selectedBond.join("")).toString(34);
-   const encodedText = text1+"z"+text2;
+   const text1 = b10to64("10"+selected.map(num => num.toString().slice(-3)).join(""));
+   const text2 = b10to64(selectedBond.join(""));
+   const encodedText = text1+":"+text2;
 
    navigator.clipboard.writeText(encodedText)
    .then(() => {
@@ -100,46 +100,71 @@ function setClipBoard() {
    });
 }
 
+async function getClipboardText() {
+   try {
+      const text = await navigator.clipboard.readText();
+      return text;
+   } catch (err) {
+      alert(t("클립보드에서 텍스트를 가져오는 데 실패했습니다"));
+   }
+}
+
 // 코드 붙여넣기 누를시
 function setCopiedCharacters() {
-   async function getClipboardText() {
+   // 클립보드에서 텍스트 가져오기
+   getClipboardText().then(encodedText => {
+      if (!encodedText) return;
+      let decodedText;
       try {
-         const text = await navigator.clipboard.readText();
-         return text;
-      } catch (err) {
-         alert(t("클립보드에서 텍스트를 가져오는 데 실패했습니다"));
+         decodedText = encodedText.trim().split('z');
+         if (decodedText.length != 2) return setCopiedCharacters2();
+      } catch(e) {
+         return setCopiedCharacters2();
       }
-   }
+
+      const ch_list_tmp = decodedText[0].split('y').map(n => parseInt(n, 34));
+      const bd_list_tmp = b34to10(decodedText[1]).split("").map(n => Number(n));
+      if (ch_list_tmp.length != bd_list_tmp.length) return setCopiedCharacters2();
+
+      selected.length = 0; selectedBond.length = 0;
+      for (let n of ch_list_tmp) selected.push(n+10000);
+      for (let n of bd_list_tmp) selectedBond.push(n);
+      updateSelected();
+   });
+}
+
+function setCopiedCharacters2() {
+   function splitString(str) {
+      const result = [];
+      for (let i = 0; i < str.length; i += 3) result.push(str.slice(i, i+3));
+      return result;
+   };
 
    // 클립보드에서 텍스트 가져오기
    getClipboardText().then(encodedText => {
       if (!encodedText) return;
-
       let decodedText;
       try {
-         decodedText = encodedText.trim().split('z');
+         decodedText = encodedText.trim().split(':');
          if (decodedText.length != 2) return alert(t("올바르지 않은 코드입니다."));
       } catch(e) {
          return alert(t("올바르지 않은 코드입니다."));
       }
 
-      const ch_list_tmp = decodedText[0].split('y').map(n => parseInt(n, 34));
-      const bd_list_tmp = parseBase(decodedText[1], 34).split("").map(n => Number(n));
-
+      const ch_list_tmp = splitString(b64to10(decodedText[0]).slice(2)).map(n => Number(n));
+      const bd_list_tmp = b64to10(decodedText[1]).split("").map(n => Number(n));
       if (ch_list_tmp.length != bd_list_tmp.length) return alert(t("올바르지 않은 코드입니다."));
 
-      selected.length = 0;
-      selectedBond.length = 0;
-      
+      selected.length = 0; selectedBond.length = 0;
       for (let n of ch_list_tmp) selected.push(n+10000);
       for (let n of bd_list_tmp) selectedBond.push(n);
-
+      
       updateSelected();
    });
 }
 
-function parseBase(str, num) {
-   const alphabet = '0123456789abcdefghijklmnopqrstuvwxyz'.slice(0, num);
+function b34to10(str) {
+   const alphabet = '0123456789abcdefghijklmnopqrstuvwx';
    let result = BigInt(0);
    for (let i = 0; i < str.length; i++) {
        const char = str[i];
@@ -147,6 +172,29 @@ function parseBase(str, num) {
        result = result * BigInt(34) + BigInt(value);
    }
    return result.toString();
+}
+
+function b64to10(str) {
+   const alphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_!';
+   let result = BigInt(0);
+   for (let i = 0; i < str.length; i++) {
+       const char = str[i];
+       const value = alphabet.indexOf(char);
+       result = result * BigInt(64) + BigInt(value);
+   }
+   return result.toString();
+}
+
+function b10to64(str) {
+   const alphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_!';
+   let decimal = BigInt(str), result = '';
+   if (decimal === 0n) return '0';
+   while (decimal > 0n) {
+       const remainder = decimal % 64n;
+       result = alphabet[Number(remainder)] + result;
+       decimal = decimal / 64n;
+   }
+   return result;
 }
 
 // 검색창에 선택된 캐릭터 이미지 띄우기
