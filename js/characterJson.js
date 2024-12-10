@@ -126,6 +126,10 @@ const chJSON = { data : [
 {ok : true, id : 10153, rarity : 3, hp:930053, atk:290530, cd:3, atkMag:100, ultMag:0, fullname : "순수한 살의 사탄", name : "농탄", element : 4, role : 0},
 {ok : true, id : 10154, rarity : 3, hp:1458854, atk:185124, cd:3, atkMag:100, ultMag:397, fullname : "달콤한 메이드 나나미", name : "메나미", element : 1, role : 2},
 {ok : true, id : 10155, rarity : 3, hp:1107205, atk:244028, cd:3, atkMag:0, ultMag:0, fullname : "냉담한 메이드 KS-Ⅷ", name : "메섹돌", element : 0, role : 0},
+// {ok : true, id : 0, rarity : 3, hp:0, atk:0, cd:0, atkMag:0, ultMag:0, fullname : "섹스마스 마왕 바알", name : "크바알", element : 0, role : 0},
+// {ok : true, id : 0, rarity : 3, hp:0, atk:0, cd:0, atkMag:0, ultMag:0, fullname : "춤추는 눈꽃 이치카", name : "크치카", element : 1, role : 1},
+// {ok : true, id : 0, rarity : 3, hp:0, atk:0, cd:0, atkMag:0, ultMag:0, fullname : "크리스마스의 기책 브리트니", name : "크브리", element : 3, role : 2},
+// {ok : true, id : 0, rarity : 3, hp:0, atk:0, cd:0, atkMag:0, ultMag:0, fullname : "순진한 소원 무엘라", name : "크엘라", element : 3, role : 3},
 
 {ok : true, id : 10009, rarity : 2, hp:959283, atk:242699, cd:4, atkMag:0, ultMag:0, fullname : "마도 메이드 아이카", name : "아이카", element : 4, role : 3},
 {ok : false, id : 10010, rarity : 2, fullname : "성기사단장 레오나", name : "레오나", element : 1, role : 2},
