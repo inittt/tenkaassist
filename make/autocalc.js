@@ -1,14 +1,7 @@
 function autoCalc(idList, command, bondList) {
    if (command == null || command.length < 10) return 0;
 
-   console.log(idList)
-   console.log(command)
-   console.log(bondList)
-
    let actNum = 0, commandList = command.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
-
-   console.log(idList.length);
-
 
    if (idList.length != 5) return 0;
    boss.maxHp = 10854389981;
@@ -23,6 +16,7 @@ function autoCalc(idList, command, bondList) {
       GLOBAL_TURN = 1; comp = []; dmg13 = 0;
       boss.hp = boss.maxHp;
       boss.buff = []; boss.li = []; alltimeFunc.length = 0;
+      // buff_ex.length = 0; buff_ex.push("도트뎀", "제거");
 
       for(const id of compIds) {
          const tmp = chJSON.data.filter(ch => ch.id === id)[0];
