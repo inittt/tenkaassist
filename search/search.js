@@ -95,7 +95,7 @@ function makeBlock(sort) {
       else stringArr.push(`<div class="comp-order">#${cnt}</div>`)
       stringArr.push(`<div class="comp-name">${t_d(name)}</div><div class="comp-deck">`);
 
-      let isLeaderHpOn = true;
+      let leaderHpOn = true;
       for(const cid of compstr.split(" ").map(Number)) {
          const ch = getCharacter(cid);
          stringArr.push(`
@@ -110,7 +110,7 @@ function makeBlock(sort) {
                <div class="text-mini">${t(ch.name)}</div>
             </div>
          `);
-         isLeaderHpOn = false;   
+         leaderHpOn = false;   
       }
       let last;
       switch(sort) {
