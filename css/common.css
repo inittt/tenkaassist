@@ -569,6 +569,22 @@ header {
 .i-sort {background-color: #3a68ff;}
 .i-save:hover {background-color: #196c14; border-color:white;}
 .i-load:hover {background-color: #9b3b21; border-color:white;}
+.i-heart {
+   width:0.4rem; height:0.4rem;margin-right:0.1rem;
+}
+.hpbox{
+   font-size:0.6rem;
+   text-align:center;
+   border-bottom-right-radius: 0.3rem;
+   border-top-left-radius: 0.3rem;
+   position:absolute;
+   right:0.2rem;
+   bottom:1.3rem;
+   width:1.5rem;
+   height:0.8rem;
+   color:white;
+   background-color: rgba(0, 0, 0, 0.7);
+}
 
 @media (max-width: 420px) {
    .comp-time {width:10rem;}

@@ -190,19 +190,22 @@ function loadBlockAllDeck(pg) {
       stringArr.push(`<div class="comp-order">#${++bundleCnt}</div>`)
       stringArr.push(`<div class="comp-name">${t_d(name)}</div><div class="comp-deck">`);
 
+      let leaderHpOn = true;
       for(const cid of compstr) {
          const ch = getCharacter(cid);
          stringArr.push(`
             <div class="character" style="margin:0.2rem;">
                <div style="margin:0.2rem;">
                   <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-                  ${isAny(ch.id) ? "" : `<div class="bond-icon z-2">${numToBond(bondMap.get(ch.id))}</div>`}
+                  <div class="bond-icon z-2">${numToBond(bondMap.get(ch.id))}</div>
+                  ${leaderHpOn ? `<div class="hpbox" z-2"><img class="i-heart" src="../images/icons/ico-heart.svg">${ch.hpUp ? ch.hpUp : 0}</div>` : ""}
                   ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                   <div class="element${ch.element} ch_border z-4"></div>
                </div>
                <div class="text-mini">${t(ch.name)}</div>
             </div>
-         `);       
+         `);
+         leaderHpOn = false;
       }
       let last = `<i class="fa-solid fa-burst"></i> ${formatNumber(fit13t)}`;
       stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
@@ -260,19 +263,22 @@ function loadBlockNDeck(pg) {
          const fit13t = comp.fit13t;
          stringArr.push(`<div class="comp-box"><div class="comp-deck">`);
 
+         let leaderHpOn = true;
          for(const cid of compstr) {
             const ch = getCharacter(cid);
             stringArr.push(`
                <div class="character" style="margin:0.2rem;">
                   <div style="margin:0.2rem;">
                      <img src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-                     ${isAny(ch.id) ? "" : `<div class="bond-icon z-2">${numToBond(bondMap.get(ch.id))}</div>`}
+                     <div class="bond-icon z-2">${numToBond(bondMap.get(ch.id))}</div>
+                     ${leaderHpOn ? `<div class="hpbox" z-2"><img class="i-heart" src="../images/icons/ico-heart.svg">${ch.hpUp ? ch.hpUp : 0}</div>` : ""}
                      ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                      <div class="element${ch.element} ch_border z-4"></div>
                   </div>
                   <div class="text-mini">${t(ch.name)}</div>
                </div>
-            `);       
+            `); 
+            leaderHpOn = false;      
          }
          let last = `<i class="fa-solid fa-burst"></i> ${formatNumber(fit13t)}`;
          stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);

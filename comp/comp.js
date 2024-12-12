@@ -80,6 +80,8 @@ function makeCompBlock(comp) {
    document.getElementById('titlebox').innerHTML = `${t_d(name)}`;
    const compbox = document.getElementById('comp-box-in');
    const stringArr = [];
+
+   let leaderHpOn = true;
    for(const cid of compstr.split(" ").map(Number)) {
       compIds_toTest.push(cid);
       const ch = getCharacter(cid);
@@ -87,13 +89,15 @@ function makeCompBlock(comp) {
          <div class="character" style="margin:0.2rem;">
             <div style="margin:0.2rem;">
                <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-               ${isAny(ch.id) ? "" : `<img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">`}
+               <img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">
+               ${leaderHpOn ? `<div class="hpbox" z-2"><img class="i-heart" src="../images/icons/ico-heart.svg">${ch.hpUp ? ch.hpUp : 0}</div>` : ""}
                ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                <div class="element${ch.element} ch_border z-4"></div>
             </div>
             <div class="text-mini">${t(ch.name)}</div>
          </div>
       `);
+      leaderHpOn = false;
    }
    compbox.innerHTML = stringArr.join("");
    document.getElementById('create_at').innerHTML = `${t("등록 : ")}${create_at} ${creator}`;
