@@ -547,9 +547,9 @@ const translate = {
    "메나미" : {en : "M.Nanami", sc : "仆奈", tc : "僕奈"},
    "메섹돌" : {en : "M.KS-Ⅷ", sc : "火机", tc : "僕K"},
    "크바알" : {en : "X.Baal", sc : "诞巴", tc : "誕巴"},
-   "크치카" : {en : "X.Ichika", sc : "初华", tc : "初華"},
-   "크브리" : {en : "X.Britney", sc : "圣军", tc : "聖軍"},
-   "크엘라" : {en : "X.Muila", sc : "牧爱菈", tc : "牧爱菈"},
+   "크치카" : {en : "X.Ichika", sc : "诞姬", tc : "雪人"},
+   "크브리" : {en : "X.Britney", sc : "诞军", tc : "誕軍"},
+   "크엘라" : {en : "X.Muila", sc : "诞牧", tc : "誕牧"},
 
    "아이카" : {en : "Aiko", sc : "艾可", tc : "艾可"},
    "레오나" : {en : "Leona", sc : "雷欧娜", tc : "雷歐娜"},
