@@ -4,9 +4,9 @@
    display: inline-block;
    margin-top:0.2rem;
    margin:0.2rem;
- }
+}
  
- .dropdown-content {
+.dropdown-content {
    padding-top:0.2rem;
    box-sizing:border-box;
    border:2px solid black;
@@ -15,15 +15,15 @@
    background-color: white;
    width:4rem;
    z-index: 5;
- }
+}
  
- .dropdown-content input[type="radio"] {
+.dropdown-content input[type="radio"] {
    text-align: center;
    display: none;
    height:100%;
- }
+}
 
- .dropdown-content label {
+.dropdown-content label {
    height:1.5rem;
    font-size:0.9rem;
    color:black;
@@ -31,13 +31,13 @@
    padding: 1rem, 1rem;
    text-align: center;
    cursor:pointer;
- }
+}
  
- .dropdown-content label:hover {
+.dropdown-content label:hover {
    background-color: #ddd;
- }
+}
  
- .dropdown-btn {
+.dropdown-btn {
    position:relative;
    display: flex;
    align-items: center;
@@ -52,28 +52,34 @@
    cursor: pointer;
    font-weight:bold;
    font-size:0.9rem;
- }
- .absolute-right {
+}
+.absolute-right {
    position:absolute;
    font-size: 1.1rem;
    margin-left:auto;
    right: 0.1rem;
- }
- .select_dropdown {
-  margin-left:0.5rem;
-  margin-right:0.5rem;
- }
+}
+.select_dropdown {
+  margin-left:0.2rem;
+}
 
- .suggest_option {
+.suggest_option {
    display:none;
- }
+}
 
- .option_btn1 {
+.option_btn1 {
    padding:0.3rem 0;
    margin-left:0.5rem;
    min-height:1.9rem;
    width:4rem;
  }
+
+.option-box {
+  display:flex;
+  align-items: center;
+  margin-top:0;
+  margin-bottom:0
+}
 
  
 .goSearchButton {

@@ -10,20 +10,37 @@ document.addEventListener("DOMContentLoaded", function() {
    })
    getCharactersWithCondition(null, null, checkRarityN = 3, "");
 
-   const dropdownBtn = document.getElementById(`btn2`);
-   const dropdownContent = document.getElementById(`drop2`);
-   dropdownBtn.addEventListener("click", function() {
-      dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+   const dropdownBtn1 = document.getElementById(`btn1`);
+   const dropdownBtn2 = document.getElementById(`btn2`);
+   const dropdownContent1 = document.getElementById(`drop1`);
+   dropdownBtn1.addEventListener("click", function() {
+      dropdownContent1.style.display = dropdownContent1.style.display === "block" ? "none" : "block";
    });
-   const radios = document.querySelectorAll(`.dropdown-content input[name='b2']`);
-   radios.forEach(function(option) {
+   const dropdownContent2 = document.getElementById(`drop2`);
+   dropdownBtn2.addEventListener("click", function() {
+      dropdownContent2.style.display = dropdownContent2.style.display === "block" ? "none" : "block";
+   });
+   const radios1 = document.querySelectorAll(`.dropdown-content input[name='b1']`);
+   radios1.forEach(function(option) {
       option.addEventListener("click", function() {
-         dropdownBtn.innerText = `${formatNumber2(this.value)}`;
+         dropdownBtn1.innerHTML = `<img class="i-heart2" src="../images/icons/ico-heart.svg">${this.value}`;
          const spanElement = document.createElement('span');
          spanElement.classList.add('absolute-right');
          spanElement.innerHTML = '▼'
-         dropdownBtn.appendChild(spanElement);
-         dropdownContent.style.display = "none";
+         dropdownBtn1.appendChild(spanElement);
+         dropdownContent1.style.display = "none";
+      });
+   });
+
+   const radios2 = document.querySelectorAll(`.dropdown-content input[name='b2']`);
+   radios2.forEach(function(option) {
+      option.addEventListener("click", function() {
+         dropdownBtn2.innerText = `${formatNumber2(this.value)}`;
+         const spanElement = document.createElement('span');
+         spanElement.classList.add('absolute-right');
+         spanElement.innerHTML = '▼'
+         dropdownBtn2.appendChild(spanElement);
+         dropdownContent2.style.display = "none";
       });
    });
 });
@@ -81,8 +98,9 @@ function searchDeck() {
    const b = [...selectedBond];
    if (go.length < 1) return alert(t("하나 이상의 캐릭터를 선택해 주세요"));
 
+   const hpUp = document.querySelector('input[name="b1"]:checked').value;
    const fit13t = document.querySelector('input[name="b2"]:checked').value;
-   location.href = `${address}/make/?dummy=99&dmg13t=0&fit13t=${fit13t}&list=${go}&bond=${b}`;
+   location.href = `${address}/make/?hpUp=${hpUp}&fit13t=${fit13t}&list=${go}&bond=${b}`;
 }
 
 // 코드 복사 누를시

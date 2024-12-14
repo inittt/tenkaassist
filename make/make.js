@@ -1,6 +1,7 @@
 const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const chBonds = params.get('bond');
+const limit_hp_up = Number(params.get('hpUp') == null ? 0 : params.get('hpUp'));
 const limit_fit = Number(params.get('fit13t') == null ? 0 : params.get('fit13t'));
 
 const possible = [];
@@ -84,6 +85,12 @@ function getAllCompsFromServer() {
 }
 
 function setPossible() {
+   const hpUpMap = new Map();
+   for(let d of chJSON.data) {
+      const hpup_tmp = d.hpUp == undefined ? 0 : d.hpUp;
+      hpUpMap.set(d.id, hpup_tmp);
+   }
+
    // 한 번에 처리할 항목 수
    const batchSize = 100;
 
@@ -94,6 +101,7 @@ function setPossible() {
 
       if (compList.every(item => haveList.includes(item))) {
          if (d.recommend > 0 && limit_fit > d.recommend) continue;
+         if (hpUpMap.get(compList[0]) < limit_hp_up) continue;
 
          const indexes = compList.map(item => haveList.indexOf(item)), bonds = [];
          for (let j = 0; j < 5; j++) bonds.push(bondList[indexes[j]]);

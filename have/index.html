@@ -6,11 +6,11 @@
    <title>TenkaAssist - 보유 캐릭터</title>
    <meta name="description" content="tenkaAssist">
    <script src="../js/common.js"></script>
-   <link rel="stylesheet" href="../css/common.css?v=1.1" type = "text/css">
-   <link rel="stylesheet" href="./have.css?v=1.1" type = "text/css">
+   <link rel="stylesheet" href="../css/common.css" type = "text/css">
+   <link rel="stylesheet" href="./have.css" type = "text/css">
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
    <script src="../js/characterJson.js"></script>
-   <script src="./have.js?v=1.1"></script>
+   <script src="./have.js"></script>
 </head>
 <body>
    <script src="../js/header.js"></script>
@@ -21,34 +21,68 @@
             <button class="icon-btn i-save" onclick="setHave()"><img class="icon" src="../images/icons/ico-save.svg"></button>
             <button class="icon-btn i-load" onclick="synchro()"><img class="icon" src="../images/icons/ico-load.svg"></button>
             <button class="icon-btn i-sort" onclick="sortHave()"><img class="icon" src="../images/icons/ico-sort.svg"></button>
-            <div class="select_dropdown">
-               <div class="dropdown">
-                  <button id="btn2" class="dropdown-btn" style="height:2rem;">40억<span class="absolute-right">▼</span></button>
-                  <div id="drop2" class="dropdown-content">
-                     <input type="radio" id="b210" name="b2" value="11000000000">
-                     <label id="l_b210" for="b210">11000000000</label>
-                     <input type="radio" id="b29" name="b2" value="10000000000">
-                     <label id="l_b29" for="b29">10000000000</label>
-                     <input type="radio" id="b28" name="b2" value="9000000000">
-                     <label id="l_b28" for="b28">9000000000</label>
-                     <input type="radio" id="b27" name="b2" value="8000000000">
-                     <label id="l_b27" for="b27">8000000000</label>
-                     <input type="radio" id="b26" name="b2" value="7000000000">
-                     <label id="l_b26" for="b26">7000000000</label>
-                     <input type="radio" id="b25" name="b2" value="6000000000">
-                     <label id="l_b25" for="b25">6000000000</label>
-                     <input type="radio" id="b24" name="b2" value="5000000000">
-                     <label id="l_b24" for="b24">5000000000</label>
-                     <input type="radio" id="b23" name="b2" value="4000000000" checked>
-                     <label id="l_b23" for="b23">4000000000</label>
-                     <input type="radio" id="b22" name="b2" value="3000000000">
-                     <label id="l_b22" for="b22">3000000000</label>
-                     <input type="radio" id="b21" name="b2" value="0">
-                     <label id="l_b21" for="b21">0</label>
-                  </div>
+            <button id="characterSearchBtn2" class="goSearchButton" onclick="searchDeck()">검색</button>
+         </div>
+      </div>
+      <div class="block option-box">
+         <span id="option-limit" style="margin-left:0.5rem;">최소조건</span>
+         <div class="select_dropdown">
+            <div class="dropdown">
+               <button id="btn1" class="dropdown-btn" style="height:1.5rem;">
+                  <img class="i-heart2" src="../images/icons/ico-heart.svg">
+                  20<span class="absolute-right">▼</span>
+               </button>
+               <div id="drop1" class="dropdown-content">
+                  <input type="radio" id="b110" name="b1" value="50">
+                  <label id="l_b110" for="b110">50</label>
+                  <input type="radio" id="b19" name="b1" value="45">
+                  <label id="l_b19" for="b19">45</label>
+                  <input type="radio" id="b18" name="b1" value="40">
+                  <label id="l_b18" for="b18">40</label>
+                  <input type="radio" id="b17" name="b1" value="35">
+                  <label id="l_b17" for="b17">35</label>
+                  <input type="radio" id="b16" name="b1" value="30">
+                  <label id="l_b16" for="b16">30</label>
+                  <input type="radio" id="b15" name="b1" value="25">
+                  <label id="l_b15" for="b15">25</label>
+                  <input type="radio" id="b14" name="b1" value="20" checked>
+                  <label id="l_b14" for="b14">20</label>
+                  <input type="radio" id="b13" name="b1" value="15">
+                  <label id="l_b13" for="b13">15</label>
+                  <input type="radio" id="b12" name="b1" value="10">
+                  <label id="l_b12" for="b12">10</label>
+                  <input type="radio" id="b11" name="b1" value="0">
+                  <label id="l_b11" for="b11">0</label>
                </div>
             </div>
-            <button id="characterSearchBtn2" class="goSearchButton" onclick="searchDeck()">검색</button>
+         </div>
+         <span>&</span>
+         <div class="select_dropdown">
+            <div class="dropdown">
+               <button id="btn2" class="dropdown-btn" style="height:1.5rem;">40억<span class="absolute-right">▼</span></button>
+               <div id="drop2" class="dropdown-content">
+                  <input type="radio" id="b210" name="b2" value="11000000000">
+                  <label id="l_b210" for="b210">11000000000</label>
+                  <input type="radio" id="b29" name="b2" value="10000000000">
+                  <label id="l_b29" for="b29">10000000000</label>
+                  <input type="radio" id="b28" name="b2" value="9000000000">
+                  <label id="l_b28" for="b28">9000000000</label>
+                  <input type="radio" id="b27" name="b2" value="8000000000">
+                  <label id="l_b27" for="b27">8000000000</label>
+                  <input type="radio" id="b26" name="b2" value="7000000000">
+                  <label id="l_b26" for="b26">7000000000</label>
+                  <input type="radio" id="b25" name="b2" value="6000000000">
+                  <label id="l_b25" for="b25">6000000000</label>
+                  <input type="radio" id="b24" name="b2" value="5000000000">
+                  <label id="l_b24" for="b24">5000000000</label>
+                  <input type="radio" id="b23" name="b2" value="4000000000" checked>
+                  <label id="l_b23" for="b23">4000000000</label>
+                  <input type="radio" id="b22" name="b2" value="3000000000">
+                  <label id="l_b22" for="b22">3000000000</label>
+                  <input type="radio" id="b21" name="b2" value="0">
+                  <label id="l_b21" for="b21">0</label>
+               </div>
+            </div>
          </div>
       </div>
       <div class="block">
@@ -110,6 +144,7 @@
    document.getElementById("characterSearchBtn2").innerText = t(" 검색").trim();
    document.getElementById("searchInput").placeholder = t("검색");
 
+   document.getElementById("option-limit").innerText = t("최소조건");
    document.getElementById("copy-text").innerText = t("코드복사");
    document.getElementById("paste-text").innerText = t("붙여넣기");
 
