@@ -4,8 +4,8 @@ const address = "https://inittt.github.io/tenkaassist"
 const server = "https://port-0-tenkafuma-assistant-server-1272llx2xidhk.sel5.cloudtype.app"
 const noImg = `${address}/images/default.jpg`;
 
-// 삭제할것---------------------------------
-//location.href = `${address}/serverFix/`;
+// 사이트 점검시 ---------------------------------
+location.href = `${address}/serverFix/`;
 //------------------------------------------
 
 // 새로운 아이콘을 추가

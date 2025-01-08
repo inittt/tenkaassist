@@ -1,4 +1,4 @@
-const liberationList = ["바알", "사탄", "이블리스", "살루시아", "란", "루루", "밀레", "섹돌", "치즈루", "노엘리", "페바알"];
+const liberationList = ["바알", "사탄", "이블리스", "살루시아", "란", "루루", "밀레", "섹돌", "치즈루", "노엘리", "페바알","신이블","이치카"];
 const chJSON = { data : [
 {ok : true, id : 10001, rarity : 3, hp:962383, atk:254657, cd:3, atkMag:100, ultMag:503, fullname : "마왕 바알", name : "바알", element : 0, role : 0, hpUp : 20},
 {ok : true, id : 10002, rarity : 3, hp:1384007, atk:177152, cd:3, atkMag:100, ultMag:0, fullname : "마왕 사탄", name : "사탄", element : 4, role : 2, hpUp : 0},
@@ -53,13 +53,13 @@ const chJSON = { data : [
 {ok : true, id : 10069, rarity : 3, hp:1023944, atk:263515, cd:4, atkMag:0, ultMag:0, fullname : "사랑을 찾아서 스즈란", name : "스즈란", element : 0, role : 3, hpUp : 20},
 {ok : true, id : 10071, rarity : 3, hp:1056717, atk:255543, cd:4, atkMag:100, ultMag:0, fullname : "저주의 감시인 스타샤", name : "스타샤", element : 0, role : 0, hpUp : 20},
 {ok : true, id : 10072, rarity : 3, hp:958397, atk:281673, cd:4, atkMag:0, ultMag:0, fullname : "새신부 바알", name : "신바알", element : 0, role : 3},
-{ok : true, id : 10074, rarity : 3, hp:1049631, atk:257314, cd:3, atkMag:100, ultMag:471, fullname : "유키히메 이치카", name : "이치카", element : 1, role : 0},
+{ok : true, id : 10074, rarity : 3, hp:1049631, atk:257314, cd:3, atkMag:100, ultMag:471, fullname : "유키히메 이치카", name : "이치카", element : 1, role : 0, hpUp : 30},
 {ok : true, id : 10075, rarity : 3, hp:995599, atk:271044, cd:4, atkMag:0, ultMag:0, fullname : "이상한 나라의 치즈루", name : "앨즈루", element : 2, role : 3, hpUp : 30},
 {ok : true, id : 10076, rarity : 3, hp:993385, atk:271929, cd:4, atkMag:100, ultMag:514, fullname : "이상한 나라의 루루", name : "앨루루", element : 2, role : 0},
 {ok : true, id : 10077, rarity : 3, hp:1365849, atk:197525, cd:4, atkMag:0, ultMag:0, fullname : "블랙호크 베리스", name : "베리스", element : 1, role : 1},
 {ok : true, id : 10078, rarity : 3, hp:900822, atk:299831, cd:4, atkMag:100, ultMag:514, fullname : "나른한 고양이 루루", name : "냥루루", element : 1, role : 4, hpUp : 30},
 {ok : true, id : 10079, rarity : 3, hp:962383, atk:280344, cd:4, atkMag:125, ultMag:200, fullname : "신춘 리츠키", name : "신츠키", element : 0, role : 0},
-{ok : true, id : 10081, rarity : 3, hp:976555, atk:276358, cd:4, atkMag:100, ultMag:618, fullname : "새신부 이블리스", name : "신이블", element : 3, role : 0},
+{ok : true, id : 10081, rarity : 3, hp:976555, atk:276358, cd:4, atkMag:100, ultMag:618, fullname : "새신부 이블리스", name : "신이블", element : 3, role : 0, hpUp : 40},
 {ok : true, id : 10082, rarity : 3, hp:980984, atk:275472, cd:5, atkMag:100, ultMag:802, fullname : "새신부 사탄", name : "신사탄", element : 4, role : 0, hpUp : 20},
 {ok : true, id : 10083, rarity : 3, hp:991170, atk:272372, cd:4, atkMag:0, ultMag:0, fullname : "DP-TOY 점장 사쿠야 유메", name : "유메", element : 4, role : 3},
 {ok : true, id : 10084, rarity : 3, hp:920752, atk:266172, cd:3, atkMag:100, ultMag:397, fullname : "인기 버튜버 안닌 미루", name : "미루", element : 0, role : 0, hpUp : 40},
