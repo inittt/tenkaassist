@@ -107,44 +107,6 @@ function addNineHours(dateTimeStr) {
    return `${newYear}/${newMonth}/${newDay} ${newHours}:${newMinutes}:${newSeconds}`;
 }
 
-// document.addEventListener("DOMContentLoaded", () => {
-//    // 버튼 생성
-//    const button = document.createElement("button");
-//    button.textContent = ""; // 버튼 텍스트 설정
-
-//    // 버튼 스타일 설정
-//    button.style.position = "fixed"; // 화면 고정
-//    button.style.bottom = "1rem";    // 하단에서 20px 간격
-//    button.style.right = "1rem";     // 우측에서 20px 간격
-//    button.style.padding = "0.2rem";
-//    button.style.backgroundColor = "#007BFF"; // 파란색 배경
-//    button.style.color = "white";             // 텍스트 색상
-//    button.style.border = "1px solid white";             // 테두리 제거
-//    button.style.borderRadius = "50%";        // 둥근 모서리
-//    button.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.1)"; // 그림자 효과
-//    button.style.cursor = "pointer";         // 클릭 가능 커서
-//    button.style.zIndex = "9999";
-
-//    // 이미지 생성
-//    const img = document.createElement("img");
-//    img.className = "icon"; // 클래스 추가
-//    img.src = `${address}/images/icons/ico-search.svg`; // 이미지 경로 설정
-//    img.alt = "Save Icon"; // 접근성을 위한 대체 텍스트
-//    img.style.width = "50%"; // 이미지 크기 설정
-//    img.style.height = "50%";
-
-//   // 이미지를 버튼에 추가
-//   button.appendChild(img);
-
-//    // 버튼 클릭 이벤트 추가
-//    button.addEventListener("click", () => {
-//    alert("버튼이 클릭되었습니다!");
-//    });
-
-//    // 버튼을 body에 추가
-//    document.body.appendChild(button);
-// })
-
 // 번역 -----------------------------------------------------------------------------
 if (localStorage.getItem("lang") == null) localStorage.setItem("lang", "ko");
 const lang = localStorage.getItem("lang");
