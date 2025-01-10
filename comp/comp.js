@@ -87,7 +87,7 @@ function makeCompBlock(comp) {
       const ch = getCharacter(cid);
       stringArr.push(`
          <div class="character" style="margin:0.2rem;">
-            <div style="margin:0.2rem;">
+            <div style="position:relative; padding:0.2rem;">
                <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
                <img src="${address}/images/icons/ro_${ch.role}.webp" class="el-icon z-2">
                ${leaderHpOn ? `<div class="hpbox" z-2"><img class="i-heart" src="../images/icons/ico-heart.svg">${ch.hpUp ? ch.hpUp : 0}</div>` : ""}

@@ -67,10 +67,10 @@
 }
 
 .bond1BtnWrapper {
-  position: relative;
   display: inline-block;
-  margin-top:0.2rem;
   margin:0.2rem;
+  margin-right:0;
+  margin-left:auto;
 }
 .bond1Btn {
   position:relative;
@@ -88,4 +88,18 @@
 }
 .bond1Btn:hover {
   border-color:white;
+}
+
+.dupCheckBtn {
+  margin-left:auto;
+  display: flex;
+  justify-content: center;
+  box-sizing:border-box;
+  border:1px solid transparent;
+  border-radius: 0.2rem;
+  padding: 0.2rem 0.6rem;
+  background-color: #e69900;
+  cursor: pointer;
+  width:3rem;
+  height:1.5rem;
 }

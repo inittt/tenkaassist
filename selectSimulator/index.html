@@ -17,14 +17,24 @@
       <div class="block">
          <div class="margin-left titleblock"><span id="titlebox-text" class="titlebox">시뮬레이터 - 캐릭선택</span></div>
       </div>
-      <div class="block" style="margin-bottom:0;">
-         <div class="margin-left titleblock">
-            <div id="selectedCh" class="flex">캐릭터를 선택해 추가해 주세요</div>
+      <div class="block" style="margin-bottom:0.3rem; padding-top:0; padding-bottom:0">
+         <div class="margin-left05 titleblock flex">
+            <button class="book-btn" onclick="ch_info(0)"><img class="icon" src="../images/icons/ico-book.svg"></button>
+            <button class="book-btn" onclick="ch_info(1)"><img class="icon" src="../images/icons/ico-book.svg"></button>
+            <button class="book-btn" onclick="ch_info(2)"><img class="icon" src="../images/icons/ico-book.svg"></button>
+            <button class="book-btn" onclick="ch_info(3)"><img class="icon" src="../images/icons/ico-book.svg"></button>
+            <button class="book-btn" onclick="ch_info(4)"><img class="icon" src="../images/icons/ico-book.svg"></button>
+            <div id="dupCheckBtn" class="dupCheckBtn" onclick="dupTeamCheck()"><img class="icon" src="../images/icons/ico-check.svg"></div>
+         </div>
+      </div>
+      <div class="block" style="margin-bottom:0; margin-top:0;">
+         <div class="margin-left05 titleblock">
+            <div id="selectedCh" class="flex" style="padding-top:0;">캐릭터를 선택해 추가해 주세요</div>
             <button id="start-button" style="margin-left:auto;" class="button2" onclick="startSimulator()">시작</button>
          </div>
       </div>
-      <div class="block" style="margin-top:0.3rem; padding-top:0.3rem">
-         <div id="dropdown-container" class="margin-left titleblock flex">
+      <div class="block" style="margin-top:0.3rem; padding-top:0; padding-bottom:0">
+         <div id="dropdown-container" class="margin-left05 titleblock flex">
             <div class="dropdown">
                <button id="btn0" class="dropdown-btn">5<span class="absolute-right">▼</span></button>
                <div id="drop0" class="dropdown-content">

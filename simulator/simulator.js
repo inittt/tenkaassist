@@ -169,7 +169,7 @@ function makeComp(list) {
             <img id="ult${idx}" class="act_btn" onclick="do_ult(${idx})" src="${address}/images/icons/btn_up.png">
             <div id="cd-max${idx}" class="cd-container"><div id="cd${idx}" class="cd"></div></div>
             <div class="character" style="margin:0.2rem;">
-               <div id="atk${idx}" style="margin:0.2rem;" onclick="do_atk(${idx})">
+               <div id="atk${idx}" style="position:relative; padding:0.2rem;" onclick="do_atk(${idx})">
                   <img id="img${idx}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
                   <div class="bond-icon z-2">${numToBond(bondList[i++])}</div>
                   ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
@@ -180,10 +180,13 @@ function makeComp(list) {
                <div class="text-mini">${t(ch.name)}</div>
             </div>
             <img id="def${idx}" class="act_btn" onclick="do_def(${idx})" src="${address}/images/icons/btn_down.png">
-            <div class="act_btn" style="height:2.5rem;">
+            <div class="act_btn" style="height:1.2rem;">
                <img class="circleImg" onclick="show_simple(${idx})" src="${address}/images/icons/describe.png">
                <img class="circleImg" onclick="show_console(${idx})" src="${address}/images/icons/star.png">
             </div>
+            <button class="book-btn" onclick="toChInfo(${id})" style="margin-bottom:0.5rem">
+               <img class="icon" src="../images/icons/ico-book.svg">
+            </button>
          </div>
       `);  
       idx++;

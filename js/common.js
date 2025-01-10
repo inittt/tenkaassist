@@ -188,7 +188,8 @@ const translate = {
    "캐릭터를 선택해 추가해 주세요" : {en : "Select a character to add", sc : "选择角色加入队伍", tc : "選擇角色加入隊伍"},
    "5개의 캐릭터를 선택해주세요" : {en : "Five characters are needed", sc : "需要5名角色", tc : "需要5名角色"},
    "5개까지 선택 가능합니다" : {en : "Up to 5 characters can be selected", sc : "可以选择5名角色", tc : "可以選擇5名角色"},
-
+   "조합이 이미 존재합니다" : {en : "The team already exists", sc : "团队已存在", tc : "團隊已存在"},
+   "등록되지 않은 조합입니다" : {en : "The team is not registered", sc : "团队未注册", tc : "團隊未註冊"},
 
    // 시뮬레이터 Simulator
    "리셋": {en : "reset", sc : "重置", tc : "重置"},

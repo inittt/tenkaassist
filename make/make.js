@@ -203,7 +203,7 @@ function loadBlockAllDeck(pg) {
          const ch = getCharacter(cid);
          stringArr.push(`
             <div class="character" style="margin:0.2rem;">
-               <div style="margin:0.2rem;">
+               <div style="position:relative; padding:0.2rem;">
                   <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
                   <div class="bond-icon z-2">${numToBond(bondMap.get(ch.id))}</div>
                   ${leaderHpOn ? `<div class="hpbox" z-2"><img class="i-heart" src="../images/icons/ico-heart.svg">${ch.hpUp ? ch.hpUp : 0}</div>` : ""}
@@ -276,7 +276,7 @@ function loadBlockNDeck(pg) {
             const ch = getCharacter(cid);
             stringArr.push(`
                <div class="character" style="margin:0.2rem;">
-                  <div style="margin:0.2rem;">
+                  <div style="position:relative; padding:0.2rem;">
                      <img src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
                      <div class="bond-icon z-2">${numToBond(bondMap.get(ch.id))}</div>
                      ${leaderHpOn ? `<div class="hpbox" z-2"><img class="i-heart" src="../images/icons/ico-heart.svg">${ch.hpUp ? ch.hpUp : 0}</div>` : ""}

@@ -66,7 +66,7 @@ function getCharactersWithCondition(element, role, rarity, search) {
       if (isAny(id)) {opacity = `style="opacity:0"`; roleImg = "";}
       innerArray.push(`
          <div class="character" onclick="clickedCh(${id})" style="margin:0.2rem;">
-            <div style="margin:0.2rem;">
+            <div style="position:relative; padding:0.2rem;">
                <img id="img_${id}" src="${address}/images/characters/cs${id}_0_0.webp" class="img z-1" alt="">
                ${roleImg}
                ${liberationList.includes(name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
@@ -96,6 +96,24 @@ function startSimulator() {
    location.href = `${address}/simulator/?list=${selected}&bond=${getBondList()}&hitAll=true`;
 }
 
+// 체크 버튼 누를시
+function dupTeamCheck() {
+   if (selected.length != 5) return alert(t("5개의 캐릭터를 선택해주세요"));
+
+   const deckName = `${getCharacter(selected[0]).name}덱`;
+   request(`${server}/comps/isDupTeam/${deckName}/${selected}`, {
+      method: "GET",
+   }).then(response => {
+      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
+      return response.json();
+   }).then(res => {
+      if (!res.success) return alert(t("데이터 로드 실패"));
+      alert(res.data ? t("조합이 이미 존재합니다") : t("등록되지 않은 조합입니다"));
+   }).catch(e => {
+      alert(t("데이터 로드 실패"));
+   })
+}
+
 // 검색창에 선택된 캐릭터 이미지 띄우기
 function updateSelected() {
    const div = document.getElementById("selectedCh");
@@ -108,7 +126,7 @@ function updateSelected() {
          let roleImg = isAny(id) ? "" : `<img src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">`;
          innerArray.push(`
             <div class="character" data-id="${id}" draggable="true" onclick="clickedSel(this, ${id})" ontouchstart="chDragStart(event.touches[0].target)" ontouchend="chTouchEnd(event)" ondragstart="chDragStart(event.target)" ondrop="chDrop(event.target)" ondragover="chDragOver(event)" style="margin:0.2rem;">
-               <div style="margin:0.2rem;">
+               <div style="position:relative; padding:0.2rem;">
                   <img src="${address}/images/characters/cs${id}_0_0.webp" class="img z-1" alt="">
                   ${roleImg}
                   ${liberationList.includes(name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
@@ -120,6 +138,13 @@ function updateSelected() {
       }
       div.innerHTML = innerArray.join("");
    }
+}
+
+// 책 버튼 클릭시 tkfmdata로 이동
+function ch_info(n) {
+   const id = selected[n];
+   if (id == undefined) return;
+   toChInfo(id);
 }
 
 // 클릭하면 체크표시 활성/비활성화, 리스트에 추가/제거

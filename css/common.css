@@ -31,6 +31,7 @@ i {
    border-color:white;
 }
 .button2 {
+   width:3rem;
    height:5.2rem;
    cursor:pointer;
    background-color: #24a01e;
@@ -38,7 +39,7 @@ i {
    font-size:1rem;
    font-weight: bold;
    border: 0.1rem solid transparent;
-   padding: 0.3rem 0.6rem;
+   padding: 0.3rem 0.3rem;
    border-radius: 0.3rem;;
 }
 .button2:hover {
@@ -135,10 +136,10 @@ a {color: inherit; text-decoration: none;}
 }
 .li-icon {
    position:absolute;
-   top:0.2rem;
-   left:0.2rem;
-   width:1.3rem;
-   height:1.3rem;
+   bottom:0.4rem;
+   right:0.2rem;
+   width:1rem;
+   height:1rem;
 }
 .chked {
    border-radius: 0.3rem;
@@ -430,6 +431,9 @@ header {
 .margin-left {
    margin-left: 1rem;
 }
+.margin-left05 {
+   margin-left: 0.5rem;
+}
 .margin-right {
    margin-right: 1rem;
 }
@@ -532,6 +536,26 @@ header {
    margin-left:auto;
 }
 
+.book-btn {
+   position:relative;
+   display: flex;
+   justify-content: center;
+   box-sizing:border-box;
+   border:1px solid white;
+   border-radius: 0.2rem;
+   width:2.9rem;
+   height:1.5rem;
+   margin:0.2rem;
+   padding: 0.2rem 0.6rem;
+   background-color: transparent;
+   cursor: pointer;
+   font-weight:bold;
+   font-size:0.9rem;
+}
+.book-btn:hover {
+   border-color:black;
+}
+
 /*아이콘 관련*/
 .icon {
    width:1rem;
@@ -574,15 +598,14 @@ header {
 .hpbox{
    font-size:0.6rem;
    text-align:center;
-   border-bottom-right-radius: 0.3rem;
    border-top-left-radius: 0.3rem;
    position:absolute;
-   right:0.2rem;
-   bottom:1.25rem;
+   left:0.2rem;
+   top:0.2rem;
    width:1.5rem;
    height:0.8rem;
    color:white;
-   background-color: rgba(0, 0, 0, 0.7);
+   background-color: rgba(0, 0, 0, 0.5);
 }
 
 @media (max-width: 420px) {

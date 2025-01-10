@@ -287,6 +287,18 @@ function isValidComp(ids) {
    return false;
 }
 
-function getHpUp() {
+function toChInfo(id) {
+   const cur = getCharacter(id);
+   if (cur == undefined || cur == null) return;
 
+   let str = translate[cur.name].en;
+   str = str.replace('.', '_').replace('-',"").replace('Ⅷ', '8').toLowerCase();
+
+   const lang_tmp = {
+      "ko" : "kr/",
+      "en" : "en/",
+      "sc" : "sc/",
+      "tc" : ""
+   }
+   window.open(`https://tkfmdata.com/${lang_tmp[lang]}unit/?code=${str}`, "_blank");
 }

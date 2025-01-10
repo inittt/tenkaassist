@@ -147,7 +147,7 @@ function setCharacters(curSortList) {
       if (isAny(id)) continue;
       innerArray.push(`
          <div class="character" onclick="clickedCh(${id})" style="margin:0.2rem;">
-            <div style="margin:0.2rem;">
+            <div style="position:relative; padding:0.2rem;">
                <img id="img_${id}" src="${address}/images/characters/cs${id}_0_0.webp" class="img z-1" alt="">
                <img id="el_${id}" src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">
                ${liberationList.includes(name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
