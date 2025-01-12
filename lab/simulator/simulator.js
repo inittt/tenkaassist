@@ -1,10 +1,23 @@
+const curHeader = 9;
+
 const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list'), idList = chIds.split(",").map(Number);
 const bond = params.get('bond'), bondList = bond == null ? [5, 5, 5, 5, 5] : bond.split(",").map(Number);
+const hpParam = params.get('hp'), liParam = params.get('li');
 const HP_MAX = 10854389981;
-const curHeader = 6;
+if (params.get('hitAll') != null && params.get('hitAll') == "false") hitAll = false;
+if (params.get('el') != null) {
+   let elNum = Number(params.get('el'));
+   if (!isNaN(elNum)) {
+      if (elNum == 0 || elNum == 1 || elNum == 2 || elNum == 3 || elNum == 4) boss.element = elNum;
+   }
+}
 let isOn = false, actNum = 0, commandList;
 
+window.onload = init;
+function init() {
+   document.getElementById("hitAllChkBox").checked = hitAll;
+}
 document.addEventListener("DOMContentLoaded", function() {
    getdiv("bossBuffBtn").innerHTML = `
       <img class="circleImg" onclick="show_simple(-1)" src="${address}/images/icons/describe.png">
@@ -60,7 +73,27 @@ document.addEventListener("DOMContentLoaded", function() {
          keyboardClick();
       }
    }).catch(e => {});
+
+   // 보스 속성에 따른 progress-bar 색상 변화
+   const pgBar = document.getElementById("boss");
+   switch(boss.element) {
+      case 0 : pgBar.style.backgroundColor = "red"; break;
+      case 1 : pgBar.style.backgroundColor = "deepskyblue"; break;
+      case 2 : pgBar.style.backgroundColor = "limegreen"; break;
+      case 3 : pgBar.style.backgroundColor = "yellow"; break;
+      case 4 : pgBar.style.backgroundColor = "darkviolet"; break;
+   }
 });
+
+function redirectOnCheck() {
+   const url = new URL(window.location.href);
+   const params = url.searchParams;
+
+   params.set('hitAll', hitAll ? "false" : "true");
+
+   // 변경된 URL로 리다이렉트
+   window.location.href = url.toString().replace(/%2C/g, ',');
+ }
 
 let arrowUpPressed = false;
 let arrowDownPressed = false;
@@ -138,6 +171,9 @@ function setComp() {
       if (champ == undefined || champ == null) return alert(t("캐릭터 정보가 잘못되었습니다"));
    }
    boss.maxHp = HP_MAX;
+   const paramHpNumber = Number(hpParam);
+   if (!isNaN(paramHpNumber)) boss.maxHp = paramHpNumber;
+
    //boss.maxHp = 5063653034;
    makeComp(idList);
    start(idList);
@@ -170,7 +206,7 @@ function makeComp(list) {
                <img class="circleImg" onclick="show_console(${idx})" src="${address}/images/icons/star.png">
             </div>
             <button class="book-btn" onclick="toChInfo(${id})" style="margin-bottom:0.5rem">
-               <img class="icon" src="../images/icons/ico-book.svg">
+               <img class="icon" src="../../images/icons/ico-book.svg">
             </button>
          </div>
       `);  
@@ -201,6 +237,8 @@ function start(compIds) {
    lastDmg = 0; lastAtvDmg = 0;
    boss.hp = boss.maxHp;
    boss.buff = []; alltimeFunc.length = 0;
+   
+   setBossLi();
    for(const id of compIds) {
       const tmp = chJSON.data.filter(ch => ch.id === id)[0];
       const coef_atk = COEF, coef_hp = COEF;
@@ -224,6 +262,17 @@ function start(compIds) {
 
    savedData.length = 0;
    updateAll();
+}
+
+function setBossLi() {
+   const tmp = liParam.split(",").map(Number);
+   for(let t of tmp) if (isNaN(t)) return alert(t);
+
+   tbf(boss, "속상감", tmp[0], "passive0", always);
+   tbf(boss, "받뎀증", -tmp[1], "passive1", always);
+   tbf(boss, "받일뎀", -tmp[2], "passive2", always);
+   tbf(boss, "받궁뎀", -tmp[3], "passive3", always);
+   tbf(boss, "받발뎀", -tmp[4], "passive4", always);
 }
 
 function do_ult(idx) {
@@ -266,13 +315,11 @@ function endAct() {
       if (boss.hp <= 0 && GLOBAL_TURN >= 14) {
          if (!isEnd) {endGame(); isEnd = true;}
       }
-      if (GLOBAL_TURN == 14 && isValidComp(idList) && bondList.every(e => e == 1)) saveBond1();
       for(let i = 0; i < 5; i++) comp[i].turnstart();
    }
 }
 
 function endGame() {
-   //for(let c of comp) c.isActed = true;
    updateAll();
 
    const msg = [];
@@ -290,57 +337,8 @@ function endGame() {
       cmd.push(command[i]);
       cmd.push((i+1)%5 == 0 ? "\n" : " > "); 
    }
-   const command_tmp = cmd.join("");
-   console.log(command_tmp);
-   
-   if (isValidComp(idList) && bondList.every(e => e == 5) && scarecrowTurn <= 50) saveBond5(command_tmp);
-   
    savedData.length = 0;
    alert(msg.join("\n"));
-}
-
-function saveBond1() {
-   const cmd = [];
-   for(let i = 0; i < 13*5; i++) {
-      if (i%5 == 0) {
-         if (Math.floor(i/5)+1 < 10) cmd.push(" ");
-         cmd.push(`${Math.floor(i/5)+1}턴 : `);
-      }
-      cmd.push(command[i]);
-      cmd.push((i+1)%5 == 0 ? "\n" : " > "); 
-   }
-   const command_tmp = cmd.join("");
-
-
-   const formData = new FormData();
-   formData.append("name", `${comp[0].name}덱`);
-   formData.append("compstr", chIds);
-   formData.append("dmg13", dmg13);
-   formData.append("command", command_tmp);
-   request(`${server}/comps/setPower1`, {
-      method: "POST",
-      body: formData
-   }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
-      return response.json();
-   }).then(res => {}).catch(e => {})
-}
-
-function saveBond5(command_tmp) {
-   if (boss.maxHp != HP_MAX) return;
-   const formData = new FormData();
-   formData.append("name", `${comp[0].name}덱`);
-   formData.append("compstr", chIds);
-   formData.append("dmg13", dmg13);
-   formData.append("scarecrow", scarecrowTurn);
-   formData.append("command", command_tmp);
-   request(`${server}/comps/setPower`, {
-      method: "POST",
-      body: formData
-   }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
-      return response.json();
-   }).then(res => {}).catch(e => {})
 }
 
 function isAllActed() {

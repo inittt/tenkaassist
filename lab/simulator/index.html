@@ -3,21 +3,21 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>TenkaAssist - 시뮬레이터</title>
+   <title>TenkaAssist - Lab</title>
    <meta name="description" content="tenkaAssist">
-   <script src="../js/common.js"></script>
-   <link rel="stylesheet" href="../css/common.css" type = "text/css">
+   <script src="../../js/common.js"></script>
+   <link rel="stylesheet" href="../../css/common.css" type = "text/css">
    <link rel="stylesheet" href="./simulator.css" type = "text/css">
-   <script src="../js/characterJson.js"></script>
-   <script src="./calculator.js"></script>
+   <script src="../../js/characterJson.js"></script>
+   <script src="../../simulator/calculator.js"></script>
    <script src="./simulator.js"></script>
 </head>
 <body class="no-scrollbar">
-   <script src="../js/header.js"></script>
+   <script src="../../js/header.js"></script>
    <div id="main-sim" class="main-container bg-dark">
       <div id="title-sim" class="block">
          <div class="margin-left titleblock">
-            <span id="titlebox" class="titlebox">시뮬레이터</span>
+            <span id="titlebox" class="titlebox">Lab</span>
             <button id="resetBtn" class="button" onclick="refresh()" style="height:2rem; margin-left:1rem;">리셋</button>
             <button id="guide" class="leaderButton leaderOff option_btn1" style="display:none">가이드</button>
             <button id="autoBtn" class="button" onclick="auto()" style="height:2rem; margin-left:1rem;">자동</button>
@@ -50,8 +50,8 @@
    <div id="console" class="console no-scrollbar" style="display:none" onclick="close_console()"></div>
 </body>
 <script>
-   document.title = "TenkaAssist - " + t("시뮬레이터");
-   document.getElementById("titlebox").innerText = t("시뮬레이터");
+   document.title = "TenkaAssist - Lab";
+   document.getElementById("titlebox").innerText = "Lab";
    document.getElementById("resetBtn").innerText = t("리셋");
    document.getElementById("guide").innerText = t("가이드");
    document.getElementById("hitAllTxt").innerText = t("매턴 전체피격 (기본값)");

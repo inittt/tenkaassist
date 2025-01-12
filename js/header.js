@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <a class="h-line" href="${address}/selectSimulator/">${t("시뮬레이터")}</a>
       <a class="h-line" href="${address}/notification/">${t("공지")}</a>
       <a class="h-line" href="${address}/stats/">${t("통계")}</a>
+      <a class="h-line" href="${address}/lab/">Lab</a>
       <a class="h-line" href="${address}/contributors/">♥</a>
    `;
 
@@ -26,7 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
       <a id="h-6" class="h-left h-box" href="${address}/selectSimulator/"><span class="bol" title="${t("시뮬레이터")}">${t("시뮬레이터")}</span></a>
       <a id="h-7" class="h-left h-box" href="${address}/notification/"><span class="bol" title="${t("공지")}">${t("공지")}</span></a>
       <a id="h-8" class="h-left h-box" href="${address}/stats/"><span class="bol" title="${t("통계")}">${t("통계")}</span></a>
-      <a id="h-9" class="h-left h-box" href="${address}/contributors/">♥</a>
+      <a id="h-9" class="h-left h-box" href="${address}/lab/"><span class="bol" title="Lab">Lab</span></a>
+      <a id="h-99" class="h-left h-box" href="${address}/contributors/">♥</a>
       <div id="translate" class="h-right">
          <img class="h-lang" onclick="showLang()" src="${address}/images/icons/language.svg">
          <div id="h-lang-list" class="h-lang-list">

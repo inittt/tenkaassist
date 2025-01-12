@@ -1,6 +1,6 @@
 let checkElementN, checkRoleN, checkRarityN;
 let draggedId;
-const curHeader = 6;
+const curHeader = 9;
 
 const selected = [];
 const params = new URLSearchParams(window.location.search);
@@ -93,25 +93,7 @@ function getBondList() {
 // 시작 버튼 누를시
 function startSimulator() {
    if (selected.length != 5) return alert(t("5개의 캐릭터를 선택해주세요"));
-   location.href = `${address}/simulator/?list=${selected}&bond=${getBondList()}`;
-}
-
-// 체크 버튼 누를시
-function dupTeamCheck() {
-   if (selected.length != 5) return alert(t("5개의 캐릭터를 선택해주세요"));
-
-   const deckName = `${getCharacter(selected[0]).name}덱`;
-   request(`${server}/comps/isDupTeam/${deckName}/${selected}`, {
-      method: "GET",
-   }).then(response => {
-      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
-      return response.json();
-   }).then(res => {
-      if (!res.success) return alert(t("데이터 로드 실패"));
-      alert(res.data ? t("이미 존재하는 조합입니다") : t("등록되지 않은 조합입니다"));
-   }).catch(e => {
-      alert(t("데이터 로드 실패"));
-   })
+   location.href = `${address}/lab/option/?list=${selected}&bond=${getBondList()}`;
 }
 
 // 검색창에 선택된 캐릭터 이미지 띄우기

@@ -1,6 +1,6 @@
+const address = "https://inittt.github.io/tenkaassist"
 //const address = "http://127.0.0.1:5500";
 //const server = "http://localhost:5000";
-const address = "https://inittt.github.io/tenkaassist"
 const server = "https://port-0-tenkafuma-assistant-server-1272llx2xidhk.sel5.cloudtype.app"
 const noImg = `${address}/images/default.jpg`;
 
@@ -209,6 +209,7 @@ const translate = {
    "구속": {en : "bond", sc : "羁绊", tc : "羈絆"},
    "허수턴": {en : "turns", sc : "回合", tc : "回合"},
    "매턴 전체피격 (기본값)": {en : "All allies are hit every turn (default)", sc:"每回合我方全部受到攻击 (默认值)", tc:"每回合我方全部受到攻擊 (預設值)"},
+   "매턴 전체공격": { "en": "Every Turn All Attack", "sc": "每回合全体攻击", "tc": "每回合全體攻擊"},
 
 
    "버프요약" : {en : "Buff Summary", sc : "状态列表", tc : "狀態列表"},
@@ -232,6 +233,7 @@ const translate = {
    "가아증" : {en : "increase armor output", sc : "造成护盾增加", tc : "造成護盾增加"},
    "받아증" : {en : "armor taken", sc : "受到护盾", tc : "受到護盾"}, 
    "받지뎀" : {en : "periodic dmg taken", sc : "受到持续伤害", tc : "受到持續傷害"},
+   "속상감" : {en : "Decrease attribute buffs/debuffs by", sc : "减少属性相剋效果", tc : "減少屬性相剋效果"},
 
    "버프상세" : {en : "Buff Details", sc : "状态详情", tc : "狀態詳情"},
    "의" : {en : "'s", sc : "的", tc : "的"},
@@ -270,7 +272,7 @@ const translate = {
    "중첩" : {en : "stack", sc : "层", tc : "層"},
    "최대" : {en : "max", sc : "最大", tc : "最大"},
    "미발동" : {en : "inactive", sc : "未生效", tc : "未生效"},
-   "에게" : {en : " get", sc : "获得", tc : "獲得"},
+   "에게" : {en : " takes", sc : "获得", tc : "獲得"},
    "부여" : {en : "", sc : "", tc : ""},
    "타깃" : {en : "target", sc : "目标", tc : "目標"},
    "힐" : {en : "recovery", sc : "回复", tc : "回復"}, 
@@ -316,8 +318,6 @@ const translate = {
    // 보유 캐릭터
    "보유" : {en : "Owned", sc : "已拥有", tc : "已擁有"},
    "보유 캐릭터" : {en : "Owned", sc : "已拥有", tc : "已擁有"},
-   "조건" : {en : "Option", sc : "选项", tc : "選項"},
-   "SR이하 포함" : {en : "add SR▽", sc : "新增 SR▽", tc : "新增 SR▽"},
    "보유중인 캐릭터를 선택해 주세요": {en : "Select from your owned characters", sc : "请选择您拥有的角色", tc : "請選擇您擁有的角色"},
    "로그인 된 경우 동기화 가능": {en : "Syncing available when logged in", sc : "登录后可同步", tc : "登入後可同步"},
    "보유 캐릭터를 가져오시겠습니까?": {en : "Do you want to retrieve your owned characters?", sc : "您要检索拥有的角色吗？", tc : "您要檢索擁有的角色嗎？"},
@@ -352,6 +352,19 @@ const translate = {
    "유효하지 않은 아이디 혹은 비밀번호입니다.": {en: "Invalid ID or password.",sc: "无效的ID或密码。",tc: "無效的ID或密碼。"},
    "기존 비밀번호가 틀립니다": {en: "The existing password is incorrect.",sc: "原密码不正确。",tc: "原密碼不正確。"},
 
+   // Lab
+   "적 설정": { en: "Enemy Settings", sc: "敌人设置", tc: "敵人設定" },
+   "허수+" : {en : "dummy+", sc : "木椿+", tc : "木椿+"},
+   "허수" : {en : "dummy", sc : "木椿", tc : "木椿"},
+   "체험" : {en : "trial", sc : "试玩", tc : "試玩"},
+   "직접입력" : {en : "manual", sc : "手动输入", tc : "手動輸入"},
+   "속성 상성 감소": { en: "Decrease attribute buffs/debuffs by", sc: "减少属性相剋效果", tc: "減少屬性相剋效果" },
+   "받는 데미지 감소": { en: "Decrease damage taken by", sc: "减少受到的伤害", tc: "減少受到的傷害" },
+   "받는 일반공격 데미지 감소": { en: "Decrease basic attack damage taken by", sc: "减少受到的基础攻击伤害", tc: "減少受到的基礎攻擊傷害" },
+   "받는 궁극기 데미지 감소": { en: "Decrease ultimate skill damage taken by", sc: "减少受到的终极技能伤害", tc: "減少受到的終極技能傷害" },
+   "받는 발동기 데미지 감소": { en: "Decrease trigger skill damage taken by", sc: "减少受到的触发技能伤害", tc: "減少受到的觸發技能傷害" },
+   "올바르지 않은 입력이 있습니다": { en: "Invalid input", sc: "输入无效", tc: "輸入無效"},
+
    // 추천덱
    "덱": {en : "team", sc : "队伍", tc : "隊伍"},
    "조합1개": {en : "1 team", sc : "队伍1", tc : "隊伍1"},
@@ -382,6 +395,7 @@ const translate = {
    // 전지역모집
    "첫글자 입력" : {en : "Initial search", sc : "内部搜索", tc : "內部搜尋"},
    "SR 등장확률" : {en : "SR Appearance Rate", sc : "SR 出现率", tc : "SR 出現率"},
+   "무속성" : {en : "None", sc : "无属性", tc : "無屬性"},
    "화속성" : {en : "Fire", sc : "火属性", tc : "火屬性"},
    "수속성" : {en : "Water", sc : "水属性", tc : "水屬性"}, 
    "풍속성" : {en : "Wind", sc : "风属性", tc : "風屬性"}, 

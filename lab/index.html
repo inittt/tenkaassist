@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>TenkaAssist - Lab</title>
+   <meta name="description" content="tenkaAssist">
+   <script src="../js/common.js"></script>
+   <link rel="stylesheet" href="../css/common.css" type = "text/css">
+   <link rel="stylesheet" href="./selectSimulator.css" type = "text/css">
+   <script src="../js/characterJson.js"></script>
+   <script src="./selectSimulator.js"></script>
+</head>
+<body>
+   <script src="../js/header.js"></script>
+   <div class="main-container bg-dark">
+      <div class="block">
+         <div class="margin-left titleblock"><span id="titlebox-text" class="titlebox">Lab - 캐릭선택</span></div>
+      </div>
+      <div class="block" style="margin-bottom:0.3rem; padding-top:0; padding-bottom:0">
+         <div class="margin-left05 titleblock flex">
+            <button class="book-btn" onclick="ch_info(0)"><img class="icon" src="../images/icons/ico-book.svg"></button>
+            <button class="book-btn" onclick="ch_info(1)"><img class="icon" src="../images/icons/ico-book.svg"></button>
+            <button class="book-btn" onclick="ch_info(2)"><img class="icon" src="../images/icons/ico-book.svg"></button>
+            <button class="book-btn" onclick="ch_info(3)"><img class="icon" src="../images/icons/ico-book.svg"></button>
+            <button class="book-btn" onclick="ch_info(4)"><img class="icon" src="../images/icons/ico-book.svg"></button>
+         </div>
+      </div>
+      <div class="block" style="margin-bottom:0; margin-top:0;">
+         <div class="margin-left05 titleblock">
+            <div id="selectedCh" class="flex" style="padding-top:0;">캐릭터를 선택해 추가해 주세요</div>
+            <button id="start-button" style="margin-left:auto;" class="button2" onclick="startSimulator()">시작</button>
+         </div>
+      </div>
+      <div class="block" style="margin-top:0.3rem; padding-top:0; padding-bottom:0">
+         <div id="dropdown-container" class="margin-left05 titleblock flex">
+            <div class="dropdown">
+               <button id="btn0" class="dropdown-btn">5<span class="absolute-right">▼</span></button>
+               <div id="drop0" class="dropdown-content">
+                  <input type="radio" id="b01" name="b0" value="1">
+                  <label for="b01">1</label>
+                  <input type="radio" id="b02" name="b0" value="2">
+                  <label for="b02">2</label>
+                  <input type="radio" id="b03" name="b0" value="3">
+                  <label for="b03">3</label>
+                  <input type="radio" id="b04" name="b0" value="4">
+                  <label for="b04">4</label>
+                  <input type="radio" id="b05" name="b0" value="5" checked>
+                  <label for="b05">5</label>
+               </div>
+            </div>
+            <div class="dropdown">
+               <button id="btn1" class="dropdown-btn">5<span class="absolute-right">▼</span></button>
+               <div id="drop1" class="dropdown-content">
+                  <input type="radio" id="b11" name="b1" value="1">
+                  <label for="b11">1</label>
+                  <input type="radio" id="b12" name="b1" value="2">
+                  <label for="b12">2</label>
+                  <input type="radio" id="b13" name="b1" value="3">
+                  <label for="b13">3</label>
+                  <input type="radio" id="b14" name="b1" value="4">
+                  <label for="b14">4</label>
+                  <input type="radio" id="b15" name="b1" value="5" checked>
+                  <label for="b15">5</label>
+               </div>
+            </div>
+            <div class="dropdown">
+               <button id="btn2" class="dropdown-btn">5<span class="absolute-right">▼</span></button>
+               <div id="drop2" class="dropdown-content">
+                  <input type="radio" id="b21" name="b2" value="1">
+                  <label for="b21">1</label>
+                  <input type="radio" id="b22" name="b2" value="2">
+                  <label for="b22">2</label>
+                  <input type="radio" id="b23" name="b2" value="3">
+                  <label for="b23">3</label>
+                  <input type="radio" id="b24" name="b2" value="4">
+                  <label for="b24">4</label>
+                  <input type="radio" id="b25" name="b2" value="5" checked>
+                  <label for="b25">5</label>
+               </div>
+            </div>
+            <div class="dropdown">
+               <button id="btn3" class="dropdown-btn">5<span class="absolute-right">▼</span></button>
+               <div id="drop3" class="dropdown-content">
+                  <input type="radio" id="b31" name="b3" value="1">
+                  <label for="b31">1</label>
+                  <input type="radio" id="b32" name="b3" value="2">
+                  <label for="b32">2</label>
+                  <input type="radio" id="b33" name="b3" value="3">
+                  <label for="b33">3</label>
+                  <input type="radio" id="b34" name="b3" value="4">
+                  <label for="b34">4</label>
+                  <input type="radio" id="b35" name="b3" value="5" checked>
+                  <label for="b35">5</label>
+               </div>
+            </div>
+            <div class="dropdown">
+               <button id="btn4" class="dropdown-btn">5<span class="absolute-right">▼</span></button>
+               <div id="drop4" class="dropdown-content">
+                  <input type="radio" id="b41" name="b4" value="1">
+                  <label for="b41">1</label>
+                  <input type="radio" id="b42" name="b4" value="2">
+                  <label for="b42">2</label>
+                  <input type="radio" id="b43" name="b4" value="3">
+                  <label for="b43">3</label>
+                  <input type="radio" id="b44" name="b4" value="4">
+                  <label for="b44">4</label>
+                  <input type="radio" id="b45" name="b4" value="5" checked>
+                  <label for="b45">5</label>
+               </div>
+            </div>
+            <div class="bond1BtnWrapper">
+               <div id="bond1Btn" class="bond1Btn" onclick="setBond(1)">1구속</div>
+            </div>
+         </div>
+      </div>
+      <div class="block flex">
+         <label class="c-radio"><input type="radio" name="element" value="0" onclick="checkElement(0)"><span id="e-0">화속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="1" onclick="checkElement(1)"><span id="e-1">수속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="2" onclick="checkElement(2)"><span id="e-2">풍속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="3" onclick="checkElement(3)"><span id="e-3">광속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="4" onclick="checkElement(4)"><span id="e-4">암속성</span></label>
+      </div>
+      <div class="block flex">
+         <label class="c-radio"><input type="radio" name="role" value="0" onclick="checkRole(0)"><span id="r-0">딜러</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="1" onclick="checkRole(1)"><span id="r-1">힐러</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="2" onclick="checkRole(2)"><span id="r-2">탱커</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="3" onclick="checkRole(3)"><span id="r-3">서포터</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="4" onclick="checkRole(4)"><span id="r-4">디스럽터</span></label>
+      </div>
+      <div class="block flex">
+         <label class="c-radio"><input type="radio" name="rarity" value="3" onclick="checkRarity(3)" checked><span>SSR</span></label>
+         <label class="c-radio"><input type="radio" name="rarity" value="2" onclick="checkRarity(2)"><span>SR</span></label>
+         <label class="c-radio"><input type="radio" name="rarity" value="1" onclick="checkRarity(1)"><span>R</span></label>
+         <label class="c-radio"><input type="radio" name="rarity" value="0" onclick="checkRarity(0)"><span>N</span></label>
+         <input id="searchInput" type="text" class="searchInput" placeholder="검색">
+      </div>
+      <div class="block flex" id="characterContainer">
+         
+      </div>
+   </div>
+</body>
+<script>
+   document.title = "TenkaAssist - Lab";
+   document.getElementById("titlebox-text").innerText = "Lab - "+t("캐릭선택");
+   document.getElementById("bond1Btn").innerText = t("1구속");
+   document.getElementById("searchInput").placeholder = t("검색");
+   document.getElementById("start-button").innerText = t("시작");
+   document.getElementById("selectedCh").innerText = t("캐릭터를 선택해 추가해 주세요");
+
+   document.getElementById("e-0").innerText = t("화속성");
+   document.getElementById("e-1").innerText = t("수속성");
+   document.getElementById("e-2").innerText = t("풍속성");
+   document.getElementById("e-3").innerText = t("광속성");
+   document.getElementById("e-4").innerText = t("암속성");
+   
+   document.getElementById("r-0").innerText = t("딜러");
+   document.getElementById("r-1").innerText = t("힐러");
+   document.getElementById("r-2").innerText = t("탱커");
+   document.getElementById("r-3").innerText = t("서포터");
+   document.getElementById("r-4").innerText = t("디스럽터");
+</script>
+</html>
