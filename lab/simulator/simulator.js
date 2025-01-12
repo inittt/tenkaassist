@@ -266,13 +266,13 @@ function start(compIds) {
 
 function setBossLi() {
    const tmp = liParam.split(",").map(Number);
-   for(let t of tmp) if (isNaN(t)) return alert(t);
+   for(let t of tmp) if (isNaN(t)) return alert(t("올바르지 않은 입력이 있습니다"));
 
-   tbf(boss, "속상감", tmp[0], "passive0", always);
-   tbf(boss, "받뎀증", -tmp[1], "passive1", always);
-   tbf(boss, "받일뎀", -tmp[2], "passive2", always);
-   tbf(boss, "받궁뎀", -tmp[3], "passive3", always);
-   tbf(boss, "받발뎀", -tmp[4], "passive4", always);
+   if (tmp[0] != 0) tbf(boss, "속상감", tmp[0], "passive0", always);
+   if (tmp[1] != 0) tbf(boss, "받뎀증", -tmp[1], "passive1", always);
+   if (tmp[2] != 0) tbf(boss, "받일뎀", -tmp[2], "passive2", always);
+   if (tmp[3] != 0) tbf(boss, "받궁뎀", -tmp[3], "passive3", always);
+   if (tmp[4] != 0) tbf(boss, "받발뎀", -tmp[4], "passive4", always);
 }
 
 function do_ult(idx) {
