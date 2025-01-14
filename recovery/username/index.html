@@ -54,9 +54,9 @@
    }
 
    function isValidName(name) {
-    const regex = /^[^\p{Punct}\s]{2,8}$/u;
-    return regex.test(name);
-}
+      const regex = /^[^\W_]{2,8}$/; 
+      return regex.test(name);
+   }
 
    function isValidEmail(email) {
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
