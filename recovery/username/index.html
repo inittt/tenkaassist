@@ -16,6 +16,7 @@
       </div>
       <div class="block loginBox">
          <input id="inputEmail" class="loginInput" name="email" type="text" placeholder="Email">
+         <input id="inputNick" class="loginInput" name="nick" type="text" placeholder="Nickname">
          <div id="inputEmailTxt" style="width:21rem; font-size:0.8rem;">복구 이메일인 경우, 메일이 발송됩니다</div>
          <button id="recoverBtn" class="loginButton bg-blue" onclick="recover()">복구</button>
       </div>
@@ -33,8 +34,11 @@
       const email = document.getElementById("inputEmail").value;
       if (!isValidEmail(email)) return alert(t("이메일 형식이 아닙니다"));
 
+      const nickname = document.getElementById("inputNick").value;
+      if (!isValidName(nickname)) return alert(t("별명은 특수문자와 공백을 제외한 2-8자여야 합니다"));
+
       sending = true;
-      request(`${server}/users/find-username/${email}`, {
+      request(`${server}/users/find-username/${nickname}/${email}`, {
          method: 'GET'
       }).then(response => {
          if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
@@ -48,6 +52,11 @@
          sending = false;
       });
    }
+
+   function isValidName(name) {
+    const regex = /^[^\p{Punct}\s]{2,8}$/u;
+    return regex.test(name);
+}
 
    function isValidEmail(email) {
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
