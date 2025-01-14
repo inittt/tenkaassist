@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>TenkaAssist - 비밀번호 찾기</title>
+   <meta name="description" content="tenkaAssist">
+   <script src="../../js/common.js"></script>
+   <link rel="stylesheet" href="../../css/common.css" type = "text/css">
+</head>
+<body>
+   <script src="../../js/header.js"></script>
+   <div class="main-container bg-dark" id="compcontainer">
+      <div class="block">
+         <div class="margin-left titleblock"><span id="titleBox" class="titlebox">비밀번호 찾기</span></div>
+      </div>
+      <div class="block loginBox">
+         <input id="inputID" class="loginInput" name="id" type="text" placeholder="Username">
+         <input id="inputEmail" class="loginInput" name="email" type="text" placeholder="Email">
+         <div id="inputEmailTxt" style="width:21rem; font-size:0.8rem;">복구 이메일인 경우, 메일이 발송됩니다</div>
+         <button id="recoverBtn" class="loginButton bg-blue" onclick="recover()">복구</button>
+      </div>
+   </div>
+</body>
+<script>
+   document.title = "TenkaAssist - " + t("비밀번호 찾기");
+   document.getElementById("titleBox").innerText = t("비밀번호 찾기");
+   document.getElementById("inputEmailTxt").innerText = t("복구 이메일인 경우, 메일이 발송됩니다");
+   document.getElementById("recoverBtn").innerText = t("복구");
+
+   function recover() {
+      const email = document.getElementById("inputEmail").value;
+      if (!isValidEmail(email)) return alert(t("이메일 형식이 아닙니다"));
+
+      const un = document.getElementById("inputID").value; 
+      if (!isValidID1(un)) return alert(t("아이디는 4자 이상 10자 이하여야 합니다"));
+      if (!isValidID2(un)) return alert(t("아이디는 영문자와 숫자만 포함되어야 합니다"));
+
+      request(`${server}/users/find-password/${un}/${email}`, {
+         method: 'GET'
+      }).then(response => {
+         if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
+         return response.json();
+      }).then(res => {
+         if (!res.success) alert(t(res.msg));
+         else alert(t(res.data));
+      }).catch(error => {
+         console.log(error);
+      });
+   }
+
+   function isValidID1(str) {
+      return str.length >= 4 && str.length <= 10;
+   }
+   function isValidID2(str) {
+      const regex = /^[a-zA-Z0-9]+$/;
+      return regex.test(str);
+   }
+
+   function isValidEmail(email) {
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return emailRegex.test(email);
+   }
+</script>
+</html>
