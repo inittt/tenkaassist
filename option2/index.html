@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>TenkaAssist - 설정</title>
+   <meta name="description" content="tenkaAssist">
+   <script src="../js/common.js"></script>
+   <script src="./option.js"></script>
+   <link rel="stylesheet" href="../css/common.css" type = "text/css">
+</head>
+<body>
+   <script src="../js/header.js"></script>
+   <div class="main-container bg-dark">
+      <div class="block">
+         <div class="margin-left titleblock"><span id="titleboxText" class="titlebox">Option</span></div>
+      </div>
+      <div class="block loginBox">
+        <div id="account-text" style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">계정 정보</div>
+        <table>
+            <tr><td id="nickTxt">닉네임</td><td id="curNick" style="padding-left:1rem;">-</td></tr>
+            <tr><td>Email</td><td id="curEmail" style="padding-left:1rem;">-</td></tr>
+            <tr><td id="regTxt">조합등록</td><td id="curReg" style="padding-left:1rem;">-</td></tr>
+            <tr><td id="simTxt">시뮬레이터</td><td id="curSim" style="padding-left:1rem;">-</td></tr>
+        </table>
+      </div>
+      <div class="block loginBox">
+        <div id="set-email-text" style="font-size:1.2rem; font-weight:bold;">복구 이메일 설정</div>
+        <input id="setEmail" class="changePWInput" name="email" type="text" placeholder="Email">
+        <button id="finishBtn" class="changePWButton bg-green" onclick="setEmail()">완료</button>
+      </div>
+      <div class="block loginBox">
+        <div id="change-pw-text" style="font-size:1.2rem; font-weight:bold;">비밀번호 변경</div>
+        <input id="curPass" class="changePWInput" name="password1" type="password" placeholder="현재 비밀번호">
+        <input id="newPass" class="changePWInput" name="password2" type="password" placeholder="새 비밀번호">
+        <input id="newPassRe" class="changePWInput" name="password3" type="password" placeholder="새 비밀번호 재입력">
+        <button id="finishBtn" class="changePWButton bg-green" onclick="setPassword()">완료</button>
+      </div>
+   </div>
+</body>
+<script>
+    document.title = "TenkaAssist - " + t("설정");
+    document.getElementById("nickTxt").innerText = t("닉네임");
+    document.getElementById("regTxt").innerText = t("조합등록");
+    document.getElementById("simTxt").innerText = t("시뮬레이터");
+
+    document.getElementById("change-pw-text").innerText = t("비밀번호 변경");
+    document.getElementById("curPass").placeholder = t("현재 비밀번호");
+    document.getElementById("newPass").placeholder = t("새 비밀번호");
+    document.getElementById("newPassRe").placeholder = t("새 비밀번호 재입력");
+    document.getElementById("finishBtn").innerText = t("완료");
+</script>
+</html>

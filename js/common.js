@@ -383,6 +383,7 @@ const translate = {
 
    // 설정
    "설정": {en : "Option", sc : "选项", tc : "選項"},
+   "이메일 형식이 아닙니다": {en : "Not a valid email format", sc : "不是有效的电子邮件格式", tc : "不是有效的電子郵件格式"},
    "비밀번호 변경": {en : "Change password", sc : "修改密码", tc : "更改密碼"},
    "현재 비밀번호": {en : "Current password", sc : "当前密码", tc : "當前密碼"},
    "새 비밀번호": {en : "New password", sc : "新密码", tc : "新密碼"},
