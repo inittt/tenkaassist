@@ -6,6 +6,7 @@
    <title>TenkaAssist - 설정</title>
    <meta name="description" content="tenkaAssist">
    <script src="../js/common.js"></script>
+   <script src="./option.js"></script>
    <link rel="stylesheet" href="../css/common.css" type = "text/css">
 </head>
 <body>
@@ -13,6 +14,20 @@
    <div class="main-container bg-dark">
       <div class="block">
          <div class="margin-left titleblock"><span id="titleboxText" class="titlebox">Option</span></div>
+      </div>
+      <div class="block loginBox">
+        <div id="account-text" style="font-size:1.2rem; font-weight:bold; margin-bottom:0.5rem;">계정 정보</div>
+        <table>
+            <tr><td id="nickTxt">닉네임</td><td id="curNick" style="padding-left:1rem;">-</td></tr>
+            <tr><td>Email</td><td id="curEmail" style="padding-left:1rem;">-</td></tr>
+            <tr><td id="regTxt">조합등록</td><td id="curReg" style="padding-left:1rem;">-</td></tr>
+            <tr><td id="simTxt">시뮬레이터</td><td id="curSim" style="padding-left:1rem;">-</td></tr>
+        </table>
+      </div>
+      <div class="block loginBox">
+        <div id="set-email-text" style="font-size:1.2rem; font-weight:bold;">복구 이메일 설정</div>
+        <input id="setEmail" class="changePWInput" name="email" type="text" placeholder="Email">
+        <button id="finishBtn" class="changePWButton bg-green" onclick="setEmail()">완료</button>
       </div>
       <div class="block loginBox">
         <div id="change-pw-text" style="font-size:1.2rem; font-weight:bold;">비밀번호 변경</div>
@@ -24,39 +39,11 @@
    </div>
 </body>
 <script>
-    function setPassword() {
-        const curPass = document.getElementById("curPass").value;
-        const newPass = document.getElementById("newPass").value;
-        const newPassRe = document.getElementById("newPassRe").value;
-        if (curPass.length == 0 || newPass.length == 0 || newPassRe.length == 0) return alert(t("빈 입력란이 있습니다"));
-        if (newPass != newPassRe) return alert(t("새 비밀번호와 재입력이 다릅니다"));
-        
-        const formData = new FormData();
-        formData.append("password", curPass);
-        formData.append("new_password", newPass);
-
-        updatePassword(formData);
-    }
-    function updatePassword(formData) {
-        request(`${server}/users/updatePassword`, {
-            method: 'PUT',
-            body: formData,
-        }).then(response => {
-            if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
-            return response.json();
-        }).then(res => {
-            if (!res.success) alert(t(res.msg));
-            else {
-                localStorage.setItem("jwtToken", "");
-                alert(t("비밀번호 변경 완료. 다시 로그인해 주세요"));
-                location.href = `${address}/login`;
-            }
-        }).catch(error => {
-            console.log(error);
-        });
-    }
-
     document.title = "TenkaAssist - " + t("설정");
+    document.getElementById("nickTxt").innerText = t("닉네임");
+    document.getElementById("regTxt").innerText = t("조합등록");
+    document.getElementById("simTxt").innerText = t("시뮬레이터");
+
     document.getElementById("change-pw-text").innerText = t("비밀번호 변경");
     document.getElementById("curPass").placeholder = t("현재 비밀번호");
     document.getElementById("newPass").placeholder = t("새 비밀번호");

@@ -18,14 +18,16 @@
       <div class="block loginBox">
          <input id="un" class="loginInput" name="username" type="text" placeholder="아이디">
          <input id="pass" class="loginInput" name="password" type="password" placeholder="비밀번호">
+         <div style="width:21rem; display:flex; justify-content:space-between;">
+            <div style="color:#aedaff; cursor:pointer;" onclick="findUsername()">Forgot username?</div>
+            <div style="color:#aedaff; cursor:pointer;" onclick="findPassword()">Forgot password?</div>
+         </div>
          <button id="login-btn" class="loginButton bg-green" onclick="login()">로그인</button>
          <button id="register-btn" class="loginButton bg-blue" onclick="goRegister()">회원가입</button>
          <script>
             function goRegister() {location.href=`${address}/register/index.html`;}
          </script>
       </div>
-
-
    </div>
 </body>
 <script>

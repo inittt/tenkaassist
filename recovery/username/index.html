@@ -27,9 +27,13 @@
    document.getElementById("inputEmailTxt").innerText = t("복구 이메일인 경우, 메일이 발송됩니다");
    document.getElementById("recoverBtn").innerText = t("복구");
 
+   let sending = false;
    function recover() {
+      if (sending) return;
       const email = document.getElementById("inputEmail").value;
       if (!isValidEmail(email)) return alert(t("이메일 형식이 아닙니다"));
+
+      sending = true;
       request(`${server}/users/find-username/${email}`, {
          method: 'GET'
       }).then(response => {
@@ -38,8 +42,10 @@
       }).then(res => {
          if (!res.success) alert(t(res.msg));
          else alert(t(res.data));
+         sending = false;
       }).catch(error => {
          console.log(error);
+         sending = false;
       });
    }
 

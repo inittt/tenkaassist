@@ -28,15 +28,18 @@
    document.getElementById("inputEmailTxt").innerText = t("복구 이메일인 경우, 메일이 발송됩니다");
    document.getElementById("recoverBtn").innerText = t("복구");
 
+   let sending = false;
    function recover() {
+      if (sending) return;
       const email = document.getElementById("inputEmail").value;
       if (!isValidEmail(email)) return alert(t("이메일 형식이 아닙니다"));
 
-      const un = document.getElementById("inputID").value; 
-      if (!isValidID1(un)) return alert(t("아이디는 4자 이상 10자 이하여야 합니다"));
-      if (!isValidID2(un)) return alert(t("아이디는 영문자와 숫자만 포함되어야 합니다"));
+      const username = document.getElementById("inputID").value; 
+      if (!isValidID1(username)) return alert(t("아이디는 4자 이상 10자 이하여야 합니다"));
+      if (!isValidID2(username)) return alert(t("아이디는 영문자와 숫자만 포함되어야 합니다"));
 
-      request(`${server}/users/find-password/${un}/${email}`, {
+      sending = true;
+      request(`${server}/users/find-password/${username}/${email}`, {
          method: 'GET'
       }).then(response => {
          if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
@@ -44,8 +47,10 @@
       }).then(res => {
          if (!res.success) alert(t(res.msg));
          else alert(t(res.data));
+         sending = false;
       }).catch(error => {
          console.log(error);
+         sending = false;
       });
    }
 

@@ -38,3 +38,10 @@ function loginStart(formData) {
       console.log(error);
    });
 }
+
+function findUsername() {
+   location.href = `${address}/recovery/username`;
+}
+function findPassword() {
+   location.href = `${address}/recovery/password`;
+}
