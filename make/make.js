@@ -243,7 +243,7 @@ function makeBlockNDeck() {
 
 function loadBlockNDeck(pg) {
    const curList = getNDeckPage(pg);
-   for(let i = 0; i < 6; i++) {
+   for(let i = 0; i < 10; i++) {
       const bundle = curList[i];
       if (bundle == undefined || bundle == null) {
          isEndOfDeck = true;
@@ -435,7 +435,7 @@ class MaxHeap {
    getAll() {return this.heap;}
 }
 
-function getTopCombinationsByPage(itemsPerPage = 6) {
+function getTopCombinationsByPage(itemsPerPage = 10) {
    return function(page = 0) {
       const result = [];
 
@@ -446,4 +446,4 @@ function getTopCombinationsByPage(itemsPerPage = 6) {
    };
 }
 
-const getNDeckPage = getTopCombinationsByPage(6);
+const getNDeckPage = getTopCombinationsByPage(10);

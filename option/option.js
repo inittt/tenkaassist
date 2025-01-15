@@ -27,7 +27,10 @@ function setEmail() {
       return response.json();
    }).then(res => {
       if (!res.success) alert(t(res.msg));
-      else alert(t(res.data));
+      else {
+         alert(t(res.data));
+         location.reload();
+      }
    }).catch(error => {
       console.log(error);
    });
