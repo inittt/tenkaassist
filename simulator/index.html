@@ -20,6 +20,7 @@
             <span id="titlebox" class="titlebox">시뮬레이터</span>
             <button id="resetBtn" class="button" onclick="refresh()" style="height:2rem; margin-left:1rem;">리셋</button>
             <button id="guide" class="leaderButton leaderOff option_btn1" style="display:none">가이드</button>
+            <button class="icon-btn i-load ico-sim" onclick="show_graph()"><img class="icon" src="../images/icons/ico-graph.svg"></button>
             <button id="autoBtn" class="button" onclick="auto()" style="height:2rem; margin-left:1rem;">자동</button>
          </div>
       </div>
@@ -47,7 +48,8 @@
          <button class="logoutBtn" onclick="loadBefore(); decActNum()">undo</button>
       </div>
    </div>
-   <div id="console" class="console no-scrollbar" style="display:none" onclick="close_console()"></div>
+   <div id="console" class="console" style="display:none" onclick="close_console()"></div>
+   <div id="console-graph" class="console-graph" style="display:none" onclick="close_graph()"></div>
 </body>
 <script>
    document.title = "TenkaAssist - " + t("시뮬레이터");

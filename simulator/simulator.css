@@ -180,3 +180,9 @@ body {
    border:1px solid gray;
    border-radius: 0.2rem;
 }
+
+.ico-sim {
+   margin-left:1rem;
+   height: 2rem;
+   width: 2rem;
+}

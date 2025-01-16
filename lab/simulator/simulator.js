@@ -453,3 +453,87 @@ function close_console() {
 
    document.body.classList.remove('no-scroll');
 }
+
+// 그래프 그리기 코드 ---------------------------------------------
+const log = []; // [idx, 데미지(공격,발동,추가)]
+const do_atk2 = do_atk;
+do_atk = function(...args) {
+   do_atk2(...args);
+   log.push([args[0], lastDmg+lastAddDmg+lastAtvDmg]);
+}
+const do_ult2 = do_ult;
+do_ult = function(...args) {
+   do_ult2(...args);
+   log.push([args[0], lastDmg+lastAddDmg+lastAtvDmg]);
+}
+const do_def2 = do_def;
+do_def = function(...args) {
+   do_def2(...args);
+   log.push([args[0], lastDmg+lastAddDmg+lastAtvDmg]);
+}
+const loadBefore2 = loadBefore;
+loadBefore = function() {
+   loadBefore2();
+   log.pop();
+}
+
+function calcDmg() {
+   const res = [0,0,0,0,0];
+   for(let l of log) res[l[0]] += l[1];
+   return res;
+}
+function show_graph() {
+   const graph = document.getElementById("console-graph");
+   if (graph == undefined) return;
+
+   const dmgList = calcDmg(), max = Math.max(...dmgList);
+   const str = `
+      <div style="font-size:0.7rem;">${t("도트, 반격데미지는 제외됩니다")}</div>
+      <table style="width:100%;">
+         ${getParts(0)}
+         ${getParts(1)}
+         ${getParts(2)}
+         ${getParts(3)}
+         ${getParts(4)}
+      </table>
+   `;
+
+   graph.innerHTML = str;
+   graph.style.display = "block";
+   document.body.classList.add('no-scroll');
+
+   function getParts(idx) {
+      return `
+      <tr>
+         <td style="width:3rem;">${graphCharacter(idx)}</td>
+         <td style="widht:15rem;">
+            <div style="border-radius:0.1rem; height:1rem; width: ${getGraphPercent(dmgList[idx], max)}; background-color:white;"></div>
+            <div>${Math.floor(dmgList[idx]).toLocaleString()}</div>
+         </td>
+      </tr>`
+   }
+}
+
+function graphCharacter(idx) {
+   return `<div class="character" style="margin:0.2rem;">
+      <div style="position:relative; padding:0.2rem;">
+         <img src="${address}/images/characters/cs${comp[idx].id}_0_0.webp" class="img z-1" alt="">
+         <div class="bond-icon z-2">${numToBond(bondList[idx])}</div>
+         ${liberationList.includes(comp[idx].name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
+         <div class="element${comp[idx].element} ch_border z-4"></div>
+      </div>
+      <div class="text-mini">${t(comp[idx].name)}</div>
+   </div>`;
+}
+
+function getGraphPercent(val, max) {
+   const percentage = ((val / max) * 100) > 0 ? ((val / max) * 100) : 0;
+   return percentage > 100 ? "100%" : `${percentage}%`;
+}
+
+function close_graph() {
+   const graph = document.getElementById("console-graph");
+   if (graph == undefined) return;
+   graph.style.display = "none";
+   document.body.classList.remove('no-scroll');
+}
