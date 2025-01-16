@@ -56,8 +56,8 @@ document.addEventListener("DOMContentLoaded", function() {
       return response.json();
    }).then(res => {
       if (res.success) {
-         document.getElementById("autoBtn").style.display = "block";
-         keyboardClick();
+         // document.getElementById("autoBtn").style.display = "block";
+         // keyboardClick();
       }
    }).catch(e => {});
 });
