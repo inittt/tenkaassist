@@ -192,7 +192,6 @@ const translate = {
    "등록되지 않은 조합입니다" : {en : "The team is not registered", sc : "团队未注册", tc : "團隊未註冊"},
 
    // 시뮬레이터 Simulator
-   "리셋": {en : "reset", sc : "重置", tc : "重置"},
    "가이드" : {en : "Guide", sc : "指南", tc : "指南"},
    "공격데미지": {en : "Basic", sc : "普攻伤害", tc : "普攻傷害"},
    "추가데미지": {en : "Addition", sc : "追加伤害", tc : "追加傷害"},
