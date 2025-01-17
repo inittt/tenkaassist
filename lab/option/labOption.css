@@ -138,3 +138,65 @@ input[type="text"]:disabled {
    margin-left:auto;
    right: 0.5rem;
  }
+
+/* 체크박스 관련*/
+
+/* 기본 체크박스 숨기기 */
+input[type="checkbox"] {display: none;}
+
+/* 커스텀 체크박스 스타일 */
+input[type="checkbox"] + label {
+   position: relative;
+   padding-left: 1.8rem;
+   cursor: pointer;
+
+   background-size: 90%;
+   background-position: center;
+   background-repeat: no-repeat;
+   background-position: center calc(50% + 0.1rem);
+}
+
+/* 커스텀 체크박스 디자인 */
+input[type="checkbox"] + label::before {
+   content: "";
+   position: absolute;
+   left: 0;
+   top: 0;
+   width: 1.4rem;
+   height: 1.4rem;
+   border: 2px solid transparent;
+   border-radius: 4px;
+}
+
+/* 체크박스가 체크되었을 때 */
+input[type="checkbox"]:checked + label::before {
+   border-color: white; /* 체크된 테두리 색 */
+   content: ""; /* 체크 표시 */
+   text-align: center;
+}
+
+.console-potential {
+   display:flex;
+   flex-direction:row;
+   justify-content: center;
+
+   width:20rem;
+   max-height:95vh;
+
+   position:fixed;
+   top:13rem;
+   left:50%;
+   transform: translateX(-50%);
+
+   padding:0.5rem;
+   overflow: auto;
+   z-index:999;
+   box-sizing: border-box;
+   border-radius: 0.7rem;
+   background-color: rgba(0, 0, 0, 0.8);
+
+   -ms-overflow-style: none; /* 인터넷 익스플로러 */
+   scrollbar-width: none; /* 파이어폭스 */
+   overflow-wrap: break-word;
+   word-break: keep-all;
+}

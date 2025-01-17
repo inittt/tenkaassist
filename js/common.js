@@ -1,5 +1,5 @@
-const address = "https://inittt.github.io/tenkaassist"
-//const address = "http://127.0.0.1:5500";
+//const address = "https://inittt.github.io/tenkaassist"
+const address = "http://127.0.0.1:5500";
 //const server = "http://localhost:5000";
 const server = "https://port-0-tenkafuma-assistant-server-1272llx2xidhk.sel5.cloudtype.app"
 const noImg = `${address}/images/default.jpg`;

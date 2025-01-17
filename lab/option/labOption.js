@@ -58,6 +58,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
    setComp();
+   
+   // 잠재 ui 만들기
+   makePotentialUI();
 });
 
 function numToBond(num) {
@@ -97,6 +100,7 @@ function makeComp(list) {
                </div>
                <div class="text-mini">${t(ch.name)}</div>
             </div>
+            <!--<button onclick="open_p(${idx})">잠재</button>-->
          </div>
       `);
       idx++; leaderHpOn = false;
@@ -119,4 +123,104 @@ function goLab() {
       li.push(Number(document.getElementById(`table${i}`).textContent));
    }
    location.href = `${address}/lab/simulator/?hp=${hp}&el=${el}&li=${li}&list=${chIds}&bond=${bond}&hitAll=${hitAll}`;
+}
+
+// 잠재능력 -----------------------------
+let curIdx = 0; // 현재 선택된 캐릭터 idx
+const potential_save = [ // 잠재 저장용 객체 리스트
+   {type:1,select:Array(12).fill().map(() => Array(6).fill(true))},
+   {type:1,select:Array(12).fill().map(() => Array(6).fill(true))},
+   {type:1,select:Array(12).fill().map(() => Array(6).fill(true))},
+   {type:1,select:Array(12).fill().map(() => Array(6).fill(true))},
+   {type:1,select:Array(12).fill().map(() => Array(6).fill(true))},
+];
+
+// 잠재 창 ui 만들기
+function makePotentialUI() {
+   const allList = [`<table style="width:auto;">`];
+   for(let i = 0; i < 12; i++) {
+      const lineList = [];
+      lineList.push(`<td style="padding:0.4rem;">${i}</td>`)
+      for(let j = 0; j < 6; j++) lineList.push(`
+         <td style="padding:0.1rem;">
+            <input type="checkbox" id="p-${i}-${j}" checked>
+            <label id="m-${i}-${j}" for="p-${i}-${j}"></label>
+         </td>`
+      );
+      allList.push(lineStr = "<tr>" + lineList.join("") + "</tr>");
+   }
+   document.getElementById("potentialBox").innerHTML = allList.join("") + "</table>";
+}
+
+// 잠재 창 열기
+function open_p(idx) {
+   curIdx = idx;
+   const cur = potential_save[idx];
+   setCheckBoxImg(cur.type);
+   for(let i = 0; i < 12; i++) for(let j = 0; j < 6; j++) {
+      const bool = cur.select[i][j];
+      document.getElementById(`p-${i}-${j}`).checked = bool ? "true" : "false";
+   }
+   document.getElementById("potentialBox").style.display = "block";
+}
+
+// 잠재 창 열기
+function close_p() {
+   document.getElementById("potentialBox").style.display = "none";
+}
+
+// 잠재 유형에 따른 checkbox 이미지 설정하기
+function setCheckBoxImg(type) {
+   console.log("tlwkr");
+   const tmp = getPotential(type);
+   for(let i = 0; i < 12; i++) for(let j = 0; j < 6; j++) {
+      let t = tmp[i][j], imgSrc;
+      if (t.charAt(0) == "스") imgSrc = `url(${address}/images/icons/ico-p-skill.webp)`;
+      else if (t.charAt(0) == "체") imgSrc = `url(${address}/images/icons/ico-p-hp.webp)`;
+      else imgSrc = `url(${address}/images/icons/ico-p-atk.webp)`;
+      document.getElementById(`m-${i}-${j}`).style.backgroundImage = imgSrc;
+   }
+}
+
+// 잠재 유형별 리스트 가져오기
+function getPotential(type) {
+   if (type == 2) return [
+      ["체:2.0","체:2.0","공:3.0","공:3.0","공:3.0","공:3.0"],
+      ["체:2.0","체:2.0","공:3.5","공:3.5","공:3.5","공:3.5"],
+      ["체:2.0","체:2.0","체:2.0","체:2.0","공:3.5","공:3.5"],
+      ["체:2.0","체:2.0","체:2.0","공:3.5","공:3.5","공:3.5"],
+      ["체:2.0","체:2.0","체:2.0","공:3.5","공:3.5","공:3.5"],
+      ["스:1.0","체:2.0","체:2.0","체:2.0","공:3.5","공:3.5"],
+      ["체:2.5","체:2.5","체:2.5","체:2.5","공:3.5","공:3.5"],
+      ["체:2.5","체:2.5","체:2.5","체:2.5","공:3.5","공:3.5"],
+      ["체:2.5","체:2.5","체:2.5","체:2.5","공:3.5","공:3.5"],
+      ["체:3.0","체:3.0","체:3.0","체:3.0","공:3.5","공:3.5"],
+      ["체:3.0","체:3.0","체:3.0","체:3.0","공:3.5","공:3.5"],
+      ["스:2.0","체:3.0","체:3.0","체:3.0","체:3.0","공:4.0"]];
+   else if (type == 3) return [
+      ["공:2.75","공:2.75","공:2.75","공:2.75","공:2.75","공:2.75"],
+      ["체:2.75","체:2.75","체:2.75","체:2.75","체:2.75","체:2.75"],
+      ["공:2.75","체:2.75","공:2.75","체:2.75","공:2.75","체:2.75"],
+      ["체:2.75","공:2.75","공:2.75","공:2.75","공:2.75","공:2.75"],
+      ["공:2.75","체:2.75","체:2.75","체:2.75","체:2.75","체:2.75"],
+      ["스:1.00","체:2.75","공:2.75","체:2.75","공:2.75","체:2.75"],
+      ["공:2.75","체:2.75","공:2.75","체:2.75","공:2.75","체:3.00"],
+      ["공:3.00","체:3.00","공:3.00","체:3.00","공:3.00","체:3.00"],
+      ["공:3.00","체:3.00","공:3.00","체:3.00","공:3.00","체:3.00"],
+      ["공:3.00","체:3.00","공:3.00","체:3.00","공:3.00","체:3.00"],
+      ["공:3.00","체:3.00","공:3.00","체:3.00","공:3.00","체:3.00"],
+      ["스:2.00","공:3.00","공:3.00","체:3.00","공:3.00","체:3.00"]];
+   else return [
+      ["공:2.0","공:2.0","체:3.0","체:3.0","체:3.0","체:3.0"],
+      ["공:2.0","공:2.0","체:3.5","체:3.5","체:3.5","체:3.5"],
+      ["공:2.0","공:2.0","공:2.0","공:2.0","체:3.5","체:3.5"],
+      ["공:2.0","공:2.0","공:2.0","체:3.5","체:3.5","체:3.5"],
+      ["공:2.0","공:2.0","공:2.0","체:3.5","체:3.5","체:3.5"],
+      ["스:1.0","공:2.0","공:2.0","공:2.0","체:3.5","체:3.5"],
+      ["공:2.5","공:2.5","공:2.5","공:2.5","체:3.5","체:3.5"],
+      ["공:2.5","공:2.5","공:2.5","공:2.5","체:3.5","체:3.5"],
+      ["공:2.5","공:2.5","공:2.5","공:2.5","체:3.5","체:3.5"],
+      ["공:3.0","공:3.0","공:3.0","공:3.0","체:3.5","체:3.5"],
+      ["공:3.0","공:3.0","공:3.0","공:3.0","체:3.5","체:3.5"],
+      ["스:2.0","공:3.0","공:3.0","공:3.0","공:3.0","체:4.0"]];
 }
