@@ -143,6 +143,7 @@ input[type="text"]:disabled {
 
 /* 기본 체크박스 숨기기 */
 input[type="checkbox"] {display: none;}
+input[type="checkbox"].exclude-checkbox {display:block;}
 
 /* 커스텀 체크박스 스타일 */
 input[type="checkbox"] + label {
