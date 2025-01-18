@@ -297,6 +297,7 @@ const translate = {
    "비밀번호 찾기": {en: "Find PW", sc: "找回密码", tc: "找回密碼"},
    "복구 이메일인 경우, 메일이 발송됩니다": {en: "If it is a recovery email, the mail will be sent", sc: "如果是恢复邮件，将发送邮件", tc: "如果是恢復郵件，將發送郵件"},
    "복구": {en: "Recovery", sc: "恢复", tc: "恢復"},
+   "복구 이메일 설정" : {en: "Set up recovery email", sc: "设置恢复邮箱", tc: "設定恢復郵箱"},
 
    // 조합등록
    "조합 등록" : {en : "Register Team", sc : "登记队伍", tc : "登記隊伍"},
