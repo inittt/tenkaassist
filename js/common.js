@@ -573,6 +573,8 @@ const translate = {
    "크치카" : {en : "X.Ichika", sc : "诞姬", tc : "雪人"},
    "크브리" : {en : "X.Britney", sc : "诞军", tc : "誕軍"},
    "크엘라" : {en : "X.Muila", sc : "诞牧", tc : "誕牧"},
+   //春圣
+
 
    "아이카" : {en : "Aiko", sc : "艾可", tc : "艾可"},
    "레오나" : {en : "Leona", sc : "雷欧娜", tc : "雷歐娜"},

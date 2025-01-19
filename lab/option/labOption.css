@@ -118,7 +118,7 @@ input[type="text"]:disabled {
    background-color: #ddd;
  }
  
- #dropdownBtn {
+ .dropdownBtn {
    display: flex;
    align-items: center;
    box-sizing:border-box;
@@ -141,6 +141,12 @@ input[type="text"]:disabled {
 
 /* 체크박스 관련*/
 
+.i-x {
+   cursor:pointer;
+   width:1.5rem;
+   height:1.5rem;
+}
+
 /* 기본 체크박스 숨기기 */
 input[type="checkbox"] {display: none;}
 input[type="checkbox"].exclude-checkbox {display:inline-block;}
@@ -161,8 +167,8 @@ input[type="checkbox"] + label {
 input[type="checkbox"] + label::before {
    content: "";
    position: absolute;
-   left: 0;
-   top: 0;
+   left: 1px;
+   top: -1px;
    width: 1.4rem;
    height: 1.4rem;
    border: 2px solid transparent;
@@ -177,15 +183,12 @@ input[type="checkbox"]:checked + label::before {
 }
 
 .console-potential {
-   display:flex;
-   flex-direction:row;
-   justify-content: center;
-
    width:20rem;
-   max-height:95vh;
+   max-width:95vw;
+   max-height:80vh;
 
    position:fixed;
-   top:13rem;
+   top:8rem;
    left:50%;
    transform: translateX(-50%);
 

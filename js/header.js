@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <a class="h-line" href="${address}/lab/">Lab</a>
       <a class="h-line" href="${address}/contributors/">♥</a>
    `;
+   headerSide.style.zIndex = 9999;
 
    let headerMain = document.createElement('header');
    headerMain.innerHTML = `
