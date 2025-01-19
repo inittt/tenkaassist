@@ -130,11 +130,12 @@ function goLab() {
    if (isNaN(hp)) return alert(t("올바르지 않은 입력이 있습니다"));
    const el = document.querySelector('input[name="element"]:checked').value;
    const hitAll = document.getElementById('hitAllChkBox').checked;
+   const options = getAbilityList();
    const li = [];
    for(let i = 0; i < 5; i++) {
       li.push(Number(document.getElementById(`table${i}`).textContent));
    }
-   location.href = `${address}/lab/simulator/?hp=${hp}&el=${el}&li=${li}&list=${chIds}&bond=${bond}&hitAll=${hitAll}`;
+   location.href = `${address}/lab/simulator/?hp=${hp}&el=${el}&options=${options}&li=${li}&list=${chIds}&bond=${bond}&hitAll=${hitAll}`;
 }
 
 // 잠재능력 -----------------------------
@@ -284,18 +285,19 @@ function getAbilityList() {
       for(let i = 0; i < 12; i++) for(let j = 0; j < 6; j++) if (cur.select[i][j]) {
          const cur_po = getPotential(cur.type)[i][j].split(":");
          if (cur_po[0] == "공") atk_plus += Number(cur_po[1])/100;
-         else if (cur_po[1] == "체") hp_plus += Number(cur_po[1])/100;
+         else if (cur_po[0] == "체") hp_plus += Number(cur_po[1])/100;
          else ;
       }
 
       // 조련
       if (cur.discipline == 3) dis += 0.3;
       else if (cur.discipline == 2) dis += 0.15;
-      else if (cur.discipline == 1) dis += 0.5;
+      else if (cur.discipline == 1) dis += 0.05;
       else ;
 
-      res.push([dis, atk_plus, hp_plus]);
+      res.push([roundN(dis, 2), roundN(atk_plus, 4), roundN(hp_plus, 4)]);
    }
+   function roundN(num, n) {return num.toFixed(n);}
    return res;
 }
 
