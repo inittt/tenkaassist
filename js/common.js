@@ -359,6 +359,7 @@ const translate = {
    "기존 비밀번호가 틀립니다": {en: "The existing password is incorrect.",sc: "原密码不正确。",tc: "原密碼不正確。"},
 
    // Lab
+   "조련": {en : "Discipline", sc: "调教", tc: "調教"},
    "적 설정": { en: "Enemy Settings", sc: "敌人设置", tc: "敵人設定" },
    "허수+" : {en : "dummy+", sc : "木椿+", tc : "木椿+"},
    "허수" : {en : "dummy", sc : "木椿", tc : "木椿"},
@@ -389,6 +390,7 @@ const translate = {
 
    // 설정
    "설정": {en : "Option", sc : "选项", tc : "選項"},
+   "계정 정보": {en : "Account Info", sc : "账户信息", tc : "帳戶信息"},
    "이메일 형식이 아닙니다": {en : "Not a valid email format", sc : "不是有效的电子邮件格式", tc : "不是有效的電子郵件格式"},
    "비밀번호 변경": {en : "Change password", sc : "修改密码", tc : "更改密碼"},
    "현재 비밀번호": {en : "Current password", sc : "当前密码", tc : "當前密碼"},
