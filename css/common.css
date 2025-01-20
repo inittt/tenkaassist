@@ -613,6 +613,7 @@ header {
 .i-save:hover {background-color: #196c14; border-color:white;}
 .i-load:hover {background-color: #9b3b21; border-color:white;}
 .i-heart {width:0.4rem; height:0.4rem;margin-right:0.1rem;}
+.i-heart1 {width:0.5rem; height:0.5rem;}
 .i-heart2 {width:0.8rem; height:0.8rem;margin-right:0.3rem;}
 .hpbox{
    font-size:0.6rem;

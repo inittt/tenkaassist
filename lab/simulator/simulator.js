@@ -190,6 +190,14 @@ function setComp() {
    start(idList);
 }
 
+function getDiscipline(n) {
+   const mark = `<img class="i-heart1" src="../../images/icons/ico-heart2.svg"></img>`
+   if (n == 1) return "";
+   else if (n == 1.05) return mark;
+   else if (n == 1.15) return mark+mark;
+   else return mark+mark+mark;
+}
+
 function makeComp(list) {
    const compDiv = document.getElementById('comp');
    const stringArr = [];
@@ -205,6 +213,7 @@ function makeComp(list) {
                   <img id="img${idx}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
                   <div class="bond-icon z-2">${numToBond(bondList[idx])}</div>
                   <div class="potential" z-2">${a_o[idx][1]}</div>
+                  <div class="discipline" z-2">${getDiscipline(a_o[idx][0])}</div>
                   ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                   <div id="act${idx}" class="acted z-3"></div>
                   <div id="el${idx}" class="element${ch.element} ch_border z-4"></div>
