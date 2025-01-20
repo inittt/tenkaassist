@@ -88,6 +88,9 @@ function makeComp(list) {
    let idx = 0, leaderHpOn = true;
    for(const id of list) {
       const ch = getCharacter(id);
+      if (ch.po == undefined) ability_save[idx].typeOn = true;
+      else ability_save[idx].type = ch.po;
+
       stringArr.push(`
          <div style="display:flex; flex-direction:column; align-items:center">
             <div class="character" style="margin:0.2rem;">
@@ -141,11 +144,11 @@ function goLab() {
 // 잠재능력 -----------------------------
 let curIdx = 0; // 현재 선택된 캐릭터 idx
 const ability_save = [ // 저장용 객체 리스트
-   {type:1,discipline:3,select:Array(12).fill().map(() => Array(6).fill(true))},
-   {type:1,discipline:3,select:Array(12).fill().map(() => Array(6).fill(true))},
-   {type:1,discipline:3,select:Array(12).fill().map(() => Array(6).fill(true))},
-   {type:1,discipline:3,select:Array(12).fill().map(() => Array(6).fill(true))},
-   {type:1,discipline:3,select:Array(12).fill().map(() => Array(6).fill(true))},
+   {type:1,discipline:3,select:Array(12).fill().map(() => Array(6).fill(true)),typeOn:false},
+   {type:1,discipline:3,select:Array(12).fill().map(() => Array(6).fill(true)),typeOn:false},
+   {type:1,discipline:3,select:Array(12).fill().map(() => Array(6).fill(true)),typeOn:false},
+   {type:1,discipline:3,select:Array(12).fill().map(() => Array(6).fill(true)),typeOn:false},
+   {type:1,discipline:3,select:Array(12).fill().map(() => Array(6).fill(true)),typeOn:false},
 ];
 
 // 잠재 창 ui 만들기
@@ -153,12 +156,14 @@ function makePotentialUI() {
    const allList = [
       `<div style="width:100%; display:flex; justify-content: space-between;">
          <div>
-            <input id="c1" type="radio" name="category" style="display:none;" value="1" checked>
-            <label for="c1">1</label>
-            <input id="c2" type="radio" name="category" style="display:none;" value="2">
-            <label for="c2">2</label>
-            <input id="c3" type="radio" name="category" style="display:none;" value="3">
-            <label for="c3">3</label>
+            <span id="select-type">
+               <input id="c1" type="radio" name="category" style="display:none;" value="1" checked>
+               <label for="c1">1</label>
+               <input id="c2" type="radio" name="category" style="display:none;" value="2">
+               <label for="c2">2</label>
+               <input id="c3" type="radio" name="category" style="display:none;" value="3">
+               <label for="c3">3</label>
+            </span>
             <span id="potential-name"></span>
          </div>
          <img class="i-x" src="../../images/icons/ico-x.svg" onclick="close_p()">
@@ -224,6 +229,9 @@ function makePotentialUI() {
 function open_p(idx) {
    curIdx = idx;
    const cur = ability_save[idx];
+   if (cur.typeOn) document.getElementById("select-type").style.display = "inline-block";
+   else document.getElementById("select-type").style.display = "none";
+
    setCheckBoxImg(cur.type);
    for(let i = 0; i < 12; i++) for(let j = 0; j < 6; j++) {
       const bool = cur.select[i][j];
@@ -267,7 +275,7 @@ function getPotentialLevel(idx) {
    return po_level;
 }
 
-// 잠재 창 열기
+// 잠재 창 닫기
 function close_p() {
    document.getElementById("potentialBox").style.display = "none";
 }
@@ -314,19 +322,6 @@ function getAbilityList() {
 // 잠재 유형별 리스트 가져오기
 function getPotential(type) {
    if (type == 2) return [
-      ["체:2.0","체:2.0","공:3.0","공:3.0","공:3.0","공:3.0"],
-      ["체:2.0","체:2.0","공:3.5","공:3.5","공:3.5","공:3.5"],
-      ["체:2.0","체:2.0","체:2.0","체:2.0","공:3.5","공:3.5"],
-      ["체:2.0","체:2.0","체:2.0","공:3.5","공:3.5","공:3.5"],
-      ["체:2.0","체:2.0","체:2.0","공:3.5","공:3.5","공:3.5"],
-      ["스:1.0","체:2.0","체:2.0","체:2.0","공:3.5","공:3.5"],
-      ["체:2.5","체:2.5","체:2.5","체:2.5","공:3.5","공:3.5"],
-      ["체:2.5","체:2.5","체:2.5","체:2.5","공:3.5","공:3.5"],
-      ["체:2.5","체:2.5","체:2.5","체:2.5","공:3.5","공:3.5"],
-      ["체:3.0","체:3.0","체:3.0","체:3.0","공:3.5","공:3.5"],
-      ["체:3.0","체:3.0","체:3.0","체:3.0","공:3.5","공:3.5"],
-      ["스:2.0","체:3.0","체:3.0","체:3.0","체:3.0","공:4.0"]];
-   else if (type == 3) return [
       ["공:2.75","공:2.75","공:2.75","공:2.75","공:2.75","공:2.75"],
       ["체:2.75","체:2.75","체:2.75","체:2.75","체:2.75","체:2.75"],
       ["공:2.75","체:2.75","공:2.75","체:2.75","공:2.75","체:2.75"],
@@ -339,6 +334,19 @@ function getPotential(type) {
       ["공:3.00","체:3.00","공:3.00","체:3.00","공:3.00","체:3.00"],
       ["공:3.00","체:3.00","공:3.00","체:3.00","공:3.00","체:3.00"],
       ["스:2.00","공:3.00","공:3.00","체:3.00","공:3.00","체:3.00"]];
+   else if (type == 3) return [
+      ["체:2.0","체:2.0","공:3.0","공:3.0","공:3.0","공:3.0"],
+      ["체:2.0","체:2.0","공:3.5","공:3.5","공:3.5","공:3.5"],
+      ["체:2.0","체:2.0","체:2.0","체:2.0","공:3.5","공:3.5"],
+      ["체:2.0","체:2.0","체:2.0","공:3.5","공:3.5","공:3.5"],
+      ["체:2.0","체:2.0","체:2.0","공:3.5","공:3.5","공:3.5"],
+      ["스:1.0","체:2.0","체:2.0","체:2.0","공:3.5","공:3.5"],
+      ["체:2.5","체:2.5","체:2.5","체:2.5","공:3.5","공:3.5"],
+      ["체:2.5","체:2.5","체:2.5","체:2.5","공:3.5","공:3.5"],
+      ["체:2.5","체:2.5","체:2.5","체:2.5","공:3.5","공:3.5"],
+      ["체:3.0","체:3.0","체:3.0","체:3.0","공:3.5","공:3.5"],
+      ["체:3.0","체:3.0","체:3.0","체:3.0","공:3.5","공:3.5"],
+      ["스:2.0","체:3.0","체:3.0","체:3.0","체:3.0","공:4.0"]];
    else return [
       ["공:2.0","공:2.0","체:3.0","체:3.0","체:3.0","체:3.0"],
       ["공:2.0","공:2.0","체:3.5","체:3.5","체:3.5","체:3.5"],
