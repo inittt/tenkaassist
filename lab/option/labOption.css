@@ -52,6 +52,34 @@ th, td {
    color:white;
 }
 
+.di-icon {
+   width:0.9rem;
+   height:0.9rem;
+}
+
+.po-icon {
+   width:1.1rem;
+   height:1.1rem;
+}
+
+.setting-btn {
+   font-size:0.8rem;
+   height:1.3rem;
+   border: 1px solid white;
+   width:3rem;
+   text-align: center;
+   cursor: pointer;
+   border-radius: 0.2rem;
+   background-color: #494949;
+   color:white;
+   display:flex;
+   justify-content: center;
+   align-items:center;
+}
+.setting-btn:hover {
+   background-color: #929292;
+}
+
 .boss-hp-input {
    box-sizing:border-box;
    border:2px solid black;
@@ -72,6 +100,26 @@ input[type="text"]:disabled {
 .el-txt2 {color: limegreen;}
 .el-txt3 {color: yellow}
 .el-txt4 {color: rgb(199, 67, 255)}
+
+input[type="radio"][name="category"] + label {
+   width:1.2rem;
+   height:1.2rem;
+   border:2px solid transparent;
+   background-color: #494949;
+   display:inline-block;
+   border-radius:0.2rem;
+   text-align: center;
+   cursor:pointer;
+   font-weight:bold;
+}
+
+input[type="radio"][name="category"] + label:hover {
+   border-color:#929292
+}
+
+input[type="radio"][name="category"]:checked + label {
+   border-color:white;
+}
 
 /* 드랍다운 */
 .dropdown {
@@ -154,6 +202,7 @@ input[type="checkbox"].exclude-checkbox {display:inline-block;}
 /* 커스텀 체크박스 스타일 */
 input[type="checkbox"] + label {
    position: relative;
+   padding:0;
    padding-left: 1.8rem;
    cursor: pointer;
 
@@ -167,12 +216,14 @@ input[type="checkbox"] + label {
 input[type="checkbox"] + label::before {
    content: "";
    position: absolute;
-   left: 1px;
-   top: -1px;
+   top: 55%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+
    width: 1.4rem;
    height: 1.4rem;
    border: 2px solid transparent;
-   border-radius: 4px;
+   border-radius: 0.3rem;
 }
 
 /* 체크박스가 체크되었을 때 */

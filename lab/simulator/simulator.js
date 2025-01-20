@@ -4,6 +4,17 @@ const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list'), idList = chIds.split(",").map(Number);
 const bond = params.get('bond'), bondList = bond == null ? [5, 5, 5, 5, 5] : bond.split(",").map(Number);
 const hpParam = params.get('hp'), liParam = params.get('li');
+const ability_options = params.get('options').split(",").map(Number);
+const a_o = [];
+for(let i = 0; i < 5; i++) {
+   const stat_dis = ability_options[i*4];
+   const stat_level = ability_options[i*4+1];
+   const stat_atk = ability_options[i*4+2];
+   const stat_hp = ability_options[i*4+3];
+   a_o.push([stat_dis, stat_level, stat_atk, stat_hp]);
+}
+
+
 const HP_MAX = 10854389981;
 if (params.get('hitAll') != null && params.get('hitAll') == "false") hitAll = false;
 if (params.get('el') != null) {
@@ -182,7 +193,7 @@ function setComp() {
 function makeComp(list) {
    const compDiv = document.getElementById('comp');
    const stringArr = [];
-   let idx = 0, i = 0;
+   let idx = 0;
    for(const id of list) {
       const ch = getCharacter(id);
       stringArr.push(`
@@ -192,7 +203,8 @@ function makeComp(list) {
             <div class="character" style="margin:0.2rem;">
                <div id="atk${idx}" style="position:relative; padding:0.2rem;" onclick="do_atk(${idx})">
                   <img id="img${idx}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-                  <div class="bond-icon z-2">${numToBond(bondList[i++])}</div>
+                  <div class="bond-icon z-2">${numToBond(bondList[idx])}</div>
+                  <div class="potential" z-2">${a_o[idx][1]}</div>
                   ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                   <div id="act${idx}" class="acted z-3"></div>
                   <div id="el${idx}" class="element${ch.element} ch_border z-4"></div>
@@ -239,9 +251,14 @@ function start(compIds) {
    boss.buff = []; alltimeFunc.length = 0;
    
    setBossLi();
+
+   let curIdx = 0;
    for(const id of compIds) {
       const tmp = chJSON.data.filter(ch => ch.id === id)[0];
-      const coef_atk = COEF, coef_hp = COEF;
+      const coef_atk = a_o[curIdx][0]*a_o[curIdx][2]*1.25;
+      const coef_hp = a_o[curIdx][0]*a_o[curIdx][3]*1.25;
+      
+      curIdx++;
       if (liberationList.includes(tmp.name))
          comp.push(new Champ(tmp.id, tmp.name, tmp.hp*1.1, tmp.atk*1.1, tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag, coef_hp, coef_atk));
       else
