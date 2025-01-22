@@ -130,8 +130,8 @@ const chJSON = { data : [
 {ok : true, id : 10157, rarity : 3, po:2, hp:956625, atk:282116, cd:1, atkMag:0, ultMag:0, fullname : "순진한 소원 무엘라", name : "크엘라", element : 3, role : 3, hpUp : 40},
 {ok : true, id : 10158, rarity : 3, po:3, hp:1391979, atk:193982, cd:4, atkMag:75, ultMag:514, fullname : "크리스마스의 기책 브리트니", name : "크브리", element : 3, role : 2, hpUp : 40},
 {ok : true, id : 10175, rarity : 3, po:2, hp:1304731, atk:206826, cd:3, atkMag:0, ultMag:0, fullname : "춤추는 눈꽃 이치카", name : "크치카", element : 1, role : 1, hpUp : 40},
-// {ok : true, id : 10159, rarity : 3, hp:1056717, atk:255543, cd:4, atkMag:0, ultMag:0, fullname : "성의 봄맞이 피오라", name : "춘오라", element : 1, role : 3, hpUp : 50},
-// {ok : true, id : 10161, rarity : 3, hp:1013314, atk:266615, cd:4, atkMag:100, ultMag:0, fullname : "춤추는 불꽃의 적룡 사샤", name : "사샤", element : 0, role : 4, hpUp : 40},
+{ok : true, id : 10159, rarity : 3, hp:1056717, atk:255543, cd:4, atkMag:0, ultMag:0, fullname : "성의 봄맞이 피오라", name : "춘오라", element : 1, role : 3, hpUp : 50},
+{ok : true, id : 10161, rarity : 3, hp:1013314, atk:266615, cd:4, atkMag:100, ultMag:0, fullname : "춤추는 불꽃의 적룡 사샤", name : "사샤", element : 0, role : 4, hpUp : 40},
 
 /*
       element  role     rarity
