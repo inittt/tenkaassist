@@ -575,8 +575,8 @@ const translate = {
    "크치카" : {en : "X.Ichika", sc : "诞姬", tc : "雪人"},
    "크브리" : {en : "X.Britney", sc : "诞军", tc : "誕軍"},
    "크엘라" : {en : "X.Muila", sc : "诞牧", tc : "誕牧"},
-   "춘오라" : {en : "Sl.Fiora", sc : "春圣", tc : "春聖"},
-   "사샤" : {en : "Zaskia", sc : "萨夏", tc : "薩夏"},
+   "춘오라" : {en : "Ny.Fiora", sc : "春菲", tc : "春菲"},
+   "사샤" : {en : "Zaskia", sc : "赤龙", tc : "赤龍"},
 
 
    "아이카" : {en : "Aiko", sc : "艾可", tc : "艾可"},
