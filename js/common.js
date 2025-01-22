@@ -1,5 +1,5 @@
 const address = "https://inittt.github.io/tenkaassist"
-//const address = "http://127.0.0.1:5500";
+// const address = "http://127.0.0.1:5500";
 //const server = "http://localhost:5000";
 const server = "https://port-0-tenkafuma-assistant-server-1272llx2xidhk.sel5.cloudtype.app"
 const noImg = `${address}/images/default.jpg`;
@@ -575,7 +575,8 @@ const translate = {
    "크치카" : {en : "X.Ichika", sc : "诞姬", tc : "雪人"},
    "크브리" : {en : "X.Britney", sc : "诞军", tc : "誕軍"},
    "크엘라" : {en : "X.Muila", sc : "诞牧", tc : "誕牧"},
-   //春圣
+   "춘오라" : {en : "Sl.Fiora", sc : "春圣", tc : "春聖"},
+   "사샤" : {en : "Zaskia", sc : "萨夏", tc : "薩夏"},
 
 
    "아이카" : {en : "Aiko", sc : "艾可", tc : "艾可"},
