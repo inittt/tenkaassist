@@ -576,6 +576,7 @@ const translate = {
    "크브리" : {en : "X.Britney", sc : "诞军", tc : "誕軍"},
    "크엘라" : {en : "X.Muila", sc : "诞牧", tc : "誕牧"},
    "춘오라" : {en : "Ny.Fiora", sc : "春菲", tc : "春菲"},
+   "봄오라" : {en : "Ny.Fiora", sc : "春菲", tc : "春菲"},
    "사샤" : {en : "Zaskia", sc : "赤龙", tc : "赤龍"},
 
 
