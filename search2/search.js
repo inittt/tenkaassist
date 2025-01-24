@@ -97,7 +97,7 @@ function getComps() {
 
 let cnt = 0, isEnd = false;
 function makeBlock(curData) {
-   for(let i = page*20; i < page*20+20; i++) {
+   for(let i = 0; i < 20; i++) {
       const comp = curData[i];
       if (comp == undefined || comp == null) {isEnd = true; break;}
       const stringArr = [];
