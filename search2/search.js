@@ -51,9 +51,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
    const formData = new FormData();
    formData.append("chIds", chIds);
-   formData.append("banList", banList);
-   if (leaderId == null) formData.append("deckName", null);
-   else formData.append("deckName", deckName);
+   if (banList != null) formData.append("banList", banList);
+   if (deckName != null) formData.append("deckName", deckName);
 
    request(`${server}/comps/searchCnt`, {
       method: "POST",
@@ -76,9 +75,8 @@ function getComps() {
    const formData = new FormData();
    formData.append("sort", sort);
    formData.append("chIds", chIds);
-   formData.append("banList", banList);
-   if (leaderId == null) formData.append("deckName", null);
-   else formData.append("deckName", deckName);
+   if (banList != null) formData.append("banList", banList);
+   if (deckName != null) formData.append("deckName", deckName);
    formData.append("page", page);
 
    request(`${server}/comps/search2`, {
