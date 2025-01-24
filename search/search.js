@@ -2,8 +2,9 @@ const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const banList = params.get('ban');
 const leaderId = params.get('leader');
+const deckName = leaderId == null ? null : `${getCharacter(Number(leaderId)).name}덱`;
 const curHeader = 2;
-let page = 0, sort = 0, curData = [], isLoading = false;
+let page = 0, sort = 0, isLoading = false;
 
 document.addEventListener("DOMContentLoaded", function() {
    var dropdownBtn = document.getElementById("dropdownBtn");
@@ -28,59 +29,73 @@ document.addEventListener("DOMContentLoaded", function() {
          if ("최신등록순" === this.value) sort = 2;
          if ("최신수정순" === this.value) sort = 3;
          if ("13턴딜(1)" === this.value) sort = 4;
-         getComps(sort);
+         
+         document.getElementById('compcontainer').innerHTML = "";
+         getComps();
       });
    });
-   getComps(0);
+   getComps();
 
    // Intersection Observer 설정
    const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && !isLoading) {
          if (page == 0 || isEnd) return;
          isLoading = true;
-         makeBlock(sort);
+         getComps();
          isLoading = false;
       }
    });
 
    // 감지할 요소
    observer.observe(document.getElementById('scroll-observer'));
-});
 
-function getComps(sort) {
-   document.getElementById('compcontainer').innerHTML = "";
-   if (leaderId == null) {
-      if (banList == null || banList.length == 0) url = `${server}/comps/search/${sort}/${chIds}`;
-      else url = `${server}/comps/searchEx/${sort}/${chIds}/${banList}`;
-   } else {
-      const leader = getCharacter(Number(leaderId));
-      if (banList == null || banList.length == 0)
-         url = `${server}/comps/searchWithLeader/${sort}/${chIds}/${leader.name}덱`;
-      else
-         url = `${server}/comps/searchWithLeaderEx/${sort}/${chIds}/${banList}/${leader.name}덱`;
-   }
+   const formData = new FormData();
+   formData.append("chIds", chIds);
+   if (banList != null) formData.append("banList", banList);
+   if (deckName != null) formData.append("deckName", deckName);
 
-   request(url, {
-      method: "GET",
+   request(`${server}/comps/searchCnt`, {
+      method: "POST",
+      body: formData
    }).then(response => {
       if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
    }).then(res => {
       if (!res.success) {
-         document.getElementById("cnt-all").innerHTML = `${t("검색된 덱")} : 0`;
+         document.getElementById("cnt-all").innerHTML = `${t("검색된 덱")} : error`;
          return console.log(res.msg);
       }
-      curData = res.data;
-      document.getElementById("cnt-all").innerHTML = `${t("검색된 덱")} : ${curData.length}`;
-      makeBlock(sort);
+      document.getElementById("cnt-all").innerHTML = `${t("검색된 덱")} : ${res.data}`;
+   }).catch(e => {
+      console.log(t("데이터 로드 실패"), e);
+   })
+});
+
+function getComps() {
+   const formData = new FormData();
+   formData.append("sort", sort);
+   formData.append("chIds", chIds);
+   if (banList != null) formData.append("banList", banList);
+   if (deckName != null) formData.append("deckName", deckName);
+   formData.append("page", page);
+
+   request(`${server}/comps/search2`, {
+      method: "POST",
+      body: formData
+   }).then(response => {
+      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
+      return response.json();
+   }).then(res => {
+      if (!res.success) return alert(res.msg);
+      makeBlock(res.data);
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
    })
 }
 
 let cnt = 0, isEnd = false;
-function makeBlock(sort) {
-   for(let i = page*20; i < page*20+20; i++) {
+function makeBlock(curData) {
+   for(let i = 0; i < 20; i++) {
       const comp = curData[i];
       if (comp == undefined || comp == null) {isEnd = true; break;}
       const stringArr = [];
