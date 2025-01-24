@@ -34,7 +34,7 @@
         <input id="curPass" class="changePWInput" name="password1" type="password" placeholder="현재 비밀번호">
         <input id="newPass" class="changePWInput" name="password2" type="password" placeholder="새 비밀번호">
         <input id="newPassRe" class="changePWInput" name="password3" type="password" placeholder="새 비밀번호 재입력">
-        <button id="finishBtn" class="changePWButton bg-green" onclick="setPassword()">완료</button>
+        <button id="finishBtn2" class="changePWButton bg-green" onclick="setPassword()">완료</button>
       </div>
    </div>
 </body>
@@ -53,5 +53,6 @@
     document.getElementById("newPass").placeholder = t("새 비밀번호");
     document.getElementById("newPassRe").placeholder = t("새 비밀번호 재입력");
     document.getElementById("finishBtn").innerText = t("완료");
+    document.getElementById("finishBtn2").innerText = t("완료");
 </script>
 </html>

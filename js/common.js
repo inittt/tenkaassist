@@ -233,6 +233,7 @@ const translate = {
    "받아증" : {en : "armor taken", sc : "受到护盾", tc : "受到護盾"}, 
    "받지뎀" : {en : "periodic dmg taken", sc : "受到持续伤害", tc : "受到持續傷害"},
    "속상감" : {en : "Decrease attribute buffs/debuffs by", sc : "减少属性相剋效果", tc : "減少屬性相剋效果"},
+   "가지증" : {en: "Increase DoT output", sc: "持续伤害增加", tc: "持續傷害增加"},
 
    "버프상세" : {en : "Buff Details", sc : "状态详情", tc : "狀態詳情"},
    "의" : {en : "'s", sc : "的", tc : "的"},
