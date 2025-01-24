@@ -2,6 +2,7 @@ const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const banList = params.get('ban');
 const leaderId = params.get('leader');
+const deckName = `${getCharacter(Number(leaderId)).name}덱`;
 const curHeader = 2;
 let page = 0, sort = 0, isLoading = false;
 
@@ -28,17 +29,19 @@ document.addEventListener("DOMContentLoaded", function() {
          if ("최신등록순" === this.value) sort = 2;
          if ("최신수정순" === this.value) sort = 3;
          if ("13턴딜(1)" === this.value) sort = 4;
-         getComps(sort);
+         
+         document.getElementById('compcontainer').innerHTML = "";
+         getComps();
       });
    });
-   getComps(0, page);
+   getComps();
 
    // Intersection Observer 설정
    const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && !isLoading) {
          if (page == 0 || isEnd) return;
          isLoading = true;
-         makeBlock(sort);
+         getComps();
          isLoading = false;
       }
    });
@@ -49,8 +52,8 @@ document.addEventListener("DOMContentLoaded", function() {
    const formData = new FormData();
    formData.append("chIds", chIds);
    formData.append("banList", banList);
-   if (leaderId == null) formData.append("name", null);
-   else formData.append("name", `${getCharacter(Number(leaderId)).name}덱`);
+   if (leaderId == null) formData.append("deckName", null);
+   else formData.append("deckName", deckName);
 
    request(`${server}/comps/searchCnt`, {
       method: "POST",
@@ -69,35 +72,31 @@ document.addEventListener("DOMContentLoaded", function() {
    })
 });
 
-function getComps(sort, page) {
-   document.getElementById('compcontainer').innerHTML = "";
-   let url;
-   if (leaderId == null) {
-      if (banList == null || banList.length == 0) url = `${server}/comps/search2/${sort}/${chIds}/${page}`;
-      else url = `${server}/comps/searchEx2/${sort}/${chIds}/${banList}/${page}`;
-   } else {
-      const leader = getCharacter(Number(leaderId));
-      if (banList == null || banList.length == 0)
-         url = `${server}/comps/searchWithLeader2/${sort}/${chIds}/${leader.name}덱/${page}`;
-      else
-         url = `${server}/comps/searchWithLeaderEx2/${sort}/${chIds}/${banList}/${leader.name}덱/${page}`;
-   }
+function getComps() {
+   const formData = new FormData();
+   formData.append("sort", sort);
+   formData.append("chIds", chIds);
+   formData.append("banList", banList);
+   if (leaderId == null) formData.append("deckName", null);
+   else formData.append("deckName", deckName);
+   formData.append("page", page);
 
-   request(url, {
-      method: "GET",
+   request(`${server}/comps/search2`, {
+      method: "POST",
+      body: formData
    }).then(response => {
       if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
    }).then(res => {
       if (!res.success) return alert(res.msg);
-      makeBlock(sort, res.data);
+      makeBlock(res.data);
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
    })
 }
 
 let cnt = 0, isEnd = false;
-function makeBlock(sort, curData) {
+function makeBlock(curData) {
    for(let i = page*20; i < page*20+20; i++) {
       const comp = curData[i];
       if (comp == undefined || comp == null) {isEnd = true; break;}
