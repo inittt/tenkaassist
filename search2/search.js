@@ -2,7 +2,7 @@ const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const banList = params.get('ban');
 const leaderId = params.get('leader');
-const deckName = `${getCharacter(Number(leaderId)).name}덱`;
+const deckName = leaderId == null ? null : `${getCharacter(Number(leaderId)).name}덱`;
 const curHeader = 2;
 let page = 0, sort = 0, isLoading = false;
 
