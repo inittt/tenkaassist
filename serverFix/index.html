@@ -12,8 +12,14 @@
       <div id="serverFix-text" class="block">
          서버 점검 중입니다<br>
          Server maintenance in progress<br>
-         服务器正在维护中
+         服务器正在维护中<br>
+         <button onclick="refresh()">refresh</button>
       </div>
    </div>
 </body>
+<script>
+   function refresh() {
+      location.href = `https://inittt.github.io/tenkaassist/`;
+   }
+</script>
 </html>
