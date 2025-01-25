@@ -209,8 +209,7 @@ const translate = {
    "허수턴": {en : "turns", sc : "回合", tc : "回合"},
    "매턴 전체피격 (기본값)": {en : "All allies are hit every turn (default)", sc:"每回合我方全部受到攻击 (默认值)", tc:"每回合我方全部受到攻擊 (預設值)"},
    "매턴 전체공격": { en: "Every Turn All Attack", sc: "每回合全体攻击", tc: "每回合全體攻擊"},
-   "도트, 반격데미지는 제외됩니다": {en: "DoT and counter damage are excluded", sc: "持续伤害和反击伤害不包括在内", tc: "持續傷害和反擊傷害不包括在內"},
-
+   
    "버프요약" : {en : "Buff Summary", sc : "状态列表", tc : "狀態列表"},
    "현재 아머 수치" : {en : "Armor", sc : "护盾", tc : "護盾"},
    "공퍼증" : {en : "atk*", sc : "攻击力*", tc : "攻擊力*"},

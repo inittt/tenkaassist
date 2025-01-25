@@ -457,28 +457,40 @@ function close_console() {
 }
 
 // 그래프 그리기 코드 ---------------------------------------------
-const log = []; // [idx, 데미지(공격,발동,추가)]
+const log = []; // [idx, 데미지(공격,발동,추가), 타입(0:기본, 1:지속, 2:반격)]
 const do_atk2 = do_atk;
 do_atk = function(...args) {
    do_atk2(...args);
-   log.push([args[0], lastDmg+lastAddDmg+lastAtvDmg]);
+   log.push([args[0], lastDmg+lastAddDmg+lastAtvDmg, 0]);
 }
 const do_ult2 = do_ult;
 do_ult = function(...args) {
    do_ult2(...args);
-   log.push([args[0], lastDmg+lastAddDmg+lastAtvDmg]);
+   log.push([args[0], lastDmg+lastAddDmg+lastAtvDmg, 0]);
 }
 const do_def2 = do_def;
 do_def = function(...args) {
    do_def2(...args);
-   log.push([args[0], lastDmg+lastAddDmg+lastAtvDmg]);
+   log.push([args[0], lastDmg+lastAddDmg+lastAtvDmg, 0]);
 }
 const loadBefore2 = loadBefore;
 loadBefore = function() {
    loadBefore2();
    log.pop();
+   while (log[log.length-1][2] > 0) log.pop();
 }
-
+const applyDotDmg2 = applyDotDmg;
+applyDotDmg = function(...args) {
+   const dmg = applyDotDmg2(...args);
+   const dmgFrom = comp.findIndex(i => i.id == args[1].id);
+   log.push([dmgFrom, dmg, 1]);
+}
+const applyRefDmg2 = applyRefDmg;
+applyRefDmg = function(...args) {
+   const dmg = applyRefDmg2(...args);
+   const dmgFrom = comp.findIndex(i => i.id == args[1].id);
+   log.push([dmgFrom, dmg, 2]);
+}
 function calcDmg() {
    const res = [0,0,0,0,0];
    for(let l of log) res[l[0]] += l[1];
@@ -490,7 +502,6 @@ function show_graph() {
 
    const dmgList = calcDmg(), max = Math.max(...dmgList);
    const str = `
-      <div style="font-size:0.7rem;">${t("도트, 반격데미지는 제외됩니다")}</div>
       <table style="width:100%;">
          ${getParts(0)}
          ${getParts(1)}
