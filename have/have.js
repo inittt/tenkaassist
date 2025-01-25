@@ -128,30 +128,30 @@ async function getClipboardText() {
 }
 
 // 코드 붙여넣기 누를시
+// function setCopiedCharacters() {
+//    // 클립보드에서 텍스트 가져오기
+//    getClipboardText().then(encodedText => {
+//       if (!encodedText) return;
+//       let decodedText;
+//       try {
+//          decodedText = encodedText.trim().split('z');
+//          if (decodedText.length != 2) return setCopiedCharacters2();
+//       } catch(e) {
+//          return setCopiedCharacters2();
+//       }
+
+//       const ch_list_tmp = decodedText[0].split('y').map(n => parseInt(n, 34));
+//       const bd_list_tmp = b34to10(decodedText[1]).split("").map(n => Number(n));
+//       if (ch_list_tmp.length != bd_list_tmp.length) return setCopiedCharacters2();
+
+//       selected.length = 0; selectedBond.length = 0;
+//       for (let n of ch_list_tmp) selected.push(n+10000);
+//       for (let n of bd_list_tmp) selectedBond.push(n);
+//       updateSelected();
+//    });
+// }
+
 function setCopiedCharacters() {
-   // 클립보드에서 텍스트 가져오기
-   getClipboardText().then(encodedText => {
-      if (!encodedText) return;
-      let decodedText;
-      try {
-         decodedText = encodedText.trim().split('z');
-         if (decodedText.length != 2) return setCopiedCharacters2();
-      } catch(e) {
-         return setCopiedCharacters2();
-      }
-
-      const ch_list_tmp = decodedText[0].split('y').map(n => parseInt(n, 34));
-      const bd_list_tmp = b34to10(decodedText[1]).split("").map(n => Number(n));
-      if (ch_list_tmp.length != bd_list_tmp.length) return setCopiedCharacters2();
-
-      selected.length = 0; selectedBond.length = 0;
-      for (let n of ch_list_tmp) selected.push(n+10000);
-      for (let n of bd_list_tmp) selectedBond.push(n);
-      updateSelected();
-   });
-}
-
-function setCopiedCharacters2() {
    function splitString(str) {
       const result = [];
       for (let i = 0; i < str.length; i += 3) result.push(str.slice(i, i+3));
