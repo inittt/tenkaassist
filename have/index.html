@@ -59,8 +59,10 @@
          <span>&</span>
          <div class="select_dropdown">
             <div class="dropdown">
-               <button id="btn2" class="dropdown-btn" style="height:1.5rem;">40억<span class="absolute-right">▼</span></button>
+               <button id="btn2" class="dropdown-btn" style="height:1.5rem;">auto<span class="absolute-right">▼</span></button>
                <div id="drop2" class="dropdown-content">
+                  <input type="radio" id="b2-1" name="b2" value="-1" checked>
+                  <label id="l_b2-1" for="b2-1">auto</label>
                   <input type="radio" id="b210" name="b2" value="11000000000">
                   <label id="l_b210" for="b210">11000000000</label>
                   <input type="radio" id="b29" name="b2" value="10000000000">
@@ -75,7 +77,7 @@
                   <label id="l_b25" for="b25">6000000000</label>
                   <input type="radio" id="b24" name="b2" value="5000000000">
                   <label id="l_b24" for="b24">5000000000</label>
-                  <input type="radio" id="b23" name="b2" value="4000000000" checked>
+                  <input type="radio" id="b23" name="b2" value="4000000000">
                   <label id="l_b23" for="b23">4000000000</label>
                   <input type="radio" id="b22" name="b2" value="3000000000">
                   <label id="l_b22" for="b22">3000000000</label>
@@ -133,7 +135,6 @@
    document.title = "TenkaAssist - " + t("보유 캐릭터");
    document.getElementById("titleBox").innerText = t("보유");
 
-   document.getElementById("btn2").innerHTML = `${formatNumber2(4000000000)}<span class="absolute-right">▼</span>`;
    for(let i = 1; i < 11; i++) {
       const set13t = document.getElementById(`l_b2${i}`);
       let val = set13t.innerText;
