@@ -35,7 +35,8 @@ document.addEventListener("DOMContentLoaded", function() {
    const radios2 = document.querySelectorAll(`.dropdown-content input[name='b2']`);
    radios2.forEach(function(option) {
       option.addEventListener("click", function() {
-         dropdownBtn2.innerText = `${formatNumber2(this.value)}`;
+         if (this.value == "-1") dropdownBtn2.innerText = `auto`;
+         else dropdownBtn2.innerText = `${formatNumber2(this.value)}`;
          const spanElement = document.createElement('span');
          spanElement.classList.add('absolute-right');
          spanElement.innerHTML = '▼'
@@ -47,6 +48,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function formatNumber2(value) {
    if (typeof value == "string") value = Number(value);
+
    if (lang == "en") return (value / 1000000000).toFixed(0) + ' B';
    else if (lang == "sc") return (value / 100000000).toFixed(0) + '亿';
    else if (lang == "tc") return (value / 100000000).toFixed(0) + '億';
@@ -127,30 +129,7 @@ async function getClipboardText() {
    }
 }
 
-// 코드 붙여넣기 누를시
-// function setCopiedCharacters() {
-//    // 클립보드에서 텍스트 가져오기
-//    getClipboardText().then(encodedText => {
-//       if (!encodedText) return;
-//       let decodedText;
-//       try {
-//          decodedText = encodedText.trim().split('z');
-//          if (decodedText.length != 2) return setCopiedCharacters2();
-//       } catch(e) {
-//          return setCopiedCharacters2();
-//       }
-
-//       const ch_list_tmp = decodedText[0].split('y').map(n => parseInt(n, 34));
-//       const bd_list_tmp = b34to10(decodedText[1]).split("").map(n => Number(n));
-//       if (ch_list_tmp.length != bd_list_tmp.length) return setCopiedCharacters2();
-
-//       selected.length = 0; selectedBond.length = 0;
-//       for (let n of ch_list_tmp) selected.push(n+10000);
-//       for (let n of bd_list_tmp) selectedBond.push(n);
-//       updateSelected();
-//    });
-// }
-
+// 코드 붙여넣기 클릭시
 function setCopiedCharacters() {
    function splitString(str) {
       const result = [];
@@ -179,17 +158,6 @@ function setCopiedCharacters() {
       
       updateSelected();
    });
-}
-
-function b34to10(str) {
-   const alphabet = '0123456789abcdefghijklmnopqrstuvwx';
-   let result = BigInt(0);
-   for (let i = 0; i < str.length; i++) {
-       const char = str[i];
-       const value = alphabet.indexOf(char);
-       result = result * BigInt(34) + BigInt(value);
-   }
-   return result.toString();
 }
 
 function b64to10(str) {

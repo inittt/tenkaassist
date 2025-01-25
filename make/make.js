@@ -2,10 +2,12 @@ const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const chBonds = params.get('bond');
 const limit_hp_up = Number(params.get('hpUp') == null ? 0 : params.get('hpUp'));
+
+// -1이면 (0보다 작으면) auto
 const limit_fit = Number(params.get('fit13t') == null ? 0 : params.get('fit13t'));
 
 const possible = [];
-let isDataLoaded = false, mod = 0, cc, isCalculating = true;
+let possibleCopy, isDataLoaded = false, mod = 0, cc, isCalculating = true;
 const curHeader = 5;
 
 const bondMap = new Map();
@@ -36,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
-         mod = 0;
+         mod = 0; curCalc = 11;
          if ("2개" === this.value) mod = 1;
          else if ("3개" === this.value) mod = 2;
          else if ("4개" === this.value) mod = 3;
@@ -107,10 +109,8 @@ function setPossible() {
          for (let j = 0; j < 5; j++) bonds.push(bondList[indexes[j]]);
 
          if (bonds.every(item => item === 5) && d.recommend > 0) d.fit13t = d.recommend;
-         else {
-            d.fit13t = autoCalc(compList, d.description, bonds);
-            if (bonds.every(item => item === 1)) d.fit13t = Math.max(d.fit13t, d.vote);
-         }
+         else if (bonds.every(item => item === 1) && d.vote > 0) d.fit13t = d.vote;
+         else d.fit13t = autoCalc(compList, d.description, bonds);
 
          if (d.fit13t >= limit_fit) possible.push(d);
       }
@@ -119,26 +119,40 @@ function setPossible() {
    default_per.innerHTML = `${(dataIdx * 100 / dataAll.length).toFixed(2)}%`;
    if (dataIdx >= maxDataCnt) {
       isCalculating = false;
+      if (limit_fit < 0) possibleCopy = JSON.parse(JSON.stringify(possible));
       makeBlock();
    } else setTimeout(() => setPossible(), 16);
 }
 
-let maxHeap;
+const e9 = 1000000000;
+let maxHeap, curCalc;
 function makeBlock() {
    page = 0;
    bundleCnt = 0;
    maxHeap = new MaxHeap();
    isEndOfDeck = false;
 
-   if (mod == 0) makeBlockAllDeck();
-   else {
+   if (mod == 0) {
+      if (limit_fit < 0) {possible.length = 0; possible.push(...possibleCopy);}
+      makeBlockAllDeck();
+   } else {
       isCalculating = true;
       deckCnt = mod+1;
+
+      if (limit_fit < 0) {
+         possible.length = 0;
+         for(let pc of possibleCopy) if (pc.fit13t >= curCalc*e9) possible.push(pc);
+         curCalc--;
+      }
+
       backtrackCounter = possible.length;
       cc.innerHTML = `<div class="block">${t("계산중")}...0.00%</div>`;
       if (possible.length < deckCnt) {
-         cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
-         isCalculating = false;
+         if (limit_fit < 0 && curCalc >= 0) makeBlock();
+         else {
+            cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
+            isCalculating = false;
+         }
       } else backtrack0(0);
    }
 }
@@ -232,8 +246,12 @@ function makeBlockNDeck() {
    cc.innerHTML = "";
    
    if (maxHeap.size() == 0) {
-      cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
-      isCalculating = false;
+      if (limit_fit < 0 && curCalc > 0) {
+         makeBlock();
+      } else {
+         cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
+         isCalculating = false;
+      }
       return;
    }
 
