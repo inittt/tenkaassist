@@ -278,7 +278,6 @@ function loadBlockNDeck(pg) {
 
       const newP = document.createElement('p');
       newP.classList.add('newP');
-      newP.textContent = ` # ${++bundleCnt}`;
       deckBundle.appendChild(newP);
 
       bundle.sort((a, b) => b.fit13t - a.fit13t);
@@ -317,7 +316,7 @@ function loadBlockNDeck(pg) {
          compblock.addEventListener("click", function() {window.open(`${address}/comp/?id=${id}`, '_blank');});
          deckBundle.appendChild(compblock);
       }
-      newP.textContent += ` (${formatNumber(dmgSum)})`;
+      newP.innerHtml = `<div> # ${++bundleCnt}</div><div>${formatNumber(dmgSum)}</div>`;
       cc.appendChild(deckBundle);
    }
 }
