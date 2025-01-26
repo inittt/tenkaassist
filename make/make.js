@@ -316,7 +316,7 @@ function loadBlockNDeck(pg) {
          compblock.addEventListener("click", function() {window.open(`${address}/comp/?id=${id}`, '_blank');});
          deckBundle.appendChild(compblock);
       }
-      newP.innerHtml = `<div> # ${++bundleCnt}</div><div>${formatNumber(dmgSum)}</div>`;
+      newP.innerHTML = `<div> # ${++bundleCnt}</div><div>${formatNumber(dmgSum)}</div>`;
       cc.appendChild(deckBundle);
    }
 }
