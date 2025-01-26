@@ -283,10 +283,12 @@ function loadBlockNDeck(pg) {
 
       bundle.sort((a, b) => b.fit13t - a.fit13t);
 
+      let dmgSum = 0;
       for(const comp of bundle) {
          const stringArr = [];
          const id = comp.id, compstr = comp.compstr;
          const fit13t = comp.fit13t;
+         dmgSum += fit13t;
          stringArr.push(`<div class="comp-box"><div class="comp-deck">`);
 
          let leaderHpOn = true;
@@ -315,6 +317,7 @@ function loadBlockNDeck(pg) {
          compblock.addEventListener("click", function() {window.open(`${address}/comp/?id=${id}`, '_blank');});
          deckBundle.appendChild(compblock);
       }
+      newP.textContent += ` (${formatNumber(dmgSum)})`;
       cc.appendChild(deckBundle);
    }
 }
