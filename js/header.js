@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="h-lang-btn" onclick="setLang('en')">English</div>
             <div class="h-lang-btn" onclick="setLang('sc')">简体中文</div>
             <div class="h-lang-btn" onclick="setLang('tc')">繁體中文</div>
+            <div class="h-lang-btn" onclick="setLang('jp')">日本語</div>
          </div>
       </div>
       <div id="userInfo" class="user-info margin-left margin-right"></div>
