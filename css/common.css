@@ -178,10 +178,12 @@ a {color: inherit; text-decoration: none;}
 .align-item-center {align-items: center;}
 .comp-order {width:3rem; font-weight: bold; font-size:1.2rem;}
 .comp-time {width:5rem; font-size:1rem;}
-.comp-name {width:10rem; font-size:1.1rem;
-   white-space : 'normal';
-   overflow-wrap : 'anywhere';
-   word-break : 'keep-all';
+.comp-name {
+   width:10rem;
+   font-size:1.1rem;
+   white-space:normal;
+   overflow-wrap:anywhere;
+   word-break:keep-all;
 }
 .comp-deck {display:flex; justify-content: space-around;}
 .comp-rank {text-align: center; font-weight: bold; width:5rem; font-size:1rem;}
