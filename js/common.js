@@ -167,7 +167,7 @@ const translate = {
    "조합등록" : {en : "Register", sc : "注册", tc : "註冊", jp : "登録"},
    "전지역모집" : {en : "Recruit", sc : "全境征才", tc : "全境徵才", jp : "全境徵才"},
    "추천덱" : {en : "Suggest", sc : "推荐团队", tc : "推薦團隊", jp : "おすすめ"},
-   "시뮬레이터" : {en : "Simulator", sc : "模拟器", tc : "模擬器", jp : "シミュレータ"},
+   "시뮬레이터" : {en : "Simulator", sc : "模拟器", tc : "模擬器", jp : "シミュ"},
    "공지" : {en : "Notify", sc : "提醒", tc : "提醒", jp : "お知らせ"},
    "로그아웃" : {en : "LogOut", sc : "登出", tc : "登出", jp : "ログアウト"},
    "로그인" : {en : "LogIn", sc : "登入", tc : "登入", jp : "ログイン"},
