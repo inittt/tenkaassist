@@ -218,7 +218,7 @@ const translate = {
    "가이드" : {en : "Guide", sc : "指南", tc : "指南", jp : "ガイド"},
    "공격데미지": {en : "Basic", sc : "普攻伤害", tc : "普攻傷害", jp : "基本ダメージ"},
    "추가데미지": {en : "Addition", sc : "追加伤害", tc : "追加傷害", jp : "追加ダメージ"},
-   "발동데미지": {en : "Trigger", sc : "触发伤害", tc : "觸發傷害", jp : "トリガーダメージ"},
+   "발동데미지": {en : "Trigger", sc : "触发伤害", tc : "觸發傷害", jp : "発動ダメージ"},
    "도트데미지": {en : "Periodic", sc : "持续伤害", tc : "持續傷害", jp : "継続ダメージ"},
    "반격데미지": {en : "Counter", sc : "反击伤害", tc : "反擊傷害", jp : "反撃ダメージ"},
    "준비 중 캐릭터가 포함되어 있습니다": {en : "Some of the characters are in preparation", sc : "一些角色正在准备中", tc : "一些角色正在準備中", jp : "準備中のキャラクターが含まれています"},
