@@ -224,12 +224,12 @@ a {color: inherit; text-decoration: none;}
 }
 .leaderButton {
    margin-left:1rem;
-   width:4rem;
+   width:4.5rem;
    border: 2px solid white;
    font-weight: bold;
    cursor: pointer;
    border-radius: 0.3rem;
-   padding: 0.3rem 0.6rem;
+   padding: 0.3rem 0.3rem;
    background-color: #a21d1d;
    color:white;
 }

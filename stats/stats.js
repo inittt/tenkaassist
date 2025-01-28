@@ -27,7 +27,7 @@ async function fetchJsonFromGitHub(owner, repo, branch, filePath) {
       return jsonData;
 
    } catch (error) {
-      console.error('Error fetching JSON from GitHub:', error);
+      console.error('Error fetching JSON from database:', error);
       return null;  // 오류 발생 시 null을 반환
    }
 }
@@ -36,7 +36,6 @@ fetchJsonFromGitHub('inittt', 'tenkaassist_data', 'main', 'data/data.json')
 .then(data => {
    if (data == null || data.length == 0) {
       throw new Error('네트워크 응답이 올바르지 않습니다.');
-      return;
    }
    server_data = data;
    setData();

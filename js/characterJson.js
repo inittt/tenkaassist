@@ -309,7 +309,8 @@ function toChInfo(id) {
       "ko" : "kr/",
       "en" : "en/",
       "sc" : "sc/",
-      "tc" : ""
+      "tc" : "",
+      "jp" : "jp/"
    }
    window.open(`https://tkfmdata.com/${lang_tmp[lang]}unit/?code=${str}`, "_blank");
 }
