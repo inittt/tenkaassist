@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
    request(`${server}/comps/searchCnt`, {
       method: "POST",
+      includeJwtToken: false,
       body: formData
    }).then(response => {
       if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
@@ -81,6 +82,7 @@ function getComps() {
 
    request(`${server}/comps/search2`, {
       method: "POST",
+      includeJwtToken: false,
       body: formData
    }).then(response => {
       if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));

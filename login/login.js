@@ -22,6 +22,7 @@ function login() {
 function loginStart(formData) {
    request(`${server}/users/login`, {
       method: 'POST',
+      includeJwtToken: false,
       body: formData,
    }).then(response => {
       if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));

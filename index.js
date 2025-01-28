@@ -52,6 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function getComps(page) {
    request(`${server}/comps/all/${sort}/${page}`, {
       method: "GET",
+      includeJwtToken: false,
    }).then(response => {
       if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
@@ -140,6 +141,7 @@ function init() {
 function loadAllCompCnt() {
    request(`${server}/comps/getCnt`, {
       method: "GET",
+      includeJwtToken: false,
    }).then(response => {
       if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();

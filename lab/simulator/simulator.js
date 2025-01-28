@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
    // 가이드 표시를 위한 행동순서 로드
    request(`${server}/comps/getCompByCompstr/${chIds}`, {
       method: "GET",
+      includeJwtToken: false,
    }).then(response => {
       if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();

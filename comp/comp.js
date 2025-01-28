@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
    // 조합 정보 세팅
    request(`${server}/comps/get/${compId}`, {
       method: "GET",
+      includeJwtToken: false,
    }).then(response => {
       if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
@@ -118,6 +119,7 @@ function makeCompBlock(comp) {
          formData.append("dmg13", dmg13t_b1);
          request(`${server}/comps/setPower1Auto`, {
             method: "POST",
+            includeJwtToken: false,
             body: formData
          }).then(response => {
             if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
@@ -138,6 +140,7 @@ function makeCompBlock(comp) {
          formData.append("dmg13", fitDmg);
          request(`${server}/comps/setPower5Auto`, {
             method: "POST",
+            includeJwtToken: false,
             body: formData
          }).then(response => {
             if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
