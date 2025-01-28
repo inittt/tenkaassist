@@ -112,24 +112,22 @@ if (localStorage.getItem("lang") == null) localStorage.setItem("lang", "ko");
 const lang = localStorage.getItem("lang");
 function t(str) {
    if (lang == "ko") return str;
-   if (lang == "en" && (str in translate)) return translate[str].en;
-   if (lang == "sc" && (str in translate)) return translate[str].sc;
-   if (lang == "tc" && (str in translate)) return translate[str].tc;
+   if (str in translate) {
+      if (lang == "en") return translate[str].en;
+      if (lang == "sc") return translate[str].sc;
+      if (lang == "tc") return translate[str].tc;
+      if (lang == "jp" && translate[str].jp != undefined) return translate[str].jp;
+   }
    return str;
 }
 function t_d(str) {
    if (lang == "ko") return str;
-   if (lang == "en") {
-      const tmp = removeLastCharacter(str);
-      if (tmp in translate) return translate[tmp].en+" Team";
-   }
-   if (lang == "sc") {
-      const tmp = removeLastCharacter(str);
-      if (tmp in translate) return translate[tmp].sc+"队";
-   }
-   if (lang == "tc") {
-      const tmp = removeLastCharacter(str);
-      if (tmp in translate) return translate[tmp].tc+"隊";
+   const tmp = removeLastCharacter(str);
+   if (tmp in translate) {
+      if (lang == "en") return translate[tmp].en+" Team";
+      if (lang == "sc") return translate[tmp].sc+"队";
+      if (lang == "tc") return translate[tmp].tc+"隊";
+      if (lang == "jp" && translate[tmp].jp != undefined) return translate[tmp].jp+"リーダー";
    }
    return str;
 }
@@ -138,78 +136,99 @@ function removeLastCharacter(str) {
    return str.slice(0, -1);
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+   if (lang != "jp") return;
+   const stylesheet = Array.from(document.styleSheets).find(
+      (sheet) => sheet.href && sheet.href.includes('common.css')
+   );
+   if (stylesheet) {
+      const rules = stylesheet.cssRules;
+      for (let i = 0; i < rules.length; i++) {
+         if (rules[i].selectorText === '.text-mini') {
+            rules[i].style.fontSize = '0.55rem';
+            rules[i].style.height = '1.55rem';
+            rules[i].style.overflowY = 'hidden';
+            rules[i].style.whiteSpace = 'normal';
+            rules[i].style.overflowWrap = 'anywhere';
+            rules[i].style.wordBreak = 'keep-all';
+         }
+      }
+   }
+});
+
 const translate = {
    // 헤더 Header
-   "조합목록" : {en : "List", sc : "组合列表", tc : "組合列表"},
-   "조합검색" : {en : "Search", sc : "搜索", tc : "搜尋"},
-   "조합등록" : {en : "Register", sc : "注册", tc : "註冊"},
-   "전지역모집" : {en : "Recruit", sc : "全境征才", tc : "全境徵才"},
-   "추천덱" : {en : "Suggest", sc : "推荐团队", tc : "推薦團隊"},
-   "시뮬레이터" : {en : "Simulator", sc : "模拟器", tc : "模擬器"},
-   "공지" : {en : "Notify", sc : "提醒", tc : "提醒"},
-   "로그아웃" : {en : "LogOut", sc : "登出", tc : "登出"},
-   "로그인" : {en : "LogIn", sc : "登入", tc : "登入"},
+   "조합목록" : {en : "List", sc : "组合列表", tc : "組合列表", jp : "リスト"},
+   "조합검색" : {en : "Search", sc : "搜索", tc : "搜尋", jp : "検索"},
+   "조합등록" : {en : "Register", sc : "注册", tc : "註冊", jp : "登録"},
+   "전지역모집" : {en : "Recruit", sc : "全境征才", tc : "全境徵才", jp : "全境徵才"},
+   "추천덱" : {en : "Suggest", sc : "推荐团队", tc : "推薦團隊", jp : "おすすめ"},
+   "시뮬레이터" : {en : "Simulator", sc : "模拟器", tc : "模擬器", jp : "シミュ"},
+   "공지" : {en : "Notify", sc : "提醒", tc : "提醒", jp : "お知らせ"},
+   "로그아웃" : {en : "LogOut", sc : "登出", tc : "登出", jp : "ログアウト"},
+   "로그인" : {en : "LogIn", sc : "登入", tc : "登入", jp : "ログイン"},
 
    // 조합목록 List
-   "홈" : {en : "Home", sc : "首页", tc : "首頁"},
-   "조합" : {en : "Team", sc : "队伍", tc : "隊伍"},
-   "허수+(5) " : {en : "dummy+", sc : "木椿+", tc : "木椿+"},
-   "허수+(5)" : {en : "dummy+(5)", sc : "木椿+(5)", tc : "木椿+(5)"},
-   "13턴딜" : {en : "13t dmg", sc : "13t 伤害", tc : "13t 傷害"},
-   "13턴딜(5)" : {en : "13t dmg(5)", sc : "13t 伤害(5)", tc : "13t 傷害(5)"},
-   "13턴딜(1)" : {en : "13t dmg(1)", sc : "13t 伤害(1)", tc : "13t 傷害(1)"},
-   "13턴(5)" : {en : "13t (5)", sc : "13t (5)", tc : "13t (5)"},
-   "13턴(1)" : {en : "13t (1)", sc : "13t (1)", tc : "13t (1)"},
-   "최신등록순" : {en : "newest", sc : "最新", tc : "最新"},
-   "최신수정순" : {en : "recent", sc : "最近", tc : "最近"},
-   "총 덱 개수" : {en : "total count", sc : "总数", tc : "總數"},
-   "턴" : {en : "t", sc : "t", tc : "t"}, // turn
-   "로드 중..." : {en : "Loading...", sc : "读取中...", tc : "讀取中..."},
-   "네트워크 응답이 올바르지 않습니다." : {en : "The network response is not correct", sc : "网络回应不正确", tc : "網路回應不正確"},
-   "데이터 로드 실패" : {en : "Data load failed", sc : "数据读取失败", tc : "數據讀取失敗"},
-   "더이상 조합이 없습니다" : {en : "There are no more teams", sc : "没有更多队伍了", tc : "沒有更多隊伍了"},
-   "덱개수 로드 실패" : {en : "Count load failed", sc : "总数读取失败", tc : "總數讀取失敗"},
+   "홈" : {en : "Home", sc : "首页", tc : "首頁", jp : "ホーム"},
+   "조합" : {en : "Team", sc : "队伍", tc : "隊伍", jp : "チーム"},
+   "허수+(5) " : {en : "dummy+", sc : "木椿+", tc : "木椿+", jp : "かかし+"},
+   "허수+(5)" : {en : "dummy+(5)", sc : "木椿+(5)", tc : "木椿+(5)", jp : "かかし+(5)"},
+   "13턴딜" : {en : "13t dmg", sc : "13t 伤害", tc : "13t 傷害", jp : "13t dmg"},
+   "13턴딜(5)" : {en : "13t dmg(5)", sc : "13t 伤害(5)", tc : "13t 傷害(5)", jp : "13t dmg(5)"},
+   "13턴딜(1)" : {en : "13t dmg(1)", sc : "13t 伤害(1)", tc : "13t 傷害(1)", jp : "13t dmg(1)"},
+   "13턴(5)" : {en : "13t (5)", sc : "13t (5)", tc : "13t (5)", jp : "13t(5)"},
+   "13턴(1)" : {en : "13t (1)", sc : "13t (1)", tc : "13t (1)", jp : "13t(1)"},
+   "최신등록순" : {en : "newest", sc : "最新", tc : "最新", jp : "最新登録順"},
+   "최신수정순" : {en : "recent", sc : "最近", tc : "最近", jp : "最新更新順"},
+   "총 덱 개수" : {en : "total count", sc : "总数", tc : "總數", jp : "総数"},
+   "턴" : {en : "t", sc : "t", tc : "t", jp : "t"}, // turn
+   "로드 중..." : {en : "Loading...", sc : "读取中...", tc : "讀取中...", jp : "ロード中..."},
+   "네트워크 응답이 올바르지 않습니다." : {en : "The network response is not correct", sc : "网络回应不正确", tc : "網路回應不正確", jp : "ネットワーク応答が正しくありません"},
+   "데이터 로드 실패" : {en : "Data load failed", sc : "数据读取失败", tc : "數據讀取失敗", jp : "データロードに失敗しました"},
+   "더이상 조합이 없습니다" : {en : "There are no more teams", sc : "没有更多队伍了", tc : "沒有更多隊伍了", jp : "これ以上のチームはありません"},
+   "덱개수 로드 실패" : {en : "Count load failed", sc : "总数读取失败", tc : "總數讀取失敗", jp : "チーム数のロードに失敗しました"},
+
 
    // 시뮬레이터 선택 selectSimulator
-   "캐릭선택" : {en : "Select", sc : "选择", tc : "選擇"}, // select characters
-   "1구속" : {en : "Set 1", sc : "全1絆", tc : "全1絆"}, // set bond 1
-   "화속성" : {en : "Fire", sc : "火属性", tc : "火屬性"},
-   "수속성" : {en : "Water", sc : "水属性", tc : "水屬性"},
-   "풍속성" : {en : "Wind", sc : "风属性", tc : "風屬性"},
-   "광속성" : {en : "Light", sc : "光属性", tc : "光屬性"},
-   "암속성" : {en : "Dark", sc : "暗属性", tc : "闇屬性"},
-   "딜러" : {en : "Attacker", sc : "攻击者", tc : "攻擊者"},
-   "힐러" : {en : "Healer", sc : "治疗者", tc : "治療者"},
-   "탱커" : {en : "Guardian", sc : "守护者", tc : "守護者"},
-   "서포터" : {en : "Supporter", sc : "辅助者", tc : "輔助者"},
-   "디스럽터" : {en : "Obstructer", sc : "妨碍者", tc : "妨礙者"},
-   "검색" : {en : "Search", sc : "搜索", tc : "搜尋"},
-   "시작" : {en : "GO", sc : "GO", tc : "GO"}, // start
-   "캐릭터를 선택해 추가해 주세요" : {en : "Select a character to add", sc : "选择角色加入队伍", tc : "選擇角色加入隊伍"},
-   "5개의 캐릭터를 선택해주세요" : {en : "Five characters are needed", sc : "需要5名角色", tc : "需要5名角色"},
-   "5개까지 선택 가능합니다" : {en : "Up to 5 characters can be selected", sc : "可以选择5名角色", tc : "可以選擇5名角色"},
-   "이미 존재하는 조합입니다" : {en : "The team already exists", sc : "团队已存在", tc : "團隊已存在"},
-   "등록되지 않은 조합입니다" : {en : "The team is not registered", sc : "团队未注册", tc : "團隊未註冊"},
+   "캐릭선택" : {en : "Select", sc : "选择", tc : "選擇", jp : ""}, // select characters
+   "1구속" : {en : "Set 1", sc : "全1絆", tc : "全1絆", jp : ""}, // set bond 1
+   "화속성" : {en : "Fire", sc : "火属性", tc : "火屬性", jp : "火属性"},
+   "수속성" : {en : "Water", sc : "水属性", tc : "水屬性", jp : "水属性"},
+   "풍속성" : {en : "Wind", sc : "风属性", tc : "風屬性", jp : "風属性"},
+   "광속성" : {en : "Light", sc : "光属性", tc : "光屬性", jp : "光属性"},
+   "암속성" : {en : "Dark", sc : "暗属性", tc : "闇屬性", jp : "闇属性"},
+   "딜러" : {en : "Attacker", sc : "攻击者", tc : "攻擊者", jp : "アタッカー"},
+   "힐러" : {en : "Healer", sc : "治疗者", tc : "治療者", jp : "ヒーラー"},
+   "탱커" : {en : "Guardian", sc : "守护者", tc : "守護者", jp : "ガーディアン"},
+   "서포터" : {en : "Supporter", sc : "辅助者", tc : "輔助者", jp : "サポーター"},
+   "디스럽터" : {en : "Obstructer", sc : "妨碍者", tc : "妨礙者", jp : "デバッファー"},
+   "검색" : {en : "Search", sc : "搜索", tc : "搜尋", jp : "検索"},
+   "시작" : {en : "GO", sc : "GO", tc : "GO", jp : "GO"}, // start
+   "캐릭터를 선택해 추가해 주세요" : {en : "Select a character to add", sc : "选择角色加入队伍", tc : "選擇角色加入隊伍", jp : ""},
+   "5개의 캐릭터를 선택해주세요" : {en : "Five characters are needed", sc : "需要5名角色", tc : "需要5名角色", jp : ""},
+   "5개까지 선택 가능합니다" : {en : "Up to 5 characters can be selected", sc : "可以选择5名角色", tc : "可以選擇5名角色", jp : ""},
+   "이미 존재하는 조합입니다" : {en : "The team already exists", sc : "团队已存在", tc : "團隊已存在", jp : ""},
+   "등록되지 않은 조합입니다" : {en : "The team is not registered", sc : "团队未注册", tc : "團隊未註冊", jp : ""},
 
    // 시뮬레이터 Simulator
-   "가이드" : {en : "Guide", sc : "指南", tc : "指南"},
-   "공격데미지": {en : "Basic", sc : "普攻伤害", tc : "普攻傷害"},
-   "추가데미지": {en : "Addition", sc : "追加伤害", tc : "追加傷害"},
-   "발동데미지": {en : "Trigger", sc : "触发伤害", tc : "觸發傷害"},
-   "도트데미지": {en : "Periodic", sc : "持续伤害", tc : "持續傷害"},
-   "반격데미지": {en : "Counter", sc : "反击伤害", tc : "反擊傷害"},
-   "준비 중 캐릭터가 포함되어 있습니다": {en : "Some of the characters are in preparation", sc : "一些角色正在准备中", tc : "一些角色正在準備中"},
-   "캐릭터를 찾을 수 없음": {en : "Character not found", sc : "找不到角色", tc : "找不到角色"},
-   "캐릭터의 수가 5개가 아닙니다": {en : "Five characters are needed", sc : "需要五个角色", tc : "需要五個角色"},
-   "캐릭터 정보가 잘못되었습니다": {en : "Character information is wrong", sc : "角色信息错误", tc : "角色資訊錯誤"},
-   "중복된 캐릭터가 있습니다": {en : "There are duplicate characters", sc : "存在重复的角色", tc : "存在重複的角色"},
-   "번 캐릭터의 구속력이 올바르지 않음. (5구속으로 적용)": {en : "'s bond is incorrect. (Applied as 5)", sc : "角色的绊数错误。(设置为5)", tc : "角色的絆數錯誤。(設定為5)"},
-   "캐릭터 세팅에 문제가 발생": {en : "There is a problem with the character setup", sc : "角色设置出现问题", tc : "角色設定出現問題"},
-   "구속": {en : "bond", sc : "羁绊", tc : "羈絆"},
-   "허수턴": {en : "turns", sc : "回合", tc : "回合"},
-   "매턴 전체피격 (기본값)": {en : "All allies are hit every turn (default)", sc:"每回合我方全部受到攻击 (默认值)", tc:"每回合我方全部受到攻擊 (預設值)"},
-   "매턴 전체공격": { en: "Every Turn All Attack", sc: "每回合全体攻击", tc: "每回合全體攻擊"},
-   
+   "가이드" : {en : "Guide", sc : "指南", tc : "指南", jp : "ガイド"},
+   "공격데미지": {en : "Basic", sc : "普攻伤害", tc : "普攻傷害", jp : "基本ダメージ"},
+   "추가데미지": {en : "Addition", sc : "追加伤害", tc : "追加傷害", jp : "追加ダメージ"},
+   "발동데미지": {en : "Trigger", sc : "触发伤害", tc : "觸發傷害", jp : "トリガーダメージ"},
+   "도트데미지": {en : "Periodic", sc : "持续伤害", tc : "持續傷害", jp : "継続ダメージ"},
+   "반격데미지": {en : "Counter", sc : "反击伤害", tc : "反擊傷害", jp : "反撃ダメージ"},
+   "준비 중 캐릭터가 포함되어 있습니다": {en : "Some of the characters are in preparation", sc : "一些角色正在准备中", tc : "一些角色正在準備中", jp : "準備中のキャラクターが含まれています"},
+   "캐릭터를 찾을 수 없음": {en : "Character not found", sc : "找不到角色", tc : "找不到角色", jp : "キャラクターが見つかりません"},
+   "캐릭터의 수가 5개가 아닙니다": {en : "Five characters are needed", sc : "需要五个角色", tc : "需要五個角色", jp : "キャラクターの数が5体ではありません"},
+   "캐릭터 정보가 잘못되었습니다": {en : "Character information is wrong", sc : "角色信息错误", tc : "角色資訊錯誤", jp : "キャラクター情報が間違っています"},
+   "중복된 캐릭터가 있습니다": {en : "There are duplicate characters", sc : "存在重复的角色", tc : "存在重複的角色", jp : "重複したキャラクターがいます"},
+   "번 캐릭터의 구속력이 올바르지 않음. (5구속으로 적용)": {en : "'s bond is incorrect. (Applied as 5)", sc : "角色的绊数错误。(设置为5)", tc : "角色的絆數錯誤。(設定為5)", jp : "番キャラクターの絆が正しくありません。(5絆として適用)"},
+   "캐릭터 세팅에 문제가 발생": {en : "There is a problem with the character setup", sc : "角色设置出现问题", tc : "角色設定出現問題", jp : "キャラクター設定に問題が発生しました"},
+   "구속": {en : "bond", sc : "羁绊", tc : "羈絆", jp : "絆"},
+   "허수턴": {en : "turns", sc : "回合", tc : "回合", jp : "ターン"},
+   "매턴 전체피격 (기본값)": {en : "All allies are hit every turn (default)", sc:"每回合我方全部受到攻击 (默认值)", tc:"每回合我方全部受到攻擊 (預設值)", jp : "毎ターン味方全体が被撃(デフォルト)"},
+   "매턴 전체공격": {en : "Every Turn All Attack", sc: "每回合全体攻击", tc: "每回合全體攻擊", jp : "毎ターン全体攻撃"},
+
    "버프요약" : {en : "Buff Summary", sc : "状态列表", tc : "狀態列表"},
    "현재 아머 수치" : {en : "Armor", sc : "护盾", tc : "護盾"},
    "공퍼증" : {en : "atk*", sc : "攻击力*", tc : "攻擊力*"},
@@ -445,195 +464,195 @@ const translate = {
 
    
    // 캐릭터명
-   "바알" : {en : "Baal", sc : "巴尔", tc : "巴爾"},
-   "사탄" : {en : "Satan", sc : "撒旦", tc : "撒旦"},
-   "이블리스" : {en : "Iblis", sc : "伊布力斯", tc : "伊布力斯"},
-   "살루시아" : {en : "Salucia", sc : "赛露西亚", tc : "賽露西亞"},
-   "란" : {en : "Lana", sc : "兰儿", tc : "蘭兒"},
-   "루루" : {en : "Lulu", sc : "露露", tc : "露露"},
-   "밀레" : {en : "Milae", sc : "圣米勒", tc : "聖米勒"},
-   "섹돌" : {en : "KS-Ⅷ", sc : "KS-Ⅷ", tc : "KS-Ⅷ"}, // ks8
-   "페바알" : {en : "F.Baal", sc : "祭巴", tc : "祭巴"},
-   "울타" : {en : "Uruta", sc : "古勇", tc : "古勇"},
-   "아야네" : {en : "Ayane", sc : "现勇", tc : "現勇"},
-   "무엘라" : {en : "Muila", sc : "未勇", tc : "未勇"},
-   "하쿠" : {en : "Shiro", sc : "贤者", tc : "賢者"},
-   "놀라이티" : {en : "Noma", sc : "狂犬", tc : "狂犬"},
-   "벨레트" : {en : "Belladonna", sc : "副手", tc : "副手"},
-   "엘자" : {en : "Elizabeth", sc : "死灵", tc : "死靈"},
-   "아이블" : {en : "I.Iblis", sc : "偶伊", tc : "偶伊"},
-   "노엘리" : {en : "Noel", sc : "黑白", tc : "黑白"},
-   "바니사탄" : {en : "E.Satan", sc : "复旦", tc : "復旦"},
-   "치즈루" : {en : "Chizuru", sc : "千鹤", tc : "千鶴"},
-   "수즈카" : {en : "S.Shizuka", sc : "夏狐", tc : "夏狐"},
-   "수루루" : {en : "S.Lulu", sc : "夏露", tc : "夏露"},
-   "수섹돌" : {en : "S.KS-Ⅷ", sc : "夏机", tc : "夏K"}, // s.ks8
-   "수나나" : {en : "S.Nana", sc : "夏娜", tc : "夏娜"},
-   "아르티아" : {en : "Aridya", sc : "睡萝", tc : "睡蘿"},
-   "구빨강" : {en : "Asida", sc : "安丝蒂", tc : "安絲蒂"},
-   "구파랑" : {en : "Asina", sc : "安丝娜", tc : "安絲娜"},
-   "메스미나" : {en : "Mesmiia", sc : "蛇后", tc : "蛇后"},
-   "라티아" : {en : "Lotiya", sc : "血族", tc : "血族"},
-   "할브리" : {en : "H.Britney", sc : "火军", tc : "火軍"}, // "Little Devil Britney"
-   "수이블" : {en : "S.Iblis", sc : "夏伊", tc : "夏伊"},
-   "할살루" : {en : "H.Salucia", sc : "小王", tc : "幼精"}, // "Hallow-Queen Salucia"
-   "슈텐" : {en : "Ibuki", sc : "伊吹", tc : "伊吹"},
-   "테키" : {en : "Didi", sc : "狄", tc : "狄"},
-   "모모" : {en : "Momo", sc : "莫默", tc : "莫默"},
-   "파야" : {en : "Faya", sc : "法雅", tc : "法雅"},
-   "뷰저" : {en : "F.Caesar", sc : "凯萨", tc : "凱薩"},
-   "산타카" : {en : "X.Aiko", sc : "圣艾", tc : "黑艾"}, // "Dark Christmas Aiko"
-   "크란" : {en : "X.Lana", sc : "圣矮", tc : "誕矮"}, // "Xmas Dwarf Queen Lana"
-   "구릴리" : {en : "Evie", sc : "驯鹿", tc : "馴鹿"},
-   "카시피나" : {en : "Karina", sc : "堕龙", tc : "墮龍"},
-   "에피나" : {en : "Daphne", sc : "煌星", tc : "煌星"},
-   "아온" : {en : "Fufu", sc : "沃沃", tc : "沃沃"},
-   "이노리" : {en : "Inori", sc : "马娘", tc : "馬娘"},
-   "풍오라" : {en : "Hm.Fiora", sc : "圣女", tc : "聖女"}, // "Harvest Maid Fiora"
-   "세라프" : {en : "Sherana", sc : "商狐", tc : "商狐"},
-   "에밀리" : {en : "Emily", sc : "女仆长", tc : "女僕"},
-   "안젤리카" : {en : "Anjelica", sc : "千咒", tc : "千咒"},
-   "신미나" : {en : "Tm.Minayomi", sc : "春剑", tc : "春劍"}, // "True Moon Minayomi"
-   "렌" : {en : "Lotus", sc : "莲", tc : "蓮"},
-   "스즈란" : {en : "Lillane", sc : "铃兰", tc : "鈴蘭"},
-   "스타샤" : {en : "Sasha", sc : "丝塔夏", tc : "絲塔夏"},
-   "신바알" : {en : "B.Baal", sc : "花巴", tc : "花巴"},
-   "이치카" : {en : "Ichika", sc : "雪姬", tc : "雪姬"},
-   "앨즈루" : {en : "W.Chizuru", sc : "梦鹤", tc : "夢鶴"}, // "Wonderland Chizuru"
-   "앨루루"	 : {en : "W.Lulu", sc : "梦露", tc : "夢露"}, // "Wonderland Lulu"
-   "베리스" : {en : "Bayliss", sc : "黑鹰", tc : "黑鷹"},
-   "냥루루" : {en : "C.Lulu", sc : "猫露", tc : "貓露"},
-   "신츠키" : {en : "Tm.Ritsuki", sc : "春忍", tc : "春忍"}, // "True Moon Ritsuki"
-   "신이블" : {en : "B.Iblis", sc : "花伊", tc : "花伊"},
-   "신사탄" : {en : "B.Satan", sc : "花旦", tc : "花旦"},
-   "유메" : {en : "Sakuya", sc : "店長", tc : "店長"}, // "SakuyaYume"
-   "미루" : {en : "Miru", sc : "咪噜", tc : "咪嚕"},
-   "카나" : {en : "Kana", sc : "花魁", tc : "花魁"},
-   "신빨강" : {en : "Q.Asida", sc : "星紅", tc : "星紅"},
-   "신파랑" : {en : "Q.Asina", sc : "银蓝", tc : "銀藍"},
-   "수밀레" : {en : "S.Milae", sc : "夏天", tc : "夏天"}, // "Summer Saint Milae"	
-   "수엘리" : {en : "S.Noel", sc : "夏黑", tc : "夏黑"},
-   "수르티아" : {en : "S.Aridya", sc : "夏梦", tc : "夏蘿"},
-   "적나나" : {en : "C1.Nana", sc : "星娜", tc : "秋娜"}, // "Chosen One Nana"
-   "키베루" : {en : "Geneva", sc : "基基", tc : "基基"},
-   "로오나" : {en : "H.Leona", sc : "小骑", tc : "幼騎"}, // "Knight in Training Leona"
-   "로티아" : {en : "H.Lotiya", sc : "血魔", tc : "血魔"}, // "BloodSucker Lotiya"
-   "바니카" : {en : "XX.Aiko", sc : "性艾", tc : "風艾"}, // "Sexmas Bunny Aiko"
-   "크즈카" : {en : "X.Shizuka", sc : "圣狐", tc : "誕狐"}, // "Christmax Fox Shizuka"
-   "우사기" : {en : "Usagihime", sc : "兔姬", tc : "兔姬"}, // "Usagihime"
-   "절살루" : {en : "Ny.Salucia", sc : "春王", tc : "春精"}, // "Elegance Personified Salucia"
-   "용란" : {en : "Ny.Lana", sc : "春矮", tc : "春矮"}, // "Dragon Dancer Lana"
-   "코바알" : {en : "V.Baal", sc : "可巴", tc : "可巴"}, // "Sweet Cocoa Baal"
-   "코이블" : {en : "V.Iblis", sc : "可伊", tc : "可伊"}, // "Pure Cocoa Iblis"
-   "코사탄" : {en : "V.Satan", sc : "可旦", tc : "可旦"}, // "Killer Cocoa Satan"
-   "배이린" : {en : "D.Irene", sc : "护琳", tc : "護琳"}, // "Corrupt Doctor Irene"
-   "간뷰" : {en : "N.Caesar", sc : "护凯", tc : "護凱"}, // "Tsundere Nurse Caesar"
-   "뷰지안" : {en : "M.Juneau", sc : "魔将", tc : "魔將"}, // "Magical Maiden Juneau"
-   "마브리" : {en : "M.Britney", sc : "风军", tc : "風軍"}, // "Magical Maiden Britney"
-   "수야네" : {en : "S.Ayane", sc : "夏勇", tc : "夏勇"},
-   "수바알" : {en : "S.Baal", sc : "夏巴", tc : "夏巴"},
-   "수오라" : {en : "S.Fiora", sc : "夏菲", tc : "夏菲"},
-   "수이카" : {en : "S.Aiko", sc : "夏艾", tc : "夏艾"},
-   "해란" : {en : "O.Lana", sc : "风矮", tc : "風矮"}, // "Go Getter Lana"
-   "해나나" : {en : "O.Nana", sc : "白娜", tc : "白娜"}, // "Salty Sea Cat Nana"
-   "천사기" : {en : "A.Usagihime", sc : "天兔", tc : "天兔"}, // "Sexy Seraph Usagihime"
-   "악미루" : {en : "D.Miru", sc : "咪黑", tc : "咪黑"}, // "Demon Kitty Annin Miru"
-   "뇨로" : {en : "Nyoro", sc : "香草奈若", tc : "香草奈若"},
-   "할야네" : {en : "H.Ayane", sc : "万勇", tc : "萬勇"}, // "Pumkin Witch Ayane"
-   "할쿠" : {en : "H.Shiro", sc : "小白", tc : "小白"}, // "Naughty Trixie Shiro"
-   "크르티아" : {en : "X.Aridya", sc : "圣萝", tc : "誕蘿"}, // "Snow Fantasy Aridya"
-   "크이블" : {en : "X.Iblis", sc : "圣伊", tc : "聖伊"}, // "Sexmas Caroler Iblis"
-   "신릴리" : {en : "W.Evie", sc : "性鹿", tc : "風鹿"}, // "Sexmas Evie"
-   "셀리나" : {en : "Salina", sc : "莎琳娜", tc : "莎琳娜"},
-   "이나스" : {en : "Inase", sc : "时御", tc : "時御"},
-   "카디아" : {en : "Cartilla", sc : "女爵", tc : "女爵"},
-   "나나미" : {en : "Nanami", sc : "奈奈美", tc : "奈奈美"},
-   "가엘리" : {en : "W.Noel", sc : "闪黑", tc : "風黑"}, // "Glittering Songstress Noel"
-   "돌스미나" : {en : "W.Mesmiia", sc : "风蛇", tc : "風蛇"}, // "Idol Agent Mesmiia"
-   "안젤라" : {en : "Angelina", sc : "雪豹", tc : "雪豹"},
-   "춘즈란" : {en : "W.Lillane", sc : "风铃", tc : "風鈴"}, // "Sensual Bunny Lillane"
-   "익루루" : {en : "P.Lulu", sc : "睡露", tc : "睡露"}, // "Lingerie Lolita Lulu"
-   "불타라" : {en : "P.Tyrella", sc : "睡托", tc : "睡托"}, // "Delusional Rival Tyrella"
-   "라냐" : {en : "Lelya", sc : "主祭", tc : "主祭"},
-   "관나나" : {en : "A.Nana", sc : "皮娜", tc : "皮娜"},
-   "수즈루" : {en : "S.Chizuru", sc : "夏鹤", tc : "夏鶴"},
-   "수살루" : {en : "S.Salucia", sc : "夏王", tc : "夏精"},
-   "수저" : {en : "S.Caesar", sc : "夏凯", tc : "夏凱"},
-   "수사탄" : {en : "S.Satan", sc : "夏旦", tc : "夏旦"},
-   "헌미나" : {en : "D.Minayomi", sc : "魔剑", tc : "魔劍"}, // "Apex Hunter Minayomi"
-   "요이키" : {en : "Oniyoiki", sc : "鬼厨", tc : "鬼廚"},
-   "곤즈카" : {en : "Beer.Shizuka", sc : "酒静", tc : "酒靜"}, // "Drunken Feaster Shizuka"
-   "츠바키" : {en : "Tsubaki", sc : "椿", tc : "椿"},
-   "아메" : {en : "Amethystina", sc : "占星", tc : "占星"},
-   "바야네" : {en : "Bg.Ayane", sc : "兔勇", tc : "兔勇"},
-   "바이블" : {en : "Bg.Iblis", sc : "兔伊", tc : "兔伊"},
-   "수잔" : {en : "Susan", sc : "苏珊", tc : "蘇珊"},
-   "농탄" : {en : "H.Satan", sc : "小撒旦", tc : "幼旦"},
-   "메나미" : {en : "M.Nanami", sc : "仆奈", tc : "僕奈"},
-   "메섹돌" : {en : "M.KS-Ⅷ", sc : "火机", tc : "僕K"},
-   "크바알" : {en : "X.Baal", sc : "诞巴", tc : "誕巴"},
-   "크치카" : {en : "X.Ichika", sc : "诞姬", tc : "雪人"},
-   "크브리" : {en : "X.Britney", sc : "诞军", tc : "誕軍"},
-   "크엘라" : {en : "X.Muila", sc : "诞牧", tc : "誕牧"},
-   "봄오라" : {en : "Ny.Fiora", sc : "春菲", tc : "春菲"},
-   "사샤" : {en : "Zaskia", sc : "赤龙", tc : "赤龍"},
+   "바알" : {en : "Baal", sc : "巴尔", tc : "巴爾", jp : "バル"},
+   "사탄" : {en : "Satan", sc : "撒旦", tc : "撒旦", jp : "サタン"},
+   "이블리스" : {en : "Iblis", sc : "伊布力斯", tc : "伊布力斯", jp : "イブリース"},
+   "살루시아" : {en : "Salucia", sc : "赛露西亚", tc : "賽露西亞", jp : "セルシア"},
+   "란" : {en : "Lana", sc : "兰儿", tc : "蘭兒", jp : "ラン"},
+   "루루" : {en : "Lulu", sc : "露露", tc : "露露", jp : "ルル"},
+   "밀레" : {en : "Milae", sc : "圣米勒", tc : "聖米勒", jp : "聖女ミラ"},
+   "섹돌" : {en : "KS-Ⅷ", sc : "KS-Ⅷ", tc : "KS-Ⅷ", jp : "KS-Ⅷ"}, // ks8
+   "페바알" : {en : "F.Baal", sc : "祭巴", tc : "祭巴", jp : "祭り バル"},
+   "울타" : {en : "Uruta", sc : "古勇", tc : "古勇", jp : "ウルタ"},
+   "아야네" : {en : "Ayane", sc : "现勇", tc : "現勇", jp : "神田綾音"},
+   "무엘라" : {en : "Muila", sc : "未勇", tc : "未勇", jp : "マイラ"},
+   "하쿠" : {en : "Shiro", sc : "贤者", tc : "賢者", jp : "ハク"},
+   "놀라이티" : {en : "Noma", sc : "狂犬", tc : "狂犬", jp : "ノルディ"},
+   "벨레트" : {en : "Belladonna", sc : "副手", tc : "副手", jp : "ベレット"},
+   "엘자" : {en : "Elizabeth", sc : "死灵", tc : "死靈", jp : "エリザベス"},
+   "아이블" : {en : "I.Iblis", sc : "偶伊", tc : "偶伊", jp : "アイドル イブリース"},
+   "노엘리" : {en : "Noel", sc : "黑白", tc : "黑白", jp : "ノエル"},
+   "바니사탄" : {en : "E.Satan", sc : "复旦", tc : "復旦", jp : "バニー サタン"},
+   "치즈루" : {en : "Chizuru", sc : "千鹤", tc : "千鶴", jp : "千鶴"},
+   "수즈카" : {en : "S.Shizuka", sc : "夏狐", tc : "夏狐", jp : "夏の日 静"},
+   "수루루" : {en : "S.Lulu", sc : "夏露", tc : "夏露", jp : "夏の日 ルル"},
+   "수섹돌" : {en : "S.KS-Ⅷ", sc : "夏机", tc : "夏K", jp : "夏の日 KS"}, // s.ks8
+   "수나나" : {en : "S.Nana", sc : "夏娜", tc : "夏娜", jp : "夏の日 ナナ"},
+   "아르티아" : {en : "Aridya", sc : "睡萝", tc : "睡蘿", jp : "アルティア"},
+   "구빨강" : {en : "Asida", sc : "安丝蒂", tc : "安絲蒂", jp : "アンスティー"},
+   "구파랑" : {en : "Asina", sc : "安丝娜", tc : "安絲娜", jp : "アンスナー"},
+   "메스미나" : {en : "Mesmiia", sc : "蛇后", tc : "蛇后", jp : "メスミナヤ"},
+   "라티아" : {en : "Lotiya", sc : "血族", tc : "血族", jp : "ラティヤ"},
+   "할브리" : {en : "H.Britney", sc : "火军", tc : "火軍", jp : "小悪魔 ブリトニー"}, // "Little Devil Britney"
+   "수이블" : {en : "S.Iblis", sc : "夏伊", tc : "夏伊", jp : "夏の日 イブリース"},
+   "할살루" : {en : "H.Salucia", sc : "小王", tc : "幼精", jp : "おてんば セルシア"}, // "Hallow-Queen Salucia"
+   "슈텐" : {en : "Ibuki", sc : "伊吹", tc : "伊吹", jp : "伊吹朱点"},
+   "테키" : {en : "Didi", sc : "狄", tc : "狄", jp : "狄"},
+   "모모" : {en : "Momo", sc : "莫默", tc : "莫默", jp : "モモ"},
+   "파야" : {en : "Faya", sc : "法雅", tc : "法雅", jp : "ファーヤ"},
+   "뷰저" : {en : "F.Caesar", sc : "凯萨", tc : "凱薩", jp : "シーザー"},
+   "산타카" : {en : "X.Aiko", sc : "圣艾", tc : "黑艾", jp : "クリスマス アイカ"}, // "Dark Christmas Aiko"
+   "크란" : {en : "X.Lana", sc : "圣矮", tc : "誕矮", jp : "クリスマス ラン"}, // "Xmas Dwarf Queen Lana"
+   "구릴리" : {en : "Evie", sc : "驯鹿", tc : "馴鹿", jp : "リリー"},
+   "카시피나" : {en : "Karina", sc : "堕龙", tc : "墮龍", jp : "キャシフィーナ"},
+   "에피나" : {en : "Daphne", sc : "煌星", tc : "煌星", jp : "バンサフィーナ"},
+   "아온" : {en : "Fufu", sc : "沃沃", tc : "沃沃", jp : "アオン"},
+   "이노리" : {en : "Inori", sc : "马娘", tc : "馬娘", jp : "いのり"},
+   "풍오라" : {en : "Hm.Fiora", sc : "圣女", tc : "聖女", jp : "豊作聖女 フィオラ"}, // "Harvest Maid Fiora"
+   "세라프" : {en : "Sherana", sc : "商狐", tc : "商狐", jp : "セラフ"},
+   "에밀리" : {en : "Emily", sc : "女仆长", tc : "女僕", jp : "エミリー"},
+   "안젤리카" : {en : "Anjelica", sc : "千咒", tc : "千咒", jp : "アンジェリカ"},
+   "신미나" : {en : "Tm.Minayomi", sc : "春剑", tc : "春劍", jp : "新春 神無雪"}, // "True Moon Minayomi"
+   "렌" : {en : "Lotus", sc : "莲", tc : "蓮", jp : "レン"},
+   "스즈란" : {en : "Lillane", sc : "铃兰", tc : "鈴蘭", jp : "鈴蘭"},
+   "스타샤" : {en : "Sasha", sc : "丝塔夏", tc : "絲塔夏", jp : "スターシャ"},
+   "신바알" : {en : "B.Baal", sc : "花巴", tc : "花巴", jp : "花嫁 バル"},
+   "이치카" : {en : "Ichika", sc : "雪姬", tc : "雪姬", jp : "初華"},
+   "앨즈루" : {en : "W.Chizuru", sc : "梦鹤", tc : "夢鶴", jp : "不思議の国 千鶴"}, // "Wonderland Chizuru"
+   "앨루루"	 : {en : "W.Lulu", sc : "梦露", tc : "夢露", jp : "不思議の国 ルル"}, // "Wonderland Lulu"
+   "베리스" : {en : "Bayliss", sc : "黑鹰", tc : "黑鷹", jp : "ベリス"},
+   "냥루루" : {en : "C.Lulu", sc : "猫露", tc : "貓露", jp : "だらだら猫 ルル"},
+   "신츠키" : {en : "Tm.Ritsuki", sc : "春忍", tc : "春忍", jp : "新春 凛月"}, // "True Moon Ritsuki"
+   "신이블" : {en : "B.Iblis", sc : "花伊", tc : "花伊", jp : "花嫁 イブリース"},
+   "신사탄" : {en : "B.Satan", sc : "花旦", tc : "花旦", jp : "花嫁 サタン"},
+   "유메" : {en : "Sakuya", sc : "店長", tc : "店長", jp : "咲野夢"}, // "SakuyaYume"
+   "미루" : {en : "Miru", sc : "咪噜", tc : "咪嚕", jp : "杏仁ミル"},
+   "카나" : {en : "Kana", sc : "花魁", tc : "花魁", jp : "香奈"},
+   "신빨강" : {en : "Q.Asida", sc : "星紅", tc : "星紅", jp : "二星の紅 アンスティー"},
+   "신파랑" : {en : "Q.Asina", sc : "银蓝", tc : "銀藍", jp : "銀河の蒼 アンスナー"},
+   "수밀레" : {en : "S.Milae", sc : "夏天", tc : "夏天", jp : "夏の日 聖女ミラ"}, // "Summer Saint Milae"	
+   "수엘리" : {en : "S.Noel", sc : "夏黑", tc : "夏黑", jp : "夏の日 ノエル"},
+   "수르티아" : {en : "S.Aridya", sc : "夏梦", tc : "夏蘿", jp : "夏の日 アルティア"},
+   "적나나" : {en : "C1.Nana", sc : "星娜", tc : "秋娜", jp : "チルドレン ナナ"}, // "Chosen One Nana"
+   "키베루" : {en : "Geneva", sc : "基基", tc : "基基", jp : "ジベール"},
+   "로오나" : {en : "H.Leona", sc : "小骑", tc : "幼騎", jp : "見習い レオナ"}, // "Knight in Training Leona"
+   "로티아" : {en : "H.Lotiya", sc : "血魔", tc : "血魔", jp : "鮮血の魔王 ラティヤ"}, // "BloodSucker Lotiya"
+   "바니카" : {en : "XX.Aiko", sc : "性艾", tc : "風艾", jp : "バニー アイカ"}, // "Sexmas Bunny Aiko"
+   "크즈카" : {en : "X.Shizuka", sc : "圣狐", tc : "誕狐", jp : "クリスマス 静"}, // "Christmax Fox Shizuka"
+   "우사기" : {en : "Usagihime", sc : "兔姬", tc : "兔姬", jp : "兎姫"}, // "Usagihime"
+   "절살루" : {en : "Ny.Salucia", sc : "春王", tc : "春精", jp : "絶世の美女 セルシア"}, // "Elegance Personified Salucia"
+   "용란" : {en : "Ny.Lana", sc : "春矮", tc : "春矮", jp : "竜飛鳳舞 ラン"}, // "Dragon Dancer Lana"
+   "코바알" : {en : "V.Baal", sc : "可巴", tc : "可巴", jp : "ココア バル"}, // "Sweet Cocoa Baal"
+   "코이블" : {en : "V.Iblis", sc : "可伊", tc : "可伊", jp : "ココア イブリース"}, // "Pure Cocoa Iblis"
+   "코사탄" : {en : "V.Satan", sc : "可旦", tc : "可旦", jp : "ココア サタン"}, // "Killer Cocoa Satan"
+   "배이린" : {en : "D.Irene", sc : "护琳", tc : "護琳", jp : "背徳医師 エリン"}, // "Corrupt Doctor Irene"
+   "간뷰" : {en : "N.Caesar", sc : "护凯", tc : "護凱", jp : "看護師 シーザー"}, // "Tsundere Nurse Caesar"
+   "뷰지안" : {en : "M.Juneau", sc : "魔将", tc : "魔將", jp : "魔法少女 ジュノアン"}, // "Magical Maiden Juneau"
+   "마브리" : {en : "M.Britney", sc : "风军", tc : "風軍", jp : "魔法少女 ブリトニー"}, // "Magical Maiden Britney"
+   "수야네" : {en : "S.Ayane", sc : "夏勇", tc : "夏勇", jp : "夏の日 神田綾音"},
+   "수바알" : {en : "S.Baal", sc : "夏巴", tc : "夏巴", jp : "夏の日 バル"},
+   "수오라" : {en : "S.Fiora", sc : "夏菲", tc : "夏菲", jp : "夏の日 フィオラ"},
+   "수이카" : {en : "S.Aiko", sc : "夏艾", tc : "夏艾", jp : "夏の日 アイカ"},
+   "해란" : {en : "O.Lana", sc : "风矮", tc : "風矮", jp : "荒波乗り ラン"}, // "Go Getter Lana"
+   "해나나" : {en : "O.Nana", sc : "白娜", tc : "白娜", jp : "さざ波の猫 ナナ"}, // "Salty Sea Cat Nana"
+   "천사기" : {en : "A.Usagihime", sc : "天兔", tc : "天兔", jp : "妖美な天使 兎姫"}, // "Sexy Seraph Usagihime"
+   "악미루" : {en : "D.Miru", sc : "咪黑", tc : "咪黑", jp : "悪魔の猫娘 杏仁ミル"}, // "Demon Kitty Annin Miru"
+   "뇨로" : {en : "Nyoro", sc : "香草奈若", tc : "香草奈若", jp : "紺碧の薄紅 香草奈若"},
+   "할야네" : {en : "H.Ayane", sc : "万勇", tc : "萬勇", jp : "魔女 神田綾音"}, // "Pumkin Witch Ayane"
+   "할쿠" : {en : "H.Shiro", sc : "小白", tc : "小白", jp : "イタズラな ハク"}, // "Naughty Trixie Shiro"
+   "크르티아" : {en : "X.Aridya", sc : "圣萝", tc : "誕蘿", jp : "雪夜の夢 アルティア"}, // "Snow Fantasy Aridya"
+   "크이블" : {en : "X.Iblis", sc : "圣伊", tc : "聖伊", jp : "性誕祭の イブリース"}, // "Sexmas Caroler Iblis"
+   "신릴리" : {en : "W.Evie", sc : "性鹿", tc : "風鹿", jp : "性誕祭の リリー"}, // "Sexmas Evie"
+   "셀리나" : {en : "Salina", sc : "莎琳娜", tc : "莎琳娜", jp : "サリナ"},
+   "이나스" : {en : "Inase", sc : "时御", tc : "時御", jp : "イネース"},
+   "카디아" : {en : "Cartilla", sc : "女爵", tc : "女爵", jp : "カティア"},
+   "나나미" : {en : "Nanami", sc : "奈奈美", tc : "奈奈美", jp : "ななみ"},
+   "가엘리" : {en : "W.Noel", sc : "闪黑", tc : "風黑", jp : "輝く歌姫 ノエル"}, // "Glittering Songstress Noel"
+   "돌스미나" : {en : "W.Mesmiia", sc : "风蛇", tc : "風蛇", jp : "マネジャー メスミナヤ"}, // "Idol Agent Mesmiia"
+   "안젤라" : {en : "Angelina", sc : "雪豹", tc : "雪豹", jp : "アンジェラ"},
+   "춘즈란" : {en : "W.Lillane", sc : "风铃", tc : "風鈴", jp : "発情うさぎ 鈴蘭"}, // "Sensual Bunny Lillane"
+   "익루루" : {en : "P.Lulu", sc : "睡露", tc : "睡露", jp : "パジャマ ルル"}, // "Lingerie Lolita Lulu"
+   "불타라" : {en : "P.Tyrella", sc : "睡托", tc : "睡托", jp : "パジャマ トトラ"}, // "Delusional Rival Tyrella"
+   "라냐" : {en : "Lelya", sc : "主祭", tc : "主祭", jp : "ラーニャ"},
+   "관나나" : {en : "A.Nana", sc : "皮娜", tc : "皮娜", jp : "調査員 ナナ"},
+   "수즈루" : {en : "S.Chizuru", sc : "夏鹤", tc : "夏鶴", jp : "夏の日 千鶴"},
+   "수살루" : {en : "S.Salucia", sc : "夏王", tc : "夏精", jp : "夏の日 セルシア"},
+   "수저" : {en : "S.Caesar", sc : "夏凯", tc : "夏凱", jp : "夏の日 シーザー"},
+   "수사탄" : {en : "S.Satan", sc : "夏旦", tc : "夏旦", jp : "夏の日 サタン"},
+   "헌미나" : {en : "D.Minayomi", sc : "魔剑", tc : "魔劍", jp : "ハンター 神無雪"}, // "Apex Hunter Minayomi"
+   "요이키" : {en : "Oniyoiki", sc : "鬼厨", tc : "鬼廚", jp : "鬼酔木"},
+   "곤즈카" : {en : "Beer.Shizuka", sc : "酒静", tc : "酒靜", jp : "酔狂の宴 静"}, // "Drunken Feaster Shizuka"
+   "츠바키" : {en : "Tsubaki", sc : "椿", tc : "椿", jp : "椿"},
+   "아메" : {en : "Amethystina", sc : "占星", tc : "占星", jp : "アメシスト"},
+   "바야네" : {en : "Bg.Ayane", sc : "兔勇", tc : "兔勇", jp : "バニー 神田綾音"},
+   "바이블" : {en : "Bg.Iblis", sc : "兔伊", tc : "兔伊", jp : "バニー イブリース"},
+   "수잔" : {en : "Susan", sc : "苏珊", tc : "蘇珊", jp : "スーザン"},
+   "농탄" : {en : "H.Satan", sc : "小撒旦", tc : "幼旦", jp : "ロリ サタン"},
+   "메나미" : {en : "M.Nanami", sc : "仆奈", tc : "僕奈", jp : "メイド ななみ"},
+   "메섹돌" : {en : "M.KS-Ⅷ", sc : "火机", tc : "僕K", jp : "メイド KS-Ⅷ"},
+   "크바알" : {en : "X.Baal", sc : "诞巴", tc : "誕巴", jp : "クリスマス バル"},
+   "크치카" : {en : "X.Ichika", sc : "诞姬", tc : "雪人", jp : "クリスマス 初華"},
+   "크브리" : {en : "X.Britney", sc : "诞军", tc : "誕軍", jp : "クリスマス ブリトニー"},
+   "크엘라" : {en : "X.Muila", sc : "诞牧", tc : "誕牧", jp : "クリスマス マイラ"},
+   "봄오라" : {en : "Ny.Fiora", sc : "春菲", tc : "春菲", jp : "性なる迎春 フィオラ"},
+   "사샤" : {en : "Zaskia", sc : "赤龙", tc : "赤龍", jp : "サーシャ"},
 
 
-   "아이카" : {en : "Aiko", sc : "艾可", tc : "艾可"},
-   "레오나" : {en : "Leona", sc : "雷欧娜", tc : "雷歐娜"},
-   "피오라" : {en : "Fiora", sc : "菲欧菈", tc : "菲歐菈"},
-   "리츠키" : {en : "Ritsuki", sc : "凛月", tc : "凜月"},
-   "미나요미" : {en : "Minayomi", sc : "神无雪", tc : "神無雪"},
-   "시즈카" : {en : "Shizuka", sc : "静", tc : "靜"},
-   "쥬노안" : {en : "Juneau", sc : "朱诺安", tc : "朱諾安"},
-   "브리트니" : {en : "Britney", sc : "布兰妮", tc : "布蘭妮"},
-   "나프라라" : {en : "Nafrala", sc : "娜芙菈菈", tc : "娜芙菈菈"},
-   "토타라" : {en : "Tyrella", sc : "托特拉", tc : "托特拉"},
-   "호타루" : {en : "YingYing", sc : "小萤", tc : "小螢"},
-   "가벨" : {en : "Janelle", sc : "刺针", tc : "刺針"},
-   "프리실라" : {en : "Pulicia", sc : "银龙", tc : "銀龍"},
-   "타노시아" : {en : "Tanocia", sc : "塔诺西雅", tc : "塔諾西雅"},
-   "티아스" : {en : "Teresa", sc : "羊妈", tc : "羊媽"},
+   "아이카" : {en : "Aiko", sc : "艾可", tc : "艾可", jp : "アイカ"},
+   "레오나" : {en : "Leona", sc : "雷欧娜", tc : "雷歐娜", jp : "レオナ"},
+   "피오라" : {en : "Fiora", sc : "菲欧菈", tc : "菲歐菈", jp : "フィオラ"},
+   "리츠키" : {en : "Ritsuki", sc : "凛月", tc : "凜月", jp : "凛月"},
+   "미나요미" : {en : "Minayomi", sc : "神无雪", tc : "神無雪", jp : "神無雪"},
+   "시즈카" : {en : "Shizuka", sc : "静", tc : "靜", jp : "静"},
+   "쥬노안" : {en : "Juneau", sc : "朱诺安", tc : "朱諾安", jp : "ジュノアン"},
+   "브리트니" : {en : "Britney", sc : "布兰妮", tc : "布蘭妮", jp : "ブリトニー"},
+   "나프라라" : {en : "Nafrala", sc : "娜芙菈菈", tc : "娜芙菈菈", jp : "ナフララ"},
+   "토타라" : {en : "Tyrella", sc : "托特拉", tc : "托特拉", jp : "トトラ"},
+   "호타루" : {en : "YingYing", sc : "小萤", tc : "小螢", jp : "ホタル"},
+   "가벨" : {en : "Janelle", sc : "刺针", tc : "刺針", jp : "ガヴィル"},
+   "프리실라" : {en : "Pulicia", sc : "银龙", tc : "銀龍", jp : "プリシラ"},
+   "타노시아" : {en : "Tanocia", sc : "塔诺西雅", tc : "塔諾西雅", jp : "タノシーヤ"},
+   "티아스" : {en : "Teresa", sc : "羊妈", tc : "羊媽", jp : "ティアス"},
 
-   "아이린" : {en : "Irene", sc : "艾琳", tc : "艾琳"},
-   "나나" : {en : "Nana", sc : "娜娜", tc : "娜娜"},
-   "아이리스" : {en : "Iris", sc : "伊维丝", tc : "伊維絲"},
-   "도라" : {en : "Dora", sc : "朵拉", tc : "朵拉"},
-   "세바스" : {en : "Sable", sc : "撒芭丝", tc : "撒芭絲"},
-   "마를렌" : {en : "Marlene", sc : "玛莲", tc : "瑪蓮"},
-   "유이" : {en : "Yoi", sc : "尤依", tc : "尤依"},
-   "소라카" : {en : "Shiraka", sc : "索拉卡", tc : "索拉卡"},
-   "미아" : {en : "Mia", sc : "米雅", tc : "米雅"},
-   "소피" : {en : "Sophie", sc : "苏菲", tc : "蘇菲"},
-   "카리나" : {en : "Jolina", sc : "嘉莉娜", tc : "嘉莉娜"},
-   "파나나" : {en : "Panana", sc : "帕奈奈", tc : "帕奈奈"},
-   "이아" : {en : "Iyan", sc : "伊艾", tc : "伊艾"},
+   "아이린" : {en : "Irene", sc : "艾琳", tc : "艾琳", jp : "エリン"},
+   "나나" : {en : "Nana", sc : "娜娜", tc : "娜娜", jp : "ナナ"},
+   "아이리스" : {en : "Iris", sc : "伊维丝", tc : "伊維絲", jp : "アイヴィス"},
+   "도라" : {en : "Dora", sc : "朵拉", tc : "朵拉", jp : "ドラ"},
+   "세바스" : {en : "Sable", sc : "撒芭丝", tc : "撒芭絲", jp : "サバス"},
+   "마를렌" : {en : "Marlene", sc : "玛莲", tc : "瑪蓮", jp : "マリン"},
+   "유이" : {en : "Yoi", sc : "尤依", tc : "尤依", jp : "ユイ"},
+   "소라카" : {en : "Shiraka", sc : "索拉卡", tc : "索拉卡", jp : "ソラカ"},
+   "미아" : {en : "Mia", sc : "米雅", tc : "米雅", jp : "ミア"},
+   "소피" : {en : "Sophie", sc : "苏菲", tc : "蘇菲", jp : "ソフィー"},
+   "카리나" : {en : "Jolina", sc : "嘉莉娜", tc : "嘉莉娜", jp : "カリナ"},
+   "파나나" : {en : "Panana", sc : "帕奈奈", tc : "帕奈奈", jp : "パナナ"},
+   "이아" : {en : "Iyan", sc : "伊艾", tc : "伊艾", jp : "イア"},
 
-   "사이렌" : {en : "Sarina", sc : "赛莲", tc : "賽蓮"},
-   "페트라" : {en : "Petra", sc : "佩托拉", tc : "佩托拉"},
-   "프레이" : {en : "Flay", sc : "芙蕾", tc : "芙蕾"},
-   "마누엘라" : {en : "Manuella", sc : "玛努艾拉", tc : "瑪努艾拉"},
-   "키쿄" : {en : "Kikyou", sc : "桔梗", tc : "桔梗"},
-   "카에데" : {en : "Kaede", sc : "枫", tc : "楓"},
-   "올라" : {en : "Ola", sc : "奧菈", tc : "奥菈"},
-   "콜레트" : {en : "Kani", sc : "可儿", tc : "可兒"},
-   "샤린" : {en : "Charlene", sc : "夏琳", tc : "夏琳"},
-   "마티나" : {en : "Martina", sc : "玛蒂娜", tc : "瑪蒂娜"},
-   "클레어" : {en : "Clarie", sc : "克蕾雅", tc : "克蕾雅"},
-   "로라" : {en : "Lori", sc : "萝尔", tc : "蘿爾"},
-   "미르노" : {en : "Minnow", sc : "米诺", tc : "米諾"},
-   "라미아" : {en : "Lamia", sc : "拉米亚", tc : "拉米亞"},
-   "하피" : {en : "Harpy", sc : "哈比", tc : "哈比"},
-   "안나" : {en : "Anna", sc : "安娜", tc : "安娜"},
-   "브란" : {en : "Blaire", sc : "布兰", tc : "布蘭"},
-   "노노카" : {en : "Natasha", sc : "诺诺可", tc : "諾諾可"},
-   "징벌천사" : {en : "Punishment", sc : "惩戒天使", tc : "懲戒天使"},
-   "복음천사" : {en : "Bliss", sc : "福音天使", tc : "福音天使"},
-   "몰리" : {en : "Molly", sc : "茉莉", tc : "茉莉"},
-   "시험3호" : {en : "prototype", sc : "试作机三号", tc : "試作機三號"},
-   "세실" : {en : "Mareyl", sc : "赛希", tc : "賽希"},
-   "무무" : {en : "MuMu", sc : "穆穆", tc : "穆穆"},
-   "안야" : {en : "Anya", sc : "安雅", tc : "安雅"},
+   "사이렌" : {en : "Sarina", sc : "赛莲", tc : "賽蓮", jp : "セイレーン"},
+   "페트라" : {en : "Petra", sc : "佩托拉", tc : "佩托拉", jp : "ペトラ"},
+   "프레이" : {en : "Flay", sc : "芙蕾", tc : "芙蕾", jp : "フレイ"},
+   "마누엘라" : {en : "Manuella", sc : "玛努艾拉", tc : "瑪努艾拉", jp : "マヌエラ"},
+   "키쿄" : {en : "Kikyou", sc : "桔梗", tc : "桔梗", jp : "桔梗"},
+   "카에데" : {en : "Kaede", sc : "枫", tc : "楓", jp : "楓"},
+   "올라" : {en : "Ola", sc : "奧菈", tc : "奥菈", jp : "アウラ"},
+   "콜레트" : {en : "Kani", sc : "可儿", tc : "可兒", jp : "コレット"},
+   "샤린" : {en : "Charlene", sc : "夏琳", tc : "夏琳", jp : "シャーリーン"},
+   "마티나" : {en : "Martina", sc : "玛蒂娜", tc : "瑪蒂娜", jp : "マルティナ"},
+   "클레어" : {en : "Clarie", sc : "克蕾雅", tc : "克蕾雅", jp : "クレア"},
+   "로라" : {en : "Lori", sc : "萝尔", tc : "蘿爾", jp : "ローラ"},
+   "미르노" : {en : "Minnow", sc : "米诺", tc : "米諾", jp : "ミルノ"},
+   "라미아" : {en : "Lamia", sc : "拉米亚", tc : "拉米亞", jp : "ラミア"},
+   "하피" : {en : "Harpy", sc : "哈比", tc : "哈比", jp : "ハーピー"},
+   "안나" : {en : "Anna", sc : "安娜", tc : "安娜", jp : "アンナ"},
+   "브란" : {en : "Blaire", sc : "布兰", tc : "布蘭", jp : "ブラン"},
+   "노노카" : {en : "Natasha", sc : "诺诺可", tc : "諾諾可", jp : "ノノカ"},
+   "징벌천사" : {en : "Punishment", sc : "惩戒天使", tc : "懲戒天使", jp : "懲戒天使"},
+   "복음천사" : {en : "Bliss", sc : "福音天使", tc : "福音天使", jp : "福音天使"},
+   "몰리" : {en : "Molly", sc : "茉莉", tc : "茉莉", jp : "ジュリー"},
+   "시험3호" : {en : "prototype", sc : "试作机三号", tc : "試作機三號", jp : "試作機3号"},
+   "세실" : {en : "Mareyl", sc : "赛希", tc : "賽希", jp : "セシル"},
+   "무무" : {en : "MuMu", sc : "穆穆", tc : "穆穆", jp : "ムム"},
+   "안야" : {en : "Anya", sc : "安雅", tc : "安雅", jp : "アンヤ"},
 
    // 통계
    "전체" : {en : "All", sc : "全体", tc : "全體"},
