@@ -156,6 +156,9 @@ document.addEventListener('DOMContentLoaded', function () {
             rules[i].style.overflowWrap = 'anywhere';
             rules[i].style.wordBreak = 'keep-all';
          }
+         if (rules[i].selectorText === '.leaderBorder') {
+            rules[i].style.height = '4.55rem';
+         }
       }
    }
 });
