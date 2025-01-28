@@ -55,6 +55,7 @@
 .testBtn {
    margin-left: 0.5rem;
    height:2.5rem;
+   min-height:3.5rem;
    cursor:pointer;
    background-color: #0a6cff;
    color:white;
