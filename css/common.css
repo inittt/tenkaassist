@@ -210,6 +210,9 @@ a {color: inherit; text-decoration: none;}
    padding:0.3rem;
    font-size:1.5rem;
    font-weight:bold;
+   white-space:normal;
+   overflow-wrap:anywhere;
+   word-break:keep-all;
 }
 .searchContainer {
    padding-right:0.5rem;

@@ -301,7 +301,7 @@ const translate = {
  
 
    // 조합상세
-   "체험하기" : {en : "test", sc : "测试", tc : "測試", jp : "体験する"},
+   "체험하기" : {en : "test", sc : "测试", tc : "測試", jp : "体験"},
    "초기화" : {en : "init", sc : "init", tc : "init", jp : "初期化"},
    "삭제" : {en : "del", sc : "del", tc : "del", jp : "削除"},
    "행동 순서" : {en : "Order of Actions", sc : "行动次序", tc : "行動次序", jp : "行動順序"},
