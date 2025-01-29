@@ -157,6 +157,7 @@ function setCopiedCharacters() {
       for (let n of bd_list_tmp) selectedBond.push(n);
       
       updateSelected();
+      getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, document.getElementById('searchInput').value);
    });
 }
 
