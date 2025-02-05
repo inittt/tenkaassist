@@ -384,7 +384,7 @@ function getDisLev(n) {
    else return 3;
 }
 
-getBossElement() {
+function getBossElement() {
    switch(boss.element) {
       case 0 : return t("화속성");
       case 1 : return t("수속성");
