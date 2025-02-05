@@ -665,7 +665,7 @@ const translate = {
    "통계": {en : "Stats", sc : "统计", tc : "統計", jp: "統計"},
    "5구": {en : "Bond 5", sc : "5絆", tc : "5絆", jp: "5絆"},
    "1구": {en : "Bond 1", sc : "1絆", tc : "1絆", jp: "5絆"},
-   "13턴딜 상위 1k 개만 집계": {en : "Only the top 1k based on 13t dmg are counted", sc : "仅统计基于13回合伤害的前一千个", tc : "僅統計基於13回合傷害的前一千個", jp: "13ターンのダメージに基づく上位1kのみ集計"},
+   "13턴딜 상위 20%만 집계": {en: "Only the top 20% based on 13t dmg are counted", sc: "仅统计基于13回合伤害的前20%", tc: "僅統計基於13回合傷害的前20%", jp: "13ターンのダメージに基づく上位20%のみ集計"},
    "캐릭터": {en : "Character", sc : "角色", tc : "角色", jp: "キャラクター"},
    "사이트": {en : "Site", sc : "网站", tc : "網站", jp: "サイト"},
    "유저 수": {en : "User count", sc : "用户数", tc : "使用者數", jp: "ユーザー数"},

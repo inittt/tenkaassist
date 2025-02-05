@@ -118,7 +118,8 @@ function setData() {
    const data = JSON.parse(JSON.stringify(server_data));
    if (sort == 1) data.sort((a, b) => b.vote - a.vote);
    else data.sort((a, b) => b.recommend - a.recommend);
-   const sortedList = data.slice(0, 1000);
+   
+   const sortedList = data.slice(0, Math.floor(data.length * 0.2));
 
    for(let c of sortedList) {
       const ids = c.compstr.split(" ").map(Number);
