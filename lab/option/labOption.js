@@ -270,7 +270,9 @@ function getPotentialLevel(idx) {
    const tmp = ability_save[idx].select;
    let po_level = 12;
    for(let i = 0; i < 12; i++) if (tmp[i].every(s => s == false)) {
-      po_level = i; break;
+      if (i == 0 || tmp[i-1].every(s => s == true) po_level = i+1;
+      else po_level = i;
+      break;
    }
    return po_level;
 }
