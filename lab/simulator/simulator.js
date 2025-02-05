@@ -350,8 +350,11 @@ function endGame() {
    updateAll();
 
    const msg = [];
+   msg.push(`Boss : ${getBossElement()}/${getBossInitBuffStr()}`);
    msg.push(`${t(comp[0].name)}, ${t(comp[1].name)}, ${t(comp[2].name)}, ${t(comp[3].name)}, ${t(comp[4].name)}`);
    msg.push(`${t("구속")} : ${bondList[0]}, ${bondList[1]}, ${bondList[2]}, ${bondList[3]}, ${bondList[4]}`);
+   msg.push(`${t("조련")} : ${getDisLev(a_o[0][0])}, ${getDisLev(a_o[1][0])}, ${getDisLev(a_o[2][0])}, ${getDisLev(a_o[3][0])}, ${getDisLev(a_o[4][0])}`);
+   msg.push(`${t("잠재")} : ${a_o[0][1]}, ${a_o[1][1]}, ${a_o[2][1]}, ${a_o[3][1]}, ${a_o[4][1]}`);
    msg.push(`${t("허수턴")} : ${scarecrowTurn}`);
    msg.push(`${t("13턴딜")} : ${dmg13.toLocaleString()}`);
 
@@ -366,6 +369,29 @@ function endGame() {
    }
    savedData.length = 0;
    alert(msg.join("\n"));
+}
+
+function getBossInitBuffStr() {
+   const tmp = liParam.split(",").map(Number);
+   for(let i = 0; i < tmp.length; i++) if (isNaN(tmp[i])) tmp[i] = 0;
+   return `${tmp[0]}%/${tmp[1]}%/${tmp[2]}%/${tmp[3]}%/${tmp[4]}%`;
+}
+
+function getDisLev(n) {
+   if (n == 1) return 0;
+   else if (n == 1.05) return 1;
+   else if (n == 1.15) return 2;
+   else return 3;
+}
+
+getBossElement() {
+   switch(boss.element) {
+      case 0 : return t("화속성");
+      case 1 : return t("수속성");
+      case 2 : return t("풍속성");
+      case 3 : return t("광속성");
+      case 4 : return t("암속성");
+   }
 }
 
 function isAllActed() {
