@@ -195,13 +195,13 @@ function numToBond(num) {
 
 function isEssential(comp_lists) {
    const chCnt = comp_lists.length * 5;
-   if (essSet.size == 0) return true;
-   else if (chCnt <= essSet.length) {
+   if (essSet.size() == 0) return true;
+   else if (chCnt <= essSet.size()) {
       for(let comp_list of comp_lists)
          if (!comp_list.every(i => essSet.has(i))) return false;
       return true;
    } else {
-      let cnt = essSet.size;
+      let cnt = essSet.size();
       for(let comp_list of comp_lists)
          for(let cid of comp_list)
             if (essSet.has(cid)) cnt--;
