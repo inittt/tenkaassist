@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
    cc = document.getElementById('compcontainer');
 
    dropdownBtn.addEventListener("click", function() {
-      if (isCalculating) return;
+      if (isCalculating || isEssOn) return;
       dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
    });
  
@@ -173,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function() {
       for(const cid of haveList) {
          const ch = getCharacter(cid);
          stringArr.push(`
-            <div id="${_s}${cid}" class="character ess" onclick="${_s}Click(${cid})">
+            <div id="ess${cid}" class="character ess" onclick="essClick(${cid})">
                <div style="position:relative; padding:0.2rem;">
                   <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
                   <div class="bond-icon z-2">${numToBond(bondMap.get(ch.id))}</div>
@@ -184,19 +184,25 @@ document.addEventListener("DOMContentLoaded", function() {
             </div>
          `);
       }
-      document.getElementById(`${_s}Box`).innerHTML = stringArr.join("");
+      document.getElementById(`essBox`).innerHTML = stringArr.join("");
    }
 });
-let isEssOn = false, isExOn = false;
+let isEssOn = false, essSave = new Set(), exSave = new Set();
 function onOffEss() {
    if (isCalculating) return;
-   if (isEssOn) setEss(false);
-   else {setEss(true); if (isExOn) setEx(false);}
+   document.getElementById("dropdown-content").style.display = "none";
+   if (!isEssOn) setEss(true);
+   else {
+      setEss(false);
+      if (isSameSet(essSave, essSet) && isSameSet(exSave, exSet)) return;
+      makeBlock();
+      essSave = new Set(essSet); exSave = new Set(exSet);
+   }
 }
-function onOffEx() {
-   if (isCalculating) return;
-   if (isExOn) setEx(false);
-   else {setEx(true); if (isEssOn) setEss(false);}
+function isSameSet(setA, setB) {
+   if (setA.size !== setB.size) return false;
+   for(let item of setA) if (!setB.has(item)) return false;
+   return true;
 }
 function setEss(bool) {
    const _essBtn = document.getElementById("essBtn");
@@ -204,15 +210,13 @@ function setEss(bool) {
    _essBtn.style.borderColor=bool?"white":"transparent";
    document.getElementById("essBlock").style.display=(isEssOn=bool)?"block":"none";
 }
-function setEx(bool) {
-   const _exBtn = document.getElementById("exBtn");
-   _exBtn.style.backgroundColor=bool?"#7a2b15":"crimson";
-   _exBtn.style.borderColor=bool?"white":"transparent";
-   document.getElementById("exBlock").style.display=(isExOn=bool)?"block":"none";
-}
 function essClick(id) {
    if (essSet.has(id)) {
-      essSet.delete(id);
+      essSet.delete(id); exSet.add(id);
+      document.getElementById(`ess${id}`).style.borderColor="crimson";
+      document.getElementById(`ess${id}`).style.backgroundColor="crimson";
+   } else if (exSet.has(id)) {
+      exSet.delete(id);
       document.getElementById(`ess${id}`).style.borderColor="transparent";
       document.getElementById(`ess${id}`).style.backgroundColor="transparent";
    } else {
@@ -220,21 +224,6 @@ function essClick(id) {
       document.getElementById(`ess${id}`).style.borderColor="#24a01e";
       document.getElementById(`ess${id}`).style.backgroundColor="#24a01e";
    }
-}
-function exClick(id) {
-   if (exSet.has(id)) {
-      exSet.delete(id);
-      document.getElementById(`ex${id}`).style.borderColor="transparent";
-      document.getElementById(`ex${id}`).style.backgroundColor="transparent";
-   } else {
-      essSet.add(id);
-      document.getElementById(`ex${id}`).style.borderColor="crimson";
-      document.getElementById(`ex${id}`).style.backgroundColor="crimson";
-   }
-}
-function refresh() {
-   setEss(false); setEx(false);
-   makeBlock();
 }
 
 /* 덱 만들기 함수 --------------------------------------------------------------------*/
@@ -263,19 +252,18 @@ function numToBond(num) {
       default: return "Ⅴ";
    }
 }
-//TODO : 제외 설정 - 2번 누르면 제외
-function isSatisfied(comp_lists) {
-   const chCnt = comp_lists.length * 5;
+
+function isSatisfied(cls) {
+   const chCnt = cls.length * 5;
+   if (exSet.size != 0) for(let cl of cls) if (cl.some(i => exSet.has(i))) return false;
+
    if (essSet.size == 0) return true;
    else if (chCnt <= essSet.size) {
-      for(let comp_list of comp_lists)
-         if (!comp_list.every(i => essSet.has(i))) return false;
+      for(let cl of cls) if (!cl.every(i => essSet.has(i))) return false;
       return true;
    } else {
       let cnt = essSet.size;
-      for(let comp_list of comp_lists)
-         for(let cid of comp_list)
-            if (essSet.has(cid)) cnt--;
+      for(let cl of cls) for(let cid of cl) if (essSet.has(cid)) cnt--;
       return cnt <= 0 ? true : false;
    }
 }
