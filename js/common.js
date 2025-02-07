@@ -408,6 +408,7 @@ const translate = {
    "3개": {en : "3 team", sc : "队伍3", tc : "隊伍3", jp : "3チーム"},
    "4개": {en : "4 team", sc : "队伍4", tc : "隊伍4", jp : "4チーム"},
    "맞춤": {en : "fit", sc : "合适", tc : "合適", jp : "カスタム"},
+   "필수/제외 캐릭터": {en: "Required/Excluded Characters", sc: "必需/排除字符", tc: "必需/排除字符", jp: "必須/除外キャラクター"},
    "서버로부터 데이터 로드 중...": {en : "Loading data from the server...", sc : "正在从服务器加载数据...", tc : "正在從伺服器加載數據...", jp : "サーバーからデータを読み込んでいます..."},
    "구속에 따른 데미지 계산 중...": {en : "Calculating damage based on bond...", sc : "根据羁绊计算伤害中...", tc : "根據羈絆計算傷害中...", jp : "絆に基づいたダメージ計算中..."},
    "계산중": {en : "Calculating", sc : "计算中", tc : "計算中", jp : "計算中"},

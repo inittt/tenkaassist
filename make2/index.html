@@ -43,7 +43,7 @@
          데이터는 KST기준 6시간마다 갱신됩니다
       </p>
       <div id="essBlock" class="block" style="display:none; box-sizing: border-box; border:3px solid white;">
-         <span style="font-size:0.9rem; font-weight:bold;">필수/제외 캐릭터</span>
+         <span id="essText" style="font-size:0.9rem; font-weight:bold;">필수/제외 캐릭터</span>
          <div id="essBox" class="flex"></div>
       </div>
       <div id="compcontainer">
@@ -64,6 +64,7 @@
    document.getElementById("t3").innerText = t("3개");
    document.getElementById("t4").innerText = t("4개");
 
+   document.getElementById("essText").innerText = t("필수/제외 캐릭터");
    document.getElementById("defaultBox").innerText = t("구속에 따른 데미지 계산 중...");
    document.getElementById("noti-txt").innerText = t("데이터는 KST기준 6시간마다 갱신됩니다");
 </script>
