@@ -618,9 +618,12 @@ header {
 }
 .i-save {background-color: #24a01e;}
 .i-load {background-color: #e1562f;}
+.i-ex {background-color: crimson;}
 .i-sort {background-color: #3a68ff;}
 .i-save:hover {background-color: #196c14; border-color:white;}
-.i-load:hover {background-color: #9b3b21; border-color:white;}
+.i-load:hover {background-color: #7a2b15; border-color:white;}
+.i-ex:hover {background-color: rgb(150, 13, 41);}
+.i-sort:hover {background-color: #1c327a;}
 .i-heart {width:0.4rem; height:0.4rem;margin-right:0.1rem;}
 .i-heart1 {width:0.5rem; height:0.5rem;}
 .i-heart2 {width:0.8rem; height:0.8rem;margin-right:0.3rem;}

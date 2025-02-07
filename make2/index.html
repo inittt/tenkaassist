@@ -21,6 +21,9 @@
       <div class="block">
          <div class="margin-left titleblock">
             <span id="titleBoxText" class="titlebox">추천덱</span>
+            <button id="essBtn" class="icon-btn i-save" onclick="onOffEss()"><img class="icon" src="../images/icons/ico-star.svg"></button>
+            <button id="exBtn" class="icon-btn i-ex" onclick="onOffEx()"><img class="icon" src="../images/icons/ico-minus.svg"></button>
+            <button id="reBtn" class="icon-btn i-sort" onclick="refresh()"><img class="icon" src="../images/icons/ico-refresh.svg"></button>
             <div style="margin-left:auto;">
                <div class="dropdown">
                   <button id="dropdownBtn">조합1개<span class="absolute-right">▼</span></button>
@@ -41,6 +44,14 @@
       <p id="noti-txt" style="font-size:0.8rem; padding:0; margin: 0; margin-left:1rem;">
          데이터는 KST기준 6시간마다 갱신됩니다
       </p>
+      <div id="essBlock" class="block" style="display:none; box-sizing: border-box; border:3px solid #24a01e;">
+         <span style="font-size:0.9rem; font-weight:bold;">필수 캐릭터</span>
+         <div id="essBox" class="flex"></div>
+      </div>
+      <div id="exBlock" class="block" style="display:none; box-sizing: border-box; border:3px solid crimson;">
+         <span style="font-size:0.9rem; font-weight:bold;">제외 캐릭터</span>
+         <div id="exBox" class="flex"></div>
+      </div>
       <div id="compcontainer">
          <div class="block">
             <span id="defaultBox">구속에 따른 데미지 계산 중...</span>

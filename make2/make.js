@@ -1,7 +1,6 @@
 const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const chBonds = params.get('bond');
-const essential = params.get('ess');
 const limit_hp_up = Number(params.get('hpUp') == null ? 0 : params.get('hpUp'));
 
 // -1이면 (0보다 작으면) auto
@@ -14,7 +13,8 @@ const curHeader = 5;
 const bondMap = new Map();
 const haveList = chIds.split(",").map(Number);
 const bondList = chBonds.split(",").map(Number);
-const essSet = new Set(essential ? essential.split(",").map(Number) : []);
+const essSet = new Set();
+const exSet = new Set();
 for(let i = 0; i < haveList.length; i++) {
    if (haveList[i] == null || bondList[i] == null) continue;
    bondMap.set(haveList[i], bondList[i]);
@@ -166,6 +166,77 @@ function init() {
    document.getElementById('option1').checked = true;
 }
 
+// 필수, 제외 캐릭터 설정 --------------------------------------
+document.addEventListener("DOMContentLoaded", function() {
+   for(let _s of ["ess", "ex"]) {
+      const stringArr = [];
+      for(const cid of haveList) {
+         const ch = getCharacter(cid);
+         stringArr.push(`
+            <div id="${_s}${cid}" class="character ess" onclick="${_s}Click(${cid})">
+               <div style="position:relative; padding:0.2rem;">
+                  <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
+                  <div class="bond-icon z-2">${numToBond(bondMap.get(ch.id))}</div>
+                  ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
+                  <div class="element${ch.element} ch_border z-4"></div>
+               </div>
+               <div class="text-mini">${t(ch.name)}</div>
+            </div>
+         `);
+      }
+      document.getElementById(`${_s}Box`).innerHTML = stringArr.join("");
+   }
+});
+let isEssOn = false, isExOn = false;
+function onOffEss() {
+   if (isCalculating) return;
+   if (isEssOn) setEss(false);
+   else {setEss(true); if (isExOn) setEx(false);}
+}
+function onOffEx() {
+   if (isCalculating) return;
+   if (isExOn) setEx(false);
+   else {setEx(true); if (isEssOn) setEss(false);}
+}
+function setEss(bool) {
+   const _essBtn = document.getElementById("essBtn");
+   _essBtn.style.backgroundColor=bool?"#196c14":"#24a01e";
+   _essBtn.style.borderColor=bool?"white":"transparent";
+   document.getElementById("essBlock").style.display=(isEssOn=bool)?"block":"none";
+}
+function setEx(bool) {
+   const _exBtn = document.getElementById("exBtn");
+   _exBtn.style.backgroundColor=bool?"#7a2b15":"crimson";
+   _exBtn.style.borderColor=bool?"white":"transparent";
+   document.getElementById("exBlock").style.display=(isExOn=bool)?"block":"none";
+}
+function essClick(id) {
+   if (essSet.has(id)) {
+      essSet.delete(id);
+      document.getElementById(`ess${id}`).style.borderColor="transparent";
+      document.getElementById(`ess${id}`).style.backgroundColor="transparent";
+   } else {
+      essSet.add(id);
+      document.getElementById(`ess${id}`).style.borderColor="#24a01e";
+      document.getElementById(`ess${id}`).style.backgroundColor="#24a01e";
+   }
+}
+function exClick(id) {
+   if (exSet.has(id)) {
+      exSet.delete(id);
+      document.getElementById(`ex${id}`).style.borderColor="transparent";
+      document.getElementById(`ex${id}`).style.backgroundColor="transparent";
+   } else {
+      essSet.add(id);
+      document.getElementById(`ex${id}`).style.borderColor="crimson";
+      document.getElementById(`ex${id}`).style.backgroundColor="crimson";
+   }
+}
+function refresh() {
+   setEss(false); setEx(false);
+   makeBlock();
+}
+
 /* 덱 만들기 함수 --------------------------------------------------------------------*/
 
 let deckCnt, bundleCnt = 0, page = 0, isEndOfDeck = false;
@@ -192,16 +263,16 @@ function numToBond(num) {
       default: return "Ⅴ";
    }
 }
-
-function isEssential(comp_lists) {
+//TODO : 제외 설정 - 2번 누르면 제외
+function isSatisfied(comp_lists) {
    const chCnt = comp_lists.length * 5;
-   if (essSet.size() == 0) return true;
-   else if (chCnt <= essSet.size()) {
+   if (essSet.size == 0) return true;
+   else if (chCnt <= essSet.size) {
       for(let comp_list of comp_lists)
          if (!comp_list.every(i => essSet.has(i))) return false;
       return true;
    } else {
-      let cnt = essSet.size();
+      let cnt = essSet.size;
       for(let comp_list of comp_lists)
          for(let cid of comp_list)
             if (essSet.has(cid)) cnt--;
@@ -223,7 +294,7 @@ function loadBlockAllDeck(pg) {
          cc.appendChild(compblock);
          return;
       }
-      if (!isEssential([comp.compstr])) continue;
+      if (!isSatisfied([comp.compstr])) continue;
 
       const stringArr = [];
       const id = comp.id, name = comp.name, compstr = comp.compstr;
@@ -386,7 +457,7 @@ function copy(a) {
 function backtrack(startIndex, selectedEntities, usedNumbers) {
    if (selectedEntities.length === deckCnt) {
       const _tmp = selectedEntities.map(o => o.compstr);
-      if (isEssential(_tmp)) maxHeap.push([...selectedEntities]);
+      if (isSatisfied(_tmp)) maxHeap.push([...selectedEntities]);
       return;
    }
 
