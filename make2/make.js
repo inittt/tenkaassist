@@ -239,7 +239,7 @@ function makeBlockAllDeck() {
    }
 
    possible.sort((a, b) => b.fit13t - a.fit13t);
-   loadBlockAllDeck(page++);
+   loadBlockAllDeck();
 }
 
 function numToBond(num) {
@@ -268,8 +268,8 @@ function isSatisfied(cls) {
 }
 
 let _count = 0;
-function loadBlockAllDeck(pg) {
-   for(let i = pg*10; i < pg*10+10; i++) {
+function loadBlockAllDeck() {
+   for(let i = page*10; i < page*10+10; i++) {
       const comp = possible[i];
       if (comp == undefined || comp == null) {
          isEndOfDeck = true;
@@ -320,7 +320,8 @@ function loadBlockAllDeck(pg) {
       cc.appendChild(compblock);
       _count++;
    }
-   if (_count < 10) loadBlockAllDeck(++page);
+   page++;
+   if (_count < 10) loadBlockAllDeck();
    else _count = 0;
 }
 function makeBlockNDeck() {
@@ -479,7 +480,7 @@ document.addEventListener('DOMContentLoaded', function() {
       entries.forEach(entry => {
          if (entry.isIntersecting) {
             if (page > 0 && !isEndOfDeck) {
-               if (mod == 0) loadBlockAllDeck(page++);
+               if (mod == 0) loadBlockAllDeck();
                else loadBlockNDeck(page++);
             }
          }
