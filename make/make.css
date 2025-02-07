@@ -1,3 +1,22 @@
+.ess {
+  margin:0.1rem;
+  border-radius: 0.3rem;
+  border:3px solid transparent;
+  cursor:pointer;
+}
+.noneStyle {}
+.noneStyle:hover {
+  border-color:#696969;
+  background-color: #696969;
+}
+.essStyle {
+  border-color:#24a01e;
+  background-color:#24a01e;
+}
+.exStyle {
+  border-color:crimson;
+  background-color:crimson;
+}
 .dropdown {
   width:6rem;
   position: relative;

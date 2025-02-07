@@ -11,8 +11,10 @@ let possibleCopy, isDataLoaded = false, mod = 0, cc, isCalculating = true;
 const curHeader = 5;
 
 const bondMap = new Map();
-const haveList = chIds.slice().split(",").map(Number);
-const bondList = chBonds.slice().split(",").map(Number);
+const haveList = chIds.split(",").map(Number);
+const bondList = chBonds.split(",").map(Number);
+const essSet = new Set();
+const exSet = new Set();
 for(let i = 0; i < haveList.length; i++) {
    if (haveList[i] == null || bondList[i] == null) continue;
    bondMap.set(haveList[i], bondList[i]);
@@ -24,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
    cc = document.getElementById('compcontainer');
 
    dropdownBtn.addEventListener("click", function() {
-      if (isCalculating) return;
+      if (isCalculating || isEssOn) return;
       dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
    });
  
@@ -133,7 +135,15 @@ function makeBlock() {
    isEndOfDeck = false;
 
    if (mod == 0) {
-      if (limit_fit < 0) {possible.length = 0; possible.push(...possibleCopy);}
+      if (limit_fit < 0) {
+         possible.length = 0;
+         if (exSet.size == 0) possible.push(...possibleCopy);
+         else {
+            for(let p of possibleCopy) {
+               if (!p.compstr.some(i => exSet.has(i))) possible.push(p);
+            }
+         }
+      }
       makeBlockAllDeck();
    } else {
       isCalculating = true;
@@ -141,7 +151,14 @@ function makeBlock() {
 
       if (limit_fit < 0) {
          possible.length = 0;
-         for(let pc of possibleCopy) if (pc.fit13t >= curCalc*e9) possible.push(pc);
+         if (exSet.size == 0) {
+            for(let pc of possibleCopy) if (pc.fit13t >= curCalc*e9) possible.push(pc);
+         } else {
+            for(let pc of possibleCopy) {
+               if (pc.fit13t >= curCalc*e9 && !pc.compstr.some(i => exSet.has(i)))
+                  possible.push(pc);
+            }
+         }
          curCalc--;
       }
 
@@ -164,6 +181,65 @@ function init() {
    document.getElementById('option1').checked = true;
 }
 
+// 필수, 제외 캐릭터 설정 --------------------------------------
+document.addEventListener("DOMContentLoaded", function() {
+   const stringArr = [];
+   for(const cid of haveList) {
+      const ch = getCharacter(cid);
+      stringArr.push(`
+         <div id="ess${cid}" class="character ess noneStyle" onclick="essClick(${cid})">
+            <div style="position:relative; padding:0.2rem;">
+               <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
+               <div class="bond-icon z-2">${numToBond(bondMap.get(ch.id))}</div>
+               ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
+               <div class="element${ch.element} ch_border z-4"></div>
+            </div>
+            <div class="text-mini">${t(ch.name)}</div>
+         </div>
+      `);
+   }
+   document.getElementById(`essBox`).innerHTML = stringArr.join("");
+});
+let isEssOn = false, essSave = new Set(), exSave = new Set();
+function onOffEss() {
+   if (isCalculating) return;
+   document.getElementById("dropdown-content").style.display = "none";
+   if (!isEssOn) setEss(true);
+   else {
+      setEss(false);
+      if (isSameSet(essSave, essSet) && isSameSet(exSave, exSet)) return;
+      curCalc = 11;
+      makeBlock();
+      essSave = new Set(essSet); exSave = new Set(exSet);
+   }
+}
+function isSameSet(setA, setB) {
+   if (setA.size !== setB.size) return false;
+   for(let item of setA) if (!setB.has(item)) return false;
+   return true;
+}
+function setEss(bool) {
+   const _essBtn = document.getElementById("essBtn");
+   _essBtn.style.backgroundColor=bool?"#196c14":"#24a01e";
+   _essBtn.style.borderColor=bool?"white":"transparent";
+   document.getElementById("essBlock").style.display=(isEssOn=bool)?"block":"none";
+}
+function essClick(id) {
+   if (essSet.has(id)) {
+      essSet.delete(id); exSet.add(id);
+      document.getElementById(`ess${id}`).classList.remove("essStyle");
+      document.getElementById(`ess${id}`).classList.add("exStyle");
+   } else if (exSet.has(id)) {
+      exSet.delete(id);
+      document.getElementById(`ess${id}`).classList.remove("exStyle");
+      document.getElementById(`ess${id}`).classList.add("noneStyle");
+   } else {
+      essSet.add(id);
+      document.getElementById(`ess${id}`).classList.remove("noneStyle");
+      document.getElementById(`ess${id}`).classList.add("essStyle");
+   }
+}
+
 /* 덱 만들기 함수 --------------------------------------------------------------------*/
 
 let deckCnt, bundleCnt = 0, page = 0, isEndOfDeck = false;
@@ -178,7 +254,7 @@ function makeBlockAllDeck() {
    }
 
    possible.sort((a, b) => b.fit13t - a.fit13t);
-   loadBlockAllDeck(page++);
+   loadBlockAllDeck();
 }
 
 function numToBond(num) {
@@ -191,8 +267,22 @@ function numToBond(num) {
    }
 }
 
-function loadBlockAllDeck(pg) {
-   for(let i = pg*10; i < pg*10+10; i++) {
+function isSatisfied(cls) {
+   const chCnt = cls.length * 5;
+   if (essSet.size == 0) return true;
+   else if (chCnt <= essSet.size) {
+      for(let cl of cls) if (!cl.every(i => essSet.has(i))) return false;
+      return true;
+   } else {
+      let cnt = essSet.size;
+      for(let cl of cls) for(let cid of cl) if (essSet.has(cid)) cnt--;
+      return cnt <= 0 ? true : false;
+   }
+}
+
+let _count = 0;
+function loadBlockAllDeck() {
+   for(let i = page*10; i < page*10+10; i++) {
       const comp = possible[i];
       if (comp == undefined || comp == null) {
          isEndOfDeck = true;
@@ -204,6 +294,7 @@ function loadBlockAllDeck(pg) {
          cc.appendChild(compblock);
          return;
       }
+      if (!isSatisfied([comp.compstr])) continue;
 
       const stringArr = [];
       const id = comp.id, name = comp.name, compstr = comp.compstr;
@@ -240,7 +331,11 @@ function loadBlockAllDeck(pg) {
          window.open(`${address}/comp/?id=${id}`, '_blank');
       });
       cc.appendChild(compblock);
+      _count++;
    }
+   page++;
+   if (_count < 10) loadBlockAllDeck();
+   else _count = 0;
 }
 function makeBlockNDeck() {
    cc.innerHTML = "";
@@ -361,7 +456,11 @@ function copy(a) {
 }
 
 function backtrack(startIndex, selectedEntities, usedNumbers) {
-   if (selectedEntities.length === deckCnt) {maxHeap.push([...selectedEntities]); return;}
+   if (selectedEntities.length === deckCnt) {
+      const _tmp = selectedEntities.map(o => o.compstr);
+      if (isSatisfied(_tmp)) maxHeap.push([...selectedEntities]);
+      return;
+   }
 
    for (let i = startIndex; i < possible.length; i++) {
       let entity = possible[i];
@@ -394,7 +493,7 @@ document.addEventListener('DOMContentLoaded', function() {
       entries.forEach(entry => {
          if (entry.isIntersecting) {
             if (page > 0 && !isEndOfDeck) {
-               if (mod == 0) loadBlockAllDeck(page++);
+               if (mod == 0) loadBlockAllDeck();
                else loadBlockNDeck(page++);
             }
          }
