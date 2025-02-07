@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
-         mod = 0; curCalc = 11;
+         mod = 0;
          if ("2개" === this.value) mod = 1;
          else if ("3개" === this.value) mod = 2;
          else if ("4개" === this.value) mod = 3;
@@ -131,6 +131,7 @@ let maxHeap, curCalc;
 function makeBlock() {
    page = 0;
    bundleCnt = 0;
+   curCalc = 11;
    maxHeap = new MaxHeap();
    isEndOfDeck = false;
 
@@ -168,24 +169,22 @@ function init() {
 
 // 필수, 제외 캐릭터 설정 --------------------------------------
 document.addEventListener("DOMContentLoaded", function() {
-   for(let _s of ["ess", "ex"]) {
-      const stringArr = [];
-      for(const cid of haveList) {
-         const ch = getCharacter(cid);
-         stringArr.push(`
-            <div id="ess${cid}" class="character ess" onclick="essClick(${cid})">
-               <div style="position:relative; padding:0.2rem;">
-                  <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-                  <div class="bond-icon z-2">${numToBond(bondMap.get(ch.id))}</div>
-                  ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
-                  <div class="element${ch.element} ch_border z-4"></div>
-               </div>
-               <div class="text-mini">${t(ch.name)}</div>
+   const stringArr = [];
+   for(const cid of haveList) {
+      const ch = getCharacter(cid);
+      stringArr.push(`
+         <div id="ess${cid}" class="character ess" onclick="essClick(${cid})">
+            <div style="position:relative; padding:0.2rem;">
+               <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
+               <div class="bond-icon z-2">${numToBond(bondMap.get(ch.id))}</div>
+               ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
+               <div class="element${ch.element} ch_border z-4"></div>
             </div>
-         `);
-      }
-      document.getElementById(`essBox`).innerHTML = stringArr.join("");
+            <div class="text-mini">${t(ch.name)}</div>
+         </div>
+      `);
    }
+   document.getElementById(`essBox`).innerHTML = stringArr.join("");
 });
 let isEssOn = false, essSave = new Set(), exSave = new Set();
 function onOffEss() {
