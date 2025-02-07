@@ -292,6 +292,7 @@ function loadBlockAllDeck() {
          compblock.style.width = "100%";
          compblock.innerHTML = t("더이상 조합이 없습니다");
          cc.appendChild(compblock);
+         _count = 0;
          return;
       }
       if (!isSatisfied([comp.compstr])) continue;
