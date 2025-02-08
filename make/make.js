@@ -121,7 +121,7 @@ function setPossible() {
    default_per.innerHTML = `${(dataIdx * 100 / dataAll.length).toFixed(2)}%`;
    if (dataIdx >= maxDataCnt) {
       isCalculating = false;
-      if (limit_fit < 0) possibleCopy = JSON.parse(JSON.stringify(possible));
+      possibleCopy = JSON.parse(JSON.stringify(possible));
       makeBlock();
    } else setTimeout(() => setPossible(), 16);
 }
@@ -135,13 +135,11 @@ function makeBlock() {
    isEndOfDeck = false;
 
    if (mod == 0) {
-      if (limit_fit < 0) {
-         possible.length = 0;
-         if (exSet.size == 0) possible.push(...possibleCopy);
-         else {
-            for(let p of possibleCopy) {
-               if (!p.compstr.some(i => exSet.has(i))) possible.push(p);
-            }
+      possible.length = 0;
+      if (exSet.size == 0) possible.push(...possibleCopy);
+      else {
+         for(let p of possibleCopy) {
+            if (!p.compstr.some(i => exSet.has(i))) possible.push(p);
          }
       }
       makeBlockAllDeck();
@@ -160,6 +158,16 @@ function makeBlock() {
             }
          }
          curCalc--;
+      } else {
+         possible.length = 0;
+         if (exSet.size == 0) {
+            for(let pc of possibleCopy) if (pc.fit13t >= limit_fit) possible.push(pc);
+         } else {
+            for(let pc of possibleCopy) {
+               if (pc.fit13t >= limit_fit && !pc.compstr.some(i => exSet.has(i)))
+                  possible.push(pc);
+            }
+         }
       }
 
       backtrackCounter = possible.length;
