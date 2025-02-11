@@ -74,18 +74,6 @@ document.addEventListener("DOMContentLoaded", function() {
       console.log(t("데이터 로드 실패"), e);
    })
 
-   request(`${server}/users/isAdmin`, {
-      method: "GET",
-   }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
-      return response.json();
-   }).then(res => {
-      if (res.success) {
-         // document.getElementById("autoBtn").style.display = "block";
-         // keyboardClick();
-      }
-   }).catch(e => {});
-
    // 보스 속성에 따른 progress-bar 색상 변화
    const pgBar = document.getElementById("boss");
    switch(boss.element) {
@@ -105,71 +93,6 @@ function redirectOnCheck() {
 
    // 변경된 URL로 리다이렉트
    window.location.href = url.toString().replace(/%2C/g, ',');
- }
-
-let arrowUpPressed = false;
-let arrowDownPressed = false;
-function keyboardClick() {
-
-   document.addEventListener("keydown", function(event) {
-      // 방향키가 눌렸는지 확인
-      if (event.key.toLowerCase() == "z") arrowUpPressed = true;
-      else if (event.key.toLowerCase() == "x") arrowDownPressed = true;
-
-      if (arrowUpPressed) {
-         // 위쪽 방향키 + 숫자키 조합 처리
-         switch(event.key) {
-               case "1":
-                  if (comp[0].curCd <= 0) document.getElementById("ult0").click();
-                  else document.getElementById("atk0").click();break;
-               case "2":
-                  if (comp[1].curCd <= 0) document.getElementById("ult1").click();
-                  else document.getElementById("atk1").click();break;
-               case "3":
-                  if (comp[2].curCd <= 0) document.getElementById("ult2").click();
-                  else document.getElementById("atk2").click();break;
-               case "4":
-                  if (comp[3].curCd <= 0) document.getElementById("ult3").click();
-                  else document.getElementById("atk3").click();break;
-               case "5":
-                  if (comp[4].curCd <= 0) document.getElementById("ult4").click();
-                  else document.getElementById("atk4").click();break;
-         }
-      } else if (arrowDownPressed) {
-         // 아래쪽 방향키 + 숫자키 조합 처리
-         switch(event.key) {
-               case "1":document.getElementById("def0").click();break;
-               case "2":document.getElementById("def1").click();break;
-               case "3":document.getElementById("def2").click();break;
-               case "4":document.getElementById("def3").click();break;
-               case "5":document.getElementById("def4").click();break;
-         }
-      } else {
-         // 숫자키만 눌렸을 때 처리
-         switch(event.key) {
-               case "1":document.getElementById("atk0").click();break;
-               case "2":document.getElementById("atk1").click();break;
-               case "3":document.getElementById("atk2").click();break;
-               case "4":document.getElementById("atk3").click();break;
-               case "5":document.getElementById("atk4").click();break;
-         }
-      }
-   });
-   // keyup 이벤트 처리
-   document.addEventListener("keyup", function(event) {
-      if (event.key.toLowerCase() === "z") arrowUpPressed = false;
-      else if (event.key.toLowerCase() === "x") arrowDownPressed = false;
-   });
-}
-
-function auto() {
-   for(let i = 0; i < commandList.length; i++) {
-      const guide_idx = Number(commandList[actNum][0])-1;
-      const guide_act = commandList[actNum][1];
-      if (guide_act == "평") do_atk(guide_idx);
-      else if (guide_act == "궁") do_ult(guide_idx);
-      else if (guide_act == "방") do_def(guide_idx);
-   }
 }
 
 function extractActions(data) {
