@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
       return response.json();
    }).then(res => {
       if (!res.success) return;
-      document.getElementById("optionBlock").innerHTML = `
+      document.getElementById("optionBlock").innerHTML += `
          <button id="adminBtn" class="submitBtn" style="margin:0.4rem;" onclick="goAdmin()">Admin</button>
       `;
    }).catch(e => {});
