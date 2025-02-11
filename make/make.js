@@ -49,11 +49,13 @@ document.addEventListener("DOMContentLoaded", function() {
       });
    });
 
-   getAllCompsFromServer();
+   getAllCompsFromServer(0);
 });
 
-async function fetchJsonFromGitHub(owner, repo, branch, filePath) {
-   const url = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filePath}`;
+async function fetchJsonFromGitHub(_url, _owner, _repo, _branch, _filePath) {
+   if (!_url) return null;
+
+   const url = `https://${_url}/${_owner}/${_repo}/${_branch}/${_filePath}`;
    try {
       const response = await fetch(url);
       if (!response.ok) throw new Error('Network response was not ok');
@@ -70,21 +72,27 @@ async function fetchJsonFromGitHub(owner, repo, branch, filePath) {
 
 let dataIdx = 0, dataAll, maxDataCnt = 0;
 let default_per;
-function getAllCompsFromServer() {
-   fetchJsonFromGitHub('inittt', 'tenkaassist_data', 'main', 'data/data.json')
+const urls = [
+   "raw.githubusercontent.com",
+   "raw.gitmirror.com",
+   "raw.bgithub.xyz",
+   "raw.fastgit.org",
+   "raw.staticdn.net"
+];
+function getAllCompsFromServer(url_idx) {
+   fetchJsonFromGitHub(urls[url_idx], 'inittt', 'tenkaassist_data', 'main', 'data/data.json')
    .then(data => {
-      if (data == null || data.length == 0) {
-         cc.innerHTML = `<div class="block">${t("데이터 로드 실패")}</div>`;
-         return;
-      }
+      if (data == null || data.length == 0) throw new Error(t("데이터 로드 실패"));
+
       default_per = document.getElementById("defaultPer");
       dataAll = data;
       dataIdx = 0;
       maxDataCnt = data.length;
       setPossible();
    }).catch(e => {
-      console.log(t("데이터 로드 실패"), e);
-      cc.innerHTML = `<div class="block">${t("데이터 로드 실패")}</div>`;
+      url_idx++;
+      if (!urls[url_idx]) cc.innerHTML = `<div class="block">${t("데이터 로드 실패")}</div>`;
+      else getAllCompsFromServer(url_idx);
    });
 }
 
