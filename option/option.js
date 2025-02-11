@@ -15,6 +15,18 @@ document.addEventListener("DOMContentLoaded", function() {
    }).catch(error => {
       console.log(error);
    });
+
+   request(`${server}/users/isAdmin`, {
+      method: "GET",
+   }).then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   }).then(res => {
+      if (!res.success) return;
+      document.getElementById("optionBlock").innerHTML = `
+         <button id="adminBtn" class="submitBtn" style="margin:0.4rem;" onclick="goAdmin()">Admin</button>
+      `;
+   }).catch(e => {});
 });
 
 function setEmail() {
@@ -69,4 +81,8 @@ function updatePassword(formData) {
    }).catch(error => {
       console.log(error);
    });
+}
+
+function goAdmin() {
+   location.href = `${address}/admin`;
 }
