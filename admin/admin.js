@@ -10,7 +10,11 @@ document.addEventListener("DOMContentLoaded", function() {
          window.history.back();
          return;
       } else showPage();
-   }).catch(e => {});
+   }).catch(e => {
+      alert("권한이 없습니다");
+      window.history.back();
+      return;
+   });
 });
 
 function showPage() {
