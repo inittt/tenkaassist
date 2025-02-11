@@ -38,6 +38,9 @@ function request(url, options) {
        defaultOptions.headers.jwtToken = localStorage.getItem('jwtToken');
    }
 
+   // URL을 정리 (이중 슬래시 처리)
+   url = new URL(url).toString();
+
    // 나머지 options와 합치기
    options = { ...defaultOptions, ...options };
 
