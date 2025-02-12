@@ -21,6 +21,7 @@
             <button id="resetBtn" class="icon-btn i-sort ico-sim" onclick="refresh()"><img class="icon" src="../../images/icons/ico-refresh.svg"></button>
             <button id="guide" class="leaderButton leaderOff" style="display:none; margin-left:0.2rem;">가이드</button>
             <button class="icon-btn i-load ico-sim" onclick="show_graph()"><img class="icon" src="../../images/icons/ico-graph.svg"></button>
+            <button class="icon-btn i-save ico-sim" onclick="show_log()"><img class="icon" src="../../images/icons/ico-book.svg"></button>
          </div>
       </div>
       <div id="simulator" class="block">
@@ -49,6 +50,7 @@
    </div>
    <div id="console" class="console no-scrollbar" style="display:none" onclick="close_console()"></div>
    <div id="console-graph" class="console-graph" style="display:none" onclick="close_graph()"></div>
+   <div id="console_log" class="console no-scrollbar" style="display:none" onclick="close_log()"></div>
 </body>
 <script>
    document.title = "TenkaAssist - Lab";

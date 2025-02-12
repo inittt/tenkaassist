@@ -430,6 +430,21 @@ function close_console() {
    document.body.classList.remove('no-scroll');
 }
 
+function show_log() {
+   const list = ["Log", ""];
+   const tmp = [...log].reverse();
+   for(let l of tmp) {
+      const name = comp[l[0]].name, dmg = Math.floor(l[1]).toLocaleString();
+      const type = l[2] == 2 ? t("반격데미지") : l[2] == 1 ? t("도트데미지") : t("공격데미지");
+      list.push(t(name)+" : "+dmg+"("+type+")");
+   }
+   document.getElementById("console_log").innerHTML = list.join("<hr>");
+   document.getElementById("console_log").style.display = "block";
+}
+function close_log() {
+   document.getElementById("console_log").style.display = "none";
+   document.body.classList.remove('no-scroll');
+}
 // 그래프 그리기 코드 ---------------------------------------------
 const log = []; // [idx, 데미지(공격,발동,추가), 타입(0:기본, 1:지속, 2:반격)]
 const do_atk2 = do_atk;

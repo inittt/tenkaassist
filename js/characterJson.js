@@ -132,9 +132,9 @@ const chJSON = { data : [
 {ok : true, id : 10175, rarity : 3, po:2, hp:1304731, atk:206826, cd:3, atkMag:0, ultMag:0, fullname : "춤추는 눈꽃 이치카", name : "크치카", element : 1, role : 1, hpUp : 40},
 {ok : true, id : 10159, rarity : 3, hp:1056717, atk:255543, cd:4, atkMag:0, ultMag:0, fullname : "성의 봄맞이 피오라", name : "봄오라", element : 1, role : 3, hpUp : 50},
 {ok : true, id : 10161, rarity : 3, hp:1013314, atk:266615, cd:4, atkMag:100, ultMag:0, fullname : "춤추는 불꽃의 적룡 사샤", name : "사샤", element : 0, role : 4, hpUp : 40},
-// {ok : true, id : 10162, rarity : 3, hp:, atk:, cd:, atkMag:, ultMag:, fullname : "경신신사 아이카", name : "무이카", element : , role : , hpUp : },
-// {ok : true, id : 10163, rarity : 3, hp:, atk:, cd:, atkMag:, ultMag:, fullname : "밤의 그림자 시저", name : "닌저", element : , role : , hpUp : },
-// {ok : true, id : 10164, rarity : 3, hp:, atk:, cd:, atkMag:, ultMag:, fullname : "제전의 꽃 카나", name : "꽃카나", element : , role : , hpUp : },
+{ok : true, id : 10162, rarity : 3, hp:996042, atk:271044, cd:8, atkMag:100, ultMag:0, fullname : "경신신사 아이카", name : "무이카", element : 4, role : 0, hpUp : 40},
+{ok : true, id : 10163, rarity : 3, hp:1138207, atk:237384, cd:4, atkMag:100, ultMag:514, fullname : "밤의 그림자 시저", name : "닌저", element : 4, role : 0, hpUp : 40},
+{ok : true, id : 10164, rarity : 3, hp:1356548, atk:198854, cd:3, atkMag:0, ultMag:0, fullname : "제전의 꽃 카나", name : "꽃카나", element : 2, role : 2, hpUp : 40},
 
 /*
       element  role     rarity
