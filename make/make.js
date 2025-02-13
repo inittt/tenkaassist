@@ -112,6 +112,7 @@ function setPossible() {
       d.compstr = compList.slice();
 
       if (compList.every(item => haveList.includes(item))) {
+         if (d.recommend < 5*e9 && d.vote < 2*e9) continue;
          if (d.recommend > 0 && limit_fit > d.recommend) continue;
          if (hpUpMap.get(compList[0]) < limit_hp_up) continue;
 
