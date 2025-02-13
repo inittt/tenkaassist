@@ -186,7 +186,7 @@ a {color: inherit; text-decoration: none;}
    word-break:keep-all;
 }
 .comp-deck {display:flex; justify-content: space-around;}
-.comp-rank {text-align: center; font-weight: bold; width:5rem; font-size:1rem;}
+.comp-rank {text-align: center; font-weight: bold; width:5.2rem; font-size:1rem;}
 .character {
    position:relative;
    display:flex;
