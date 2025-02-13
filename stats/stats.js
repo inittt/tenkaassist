@@ -2,46 +2,44 @@ const curHeader = 8;
 let server_data;
 let isloading = true, radioValue = 0, mod = 0, sort = 0;
 
-async function fetchJsonFromGitHub(owner, repo, branch, filePath) {
-   const url = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filePath}`;
+async function fetchJsonFromGitHub(_url, _owner, _repo, _branch, _filePath) {
+   if (!_url) return null;
 
+   const url = `https://${_url}/${_owner}/${_repo}/${_branch}/${_filePath}`;
    try {
-      // fetch로 데이터를 가져옴
       const response = await fetch(url);
-
-      // 응답이 성공적이지 않으면 에러를 던짐
-      if (!response.ok) {
-         throw new Error('Network response was not ok');
-      }
-
-      // 응답을 arrayBuffer로 받아옴 (응답 body는 스트림 형태)
+      if (!response.ok) throw new Error('Network response was not ok');
       const buffer = await response.arrayBuffer();
-
-      // pako를 사용하여 Gzip 압축 해제
       const compressedData = new Uint8Array(buffer);
       const decompressedData = pako.inflate(compressedData);
-
-      // 압축 해제된 데이터를 바로 JSON 객체로 변환
       const jsonData = JSON.parse(new TextDecoder().decode(decompressedData));
-
       return jsonData;
-
    } catch (error) {
       console.error('Error fetching JSON from database:', error);
-      return null;  // 오류 발생 시 null을 반환
+      return null;
    }
 }
 
-fetchJsonFromGitHub('inittt', 'tenkaassist_data', 'main', 'data/data.json')
-.then(data => {
-   if (data == null || data.length == 0) {
-      throw new Error('네트워크 응답이 올바르지 않습니다.');
-   }
-   server_data = data;
-   setData();
-}).catch(e => {
-   console.log(t("데이터 로드 실패"), e);
-});
+const urls = [
+   "raw.githubusercontent.com",
+   "raw.gitmirror.com",
+   "raw.bgithub.xyz",
+   "raw.fastgit.org",
+   "raw.staticdn.net"
+];
+function getAllCompsFromServer(url_idx) {
+   fetchJsonFromGitHub(urls[url_idx], 'inittt', 'tenkaassist_data', 'main', 'data/data.json')
+   .then(data => {
+      if (data == null || data.length == 0) throw new Error(t("데이터 로드 실패"));
+      server_data = data;
+      setData();
+   }).catch(e => {
+      url_idx++;
+      if (!urls[url_idx]) alert(t("데이터 로드 실패"), e);
+      else getAllCompsFromServer(url_idx);
+   });
+}
+getAllCompsFromServer(0);
 
 document.addEventListener("DOMContentLoaded", function() {
    const dropdownBtn = document.getElementById("dropdownBtn");

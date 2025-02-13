@@ -65,7 +65,7 @@ async function fetchJsonFromGitHub(_url, _owner, _repo, _branch, _filePath) {
       const jsonData = JSON.parse(new TextDecoder().decode(decompressedData));
       return jsonData;
    } catch (error) {
-      console.error('Error fetching JSON from GitHub:', error);
+      console.error('Error fetching JSON from database:', error);
       return null;
    }
 }
