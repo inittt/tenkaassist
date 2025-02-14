@@ -70,7 +70,7 @@ async function fetchJsonFromGitHub(_url, _owner, _repo, _branch, _filePath) {
    }
 }
 
-let dataIdx = 0, dataAll, maxDataCnt = 0;
+let dataIdx = 0, dataAll;
 let default_per;
 const urls = [
    "raw.githubusercontent.com",
@@ -85,9 +85,8 @@ function getAllCompsFromServer(url_idx) {
       if (data == null || data.length == 0) throw new Error(t("데이터 로드 실패"));
 
       default_per = document.getElementById("defaultPer");
-      dataAll = data;
+      dataAll = data.filter(i => !(i.recommend < 5*e9 && i.vote < 2*e9));
       dataIdx = 0;
-      maxDataCnt = data.length;
       setPossible();
    }).catch(e => {
       url_idx++;
@@ -106,13 +105,12 @@ function setPossible() {
    // 한 번에 처리할 항목 수
    const batchSize = 100;
 
-   for (let i = 0; i < batchSize && dataIdx < maxDataCnt; i++) {
+   for (let i = 0; i < batchSize && dataIdx < dataAll.length; i++) {
       let d = dataAll[dataIdx++];
       const compList = d.compstr.split(" ").map(Number);
       d.compstr = compList.slice();
 
       if (compList.every(item => haveList.includes(item))) {
-         if (d.recommend < 5*e9 && d.vote < 2*e9) continue;
          if (d.recommend > 0 && limit_fit > d.recommend) continue;
          if (hpUpMap.get(compList[0]) < limit_hp_up) continue;
 
@@ -128,7 +126,7 @@ function setPossible() {
    }
 
    default_per.innerHTML = `${(dataIdx * 100 / dataAll.length).toFixed(2)}%`;
-   if (dataIdx >= maxDataCnt) {
+   if (dataIdx >= dataAll.length) {
       isCalculating = false;
       possibleCopy = JSON.parse(JSON.stringify(possible));
       makeBlock();
