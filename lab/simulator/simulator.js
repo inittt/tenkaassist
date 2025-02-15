@@ -314,6 +314,7 @@ function getBossElement() {
       case 2 : return t("풍속성");
       case 3 : return t("광속성");
       case 4 : return t("암속성");
+      default : return t("무속성");
    }
 }
 
