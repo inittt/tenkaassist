@@ -273,7 +273,7 @@ function endGame() {
    updateAll();
 
    const msg = [];
-   msg.push(`Boss : ${getBossElement()}/${getBossInitBuffStr()}`);
+   msg.push(`Target : ${getBossElement()}/${getBossInitBuffStr()}`);
    msg.push(`${t(comp[0].name)}, ${t(comp[1].name)}, ${t(comp[2].name)}, ${t(comp[3].name)}, ${t(comp[4].name)}`);
    msg.push(`${t("구속")} : ${bondList[0]}, ${bondList[1]}, ${bondList[2]}, ${bondList[3]}, ${bondList[4]}`);
    msg.push(`${t("조련")} : ${getDisLev(a_o[0][0])}, ${getDisLev(a_o[1][0])}, ${getDisLev(a_o[2][0])}, ${getDisLev(a_o[3][0])}, ${getDisLev(a_o[4][0])}`);
