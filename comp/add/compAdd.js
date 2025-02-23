@@ -52,7 +52,7 @@ function getCharactersWithCondition(element, role, rarity, search) {
 function registerDeck() {
    if (selected.length != 5) return alert(t("5개의 캐릭터를 선택해주세요"));
 
-   if (!isValidComp(selected)) return alert(t("회복수단이 없는 조합입니다"));
+   if (!isValidComp(selected)) return alert(t("생존할 수 없는 조합입니다"));
 
    const deckName = `${getCharacter(selected[0]).name}덱`;
    const formData = new FormData();

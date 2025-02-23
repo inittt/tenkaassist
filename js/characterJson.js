@@ -266,6 +266,11 @@ function isValidComp(ids) {
    if (ids.length != 5) return false;
    const comp = ids.map(id => getCharacter(id));
 
+   // 반격캐 + 농탄(10153) 제외
+   const refList = [10002, 10027, 10056, 10130, 10164];
+   if (comp.some(i => i.id === 10153)) {
+      if (comp.some(i => refList.includes(i.id))) return false;
+   }
    
    // 놀라이티 리더
    if (comp[0].id == 10022) {

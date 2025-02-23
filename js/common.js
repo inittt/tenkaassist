@@ -328,7 +328,7 @@ const translate = {
    // 조합등록
    "조합 등록" : {en : "Register Team", sc : "登记队伍", tc : "登記隊伍", jp : "チーム登録"},
    "등록" : {en : "OK", sc : "OK", tc : "OK", jp : "OK"},
-   "회복수단이 없는 조합입니다" : {en: "This team has no recovery options", sc: "这个队伍没有恢复手段", tc: "這個隊伍沒有恢復手段", jp: "このチームには回復手段がありません"},
+   "생존할 수 없는 조합입니다": {en: "This team cannot survive", sc: "这个队伍无法生存", tc: "這個隊伍無法生存", jp: "このチームは生存できません"},
    "등록 성공" : {en : "Register Successful", sc : "这队伍没有治疗能力", tc : "這隊伍沒有治療能力", jp : "登録成功"},
    "조합 등록 실패" : {en : "Team registration failed", sc : "隊伍登記失敗", tc : "队伍登记失败", jp : "チーム登録失敗"},
    "데미지 측정을 하지 않거나 13턴 데미지(5)가 40억 미만인 조합은 주기적으로 삭제됩니다" : {en: "Teams that do not measure damage or have 13t dmg(5) below 4 billion will be periodically deleted.", sc: "未进行伤害测量或13回合伤害(5)低于40亿的团队将定期删除.", tc: "未進行傷害測量或13回合傷害(5)低於40億的團隊將定期刪除.", jp: "ダメージ測定を行っていない、または13ターンのダメージ(5)が40億未満のチームは定期的に削除されます"},
