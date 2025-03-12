@@ -135,6 +135,8 @@ const chJSON = { data : [
 {ok : true, id : 10162, rarity : 3, po:1, hp:996042, atk:271044, cd:8, atkMag:100, ultMag:0, fullname : "경신신사 아이카", name : "무이카", element : 4, role : 0, hpUp : 40},
 {ok : true, id : 10163, rarity : 3, po:1, hp:1138207, atk:237384, cd:4, atkMag:100, ultMag:514, fullname : "밤의 그림자 시저", name : "닌저", element : 4, role : 0, hpUp : 40},
 {ok : true, id : 10164, rarity : 3, po:3, hp:1356548, atk:198854, cd:3, atkMag:0, ultMag:0, fullname : "제전의 꽃 카나", name : "꽃카나", element : 2, role : 2, hpUp : 40},
+//{ok : true, id : 10165, rarity : 3, hp:952640, atk:283444, cd:8, atkMag:88.6, ultMag:0, fullname : "실버아울 미아", name : "미아", element : 2, role : 0, hpUp : 40},
+//{ok : true, id : 10166, rarity : 3, hp:1037673, atk:260414, cd:4, atkMag:0, ultMag:0, fullname : "폴라베어 애니ㆍ윈터", name : "애니", element : 3, role : 3, hpUp : 40},
 
 /*
       element  role     rarity
@@ -169,7 +171,7 @@ const chJSON = { data : [
 {ok : false, id : 10806, rarity : 1, fullname : "머메이드 마를렌", name : "마를렌", element : 1, role : 1},
 {ok : false, id : 10807, rarity : 1, fullname : "유랑 마법사 유이", name : "유이", element : 0, role : 0},
 {ok : false, id : 10808, rarity : 1, fullname : "다크엘프 소라카", name : "소라카", element : 4, role : 4},
-{ok : false, id : 10809, rarity : 1, fullname : "괴도 미아", name : "미아", element : 2, role : 4},
+{ok : false, id : 10809, rarity : 1, fullname : "괴도 미아", name : "괴도미아", element : 2, role : 4},
 {ok : false, id : 10810, rarity : 1, fullname : "켄타우로스 메이드 소피", name : "소피", element : 1, role : 3},
 {ok : false, id : 10811, rarity : 1, fullname : "시크한 마녀의사 카리나", name : "카리나", element : 0, role : 1},
 {ok : false, id : 10812, rarity : 1, fullname : "펌킨 페어리 파나나", name : "파나나", element : 4, role : 1},
