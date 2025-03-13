@@ -519,7 +519,7 @@ const translate = {
    "이노리" : {en : "Inori", sc : "马娘", tc : "馬娘", jp : "いのり"},
    "풍오라" : {en : "Hm.Fiora", sc : "圣女", tc : "聖女", jp : "豊作聖女 フィオラ"}, // "Harvest Maid Fiora"
    "세라프" : {en : "Sherana", sc : "商狐", tc : "商狐", jp : "セラフ"},
-   "에밀리" : {en : "Emily", sc : "女仆长", tc : "女僕", jp : "エミリー"},
+   "에밀리" : {en : "Emily", sc : "大女仆", tc : "女僕", jp : "エミリー"},
    "안젤리카" : {en : "Anjelica", sc : "千咒", tc : "千咒", jp : "アンジェリカ"},
    "신미나" : {en : "Tm.Minayomi", sc : "春剑", tc : "春劍", jp : "新春 神無雪"}, // "True Moon Minayomi"
    "렌" : {en : "Lotus", sc : "莲", tc : "蓮", jp : "レン"},
@@ -608,8 +608,8 @@ const translate = {
    "무이카" : {en : "P.Aiko", sc : "信艾", tc : "信艾", jp : "敬虔な神祭 アイカ"},
    "닌저" : {en : "Ni.Caesar", sc : "夜凯", tc : "夜凱", jp : "夜ノ影 シーザー"},
    "꽃카나" : {en : "F.Kana", sc : "风魁", tc : "風魁", jp : "祭りの花 香奈"},
-   "미아" : {en : "*Mia", sc : "米娅", tc : "米娅", jp : "ミア"},
-   "애니" : {en : "Annee", sc : "艾妮", tc : "艾妮", jp : "アイニー"},
+   "미아" : {en : "Star.Mia", sc : "米娅", tc : "米婭", jp : "ミア"},
+   "애니" : {en : "Star.Annee", sc : "白熊", tc : "白熊", jp : "アイニー"},
 
 
    "아이카" : {en : "Aiko", sc : "艾可", tc : "艾可", jp : "アイカ"},
