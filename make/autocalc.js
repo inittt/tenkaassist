@@ -1,10 +1,11 @@
-function autoCalc(idList, command, bondList) {
+function autoCalc(idList, command, bondList, boss_element = -1) {
    if (command == null || command.length < 10) return 0;
 
    let actNum = 0, commandList = command.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
 
    if (idList.length != 5) return 0;
    boss.maxHp = 10854389981;
+   if (boss_element != -1) boss.element = boss_element;
    return start(idList);
 
    // functions

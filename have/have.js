@@ -11,14 +11,9 @@ document.addEventListener("DOMContentLoaded", function() {
    getCharactersWithCondition(null, null, checkRarityN = 3, "");
 
    const dropdownBtn1 = document.getElementById(`btn1`);
-   const dropdownBtn2 = document.getElementById(`btn2`);
    const dropdownContent1 = document.getElementById(`drop1`);
    dropdownBtn1.addEventListener("click", function() {
       dropdownContent1.style.display = dropdownContent1.style.display === "block" ? "none" : "block";
-   });
-   const dropdownContent2 = document.getElementById(`drop2`);
-   dropdownBtn2.addEventListener("click", function() {
-      dropdownContent2.style.display = dropdownContent2.style.display === "block" ? "none" : "block";
    });
    const radios1 = document.querySelectorAll(`.dropdown-content input[name='b1']`);
    radios1.forEach(function(option) {
@@ -32,6 +27,11 @@ document.addEventListener("DOMContentLoaded", function() {
       });
    });
 
+   const dropdownBtn2 = document.getElementById(`btn2`);
+   const dropdownContent2 = document.getElementById(`drop2`);
+   dropdownBtn2.addEventListener("click", function() {
+      dropdownContent2.style.display = dropdownContent2.style.display === "block" ? "none" : "block";
+   });
    const radios2 = document.querySelectorAll(`.dropdown-content input[name='b2']`);
    radios2.forEach(function(option) {
       option.addEventListener("click", function() {
@@ -42,6 +42,23 @@ document.addEventListener("DOMContentLoaded", function() {
          spanElement.innerHTML = '▼'
          dropdownBtn2.appendChild(spanElement);
          dropdownContent2.style.display = "none";
+      });
+   });
+
+   const dropdownBtn3 = document.getElementById(`btn3`);
+   const dropdownContent3 = document.getElementById(`drop3`);
+   dropdownBtn3.addEventListener("click", function() {
+      dropdownContent3.style.display = dropdownContent3.style.display === "block" ? "none" : "block";
+   });
+   const radios3 = document.querySelectorAll(`.dropdown-content input[name='b3']`);
+   radios3.forEach(function(option) {
+      option.addEventListener("click", function() {
+         dropdownBtn3.innerHTML = `<img class="icon-middle" src="../images/elements/ico_${this.value}.png">`;
+         const spanElement = document.createElement('span');
+         spanElement.classList.add('absolute-right');
+         spanElement.innerHTML = '▼'
+         dropdownBtn3.appendChild(spanElement);
+         dropdownContent3.style.display = "none";
       });
    });
 });
@@ -103,7 +120,9 @@ function searchDeck() {
 
    const hpUp = document.querySelector('input[name="b1"]:checked').value;
    const fit13t = document.querySelector('input[name="b2"]:checked').value;
-   location.href = `${address}/make/?hpUp=${hpUp}&fit13t=${fit13t}&list=${go}&bond=${b}`;
+   const bel = document.querySelector('input[name="b3"]:checked').value;
+
+   location.href = `${address}/make/?hpUp=${hpUp}&fit13t=${fit13t}&list=${go}&bond=${b}&bossEl=${bel}`;
 }
 
 // 코드 복사 누를시

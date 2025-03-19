@@ -1,6 +1,19 @@
 const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const chBonds = params.get('bond');
+const boss_element_str = params.get('bossEl') == null ? "none" : params.get('bossEl');
+const boss_element = el2Num(boss_element_str);
+function el2Num(str) {
+   switch(str) {
+      case "fire" : return 0;
+      case "water" : return 1;
+      case "wind" : return 2;
+      case "light" : return 3;
+      case "dark" : return 4;
+      default : return -1;
+   }
+}
+
 const limit_hp_up = Number(params.get('hpUp') == null ? 0 : params.get('hpUp'));
 
 // -1이면 (0보다 작으면) auto
@@ -21,6 +34,13 @@ for(let i = 0; i < haveList.length; i++) {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
+   if (boss_element != -1) {
+      document.getElementById("element-image").innerHTML = 
+         `<img class="icon-big" src="../images/elements/ico_${boss_element_str}.png">`;
+      document.getElementById("element-image").style.display = "block";
+      document.getElementById("comb-radio").style.display = "none";
+   }
+
    var dropdownBtn = document.getElementById("dropdownBtn");
    var dropdownContent = document.getElementById("dropdown-content");
    cc = document.getElementById('compcontainer');
@@ -111,17 +131,28 @@ function setPossible() {
       d.compstr = compList.slice();
 
       if (compList.every(item => haveList.includes(item))) {
-         if (d.recommend > 0 && limit_fit > d.recommend) continue;
-         if (hpUpMap.get(compList[0]) < limit_hp_up) continue;
+         if (boss_element == -1) {
+            if (d.recommend > 0 && limit_fit > d.recommend) continue;
+            if (hpUpMap.get(compList[0]) < limit_hp_up) continue;
 
-         const indexes = compList.map(item => haveList.indexOf(item)), bonds = [];
-         for (let j = 0; j < 5; j++) bonds.push(bondList[indexes[j]]);
+            const indexes = compList.map(item => haveList.indexOf(item)), bonds = [];
+            for (let j = 0; j < 5; j++) bonds.push(bondList[indexes[j]]);
 
-         if (bonds.every(item => item === 5) && d.recommend > 0) d.fit13t = d.recommend;
-         else if (bonds.every(item => item === 1) && d.vote > 0) d.fit13t = d.vote;
-         else d.fit13t = autoCalc(compList, d.description, bonds);
+            if (bonds.every(item => item === 5) && d.recommend > 0) d.fit13t = d.recommend;
+            else if (bonds.every(item => item === 1) && d.vote > 0) d.fit13t = d.vote;
+            else d.fit13t = autoCalc(compList, d.description, bonds);
 
-         if (d.fit13t >= limit_fit) possible.push(d);
+            if (d.fit13t >= limit_fit) possible.push(d);
+         } else {
+            if (hpUpMap.get(compList[0]) < limit_hp_up) continue;
+
+            const indexes = compList.map(item => haveList.indexOf(item)), bonds = [];
+            for (let j = 0; j < 5; j++) bonds.push(bondList[indexes[j]]);
+
+            d.fit13t = autoCalc(compList, d.description, bonds, boss_element);
+
+            if (d.fit13t >= limit_fit) possible.push(d);
+         }
       }
    }
 
