@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>TenkaAssist - 보유 캐릭터</title>
+   <meta name="description" content="tenkaAssist">
+   <script src="../js/common.js"></script>
+   <link rel="stylesheet" href="../css/common.css" type = "text/css">
+   <link rel="stylesheet" href="./have.css" type = "text/css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+   <script src="../js/characterJson.js"></script>
+   <script src="./have.js"></script>
+</head>
+<body>
+   <script src="../js/header.js"></script>
+   <div class="main-container bg-dark">
+      <div class="block">
+         <div class="margin-left titleblock">
+            <span id="titleBox" class="titlebox">보유</span>
+            <button class="icon-btn i-save" onclick="setHave()"><img class="icon" src="../images/icons/ico-save.svg"></button>
+            <button class="icon-btn i-load" onclick="synchro()"><img class="icon" src="../images/icons/ico-load.svg"></button>
+            <button class="icon-btn i-sort" onclick="sortHave()"><img class="icon" src="../images/icons/ico-sort.svg"></button>
+            <button id="characterSearchBtn2" class="goSearchButton" onclick="searchDeck()">검색</button>
+         </div>
+      </div>
+      <div class="block option-box">
+         <span id="option-limit" style="margin-left:0.5rem;">최소조건</span>
+         <div class="select_dropdown">
+            <div class="dropdown">
+               <button id="btn1" class="dropdown-btn" style="height:1.5rem;">
+                  <img class="i-heart2" src="../images/icons/ico-heart.svg">
+                  20<span class="absolute-right">▼</span>
+               </button>
+               <div id="drop1" class="dropdown-content">
+                  <input type="radio" id="b110" name="b1" value="50">
+                  <label id="l_b110" for="b110">50</label>
+                  <input type="radio" id="b19" name="b1" value="45">
+                  <label id="l_b19" for="b19">45</label>
+                  <input type="radio" id="b18" name="b1" value="40">
+                  <label id="l_b18" for="b18">40</label>
+                  <input type="radio" id="b17" name="b1" value="35">
+                  <label id="l_b17" for="b17">35</label>
+                  <input type="radio" id="b16" name="b1" value="30">
+                  <label id="l_b16" for="b16">30</label>
+                  <input type="radio" id="b15" name="b1" value="25">
+                  <label id="l_b15" for="b15">25</label>
+                  <input type="radio" id="b14" name="b1" value="20" checked>
+                  <label id="l_b14" for="b14">20</label>
+                  <input type="radio" id="b13" name="b1" value="15">
+                  <label id="l_b13" for="b13">15</label>
+                  <input type="radio" id="b12" name="b1" value="10">
+                  <label id="l_b12" for="b12">10</label>
+                  <input type="radio" id="b11" name="b1" value="0">
+                  <label id="l_b11" for="b11">0</label>
+               </div>
+            </div>
+         </div>
+         <span>&</span>
+         <div class="select_dropdown">
+            <div class="dropdown">
+               <button id="btn2" class="dropdown-btn" style="height:1.5rem;">auto<span class="absolute-right">▼</span></button>
+               <div id="drop2" class="dropdown-content">
+                  <input type="radio" id="b2-1" name="b2" value="-1" checked>
+                  <label id="l_b2-1" for="b2-1">auto</label>
+                  <input type="radio" id="b210" name="b2" value="11000000000">
+                  <label id="l_b210" for="b210">11000000000</label>
+                  <input type="radio" id="b29" name="b2" value="10000000000">
+                  <label id="l_b29" for="b29">10000000000</label>
+                  <input type="radio" id="b28" name="b2" value="9000000000">
+                  <label id="l_b28" for="b28">9000000000</label>
+                  <input type="radio" id="b27" name="b2" value="8000000000">
+                  <label id="l_b27" for="b27">8000000000</label>
+                  <input type="radio" id="b26" name="b2" value="7000000000">
+                  <label id="l_b26" for="b26">7000000000</label>
+                  <input type="radio" id="b25" name="b2" value="6000000000">
+                  <label id="l_b25" for="b25">6000000000</label>
+                  <input type="radio" id="b24" name="b2" value="5000000000">
+                  <label id="l_b24" for="b24">5000000000</label>
+                  <input type="radio" id="b23" name="b2" value="4000000000">
+                  <label id="l_b23" for="b23">4000000000</label>
+                  <input type="radio" id="b22" name="b2" value="3000000000">
+                  <label id="l_b22" for="b22">3000000000</label>
+                  <input type="radio" id="b21" name="b2" value="0">
+                  <label id="l_b21" for="b21">0</label>
+               </div>
+            </div>
+         </div>
+         <div class="select_dropdown">
+            <div class="dropdown">
+               <button id="btn3" class="dropdown-btn" style="height:1.5rem;">None<span class="absolute-right">▼</span></button>
+               <div id="drop3" class="dropdown-content">
+                  <input type="radio" id="b36" name="b3" value="none">
+                  <label id="l_b36" for="b36">none</label>
+                  <input type="radio" id="b35" name="b3" value="fire">
+                  <label id="l_b35" for="b35">fire</label>
+                  <input type="radio" id="b34" name="b3" value="water">
+                  <label id="l_b34" for="b34">water</label>
+                  <input type="radio" id="b33" name="b3" value="wind">
+                  <label id="l_b33" for="b33">wind</label>
+                  <input type="radio" id="b32" name="b3" value="light">
+                  <label id="l_b32" for="b32">light</label>
+                  <input type="radio" id="b31" name="b3" value="dark">
+                  <label id="l_b31" for="b31">dark</label>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="block">
+         <div style="display: flex; justify-content: space-between;">
+            <div class="icon-copy-btn" onclick="setClipBoard()">
+               <img class="icon" src="../images/icons/ico-copy.svg" style="vertical-align: middle;" alt="copy">
+               <span id="copy-text" class="copy-text" style="vertical-align: middle;">복사</span>
+            </div>
+            <div class="icon-paste-btn" onclick="setCopiedCharacters()">
+               <img class="icon" src="../images/icons/ico-paste.svg" style="vertical-align: middle;" alt="paste">
+               <span id="paste-text" class="copy-text" style="vertical-align: middle;">붙여넣기</span>
+            </div>
+         </div>
+         <div class="margin-left titleblock" style="min-height:5.2rem;">
+            <div id="selectedCh" class="flex">
+               보유중인 캐릭터를 선택해 주세요<br>
+               (로그인 된 경우 동기화 가능)
+            </div>
+         </div>
+      </div>
+      <div class="block flex">
+         <label class="c-radio"><input type="radio" name="element" value="0" onclick="checkElement(0)"><span id="e-0">화속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="1" onclick="checkElement(1)"><span id="e-1">수속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="2" onclick="checkElement(2)"><span id="e-2">풍속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="3" onclick="checkElement(3)"><span id="e-3">광속성</span></label>
+         <label class="c-radio"><input type="radio" name="element" value="4" onclick="checkElement(4)"><span id="e-4">암속성</span></label>
+      </div>
+      <div class="block flex">
+         <label class="c-radio"><input type="radio" name="role" value="0" onclick="checkRole(0)"><span id="r-0">딜러</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="1" onclick="checkRole(1)"><span id="r-1">힐러</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="2" onclick="checkRole(2)"><span id="r-2">탱커</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="3" onclick="checkRole(3)"><span id="r-3">서포터</span></label>
+         <label class="c-radio"><input type="radio" name="role" value="4" onclick="checkRole(4)"><span id="r-4">디스럽터</span></label>
+      </div>
+      <div class="block flex">
+         <label class="c-radio"><input type="radio" name="rarity" value="3" onclick="checkRarity(3)" checked><span>SSR</span></label>
+         <label class="c-radio"><input type="radio" name="rarity" value="2" onclick="checkRarity(2)"><span>SR</span></label>
+         <label class="c-radio"><input type="radio" name="rarity" value="1" onclick="checkRarity(1)"><span>R</span></label>
+         <label class="c-radio"><input type="radio" name="rarity" value="0" onclick="checkRarity(0)"><span>N</span></label>
+         <input id="searchInput" type="text" class="searchInput" placeholder="검색">
+      </div>
+      <div class="block flex" id="characterContainer">
+         
+      </div>
+   </div>
+</body>
+<script>
+   document.title = "TenkaAssist - " + t("보유 캐릭터");
+   document.getElementById("titleBox").innerText = t("보유");
+
+   for(let i = 1; i < 11; i++) {
+      const set13t = document.getElementById(`l_b2${i}`);
+      let val = set13t.innerText;
+      set13t.innerText = formatNumber2(val);
+   }
+   
+   document.getElementById("selectedCh").innerHTML = `${t("보유중인 캐릭터를 선택해 주세요")}<br>(${t("로그인 된 경우 동기화 가능")})`;
+   document.getElementById("characterSearchBtn2").innerText = t(" 검색").trim();
+   document.getElementById("searchInput").placeholder = t("검색");
+
+   document.getElementById("option-limit").innerText = t("최소조건");
+   document.getElementById("copy-text").innerText = t("코드복사");
+   document.getElementById("paste-text").innerText = t("붙여넣기");
+
+   document.getElementById("e-0").innerText = t("화속성");
+   document.getElementById("e-1").innerText = t("수속성");
+   document.getElementById("e-2").innerText = t("풍속성");
+   document.getElementById("e-3").innerText = t("광속성");
+   document.getElementById("e-4").innerText = t("암속성");
+   
+   document.getElementById("r-0").innerText = t("딜러");
+   document.getElementById("r-1").innerText = t("힐러");
+   document.getElementById("r-2").innerText = t("탱커");
+   document.getElementById("r-3").innerText = t("서포터");
+   document.getElementById("r-4").innerText = t("디스럽터");
+</script>
+</html>
