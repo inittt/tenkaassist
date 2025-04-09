@@ -610,6 +610,7 @@ const translate = {
    "꽃카나" : {en : "F.Kana", sc : "风魁", tc : "風魁", jp : "祭りの花 香奈"},
    "미아" : {en : "Star.Mia", sc : "米娅", tc : "米婭", jp : "ミア"},
    "애니" : {en : "Star.Annee", sc : "白熊", tc : "白熊", jp : "アイニー"},
+   "라벤더" : {en : "Lér Bédard", sc : "莱尔贝姐", tc : "萊爾貝姐", jp : "ラベンダー"},
 
 
    "아이카" : {en : "Aiko", sc : "艾可", tc : "艾可", jp : "アイカ"},
