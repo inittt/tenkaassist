@@ -72,14 +72,12 @@ function getCharactersWithCondition(element, role, rarity, search) {
 // 검색 버튼 누를시
 function searchDeck() {
    if (selected.length > 5) return alert(t("5개까지 선택 가능합니다"));
-   if (selected.length < 1) return alert(t("하나 이상의 캐릭터를 선택해 주세요"));
-   if (isOn){
-      if (banList.length == 0) location.href = `${address}/search/?list=${selected}&leader=${selected[0]}`;
-      else location.href = `${address}/search/?list=${selected}&ban=${banList}&leader=${selected[0]}`;
-   } else  {
-      if (banList.length == 0) location.href = `${address}/search/?list=${selected}`;
-      else location.href = `${address}/search/?list=${selected}&ban=${banList}`;
-   }
+   if (selected.length < 1 && banList.length < 1) return alert(t("캐릭터를 선택해 추가해 주세요"));
+
+   const bans = banList.length == 0 ? 0 : banList;
+   const chs = selected.length == 0 ? 0 : selected;
+   const ldr = isOn ? selected[0] : 0;
+   location.href = `${address}/search/?list=${chs}&ban=${bans}&leader=${ldr}`;
 }
 
 function resizeButton() {

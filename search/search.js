@@ -1,8 +1,8 @@
 const params = new URLSearchParams(window.location.search);
-const chIds = params.get('list');
-const banList = params.get('ban');
-const leaderId = params.get('leader');
-const deckName = leaderId == null ? null : `${getCharacter(Number(leaderId)).name}덱`;
+const _c = params.get('list'), _b = params.get('ban'), _d = params.get('leader');
+const chIds = _c == "0" ? null : _c;
+const banList = _b == "0" ? null : _b;
+const deckName = _d == "0" ? null : `${getCharacter(Number(_d)).name}덱`;
 const curHeader = 2;
 let page = 0, sort = 0, isLoading = false;
 
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
    observer.observe(document.getElementById('scroll-observer'));
 
    const formData = new FormData();
-   formData.append("chIds", chIds);
+   if (chIds != null) formData.append("chIds", chIds);
    if (banList != null) formData.append("banList", banList);
    if (deckName != null) formData.append("deckName", deckName);
 
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function getComps() {
    const formData = new FormData();
    formData.append("sort", sort);
-   formData.append("chIds", chIds);
+   if (chIds != null) formData.append("chIds", chIds);
    if (banList != null) formData.append("banList", banList);
    if (deckName != null) formData.append("deckName", deckName);
    formData.append("page", page);
