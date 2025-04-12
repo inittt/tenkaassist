@@ -138,8 +138,8 @@ const chJSON = { data : [
 {ok : true, id : 10165, rarity : 3, po:1, hp:952640, atk:283444, cd:8, atkMag:88.6, ultMag:0, fullname : "실버아울 미아", name : "미아", element : 2, role : 0, hpUp : 40},
 {ok : true, id : 10166, rarity : 3, po:1, hp:1037673, atk:260414, cd:4, atkMag:0, ultMag:0, fullname : "폴라베어 애니ㆍ윈터", name : "애니", element : 3, role : 3, hpUp : 40},
 {ok : true, id : 10176, rarity : 3, po:2, hp:1396851, atk:193096, cd:3, atkMag:50, ultMag:257, fullname : "스위트 베이비 라벤더", name : "라벤더", element : 3, role : 4, hpUp : 0},
-{ok : true, id : 10167, rarity : 3, hp:1046973, atk:257757, cd:4, atkMag:0, ultMag:0, fullname : "도약의 별 노엘리", name : "도엘리", element : 0, role : 3, hpUp : 40},
-{ok : true, id : 10168, rarity : 3, hp:1061589, atk:254214, cd:4, atkMag:0, ultMag:0, fullname : "치어리더장 유니스", name : "유니스", element : 2, role : 1, hpUp : 50},
+{ok : true, id : 10167, rarity : 3, po:2, hp:1046973, atk:257757, cd:4, atkMag:0, ultMag:0, fullname : "도약의 별 노엘리", name : "도엘리", element : 0, role : 3, hpUp : 40},
+{ok : true, id : 10168, rarity : 3, po:1, hp:1061589, atk:254214, cd:4, atkMag:0, ultMag:0, fullname : "치어리더장 유니스", name : "유니스", element : 2, role : 1, hpUp : 50},
 
 /*
       element  role     rarity
