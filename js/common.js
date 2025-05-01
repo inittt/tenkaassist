@@ -382,6 +382,7 @@ const translate = {
    "별명은 특수문자와 공백을 제외한 2-8자여야 합니다": {en: "Nickname must be 2 to 8 characters long, excluding special characters and spaces.", sc: "昵称必须是2到8个字符，不包括特殊字符和空格。", tc: "暱稱必須是2到8個字符，並且不能包含特殊字符和空格。", jp: "ニックネームは特殊文字と空白を除いた2〜8文字でなければなりません"},
    "중복된 아이디가 존재합니다.": {en: "Duplicate ID exists.", sc: "已存在重复的ID。", tc: "已存在重複的ID。", jp: "重複したIDが存在します"},
    "중복된 별명이 존재합니다.": {en: "Duplicate nickname exists.", sc: "已存在重复的昵称。", tc: "已存在重複的暱稱。", jp: "重複したニックネームが存在します"},
+   "중복된 아이디 혹은 별명이 존재합니다.": {en:"Duplicate username or nickname exists.", sc:"存在重复的ID或昵称", tc:"存在重複的ID或暱稱", jp:"重複したIDまたはニックネームが存在します"},
    "유효하지 않은 아이디 혹은 비밀번호입니다.": {en: "Invalid ID or password.", sc: "无效的ID或密码。", tc: "無效的ID或密碼。", jp: "無効なIDまたはパスワードです"},
    "기존 비밀번호가 틀립니다": {en: "The existing password is incorrect.", sc: "原密码不正确。", tc: "原密碼不正確。", jp: "現在のパスワードが間違っています"},
 
