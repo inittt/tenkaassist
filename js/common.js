@@ -614,7 +614,7 @@ const translate = {
    "라벤더" : {en : "Bedard", sc : "肥婆", tc : "肥婆", jp : "ラベンダー"},
    "도엘리" : {en : "C.Noel", sc : "拉黑", tc : "拉黑", jp : "躍動の☆ ノエル"},
    "유니스" : {en : "Eunice", sc : "拉尤", tc : "拉尤", jp : "ユニス"},
-   "더피" : {en : "momDaphne", sc : "兔妈", tc : "兔媽", jp : "ダフィー"},
+   "더피" : {en : "MomDaphne", sc : "兔妈", tc : "兔媽", jp : "ダフィー"},
    "새바키" : {en : "W.Tsubaki", sc : "妻狐", tc : "妻狐", jp : "妖艶な人妻 椿"},
 
 
