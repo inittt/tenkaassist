@@ -5,6 +5,18 @@ const chIds = params.get('list'), idList = chIds.split(",").map(Number);
 const bond = params.get('bond'), bondList = bond == null ? [5, 5, 5, 5, 5] : bond.split(",").map(Number);
 const hpParam = params.get('hp'), liParam = params.get('li');
 const ability_options = params.get('options').split(",").map(Number);
+const gboss = Number(params.get('gboss'));
+function setGboss() {
+   switch(gboss) {
+      case 1 :
+         for(let idx of getRoleIdx("디")) anbf(comp[idx], "궁", boss, "받뎀증", 15, "gboss1", 1, 2, always);
+         break;
+      case 2 :
+         anbf(comp[0], "힐", boss, "받뎀증", 0.5, "gboss2", 1, 65, always);
+         break;
+   }
+}
+
 const a_o = [];
 for(let i = 0; i < 5; i++) {
    const stat_dis = ability_options[i*4];
@@ -208,6 +220,7 @@ function start(compIds) {
    }
    comp[0].leader();
    for(let i = 0; i < 5; i++) comp[i].passive();
+   setGboss();
    for(let i = 0; i < 5; i++) comp[i].turnstart();
 
    savedData.length = 0;
@@ -261,6 +274,7 @@ function endAct() {
    if (isAllActed()) {
       for(let i = 0; i < 5; i++) comp[i].turnover();
       nextTurn();
+      boss.def = false;
       if (boss.hp <= 0 && scarecrowTurn > GLOBAL_TURN-1) scarecrowTurn = GLOBAL_TURN-1;
       if (boss.hp <= 0 && GLOBAL_TURN >= 14) {
          if (!isEnd) {endGame(); isEnd = true;}
@@ -372,6 +386,13 @@ function updateAll() {
    getdiv("simulator").style.fontSize = "1rem";
    updateProgressBar(boss.hp, boss.maxHp);
    getdiv("cumulative-dmg").innerHTML = (boss.maxHp - Math.floor(boss.hp)).toLocaleString();
+   if (boss.def) {
+      document.getElementById("bossdef").style.display = "inline";
+      document.getElementById("endf").style.borderColor = "white";
+   } else {
+      document.getElementById("bossdef").style.display = "none";
+      document.getElementById("endf").style.borderColor = "transparent";
+   }
 }
 function updateCdBar(i) {
    const cdBar = getdiv(`cd${i}`);
@@ -540,4 +561,15 @@ function close_graph() {
    if (graph == undefined) return;
    graph.style.display = "none";
    document.body.classList.remove('no-scroll');
+}
+
+function cdMinus1() {
+   saveCur();
+   for(let c of comp) cdChange(c, -1);
+   updateAll();
+}
+
+function EnemyDefense() {
+   boss.def = !boss.def;
+   updateAll();
 }

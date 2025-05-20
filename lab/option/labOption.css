@@ -255,3 +255,7 @@ input[type="checkbox"]:checked + label::before {
    overflow-wrap: break-word;
    word-break: keep-all;
 }
+
+.gboss {
+   cursor:pointer;
+}

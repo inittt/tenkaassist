@@ -184,6 +184,15 @@ function goTest() {
    location.href = `${address}/selectSimulator/?list=${compIds_toTest}`
 }
 
+function goLab() {
+   for(let id of compIds_toTest) {
+      const cha = getCharacter(id);
+      if (cha == undefined || cha == null) return alert(t("캐릭터를 찾을 수 없음") + " : " + id);
+      if (!cha.ok) return alert(t("준비 중 캐릭터가 포함되어 있습니다"));
+   }
+   location.href = `${address}/lab/?list=${compIds_toTest}`
+}
+
 function setCommand(str) {
    if (str == null) return "";
    for(let i = 2; i < 101; i++) {

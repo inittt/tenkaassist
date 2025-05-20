@@ -111,7 +111,42 @@
                   <button class="s-btn" onclick="ud(4,10)">▶</button>
                </td>
             </tr>
-        </table>
+         </table>
+
+         <!---레이드 전용------------------------------>
+         <hr>
+         <label for="gboss1" class="gboss">
+            <input type="radio" id="gboss1" name="gboss" value="1">
+            <span id="gbTxt1">디스럽터가 궁극기 사용 시 타깃이 받는 데미지 15% 증가(최대 2중첩) 발동</span>
+         </label><hr>
+         <label for="gboss2" class="gboss">
+            <input type="radio" id="gboss2" name="gboss" value="2">
+            <span id="gbTxt2">1번 자리 캐릭터가 치유를 받을 시 타깃이 받는 데미지 0.5% 증가(최대 65중첩)</span>
+         </label>
+         <script>
+            const gbTxt1 = document.getElementById("gbTxt1");
+            const gbTxt2 = document.getElementById("gbTxt2");
+            let strGboss1 = {
+            "ko": "디스럽터가 궁극기 사용 시 타깃이 받는 데미지 15% 증가(최대 2중첩) 발동",
+            "en": "When Obstructer uses the ultimate skill, target takes 15% more damage (max 2 stacks)",
+            "sc": "妨碍者释放终极技能时, 目标受到的伤害提高15% (最多可叠加2层)",
+            "tc": "妨礙者施放究極技能時, 目標受到的傷害提高15% (最多可疊加2層)",
+            "jp": "デバッファーが必殺技を使用すると、ターゲットが受けるダメージが15%増加 (最大2重複)"
+            };
+
+            let strGboss2 = {
+            "ko": "1번 자리 캐릭터가 치유를 받을 시 타깃이 받는 데미지 0.5% 증가(최대 65중첩)",
+            "en": "When pos 1 is healed, target takes 0.5% more damage (max 65 stacks)",
+            "sc": "1号位角色受到治疗时, 目标受到的伤害提高0.5% (最多可叠加65层)",
+            "tc": "1號位角色受到治療時, 目標受到的傷害提高0.5% (最多可疊加65層)",
+            "jp": "1番目のキャラが回復を受けると、ターゲットが受けるダメージが0.5%増加 (最大65重複)"
+            };
+            gbTxt1.innerText = strGboss1[lang];
+            gbTxt2.innerText = strGboss2[lang];
+
+         </script>
+         <!------------------------------------------>
+
       </div>
    </div>
 </body>

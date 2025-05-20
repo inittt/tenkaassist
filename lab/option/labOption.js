@@ -138,7 +138,9 @@ function goLab() {
    for(let i = 0; i < 5; i++) {
       li.push(Number(document.getElementById(`table${i}`).textContent));
    }
-   location.href = `${address}/lab/simulator/?hp=${hp}&el=${el}&options=${options}&li=${li}&list=${chIds}&bond=${bond}&hitAll=${hitAll}`;
+   const selectedGB = document.querySelector('input[name="gboss"]:checked');
+   const gboss = selectedGB ? selectedGB.value : 0;
+   location.href = `${address}/lab/simulator/?hp=${hp}&el=${el}&options=${options}&li=${li}&list=${chIds}&bond=${bond}&hitAll=${hitAll}&gboss=${gboss}`;
 }
 
 // 잠재능력 -----------------------------
