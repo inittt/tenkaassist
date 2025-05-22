@@ -180,6 +180,13 @@ function makeBlock() {
             if (!p.compstr.some(i => exSet.has(i))) possible.push(p);
          }
       }
+      cc.innerHTML = "";
+      if (possible.length == 0) {
+         cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
+         isCalculating = false;
+         return;
+      }
+      possible.sort((a, b) => b.fit13t - a.fit13t);
       makeBlockAllDeck();
    } else {
       isCalculating = true;
@@ -291,16 +298,19 @@ function essClick(id) {
 let deckCnt, bundleCnt = 0, page = 0, isEndOfDeck = false;
 
 function makeBlockAllDeck() {
-   cc.innerHTML = "";
-
-   if (possible.length == 0) {
-      cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
-      isCalculating = false;
-      return;
-   }
-
-   possible.sort((a, b) => b.fit13t - a.fit13t);
    loadBlockAllDeck();
+
+   // 옵저버가 화면 안에 존재할 경우
+   setTimeout(() => {
+      const nextTrigger = document.getElementById('observer');
+      const rect = nextTrigger.getBoundingClientRect();
+      if (
+         rect.top < window.innerHeight &&
+         rect.bottom >= 0
+      ) {
+         makeBlockAllDeck();
+      }
+   }, 100);
 }
 
 function numToBond(num) {
@@ -385,24 +395,24 @@ function loadBlockAllDeck() {
    else _count = 0;
 }
 function makeBlockNDeck() {
-   cc.innerHTML = "";
-   
-   if (maxHeap.size() == 0) {
-      if (limit_fit < 0 && curCalc > 0) {
-         makeBlock();
-      } else {
-         cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
-         isCalculating = false;
-      }
-      return;
-   }
-
-   loadBlockNDeck(page++);
+   loadBlockNDeck();
    isCalculating = false;
+
+   // 옵저버가 화면 안에 존재할 경우
+   setTimeout(() => {
+      const nextTrigger = document.getElementById('observer');
+      const rect = nextTrigger.getBoundingClientRect();
+      if (
+         rect.top < window.innerHeight &&
+         rect.bottom >= 0
+      ) {
+         makeBlockNDeck();
+      }
+   }, 100);
 }
 
-function loadBlockNDeck(pg) {
-   const curList = getNDeckPage(pg);
+function loadBlockNDeck() {
+   const curList = getNDeckPage(page);
    for(let i = 0; i < 10; i++) {
       const bundle = curList[i];
       if (bundle == undefined || bundle == null) {
@@ -461,6 +471,7 @@ function loadBlockNDeck(pg) {
       newP.innerHTML = `<div> # ${++bundleCnt}</div><div>${formatNumber(dmgSum)}</div>`;
       cc.appendChild(deckBundle);
    }
+   page++;
 }
 
 
@@ -472,7 +483,20 @@ function backtrack0(backtrackIdx) {
    if (nextIdx > backtrackIdx) backtrackOneCycle(nextIdx);
    
    updateProgress();
-   if (backtrackCounter <= 0) makeBlockNDeck();
+   if (backtrackCounter <= 0) {
+      cc.innerHTML = "";
+   
+      if (maxHeap.size() == 0) {
+         if (limit_fit < 0 && curCalc > 0) {
+            makeBlock();
+         } else {
+            cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
+            isCalculating = false;
+         }
+         return;
+      }
+      makeBlockNDeck();
+   }
    else setTimeout(() => backtrack0(backtrackIdx+1), 16);
 }
 
