@@ -66,6 +66,21 @@ function getComps(page) {
       makeBlock(res.data.content, sort);
       isLoading = false;
       document.getElementById('nextTrigger').innerHTML = t(`더이상 조합이 없습니다`);
+
+      // 옵저버가 화면 안에 존재할 경우
+      setTimeout(() => {
+         const nextTrigger = document.getElementById('nextTrigger');
+         const rect = nextTrigger.getBoundingClientRect();
+         if (
+            rect.top < window.innerHeight &&
+            rect.bottom >= 0 &&
+            !isLoading
+         ) {
+            isLoading = true;
+            getComps(page++);
+         }
+      }, 100);
+
    }).catch(e => {
       isLoading = false;
       console.log(t("데이터 로드 실패"), e);
