@@ -180,6 +180,13 @@ function makeBlock() {
             if (!p.compstr.some(i => exSet.has(i))) possible.push(p);
          }
       }
+      cc.innerHTML = "";
+      if (possible.length == 0) {
+         cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
+         isCalculating = false;
+         return;
+      }
+      possible.sort((a, b) => b.fit13t - a.fit13t);
       makeBlockAllDeck();
    } else {
       isCalculating = true;
@@ -291,15 +298,6 @@ function essClick(id) {
 let deckCnt, bundleCnt = 0, page = 0, isEndOfDeck = false;
 
 function makeBlockAllDeck() {
-   cc.innerHTML = "";
-
-   if (possible.length == 0) {
-      cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
-      isCalculating = false;
-      return;
-   }
-
-   possible.sort((a, b) => b.fit13t - a.fit13t);
    loadBlockAllDeck();
 
    // 옵저버가 화면 안에 존재할 경우
@@ -310,7 +308,7 @@ function makeBlockAllDeck() {
          rect.top < window.innerHeight &&
          rect.bottom >= 0
       ) {
-         loadBlockAllDeck();
+         makeBlockAllDeck();
       }
    }, 100);
 }
@@ -397,18 +395,6 @@ function loadBlockAllDeck() {
    else _count = 0;
 }
 function makeBlockNDeck() {
-   cc.innerHTML = "";
-   
-   if (maxHeap.size() == 0) {
-      if (limit_fit < 0 && curCalc > 0) {
-         makeBlock();
-      } else {
-         cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
-         isCalculating = false;
-      }
-      return;
-   }
-
    loadBlockNDeck();
    isCalculating = false;
 
@@ -420,7 +406,7 @@ function makeBlockNDeck() {
          rect.top < window.innerHeight &&
          rect.bottom >= 0
       ) {
-         loadBlockNDeck();
+         makeBlockNDeck();
       }
    }, 100);
 }
@@ -497,7 +483,20 @@ function backtrack0(backtrackIdx) {
    if (nextIdx > backtrackIdx) backtrackOneCycle(nextIdx);
    
    updateProgress();
-   if (backtrackCounter <= 0) makeBlockNDeck();
+   if (backtrackCounter <= 0) {
+      cc.innerHTML = "";
+   
+      if (maxHeap.size() == 0) {
+         if (limit_fit < 0 && curCalc > 0) {
+            makeBlock();
+         } else {
+            cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
+            isCalculating = false;
+         }
+         return;
+      }
+      makeBlockNDeck();
+   }
    else setTimeout(() => backtrack0(backtrackIdx+1), 16);
 }
 
