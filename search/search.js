@@ -91,6 +91,8 @@ function getComps() {
       if (!res.success) return alert(res.msg);
       makeBlock(res.data);
 
+      page++;
+
       // 옵저버가 화면 안에 존재할 경우
       setTimeout(() => {
          const nextTrigger = document.getElementById('nextTrigger');
@@ -101,7 +103,7 @@ function getComps() {
             !isLoading
          ) {
             isLoading = true;
-            getComps(++page);
+            getComps();
          }
       }, 100);
 
@@ -164,7 +166,6 @@ function makeBlock(curData) {
    if (cnt == 0) document.getElementById('compcontainer').innerHTML = `
       <div class="block">${t("검색결과 없음")}</div>
    `;
-   page++;
 }
 
 function rankOrBond1(ranking, dmg13_1) {

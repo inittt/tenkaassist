@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function() {
          if ("13턴딜(1)" === this.value) sort = 4;
          
          page = 0; cnt = 1; isLoading = true;
-         getComps(page++);
+         getComps();
       });
    });
 
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function() {
       entries.forEach(entry => {
          if (entry.isIntersecting && !isLoading) {
             isLoading = true;
-            getComps(page++);
+            getComps();
          }
       });
    }, {root: null, rootMargin: '0px', threshold: 0.5, once: false});
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function() {
    loadAllCompCnt();
 });
 
-function getComps(page) {
+function getComps() {
    request(`${server}/comps/all/${sort}/${page}`, {
       method: "GET",
       includeJwtToken: false,
@@ -67,6 +67,8 @@ function getComps(page) {
       isLoading = false;
       document.getElementById('nextTrigger').innerHTML = t(`더이상 조합이 없습니다`);
 
+      page++;
+      
       // 옵저버가 화면 안에 존재할 경우
       setTimeout(() => {
          const nextTrigger = document.getElementById('nextTrigger');
@@ -77,7 +79,7 @@ function getComps(page) {
             !isLoading
          ) {
             isLoading = true;
-            getComps(++page);
+            getComps();
          }
       }, 100);
 
