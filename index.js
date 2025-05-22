@@ -77,7 +77,7 @@ function getComps(page) {
             !isLoading
          ) {
             isLoading = true;
-            getComps(page++);
+            getComps(++page);
          }
       }, 100);
 
