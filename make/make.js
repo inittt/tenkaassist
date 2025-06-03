@@ -310,7 +310,7 @@ function makeBlockAllDeck() {
       ) {
          makeBlockAllDeck();
       }
-   }, 100);
+   }, 500);
 }
 
 function numToBond(num) {

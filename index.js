@@ -81,7 +81,7 @@ function getComps() {
             isLoading = true;
             getComps();
          }
-      }, 100);
+      }, 500);
 
    }).catch(e => {
       isLoading = false;

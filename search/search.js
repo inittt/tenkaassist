@@ -105,7 +105,7 @@ function getComps() {
             isLoading = true;
             getComps();
          }
-      }, 100);
+      }, 500);
 
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
