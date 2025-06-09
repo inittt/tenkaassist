@@ -102,7 +102,7 @@ function getBondList() {
 // 시작 버튼 누를시
 function startSimulator() {
    if (selected.length != 5) return alert(t("5개의 캐릭터를 선택해주세요"));
-   location.href = `${address}/simulator/?list=${selected}&bond=${getBondList()}`;
+   location.href = `${address}/simulator2/?list=${selected}&bond=${getBondList()}`;
 }
 
 // 체크 버튼 누를시
