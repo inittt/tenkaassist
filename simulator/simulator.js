@@ -185,6 +185,7 @@ function endAct() {
    if (isAllActed()) {
       for(let i = 0; i < 5; i++) comp[i].turnover();
       nextTurn();
+      boss.def = false;
       if (boss.hp <= 0 && scarecrowTurn > GLOBAL_TURN-1) scarecrowTurn = GLOBAL_TURN-1;
       if (boss.hp <= 0 && GLOBAL_TURN >= 14) {
          if (!isEnd) {endGame(); isEnd = true;}
@@ -320,6 +321,13 @@ function updateAll() {
    getdiv("simulator").style.fontSize = "1rem";
    updateProgressBar(boss.hp, boss.maxHp);
    getdiv("cumulative-dmg").innerHTML = (boss.maxHp - Math.floor(boss.hp)).toLocaleString();
+   if (boss.def) {
+      document.getElementById("bossdef").style.display = "inline";
+      document.getElementById("endf").style.borderColor = "white";
+   } else {
+      document.getElementById("bossdef").style.display = "none";
+      document.getElementById("endf").style.borderColor = "transparent";
+   }
 }
 function updateCdBar(i) {
    const cdBar = getdiv(`cd${i}`);
