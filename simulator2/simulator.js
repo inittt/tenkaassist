@@ -43,20 +43,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
       updateGuide();
    });
-   // 가이드 표시를 위한 행동순서 로드
-   request(`${server}/comps/getCompByCompstr/${chIds}`, {
-      method: "GET",
-      includeJwtToken: false,
-   }).then(response => {
-      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
-      return response.json();
-   }).then(res => {
-      if (!res.success || res.data == null) return;
-      if (res.data.length > 10) guideBtn.style.display = 'block';
-      commandList = extractActions(res.data);
-   }).catch(e => {
-      console.log(t("데이터 로드 실패"), e);
-   })
 });
 
 function extractActions(data) {
@@ -233,47 +219,11 @@ function endGame() {
 }
 
 function saveBond1() {
-   const cmd = [];
-   for(let i = 0; i < 13*5; i++) {
-      if (i%5 == 0) {
-         if (Math.floor(i/5)+1 < 10) cmd.push(" ");
-         cmd.push(`${Math.floor(i/5)+1}턴 : `);
-      }
-      cmd.push(command[i]);
-      cmd.push((i+1)%5 == 0 ? "\n" : " > "); 
-   }
-   const command_tmp = cmd.join("");
-
-
-   const formData = new FormData();
-   formData.append("name", `${comp[0].name}덱`);
-   formData.append("compstr", chIds);
-   formData.append("dmg13", dmg13);
-   formData.append("command", command_tmp);
-   request(`${server}/comps/setPower1`, {
-      method: "POST",
-      body: formData,
-   }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
-      return response.json();
-   }).then(res => {}).catch(e => {})
+   
 }
 
 function saveBond5(command_tmp) {
-   if (boss.maxHp != HP_MAX) return;
-   const formData = new FormData();
-   formData.append("name", `${comp[0].name}덱`);
-   formData.append("compstr", chIds);
-   formData.append("dmg13", dmg13);
-   formData.append("scarecrow", scarecrowTurn);
-   formData.append("command", command_tmp);
-   request(`${server}/comps/setPower`, {
-      method: "POST",
-      body: formData
-   }).then(response => {
-      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
-      return response.json();
-   }).then(res => {}).catch(e => {})
+   
 }
 
 function isAllActed() {
