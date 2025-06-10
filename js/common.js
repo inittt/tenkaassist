@@ -262,6 +262,7 @@ const translate = {
    "받지뎀" : {en : "periodic dmg taken", sc : "受到持续伤害", tc : "受到持續傷害", jp : "受ける持続ダメージ増加"},
    "속상감" : {en : "Decrease attribute buffs/debuffs by", sc : "减少属性相剋效果", tc : "減少屬性相剋效果", jp : "属性相性の低下"},
    "가지증" : {en: "Increase DoT output", sc: "持续伤害增加", tc: "持續傷害增加", jp : "加える持続ダメージ増加"},
+   "방경감" : {en : "Reduce defense effect", sc : "降低防御效果", tc : "降低防禦效果", jp : "防御効果を減少"},
 
    "버프상세" : {en : "Buff Details", sc : "状态详情", tc : "狀態詳情", jp : "バフ詳細"},
    "의" : {en : "'s", sc : "的", tc : "的", jp : "の"},
@@ -616,6 +617,10 @@ const translate = {
    "유니스" : {en : "Eunice", sc : "拉尤", tc : "拉尤", jp : "ユニス"},
    "더피" : {en : "MomDaphne", sc : "兔妈", tc : "兔媽", jp : "ダフィー"},
    "새바키" : {en : "W.Tsubaki", sc : "妻狐", tc : "妻狐", jp : "妖艶な人妻 椿"},
+   "청이블" : {en : "*Iblis", sc : "*夏伊", tc : "*夏伊", jp : "真夏の清涼 イブリース"},
+   "수릴리" : {en : "*Evie", sc : "*驯鹿", tc : "*馴鹿", jp : "夏の日 リリー"},
+   "수놀라" : {en : "*Noma", sc : "*狂犬", tc : "*狂犬", jp : "夏の日 ノルディ"},
+   "포르네" : {en : "Forneus", sc : "芙纽丝", tc : "芙紐絲", jp : "フォルネ"},
 
 
    "아이카" : {en : "Aiko", sc : "艾可", tc : "艾可", jp : "アイカ"},
