@@ -323,10 +323,8 @@ function updateAll() {
    getdiv("cumulative-dmg").innerHTML = (boss.maxHp - Math.floor(boss.hp)).toLocaleString();
    if (boss.def) {
       document.getElementById("bossdef").style.display = "inline";
-      document.getElementById("endf").style.borderColor = "white";
    } else {
       document.getElementById("bossdef").style.display = "none";
-      document.getElementById("endf").style.borderColor = "transparent";
    }
 }
 function updateCdBar(i) {
