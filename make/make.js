@@ -299,18 +299,6 @@ let deckCnt, bundleCnt = 0, page = 0, isEndOfDeck = false;
 
 function makeBlockAllDeck() {
    loadBlockAllDeck();
-
-   // 옵저버가 화면 안에 존재할 경우
-   setTimeout(() => {
-      const nextTrigger = document.getElementById('observer');
-      const rect = nextTrigger.getBoundingClientRect();
-      if (
-         rect.top < window.innerHeight &&
-         rect.bottom >= 0
-      ) {
-         makeBlockAllDeck();
-      }
-   }, 500);
 }
 
 function numToBond(num) {
