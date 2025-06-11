@@ -183,6 +183,7 @@ const translate = {
    "공지" : {en : "Notify", sc : "提醒", tc : "提醒", jp : "お知らせ"},
    "로그아웃" : {en : "LogOut", sc : "登出", tc : "登出", jp : "ログアウト"},
    "로그인" : {en : "LogIn", sc : "登入", tc : "登入", jp : "ログイン"},
+   "서버와 버전이 다릅니다. 새로고침 혹은 캐시를 삭제해 주세요." : {en : "The server version is different. Please refresh or clear your cache.", sc : "服务器版本不同。请刷新或清除缓存.", tc : "伺服器版本不同。請重新整理或清除快取.", jp : "サーバーのバージョンが異なります。リフレッシュするかキャッシュをクリアしてください."},
 
    // 조합목록 List
    "홈" : {en : "Home", sc : "首页", tc : "首頁", jp : "ホーム"},

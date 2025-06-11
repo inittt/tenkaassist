@@ -59,6 +59,10 @@ document.addEventListener('DOMContentLoaded', function() {
    request(`${server}/users/me`, {
       method: "GET",
    }).then(response => {
+      if (response.status === 403) {
+         alert(t("서버와 버전이 다릅니다. 새로고침 혹은 캐시를 삭제해 주세요."));
+         throw new Error('버전 불일치로 인한 접근 거부');
+      }
       if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
       return response.json();
    }).then(res => {
