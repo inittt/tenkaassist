@@ -11,6 +11,13 @@ const _version = '1.0.0';
 // location.href = `${address}/serverFix/`;
 //------------------------------------------
 
+// 강제 새로고침
+const isRefresh = localStorage.getItem("refresh") == "1";
+if (isRefresh) {
+   localStorage.setItem("refresh", "1");
+   location.reload();
+}
+
 
 // 새로운 아이콘을 추가
 function setFavicon(url) {
@@ -32,23 +39,33 @@ function setFavicon(url) {
 var faviconUrl = `${address}/images/icons/main.webp`;
 setFavicon(faviconUrl);
 
-function request(url, options) {
-   // 기본 헤더
-   const defaultOptions = {
-      headers: {}
+function request(url, options = {}) {
+   // 우리가 기본으로 넣고 싶은 헤더
+   const defaultHeaders = {
+      version: '1.0.0'
    };
 
    // jwtToken 조건부 추가
-   if (options && options.includeJwtToken !== false) {
-       defaultOptions.headers.jwtToken = localStorage.getItem('jwtToken');
+   if (options.includeJwtToken !== false) {
+      defaultHeaders.jwtToken = localStorage.getItem('jwtToken');
    }
 
-   // URL을 정리 (이중 슬래시 처리)
+   // 기존 헤더와 병합 (덮어쓰지 않도록)
+   const mergedHeaders = {
+      ...defaultHeaders,
+      ...(options.headers || {})
+   };
+
+   // URL 정리
    url = new URL(url).toString();
 
-   // 나머지 options와 합치기
-   options = { ...defaultOptions, ...options };
-   return fetch(url, options);
+   // 최종 옵션 구성
+   const finalOptions = {
+      ...options,
+      headers: mergedHeaders
+   };
+
+   return fetch(url, finalOptions);
 }
 
 // js, css 로드
