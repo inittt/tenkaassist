@@ -142,10 +142,10 @@ const chJSON = { data : [
 {ok : true, id : 10168, rarity : 3, po:1, hp:1061589, atk:254214, cd:4, atkMag:0, ultMag:0, fullname : "치어리더장 유니스", name : "유니스", element : 2, role : 1, hpUp : 50},
 {ok : true, id : 10169, rarity : 3, po:2, hp:1104991, atk:244471, cd:4, atkMag:0, ultMag:397, fullname : "무한성욕의 유부녀 더피", name : "더피", element : 4, role : 4, hpUp : 40},
 {ok : true, id : 10170, rarity : 3, po:1, hp:1026601, atk:263072, cd:4, atkMag:100, ultMag:200, fullname : "매혹적인 새댁 츠바키", name : "새바키", element : 1, role : 0, hpUp : 40},
-// {ok : true, id : 10171, rarity : 3, po:1, hp:893293, atk:302488, cd:4, atkMag:125, ultMag:510, fullname : "청량한 여름 이블리스", name : "청이블", element : 2, role : 0, hpUp : 40},
-// {ok : true, id : 10172, rarity : 3, po:1, hp:1136436, atk:237384, cd:4, atkMag:0, ultMag:0, fullname : "여름날 릴리", name : "수릴리", element : 3, role : 1, hpUp : 40},
-// {ok : true, id : 10173, rarity : 3, po:1, hp:1039887, atk:259528, cd:3, atkMag:100, ultMag:396.9, fullname : "여름날 놀라이티", name : "수놀라", element : 1, role : 0, hpUp : 40},
-// {ok : true, id : 10174, rarity : 3, po:3, hp:1512443, atk:178481, cd:4, atkMag:100, ultMag:200, fullname : "노도의 마상어 포르네우스", name : "포르네", element : 4, role : 2, hpUp : 0},
+{ok : true, id : 10171, rarity : 3, po:1, hp:893293, atk:302488, cd:4, atkMag:125, ultMag:510, fullname : "청량한 여름 이블리스", name : "청이블", element : 2, role : 0, hpUp : 40},
+{ok : true, id : 10172, rarity : 3, po:1, hp:1136436, atk:237384, cd:4, atkMag:0, ultMag:0, fullname : "여름날 릴리", name : "수릴리", element : 3, role : 1, hpUp : 40},
+{ok : true, id : 10173, rarity : 3, po:1, hp:1039887, atk:259529, cd:3, atkMag:100, ultMag:396.9, fullname : "여름날 놀라이티", name : "수놀라", element : 1, role : 0, hpUp : 40},
+{ok : true, id : 10174, rarity : 3, po:3, hp:1512443, atk:178481, cd:4, atkMag:100, ultMag:200, fullname : "노도의 마상어 포르네우스", name : "포르네", element : 4, role : 2, hpUp : 0},
 
 /*
       element  role     rarity
