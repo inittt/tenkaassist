@@ -33,24 +33,35 @@ var faviconUrl = `${address}/images/icons/main.webp`;
 setFavicon(faviconUrl);
 
 function request(url, options) {
-   const defaultOptions = {
-       headers: {
-         version: _version
-       }
+   // 기본 헤더
+   const defaultHeaders = {
+      version: _version
    };
 
-   // jwtToken이 필요할 경우에만 헤더에 추가
-   if (options && options.includeJwtToken !== false) {
-       defaultOptions.headers.jwtToken = localStorage.getItem('jwtToken');
+   // jwtToken 조건부 추가
+   if (options.includeJwtToken !== false) {
+      const token = localStorage.getItem('jwtToken');
+      if (token) {
+         defaultHeaders.jwtToken = token;
+      }
    }
+
+   // options.headers가 있으면 병합, 없으면 defaultHeaders 사용
+   const mergedHeaders = {
+      ...defaultHeaders,
+      ...(options.headers || {})
+   };
+
+   // 최종 옵션에 병합된 headers 넣기
+   const fetchOptions = {
+      ...options,
+      headers: mergedHeaders
+   };
 
    // URL을 정리 (이중 슬래시 처리)
    url = new URL(url).toString();
 
-   // 나머지 options와 합치기
-   options = { ...defaultOptions, ...options };
-
-   return fetch(url, options); // 원본 fetch 함수를 호출합니다.
+   return fetch(url, fetchOptions);
 }
 
 // js, css 로드
