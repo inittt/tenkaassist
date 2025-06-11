@@ -5,7 +5,7 @@ const server = "https://port-0-tenkafuma-assistant-server-1272llx2xidhk.sel5.clo
 const noImg = `${address}/images/default.jpg`;
 
 // 버전 설정 (서버와 다르면 응답없음)
-const _version = '1.0.0';
+const _version = '2.0.0';
 
 // 사이트 점검시 ---------------------------------
 // location.href = `${address}/serverFix/`;
