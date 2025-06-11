@@ -4,9 +4,13 @@ const address = "https://inittt.github.io/tenkaassist"
 const server = "https://port-0-tenkafuma-assistant-server-1272llx2xidhk.sel5.cloudtype.app"
 const noImg = `${address}/images/default.jpg`;
 
+// 버전 설정 (서버와 다르면 응답없음)
+const _version = '1.0.0';
+
 // 사이트 점검시 ---------------------------------
 location.href = `${address}/serverFix/`;
 //------------------------------------------
+
 
 // 새로운 아이콘을 추가
 function setFavicon(url) {
@@ -30,7 +34,9 @@ setFavicon(faviconUrl);
 
 function request(url, options) {
    const defaultOptions = {
-       headers: {}
+       headers: {
+         version: _version
+       }
    };
 
    // jwtToken이 필요할 경우에만 헤더에 추가
