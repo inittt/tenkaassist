@@ -8,7 +8,7 @@ const noImg = `${address}/images/default.jpg`;
 const _version = '1.0.0';
 
 // 사이트 점검시 ---------------------------------
-location.href = `${address}/serverFix/`;
+// location.href = `${address}/serverFix/`;
 //------------------------------------------
 
 
