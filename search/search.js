@@ -80,7 +80,7 @@ function getComps() {
    if (deckName != null) formData.append("deckName", deckName);
    formData.append("page", page);
 
-   request(`${server}/comps/search2`, {
+   request(`${server}/comps/search`, {
       method: "POST",
       includeJwtToken: false,
       body: formData
