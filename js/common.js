@@ -56,6 +56,8 @@ function request(url, options = {}) {
       ...(options.headers || {})
    };
 
+   console.log('Request headers:', mergedHeaders);
+
    // URL 정리
    url = new URL(url).toString();
 
