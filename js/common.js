@@ -32,7 +32,7 @@ function setFavicon(url) {
 var faviconUrl = `${address}/images/icons/main.webp`;
 setFavicon(faviconUrl);
 
-function request(url, options) {
+function request(url, options = {}) {
    // 기본 헤더
    const defaultHeaders = {
       version: _version
