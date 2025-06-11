@@ -59,10 +59,6 @@ document.addEventListener('DOMContentLoaded', function() {
    request(`${server}/users/me`, {
       method: "GET",
    }).then(response => {
-      if (response.status === 403) {
-         alert("incorrect version"); // 또는 원하는 메시지
-         throw new Error('403 Forbidden');
-      }
       if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
       return response.json();
    }).then(res => {

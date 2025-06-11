@@ -4,8 +4,7 @@ const address = "https://inittt.github.io/tenkaassist"
 const server = "https://port-0-tenkafuma-assistant-server-1272llx2xidhk.sel5.cloudtype.app"
 const noImg = `${address}/images/default.jpg`;
 
-// 버전 설정 (서버와 다르면 응답없음)
-const _version = '1.0.0';
+const _version = "1";
 
 // 사이트 점검시 ---------------------------------
 // location.href = `${address}/serverFix/`;
@@ -32,35 +31,24 @@ function setFavicon(url) {
 var faviconUrl = `${address}/images/icons/main.webp`;
 setFavicon(faviconUrl);
 
-function request(url, options = {}) {
+function request(url, options) {
    // 우리가 기본으로 넣고 싶은 헤더
-   const defaultHeaders = {
-      version: '1.0.0'
+   const defaultOptions = {
+      headers: {}
    };
 
    // jwtToken 조건부 추가
-   if (options.includeJwtToken !== false) {
-      defaultHeaders.jwtToken = localStorage.getItem('jwtToken');
+   if (options && options.includeJwtToken !== false) {
+       defaultOptions.headers.jwtToken = localStorage.getItem('jwtToken');
    }
-
-   // 기존 헤더와 병합 (덮어쓰지 않도록)
-   const mergedHeaders = {
-      ...defaultHeaders,
-      ...(options.headers || {})
-   };
-
-   console.log('Request headers:', mergedHeaders);
 
    // URL 정리
    url = new URL(url).toString();
 
-   // 최종 옵션 구성
-   const finalOptions = {
-      ...options,
-      headers: mergedHeaders
-   };
+   // 나머지 options와 합치기
+   options = { ...defaultOptions, ...options };
 
-   return fetch(url, finalOptions);
+   return fetch(url, options);
 }
 
 // js, css 로드
