@@ -32,36 +32,23 @@ function setFavicon(url) {
 var faviconUrl = `${address}/images/icons/main.webp`;
 setFavicon(faviconUrl);
 
-function request(url, options = {}) {
+function request(url, options) {
    // 기본 헤더
-   const defaultHeaders = {
-      version: _version
+   const defaultOptions = {
+      headers: {}
    };
 
    // jwtToken 조건부 추가
-   if (options.includeJwtToken !== false) {
-      const token = localStorage.getItem('jwtToken');
-      if (token) {
-         defaultHeaders.jwtToken = token;
-      }
+   if (options && options.includeJwtToken !== false) {
+       defaultOptions.headers.jwtToken = localStorage.getItem('jwtToken');
    }
-
-   // options.headers가 있으면 병합, 없으면 defaultHeaders 사용
-   const mergedHeaders = {
-      ...defaultHeaders,
-      ...(options.headers || {})
-   };
-
-   // 최종 옵션에 병합된 headers 넣기
-   const fetchOptions = {
-      ...options,
-      headers: mergedHeaders
-   };
 
    // URL을 정리 (이중 슬래시 처리)
    url = new URL(url).toString();
 
-   return fetch(url, fetchOptions);
+   // 나머지 options와 합치기
+   options = { ...defaultOptions, ...options };
+   return fetch(url, options);
 }
 
 // js, css 로드
@@ -194,8 +181,7 @@ const translate = {
    "공지" : {en : "Notify", sc : "提醒", tc : "提醒", jp : "お知らせ"},
    "로그아웃" : {en : "LogOut", sc : "登出", tc : "登出", jp : "ログアウト"},
    "로그인" : {en : "LogIn", sc : "登入", tc : "登入", jp : "ログイン"},
-   "서버와 버전이 다릅니다. 새로고침 혹은 캐시를 삭제해 주세요." : {en : "The server version is different. Please refresh or clear your cache.", sc : "服务器版本不同。请刷新或清除缓存.", tc : "伺服器版本不同。請重新整理或清除快取.", jp : "サーバーのバージョンが異なります。リフレッシュするかキャッシュをクリアしてください."},
-
+   
    // 조합목록 List
    "홈" : {en : "Home", sc : "首页", tc : "首頁", jp : "ホーム"},
    "조합" : {en : "Team", sc : "队伍", tc : "隊伍", jp : "チーム"},
