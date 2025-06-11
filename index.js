@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function getComps() {
-   request(`${server}/comps/all/${sort}/${page}`, {
+   request(`${server}/comps/getAll/${sort}/${page}`, {
       method: "GET",
       includeJwtToken: false,
    }).then(response => {

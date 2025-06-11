@@ -385,18 +385,6 @@ function loadBlockAllDeck() {
 function makeBlockNDeck() {
    loadBlockNDeck();
    isCalculating = false;
-
-   // 옵저버가 화면 안에 존재할 경우
-   setTimeout(() => {
-      const nextTrigger = document.getElementById('observer');
-      const rect = nextTrigger.getBoundingClientRect();
-      if (
-         rect.top < window.innerHeight &&
-         rect.bottom >= 0
-      ) {
-         makeBlockNDeck();
-      }
-   }, 100);
 }
 
 function loadBlockNDeck() {
