@@ -79,6 +79,7 @@ function autoCalc(idList, command, bondList, boss_element = -1) {
       if (isAllActed()) {
          for(let i = 0; i < 5; i++) comp[i].turnover();
          nextTurn();
+         boss.def = false;
          for(let i = 0; i < 5; i++) comp[i].turnstart();
       }
    }
