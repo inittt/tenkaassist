@@ -15,9 +15,9 @@ function autoCalc(idList, command, bondList, boss_element = -1) {
 
       // init
       GLOBAL_TURN = 1; comp = []; dmg13 = 0;
-      boss.hp = boss.maxHp;
+      boss.hp = boss.maxHp; boss.def = false;
       boss.buff = []; boss.li = []; alltimeFunc.length = 0;
-      buff_ex.length = 0; buff_ex.push("도트뎀", "제거");
+      buff_ex.length = 0;
 
       for(const id of compIds) {
          const tmp = chJSON.data.filter(ch => ch.id === id)[0];
