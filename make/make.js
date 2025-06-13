@@ -373,7 +373,7 @@ function loadBlockAllDeck() {
       compblock.style.width = "100%";
       compblock.innerHTML = stringArr.join("");
       compblock.addEventListener("click", function() {
-         window.open(`${address}/comp/?id=${id}`, '_blank');
+         window.open(`${address}/comp/?id=${id}&bond=${makeBondList(compstr)}`, '_blank');
       });
       cc.appendChild(compblock);
       _count++;
@@ -382,6 +382,13 @@ function loadBlockAllDeck() {
    if (_count < 10) loadBlockAllDeck();
    else _count = 0;
 }
+
+function makeBondList(complist) {
+   const _bd = [];
+   for(const cid of complist) _bd.push(bondMap.get(cid));
+   return _bd;
+}
+
 function makeBlockNDeck() {
    loadBlockNDeck();
    isCalculating = false;
@@ -441,7 +448,9 @@ function loadBlockNDeck() {
          let compblock = document.createElement('div');
          compblock.classList.add("block", "hoverblock");
          compblock.innerHTML = stringArr.join("");
-         compblock.addEventListener("click", function() {window.open(`${address}/comp/?id=${id}`, '_blank');});
+         compblock.addEventListener("click", function() {
+            window.open(`${address}/comp/?id=${id}&bond=${makeBondList(compstr)}`, '_blank');
+         });
          deckBundle.appendChild(compblock);
       }
       newP.innerHTML = `<div> # ${++bundleCnt}</div><div>${formatNumber(dmgSum)}</div>`;
