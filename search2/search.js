@@ -72,6 +72,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function getComps() {
+   clickLoadOnoff(false);
    const formData = new FormData();
    formData.append("sort", sort);
    if (chIds != null) formData.append("chIds", chIds);
@@ -91,7 +92,7 @@ function getComps() {
       makeBlock(res.data);
       page++;
       isLoading = false;
-      if (!isEnd) clickLoadOnoff(true);
+      clickLoadOnoff(!isEnd);
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
    })
@@ -176,5 +177,4 @@ function clickLoadOnoff(bool) {
 function clickLoad() {
    if (isLoading) return;
    getComps();
-   clickLoadOnoff(false);
 }
