@@ -91,7 +91,7 @@ function getComps() {
       makeBlock(res.data);
       page++;
       isLoading = false;
-      clickLoadOnoff(true);
+      if (!isEnd) clickLoadOnoff(true);
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
    })
@@ -103,7 +103,6 @@ function makeBlock(curData) {
       const comp = curData[i];
       if (comp == undefined || comp == null) {
          isEnd = true;
-         clickLoadOnoff(false);
          break;
       }
       const stringArr = [];
