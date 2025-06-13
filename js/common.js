@@ -201,7 +201,7 @@ const translate = {
    "데이터 로드 실패" : {en : "Data load failed", sc : "数据读取失败", tc : "數據讀取失敗", jp : "データロードに失敗しました"},
    "더이상 조합이 없습니다" : {en : "There are no more teams", sc : "没有更多队伍了", tc : "沒有更多隊伍了", jp : "これ以上のチームはありません"},
    "덱개수 로드 실패" : {en : "Count load failed", sc : "总数读取失败", tc : "總數讀取失敗", jp : "チーム数のロードに失敗しました"},
-
+   "클릭하여 로드" : {en : "Click to load", sc : "点击加载", tc : "點擊加載", jp : "クリックして読み込む"},
 
    // 시뮬레이터 선택 selectSimulator
    "캐릭선택" : {en : "Select", sc : "选择", tc : "選擇", jp : "選択"}, // select characters

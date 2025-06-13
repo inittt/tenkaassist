@@ -326,6 +326,7 @@ function isSatisfied(cls) {
 
 let _count = 0;
 function loadBlockAllDeck() {
+   clickLoadOnoff(false);
    for(let i = page*10; i < page*10+10; i++) {
       const comp = possible[i];
       if (comp == undefined || comp == null) {
@@ -337,6 +338,7 @@ function loadBlockAllDeck() {
          compblock.innerHTML = t("더이상 조합이 없습니다");
          cc.appendChild(compblock);
          _count = 0;
+         clickLoadOnoff(false);
          return;
       }
       if (!isSatisfied([comp.compstr])) continue;
@@ -381,6 +383,7 @@ function loadBlockAllDeck() {
    page++;
    if (_count < 10) loadBlockAllDeck();
    else _count = 0;
+   clickLoadOnoff(true);
 }
 
 function makeBondList(complist) {
@@ -395,6 +398,7 @@ function makeBlockNDeck() {
 }
 
 function loadBlockNDeck() {
+   clickLoadOnoff(false);
    const curList = getNDeckPage(page);
    for(let i = 0; i < 10; i++) {
       const bundle = curList[i];
@@ -405,6 +409,7 @@ function loadBlockNDeck() {
          deckBundle.classList.add('deckBundle');
          deckBundle.innerHTML = t("더이상 조합이 없습니다");
          cc.appendChild(deckBundle);
+         clickLoadOnoff(false);
          return;
       }
 
@@ -457,6 +462,7 @@ function loadBlockNDeck() {
       cc.appendChild(deckBundle);
    }
    page++;
+   clickLoadOnoff(true);
 }
 
 
@@ -622,3 +628,14 @@ function getTopCombinationsByPage(itemsPerPage = 10) {
 }
 
 const getNDeckPage = getTopCombinationsByPage(10);
+
+function clickLoadOnoff(bool) {
+   const _btn = document.getElementById("clickLoad");
+   _btn.style.visibility = bool ? "visible" : "hidden";
+}
+function clickLoad() {
+   if (page > 0 && !isEndOfDeck) {
+      if (mod == 0) loadBlockAllDeck();
+      else loadBlockNDeck(page++);
+   }
+}
