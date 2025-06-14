@@ -54,6 +54,8 @@
          </div>
       </div>
       <div class="target" id="observer"></div>
+      <br><br>
+      <button id="clickLoad" class="block hoverblock pointer" style="visibility: hidden; color:white;" onclick="clickLoad()">클릭하여 로드</button>
    </div>
 </body>
 <script>
@@ -68,5 +70,6 @@
    document.getElementById("essText").innerText = t("필수/제외 캐릭터");
    document.getElementById("defaultBox").innerText = t("구속에 따른 데미지 계산 중...");
    document.getElementById("noti-txt").innerText = t("데이터는 KST기준 6시간마다 갱신됩니다");
+   document.getElementById("clickLoad").innerText = t("클릭하여 로드");
 </script>
 </html>

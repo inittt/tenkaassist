@@ -40,9 +40,7 @@ document.addEventListener("DOMContentLoaded", function() {
    const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && !isLoading) {
          if (page == 0 || isEnd) return;
-         isLoading = true;
          getComps();
-         isLoading = false;
       }
    });
 
@@ -73,6 +71,8 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function getComps() {
+   clickLoadOnoff(false);
+   isLoading = true;
    const formData = new FormData();
    formData.append("sort", sort);
    if (chIds != null) formData.append("chIds", chIds);
@@ -90,9 +90,9 @@ function getComps() {
    }).then(res => {
       if (!res.success) return alert(res.msg);
       makeBlock(res.data);
-
       page++;
-
+      isLoading = false;
+      clickLoadOnoff(!isEnd);
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
    })
@@ -102,7 +102,10 @@ let cnt = 0, isEnd = false;
 function makeBlock(curData) {
    for(let i = 0; i < 20; i++) {
       const comp = curData[i];
-      if (comp == undefined || comp == null) {isEnd = true; break;}
+      if (comp == undefined || comp == null) {
+         isEnd = true;
+         break;
+      }
       const stringArr = [];
       cnt++;
       const id = comp.id, name = comp.name, compstr = comp.compstr;
@@ -165,4 +168,13 @@ function init() {
    rds.forEach(function(radio) {radio.checked = false;});
    document.getElementById('option1').checked = true;
 
+}
+
+function clickLoadOnoff(bool) {
+   const _btn = document.getElementById("clickLoad");
+   _btn.style.visibility = bool ? "visible" : "hidden";
+}
+function clickLoad() {
+   if (isLoading) return;
+   getComps();
 }

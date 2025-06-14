@@ -10,6 +10,13 @@ if (ch_ids != null) {
    for(let i of ch_idList) selected.push(i);
 }
 
+let bondParam = params.get('bond'), _bond = null;
+if (bondParam === null) _bond = null;
+else {
+  let items = bondParam.split(",").map(s => Number(s.trim()));
+  _bond = items.every(num => !isNaN(num) && num >= 1 && num <= 5) ? items : null;
+}
+
 const chJsonList = chJSON.data.slice();
 document.addEventListener("DOMContentLoaded", function() {
    const searchInput = document.getElementById('searchInput');
@@ -28,6 +35,19 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
       });
       const radios = document.querySelectorAll(`.dropdown-content input[name='b${i}']`);
+      // _bond 값 있으면 초기값으로 라디오 버튼 세팅
+      if (_bond && _bond[i] !== undefined) {
+         radios.forEach(function(option) {
+            if (Number(option.value) === _bond[i]) {
+               option.checked = true;
+               dropdownBtn.innerText = `${option.value}`;
+               const spanElement = document.createElement('span');
+               spanElement.classList.add('absolute-right');
+               spanElement.innerHTML = '▼';
+               dropdownBtn.appendChild(spanElement);
+            }
+         });
+      }
       radios.forEach(function(option) {
          option.addEventListener("click", function() {
             dropdownBtn.innerText = `${this.value}`;

@@ -24,7 +24,6 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownContent.style.display = "none";
 
          sort = 0;
-         document.getElementById('nextTrigger').innerHTML = t("로드 중...");
          document.getElementById('titleboxText').innerHTML = `${t("조합")} - ${t(this.value)}`;
          if ("13턴딜(5)" === this.value) sort = 1;
          if ("최신등록순" === this.value) sort = 2;
@@ -39,7 +38,6 @@ document.addEventListener("DOMContentLoaded", function() {
    const observer = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
          if (entry.isIntersecting && !isLoading) {
-            isLoading = true;
             getComps();
          }
       });
@@ -50,6 +48,8 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function getComps() {
+   clickLoadOnoff(false);
+   isLoading = true;
    request(`${server}/comps/getAll/${sort}/${page}`, {
       method: "GET",
       includeJwtToken: false,
@@ -57,18 +57,15 @@ function getComps() {
       if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
    }).then(res => {
-      isLoading = false;
       if (!res.success) {
          isLoading = true;
          document.getElementById('nextTrigger').innerHTML = `${res.msg}`;
          return console.log(t("데이터 로드 실패"));
       }
       makeBlock(res.data.content, sort);
-      isLoading = false;
-      document.getElementById('nextTrigger').innerHTML = t(`더이상 조합이 없습니다`);
-
       page++;
-      
+      isLoading = false;
+      clickLoadOnoff(true);
    }).catch(e => {
       isLoading = false;
       console.log(t("데이터 로드 실패"), e);
@@ -154,4 +151,13 @@ function loadAllCompCnt() {
    }).catch(e => {
       console.log(t("덱개수 로드 실패"), e);
    })
+}
+
+function clickLoadOnoff(bool) {
+   const _btn = document.getElementById("clickLoad");
+   _btn.style.visibility = bool ? "visible" : "hidden";
+}
+function clickLoad() {
+   if (isLoading) return;
+   getComps();
 }

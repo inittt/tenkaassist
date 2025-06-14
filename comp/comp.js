@@ -1,5 +1,12 @@
 let params = new URLSearchParams(window.location.search);
 let compId = params.get('id');
+let bondParam = params.get('bond'), _bond = null;
+if (bondParam === null) _bond = null;
+else {
+  let items = bondParam.split(",").map(s => Number(s.trim()));
+  _bond = items.every(num => !isNaN(num) && num >= 1 && num <= 5) ? items : null;
+}
+
 
 const compIds_toTest = [];
 let isDataLoaded = true, curCommand = null, curCompstr = null;
@@ -43,6 +50,19 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
       });
       const radios = document.querySelectorAll(`.dropdown-content input[name='b${i}']`);
+      // _bond 값 있으면 초기값으로 라디오 버튼 세팅
+      if (_bond && _bond[i] !== undefined) {
+         radios.forEach(function(option) {
+            if (Number(option.value) === _bond[i]) {
+               option.checked = true;
+               dropdownBtn.innerText = `${option.value}`;
+               const spanElement = document.createElement('span');
+               spanElement.classList.add('absolute-right');
+               spanElement.innerHTML = '▼';
+               dropdownBtn.appendChild(spanElement);
+            }
+         });
+      }
       radios.forEach(function(option) {
          option.addEventListener("click", function() {
             dropdownBtn.innerText = `${this.value}`;
@@ -190,7 +210,7 @@ function goLab() {
       if (cha == undefined || cha == null) return alert(t("캐릭터를 찾을 수 없음") + " : " + id);
       if (!cha.ok) return alert(t("준비 중 캐릭터가 포함되어 있습니다"));
    }
-   location.href = `${address}/lab/?list=${compIds_toTest}`
+   location.href = `${address}/lab/?list=${compIds_toTest}&bond=${getBondList()}`;
 }
 
 function setCommand(str) {

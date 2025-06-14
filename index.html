@@ -38,6 +38,8 @@
       <p id="cnt-all" style="font-size:0.8rem; padding:0; margin: 0; margin-left:1rem;"></p>
       <div id="compcontainer"></div>
       <div id="nextTrigger" class="nextTrigger"></div>
+      <br><br>
+      <button id="clickLoad" class="block hoverblock pointer" style="visibility: hidden; color:white;" onclick="clickLoad()">클릭하여 로드</button>
    </div>
 </body>
 <script>
@@ -49,5 +51,6 @@
    document.getElementById("r4").innerText = t("최신수정순");
    document.getElementById("r5").innerText = t("13턴딜(1)");
    document.title = "TenkaAssist - " + t("홈");
+   document.getElementById("clickLoad").innerText = t("클릭하여 로드");
 </script>
 </html>
