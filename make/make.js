@@ -60,6 +60,9 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
+         
+         clickLoadOnoff(false);
+
          mod = 0; curCalc = 11;
          if ("2개" === this.value) mod = 1;
          else if ("3개" === this.value) mod = 2;
