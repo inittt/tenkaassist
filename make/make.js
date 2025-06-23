@@ -60,9 +60,6 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
-         
-         clickLoadOnoff(false);
-
          mod = 0; curCalc = 11;
          if ("2개" === this.value) mod = 1;
          else if ("3개" === this.value) mod = 2;
@@ -174,6 +171,7 @@ function makeBlock() {
    bundleCnt = 0;
    maxHeap = new MaxHeap();
    isEndOfDeck = false;
+   clickLoadOnoff(false);
 
    if (mod == 0) {
       possible.length = 0;
@@ -329,7 +327,6 @@ function isSatisfied(cls) {
 
 let _count = 0;
 function loadBlockAllDeck() {
-   clickLoadOnoff(false);
    for(let i = page*10; i < page*10+10; i++) {
       const comp = possible[i];
       if (comp == undefined || comp == null) {
@@ -385,8 +382,10 @@ function loadBlockAllDeck() {
    }
    page++;
    if (_count < 10) loadBlockAllDeck();
-   else _count = 0;
-   clickLoadOnoff(true);
+   else {
+      _count = 0;
+      clickLoadOnoff(true);
+   }
 }
 
 function makeBondList(complist) {
@@ -401,7 +400,6 @@ function makeBlockNDeck() {
 }
 
 function loadBlockNDeck() {
-   clickLoadOnoff(false);
    const curList = getNDeckPage(page);
    for(let i = 0; i < 10; i++) {
       const bundle = curList[i];
