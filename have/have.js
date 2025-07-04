@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownContent3.style.display = "none";
       });
    });
+   makeOptionUI();
 });
 
 function formatNumber2(value) {
@@ -122,7 +123,7 @@ function searchDeck() {
    const fit13t = document.querySelector('input[name="b2"]:checked').value;
    const bel = document.querySelector('input[name="b3"]:checked').value;
 
-   location.href = `${address}/make/?hpUp=${hpUp}&fit13t=${fit13t}&list=${go}&bond=${b}&bossEl=${bel}`;
+   location.href = `${address}/make/?hpUp=${hpUp}&fit13t=${fit13t}&list=${go}&bond=${b}&bossEl=${bel}&options=${options}`;
 }
 
 // 코드 복사 누를시
@@ -367,4 +368,109 @@ function sortHave() {
    }
 
    updateSelected();   
+}
+
+// [직업, 부등호, 개수, 속상감, 받뎀감, 받평뎀감, 받궁뎀감, 받발뎀감]
+const options = [0, 0, 0, 0, 0, 0, 0, 0];
+const signList = ["≥", ">", "=", "<", "≤"];
+// 잠재 창 ui 만들기
+function makeOptionUI() {
+   const allList = [
+      `<div style="width:100%; display:flex; justify-content: space-between;">
+         <div></div>
+         <img class="i-x" src="../../images/icons/ico-x.svg" onclick="close_option()">
+      </div>`,
+      `<div class="flex align-item-center border-btm" style="justify-content:center;">
+         <button id="class_btn" class="icon-btn2 i-gear" onclick="click_class()">
+            <img class="icon-midbig" src="../images/icons/ro_0.webp">
+         </button>
+         <button class="icon-btn2 i-gear" onclick="click_sign()">
+            <div id="sign_btn" class="icon-midbig" style="font-size:1.2rem; color:white;">≥</div>
+         </button>
+         <button class="icon-btn2 i-gear" onclick="click_class_count()">
+            <div id="class_count_btn" class="icon-midbig" style="color:white; font-size:1.2rem;">0</div>
+         </button>
+      </div>`,
+      `<table style="width: 100%; text-align: center;">
+         <tr><td id="tr1">${t("속성 상성 감소")}</td></tr>
+         <tr><td class="flex-center border-btm" style="min-width:11rem;">
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(0,-10)">◀</button>
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(0,-1)">◁</button>
+            <span id="table0" class="input-txt">0</span><span>%</span>
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(0,1)">▷</button>
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(0,10)">▶</button>
+         </td></tr>
+         <tr><td id="tr2">${t("받는 데미지 감소")}</td></tr>
+         <tr><td class="flex-center border-btm">
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(1,-10)">◀</button>
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(1,-1)">◁</button>
+            <span id="table1" class="input-txt">0</span><span>%</span>
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(1,1)">▷</button>
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(1,10)">▶</button>
+         </td></tr>
+         <tr><td id="tr3">${t("받는 일반공격 데미지 감소")}</td></tr>
+         <tr><td class="flex-center border-btm">
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(2,-10)">◀</button>
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(2,-1)">◁</button>
+            <span id="table2" class="input-txt">0</span><span>%</span>
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(2,1)">▷</button>
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(2,10)">▶</button>
+         </td></tr>
+         <tr><td id="tr4">${t("받는 궁극기 데미지 감소")}</td></tr>
+         <tr><td class="flex-center border-btm">
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(3,-10)">◀</button>
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(3,-1)">◁</button>
+            <span id="table3" class="input-txt">0</span><span>%</span>
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(3,1)">▷</button>
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(3,10)">▶</button>
+         </td></tr>
+         <tr><td id="tr5">${t("받는 발동기 데미지 감소")}</td></tr>
+         <tr><td class="flex-center">
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(4,-10)">◀</button>
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(4,-1)">◁</button>
+            <span id="table4" class="input-txt">0</span><span>%</span>
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(4,1)">▷</button>
+            <button class="icon-btn2 i-gear rem1_5" onclick="ud(4,10)">▶</button>
+         </td></tr>
+      </table>`
+   ];
+
+   document.getElementById("optionBox").innerHTML = allList.join("");
+}
+
+function open_option() {
+   document.getElementById("optionBox").style.display = "block";
+}
+function close_option() {
+   document.getElementById("optionBox").style.display = "none";
+}
+
+function click_class() {
+   options[0] = options[0] == 9 ? 0 : options[0]+1;
+   if (options[0] < 5) {
+      document.getElementById("class_btn").innerHTML = `
+         <img class="icon-midbig" src="../images/icons/ro_${options[0]}.webp">
+      `;
+   } else {
+      const tmp = ["fire", "water", "wind", "light", "dark"];
+      document.getElementById("class_btn").innerHTML = `
+         <img class="icon-midbig" src="../images/elements/ico_${tmp[options[0]-5]}.png">
+      `;
+   }
+}
+
+function click_sign() {
+   options[1] = options[1] == 4 ? 0 : options[1]+1;
+   document.getElementById("sign_btn").innerHTML = signList[options[1]];
+}
+
+function click_class_count() {
+   options[2] = options[2] == 5 ? 0 : options[2]+1;
+   document.getElementById("class_count_btn").innerHTML = options[2];
+}
+
+function ud(a, b) {
+   const tmp = document.getElementById(`table${a}`);
+   options[a+3] += b;
+   tmp.innerText = options[a+3];
 }

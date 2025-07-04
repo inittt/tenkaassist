@@ -14,6 +14,7 @@
 </head>
 <body>
    <script src="../js/header.js"></script>
+   <div id="optionBox" class="console-option" style="display: none;"></div>
    <div class="main-container bg-dark">
       <div class="block">
          <div class="margin-left titleblock">
@@ -87,7 +88,7 @@
             </div>
          </div>
          <div class="select_dropdown">
-            <div class="dropdown">
+            <div class="dropdown" style="width:3rem;">
                <button id="btn3" class="dropdown-btn" style="height:1.5rem; width:3rem;"><img class="icon-middle" src="../images/elements/ico_none.png"><span class="absolute-right">▼</span></button>
                <div id="drop3" class="dropdown-content" style="width:3rem;">
                   <input type="radio" id="b36" name="b3" value="none" checked>
@@ -105,6 +106,7 @@
                </div>
             </div>
          </div>
+         <button class="icon-btn i-gear" onclick="open_option()" style="margin:0; margin-left:0.3rem;"><img class="icon" src="../images/icons/ico-gear.svg"></button>
       </div>
       <div class="block">
          <div style="display: flex; justify-content: space-between;">

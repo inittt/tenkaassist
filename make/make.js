@@ -14,6 +14,13 @@ function el2Num(str) {
    }
 }
 
+const _option = params.get('options');
+let _optionList = _option == null ? null : _option.split(",").map(Number);
+if (_optionList != null) {
+   if (_optionList.length != 8) _optionList = null;
+   else if (_optionList.every(v => v == 0)) _optionList = null;
+}
+
 const limit_hp_up = Number(params.get('hpUp') == null ? 0 : params.get('hpUp'));
 
 // -1이면 (0보다 작으면) auto
@@ -38,6 +45,10 @@ document.addEventListener("DOMContentLoaded", function() {
       document.getElementById("element-image").innerHTML = 
          `<img class="icon-big" src="../images/elements/ico_${boss_element_str}.png">`;
       document.getElementById("element-image").style.display = "block";
+      document.getElementById("comb-radio").style.display = "none";
+   }
+   
+   if (_optionList != null) {
       document.getElementById("comb-radio").style.display = "none";
    }
 
@@ -115,6 +126,24 @@ function getAllCompsFromServer(url_idx) {
    });
 }
 
+function check_class_option(team) {
+   const a = _optionList[0], b = _optionList[1], c = _optionList[2];
+   let cnt = 0;
+   if (a < 5) {
+      for(let id of team) if (getCharacter(id).role == a) cnt++;
+   } else {
+      for(let id of team) if (getCharacter(id).element == a-5) cnt++;
+   }
+   switch (b) {
+      case 0: return cnt >= c;
+      case 1: return cnt > c;
+      case 2: return cnt == c;
+      case 3: return cnt < c;
+      case 4: return cnt <= c;
+      default: return false;
+   }
+}
+
 function setPossible() {
    const hpUpMap = new Map();
    for(let d of chJSON.data) {
@@ -131,6 +160,8 @@ function setPossible() {
       d.compstr = compList.slice();
 
       if (compList.every(item => haveList.includes(item))) {
+         if (_optionList != null && !check_class_option(compList)) continue;
+
          if (boss_element == -1) {
             if (d.recommend > 0 && limit_fit > d.recommend) continue;
             if (hpUpMap.get(compList[0]) < limit_hp_up) continue;
@@ -140,7 +171,7 @@ function setPossible() {
 
             if (bonds.every(item => item === 5) && d.recommend > 0) d.fit13t = d.recommend;
             else if (bonds.every(item => item === 1) && d.vote > 0) d.fit13t = d.vote;
-            else d.fit13t = autoCalc(compList, d.description, bonds);
+            else d.fit13t = autoCalc(compList, d.description, bonds, -1, _optionList);
 
             if (d.fit13t >= limit_fit) possible.push(d);
          } else {
@@ -149,7 +180,7 @@ function setPossible() {
             const indexes = compList.map(item => haveList.indexOf(item)), bonds = [];
             for (let j = 0; j < 5; j++) bonds.push(bondList[indexes[j]]);
 
-            d.fit13t = autoCalc(compList, d.description, bonds, boss_element);
+            d.fit13t = autoCalc(compList, d.description, bonds, boss_element, _optionList);
 
             if (d.fit13t >= limit_fit) possible.push(d);
          }

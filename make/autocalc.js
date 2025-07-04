@@ -1,4 +1,4 @@
-function autoCalc(idList, command, bondList, boss_element = -1) {
+function autoCalc(idList, command, bondList, boss_element = -1, _optionList = null) {
    if (command == null || command.length < 10) return 0;
 
    let actNum = 0, commandList = command.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
@@ -19,6 +19,7 @@ function autoCalc(idList, command, bondList, boss_element = -1) {
       boss.buff = []; boss.li = []; alltimeFunc.length = 0;
       buff_ex.length = 0;
       buff_ex.push("도트뎀", "제거");
+      if (_optionList != null) setBossLi();
 
       for(const id of compIds) {
          const tmp = chJSON.data.filter(ch => ch.id === id)[0];
@@ -37,6 +38,14 @@ function autoCalc(idList, command, bondList, boss_element = -1) {
       for(let i = 0; i < 5; i++) comp[i].turnstart();
 
       return auto();
+   }
+
+   function setBossLi() {
+      if (_optionList[3] != 0) tbf(boss, "속상감", _optionList[3], "passive0", always);
+      if (_optionList[4] != 0) tbf(boss, "받뎀증", -_optionList[4], "passive1", always);
+      if (_optionList[5] != 0) tbf(boss, "받일뎀", -_optionList[5], "passive2", always);
+      if (_optionList[6] != 0) tbf(boss, "받궁뎀", -_optionList[6], "passive3", always);
+      if (_optionList[7] != 0) tbf(boss, "받발뎀", -_optionList[7], "passive4", always);
    }
 
    function auto() {

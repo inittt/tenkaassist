@@ -595,6 +595,11 @@ header {
    height:1.3rem;
    vertical-align: middle;
 }
+.icon-midbig {
+   width:1.6rem;
+   height:1.6rem;
+   vertical-align: middle;
+}
 .icon-big {
    width:2rem;
    height:2rem;
@@ -628,10 +633,12 @@ header {
 }
 .i-save {background-color: #24a01e;}
 .i-load {background-color: #e1562f;}
+.i-gear {background-color: #3d3d3d; border-color:rgb(141, 141, 141);}
 .i-ex {background-color: crimson;}
 .i-sort {background-color: #3a68ff;}
 .i-save:hover {background-color: #196c14; border-color:white;}
 .i-load:hover {background-color: #7a2b15; border-color:white;}
+.i-gear:hover {background-color: #1c1c1c; border-color:white;}
 .i-ex:hover {background-color: rgb(150, 13, 41);}
 .i-sort:hover {background-color: #1c327a;}
 .i-heart {width:0.4rem; height:0.4rem;margin-right:0.1rem;}
