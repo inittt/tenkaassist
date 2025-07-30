@@ -1,4 +1,4 @@
-const liberationList = ["바알", "사탄", "이블리스", "살루시아", "란", "루루", "밀레", "섹돌", "치즈루", "노엘리", "페바알","신이블","이치카"];
+const liberationList = ["바알", "사탄", "이블리스", "살루시아", "란", "루루", "밀레", "섹돌", "치즈루", "노엘리", "페바알","신이블","이치카", "적나나", "해나나"];
 const chJSON = { data : [
 {ok : true, id : 10001, rarity : 3, po:1, hp:962383, atk:254657, cd:3, atkMag:100, ultMag:503, fullname : "마왕 바알", name : "바알", element : 0, role : 0, hpUp : 20},
 {ok : true, id : 10002, rarity : 3, po:3, hp:1384007, atk:177152, cd:3, atkMag:100, ultMag:0, fullname : "마왕 사탄", name : "사탄", element : 4, role : 2, hpUp : 0},
@@ -69,7 +69,7 @@ const chJSON = { data : [
 {ok : true, id : 10090, rarity : 3, po:1, hp:995599, atk:271044, cd:4, atkMag:100, ultMag:514, fullname : "여름날 성녀 밀레", name : "수밀레", element : 1, role : 0},
 {ok : true, id : 10091, rarity : 3, po:2, hp:1249371, atk:216126, cd:3, atkMag:0, ultMag:0, fullname : "여름날 블랙앤화이트 노엘리", name : "수엘리", element : 3, role : 3, hpUp : 20},
 {ok : true, id : 10092, rarity : 3, po:1, hp:913223, atk:295845, cd:3, atkMag:120, ultMag:546, fullname : "여름날 아르티아", name : "수르티아", element : 1, role : 0},
-{ok : true, id : 10093, rarity : 3, po:1, hp:1012872, atk:266615, cd:4, atkMag:125, ultMag:680, fullname : "적격자 나나", name : "적나나", element : 3, role : 0},
+{ok : true, id : 10093, rarity : 3, po:1, hp:1012872, atk:266615, cd:4, atkMag:125, ultMag:681, fullname : "적격자 나나", name : "적나나", element : 3, role : 0, hpUp : 40},
 {ok : true, id : 10094, rarity : 3, po:1, hp:1006228, atk:268386, cd:50, atkMag:100, ultMag:471, fullname : "미지의 생명체 키베루", name : "키베루", element : 4, role : 0},
 {ok : true, id : 10095, rarity : 3, po:3, hp:1307831, atk:206383, cd:3, atkMag:100, ultMag:0, fullname : "견습 성기사 레오나", name : "로오나", element : 3, role : 2},
 {ok : true, id : 10096, rarity : 3, po:1, hp:894179, atk:302045, cd:4, atkMag:0, ultMag:0, fullname : "선혈의 마왕 라티아", name : "로티아", element : 4, role : 3},
@@ -90,7 +90,7 @@ const chJSON = { data : [
 {ok : true, id : 10118, rarity : 3, po:1, hp:1278601, atk:211254, cd:4, atkMag:0, ultMag:0, fullname : "여름날 피오라", name : "수오라", element : 3, role : 1, hpUp : 20},
 {ok : true, id : 10119, rarity : 3, po:1, hp:996485, atk:271044, cd:3, atkMag:0, ultMag:0, fullname : "여름날 아이카", name : "수이카", element : 0, role : 1},
 {ok : true, id : 10120, rarity : 3, po:1, hp:997814, atk:270601, cd:4, atkMag:100, ultMag:514, fullname : "바람과 파도를 타고 란", name : "해란", element : 2, role : 4, hpUp : 20},
-{ok : true, id : 10121, rarity : 3, po:1, hp:1133778, atk:238270, cd:4, atkMag:0, ultMag:0, fullname : "푸른 물결의 고양이 나나", name : "해나나", element : 2, role : 3},
+{ok : true, id : 10121, rarity : 3, po:1, hp:1133778, atk:238270, cd:4, atkMag:0, ultMag:0, fullname : "푸른 물결의 고양이 나나", name : "해나나", element : 2, role : 3, hpUp : 25},
 {ok : true, id : 10122, rarity : 3, po:1, hp:907908, atk:297616, cd:4, atkMag:0, ultMag:0, fullname : "섹시천사 우사기 히메", name : "천사기", element : 3, role : 3, hpUp : 20},
 {ok : true, id : 10123, rarity : 3, po:1, hp:930053, atk:290530, cd:3, atkMag:100, ultMag:397, fullname : "데빌캣 안닌 미루", name : "악미루", element : 4, role : 0, hpUp : 20},
 {ok : true, id : 10124, rarity : 3, po:1, hp:968583, atk:279015, cd:3, atkMag:100, ultMag:397, fullname : "스며드는 핑크빛 바닐라 뇨로", name : "뇨로", element : 0, role : 0, hpUp : 20},
@@ -147,8 +147,8 @@ const chJSON = { data : [
 {ok : true, id : 10173, rarity : 3, po:1, hp:1039887, atk:259529, cd:3, atkMag:100, ultMag:396.9, fullname : "여름날 놀라이티", name : "수놀라", element : 1, role : 0, hpUp : 40},
 {ok : true, id : 10174, rarity : 3, po:3, hp:1512443, atk:178481, cd:4, atkMag:100, ultMag:200, fullname : "노도의 마상어 포르네우스", name : "포르네", element : 4, role : 2, hpUp : 0},
 {ok : true, id : 10160, rarity : 3, po:1, hp:926067, atk:291416, cd:40, atkMag:100, ultMag:1400, fullname : "성검 해방 칸다 아야네", name : "성야네", element : 3, role : 0, hpUp : 40},
-{ok : true, id : 10177, rarity : 3, hp:1084618, atk:248899, cd:3, atkMag:0, ultMag:0, fullname : "천공의 승무원 나나미", name : "승나미", element : 3, role : 3, hpUp : 40},
-{ok : true, id : 10178, rarity : 3, hp:968583, atk:279015, cd:3, atkMag:0, ultMag:0, fullname : "기장 바알", name : "기바알", element : 2, role : 0, hpUp : 40},
+{ok : true, id : 10177, rarity : 3, po:1, hp:1084618, atk:248899, cd:3, atkMag:0, ultMag:0, fullname : "천공의 승무원 나나미", name : "승나미", element : 3, role : 3, hpUp : 40},
+{ok : true, id : 10178, rarity : 3, po:1, hp:968583, atk:279015, cd:3, atkMag:0, ultMag:0, fullname : "기장 바알", name : "기바알", element : 2, role : 0, hpUp : 40},
 
 /*
       element  role     rarity
