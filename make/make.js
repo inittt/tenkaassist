@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
-         mod = 0; curCalc = 11;
+         mod = 0; curCalc = 15;
          if ("2개" === this.value) mod = 1;
          else if ("3개" === this.value) mod = 2;
          else if ("4개" === this.value) mod = 3;
@@ -293,7 +293,7 @@ function onOffEss() {
    else {
       setEss(false);
       if (isSameSet(essSave, essSet) && isSameSet(exSave, exSet)) return;
-      curCalc = 11;
+      curCalc = 15;
       makeBlock();
       essSave = new Set(essSet); exSave = new Set(exSet);
    }

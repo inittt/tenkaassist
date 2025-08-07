@@ -64,6 +64,14 @@
                <div id="drop2" class="dropdown-content">
                   <input type="radio" id="b2-1" name="b2" value="-1" checked>
                   <label id="l_b2-1" for="b2-1">auto</label>
+                  <input type="radio" id="b214" name="b2" value="15000000000">
+                  <label id="l_b214" for="b214">15000000000</label>
+                  <input type="radio" id="b213" name="b2" value="14000000000">
+                  <label id="l_b213" for="b213">14000000000</label>
+                  <input type="radio" id="b212" name="b2" value="13000000000">
+                  <label id="l_b212" for="b212">13000000000</label>
+                  <input type="radio" id="b211" name="b2" value="12000000000">
+                  <label id="l_b211" for="b211">12000000000</label>
                   <input type="radio" id="b210" name="b2" value="11000000000">
                   <label id="l_b210" for="b210">11000000000</label>
                   <input type="radio" id="b29" name="b2" value="10000000000">
@@ -156,7 +164,7 @@
    document.title = "TenkaAssist - " + t("보유 캐릭터");
    document.getElementById("titleBox").innerText = t("보유");
 
-   for(let i = 1; i < 11; i++) {
+   for(let i = 1; i < 15; i++) {
       const set13t = document.getElementById(`l_b2${i}`);
       let val = set13t.innerText;
       set13t.innerText = formatNumber2(val);
