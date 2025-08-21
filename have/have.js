@@ -122,8 +122,9 @@ function searchDeck() {
    const hpUp = document.querySelector('input[name="b1"]:checked').value;
    const fit13t = document.querySelector('input[name="b2"]:checked').value;
    const bel = document.querySelector('input[name="b3"]:checked').value;
+   const hitAll = document.getElementById('hitAllChkBox').checked;
 
-   location.href = `${address}/make/?hpUp=${hpUp}&fit13t=${fit13t}&list=${go}&bond=${b}&bossEl=${bel}&options=${options}`;
+   location.href = `${address}/make/?hpUp=${hpUp}&fit13t=${fit13t}&list=${go}&bond=${b}&bossEl=${bel}&options=${options}&hitAll=${hitAll}`;
 }
 
 // 코드 복사 누를시
@@ -379,6 +380,10 @@ function makeOptionUI() {
       `<div style="width:100%; display:flex; justify-content: space-between;">
          <div></div>
          <img class="i-x" src="../images/icons/ico-x.svg" onclick="close_option()">
+      </div>`,
+      `<div class="flex align-item-center border-btm" style="justify-content:center; padding-bottom:0.4rem;">
+         <input type="checkbox" id="hitAllChkBox" style="width:1rem; height:1rem; cursor:pointer;" class="exclude-checkbox" checked>&nbsp;
+         <span id="hitAllTxt">${t("매턴 전체공격")}</span>
       </div>`,
       `<div class="flex align-item-center border-btm" style="justify-content:center;">
          <button id="class_btn" class="icon-btn2 i-gear" onclick="click_class()">

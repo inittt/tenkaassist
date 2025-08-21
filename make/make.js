@@ -2,6 +2,9 @@ const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list');
 const chBonds = params.get('bond');
 const boss_element_str = params.get('bossEl') == null ? "none" : params.get('bossEl');
+
+if (params.get('hitAll') != null && params.get('hitAll') == "false") hitAll = false;
+
 const boss_element = el2Num(boss_element_str);
 function el2Num(str) {
    switch(str) {
@@ -162,7 +165,7 @@ function setPossible() {
       if (compList.every(item => haveList.includes(item))) {
          if (_optionList != null && !check_class_option(compList)) continue;
 
-         if (boss_element == -1) {
+         if (boss_element == -1 && hitAll == true) {
             if (d.recommend > 0 && limit_fit > d.recommend) continue;
             if (hpUpMap.get(compList[0]) < limit_hp_up) continue;
 
