@@ -138,3 +138,49 @@
       flex: 1 1 100%; /* 화면이 작을 때 가로 길이를 100%로 */
   }
 }
+
+.icon-i-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  padding:0.3rem 0.3rem 0 0.3rem;
+}
+
+.tooltip {
+  visibility: hidden;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 0.4rem 0.6rem;
+  border:2px solid white;
+  border-radius: 0.5rem;
+  position: absolute;
+  z-index: 1;
+  top: 125%; /* 아이콘 아래쪽에 뜨도록 */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+  font-size: 0.8rem;
+
+  width: 15rem;         /* 가로 길이 고정 */
+  white-space: normal;  /* 줄바꿈 허용 */
+  word-wrap: break-word; /* 단어 단위 줄바꿈 */
+}
+
+.tooltip::after {
+  content: "";
+  position: absolute;
+  bottom: 100%; /* 화살표를 위로 */
+  left: 50%;
+  margin-left: -2px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #FFF transparent;
+}
+
+.icon-i-container:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}

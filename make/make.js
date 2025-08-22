@@ -43,7 +43,59 @@ for(let i = 0; i < haveList.length; i++) {
    bondMap.set(haveList[i], bondList[i]);
 }
 
+function setTooltip() {
+   console.log("test")
+   const tt = document.getElementById("tooltip");
+   const str = [];
+
+   // 속성 툴팁
+   let _el;
+   switch(boss_element) {
+      case 0 : _el = "화속성"; break;
+      case 1 : _el = "수속성"; break;
+      case 2 : _el = "풍속성"; break;
+      case 3 : _el = "광속성"; break;
+      case 4 : _el = "암속성"; break;
+      default : _el = "무속성";
+   }
+   str.push(t("속성") + " : " + t(_el));
+
+   // hpup + 최소데미지
+   const _hu = limit_hp_up;
+   const _lf = limit_fit == -1 ? "auto" : formatNumber(limit_fit).replace(/\.\d{2}/, '');
+   str.push("♥ "+ _hu + " & " + _lf);
+   
+   // 피격판정
+   const _htxt = t("매턴 전체공격") + (hitAll ? " (on)" : " (off)");
+   str.push(_htxt);
+
+   // 조건
+   const _ol = _optionList == null ? new Array(8).fill(0) : _optionList.slice();
+   if (!_ol.every(e => e == 0)) {
+      const tgList = ["딜러", "힐러", "탱커", "서포터", "디스럽터", "화속성", "수속성", "풍속성", "암속성", "광속성"];
+      const signList = ["≥", ">", "=", "<", "≤"];
+      const _op = `${t(tgList[_ol[0]])} ${signList[_ol[1]]} ${_ol[2]}`
+      str.push(_op);
+
+      // 보스버프
+      function ttt(s) {
+         s = s.replace("Decrease", "Dec");
+         s = s.replace("damage", "dmg");
+         s = s.replace("ultimate", "ult");
+         return s;
+      }
+      str.push(`${ttt(t("속성 상성 감소"))} ${_ol[3]}%`);
+      str.push(`${ttt(t("받는 데미지 감소"))} ${_ol[4]}%`);
+      str.push(`${ttt(t("받는 일반공격 데미지 감소"))} ${_ol[5]}%`);
+      str.push(`${ttt(t("받는 궁극기 데미지 감소"))} ${_ol[6]}%`);
+      str.push(`${ttt(t("받는 발동기 데미지 감소"))} ${_ol[7]}%`);
+   }
+
+   tt.innerHTML = str.join("<br>");
+}
+
 document.addEventListener("DOMContentLoaded", function() {
+   setTooltip();
    if (boss_element != -1) {
       document.getElementById("element-image").innerHTML = 
          `<img class="icon-big" src="../images/elements/ico_${boss_element_str}.png">`;

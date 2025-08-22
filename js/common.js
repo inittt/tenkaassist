@@ -206,6 +206,7 @@ const translate = {
    // 시뮬레이터 선택 selectSimulator
    "캐릭선택" : {en : "Select", sc : "选择", tc : "選擇", jp : "選択"}, // select characters
    "1구속" : {en : "Set 1", sc : "全1絆", tc : "全1絆", jp : "絆1設定"}, // set bond 1
+   "속성" : {en : "Attribute", sc : "属性", tc : "屬性", jp : "属性"},
    "화속성" : {en : "Fire", sc : "火属性", tc : "火屬性", jp : "火属性"},
    "수속성" : {en : "Water", sc : "水属性", tc : "水屬性", jp : "水属性"},
    "풍속성" : {en : "Wind", sc : "风属性", tc : "風屬性", jp : "風属性"},
