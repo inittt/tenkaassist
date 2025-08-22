@@ -44,8 +44,19 @@ for(let i = 0; i < haveList.length; i++) {
 }
 
 function setTooltip() {
-   console.log("test")
    const tt = document.getElementById("tooltip");
+   const container = document.querySelector(".icon-i-container");
+
+   // 클릭으로 토글
+   container.addEventListener('click', (e) => {
+   tt.classList.toggle('clicked');
+   e.stopPropagation(); // 다른 클릭 이벤트 방지
+   });
+
+   // 화면 아무 곳 클릭하면 툴팁 닫기
+   document.addEventListener('click', () => {
+   tt.classList.remove('clicked');
+   });
    const str = [];
 
    // 속성 툴팁

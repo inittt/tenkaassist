@@ -146,41 +146,51 @@
   padding:0.3rem 0.3rem 0 0.3rem;
 }
 
-.tooltip {
+/* 기본 숨김 */
+.hidetooltip {
   visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* hover 시 표시 (PC용) */
+.icon-i-container:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* 클릭 시 JS로 숨김 */
+.tooltip.clicked {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* 툴팁 스타일 */
+.tooltip {
   background-color: #333;
   color: #fff;
   text-align: center;
   padding: 0.4rem 0.6rem;
-  border:2px solid white;
+  border: 2px solid white;
   border-radius: 0.5rem;
   position: absolute;
   z-index: 1;
-  top: 125%; /* 아이콘 아래쪽에 뜨도록 */
+  top: 125%;
   left: 50%;
   transform: translateX(-50%);
-  opacity: 0;
-  transition: opacity 0.3s;
-  white-space: nowrap;
+  white-space: normal;
+  word-wrap: break-word;
   font-size: 0.8rem;
-
-  width: 15rem;         /* 가로 길이 고정 */
-  white-space: normal;  /* 줄바꿈 허용 */
-  word-wrap: break-word; /* 단어 단위 줄바꿈 */
+  width: 15rem;
 }
 
 .tooltip::after {
   content: "";
   position: absolute;
-  bottom: 100%; /* 화살표를 위로 */
+  bottom: 100%;
   left: 50%;
   margin-left: -2px;
   border-width: 5px;
   border-style: solid;
   border-color: transparent transparent #FFF transparent;
-}
-
-.icon-i-container:hover .tooltip {
-  visibility: visible;
-  opacity: 1;
 }
