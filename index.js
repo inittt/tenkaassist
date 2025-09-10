@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function getComps() {
    clickLoadOnoff(false);
    isLoading = true;
-   request(`${server}/comps/getAll/${sort}/${page}`, {
+   request(`${server}/comps/all/${sort}/${page}`, {
       method: "GET",
       includeJwtToken: false,
    }).then(response => {
