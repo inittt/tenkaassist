@@ -147,7 +147,7 @@ function loadAllCompCnt() {
       return response.json();
    }).then(res => {
       if (!res.success) return console.log(t("덱개수 로드 실패"));
-      document.getElementById("cnt-all").innerHTML = `${t("총 덱 개수")} : ${res.data}` + t(" (3분마다 갱신)");
+      document.getElementById("cnt-all").innerHTML = `${t("총 덱 개수")} : ${res.data}`;
    }).catch(e => {
       console.log(t("덱개수 로드 실패"), e);
    })
