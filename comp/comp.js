@@ -79,11 +79,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function setFitDmg() {
    if (curCommand != null && curCommand.length > 10) {
-      const fitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, getBondList());
+      const _bondList = getBondList();
+      const fitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, _bondList);
 
       // 전체피격 없을 때 계산
       hitAll = false;
-      const noHitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, bondList_tmp);
+      const noHitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, _bondList);
       hitAll = true;
       //////
 
