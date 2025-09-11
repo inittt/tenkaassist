@@ -80,7 +80,14 @@ document.addEventListener("DOMContentLoaded", function() {
 function setFitDmg() {
    if (curCommand != null && curCommand.length > 10) {
       const fitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, getBondList());
-      document.getElementById('fit-dmg').innerHTML = `${formatNumber(fitDmg)}`;
+
+      // 전체피격 없을 때 계산
+      hitAll = false;
+      const noHitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, bondList_tmp);
+      hitAll = true;
+      //////
+
+      document.getElementById('fit-dmg').innerHTML = `${formatNumber(fitDmg)} (${formatNumber(noHitDmg)})`;
    }
 }
 
@@ -153,7 +160,14 @@ function makeCompBlock(comp) {
    if (curCommand != null && curCommand.length > 10) {
       const bondList_tmp = getBondList();
       const fitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, bondList_tmp);
-      document.getElementById('fit-dmg').innerHTML = `${formatNumber(fitDmg)}`;
+
+      // 전체피격 없을 때 계산
+      hitAll = false;
+      const noHitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, bondList_tmp);
+      hitAll = true;
+      //////
+
+      document.getElementById('fit-dmg').innerHTML = `${formatNumber(fitDmg)} (${formatNumber(noHitDmg)})`;
       if (recommend > 0 && bondList_tmp.every(i => i == 5) && fitDmg != recommend) {
          const formData = new FormData();
          formData.append("compId", id);
