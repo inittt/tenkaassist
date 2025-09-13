@@ -151,9 +151,9 @@ const chJSON = { data : [
 {ok : true, id : 10178, rarity : 3, po:1, hp:968583, atk:279015, cd:3, atkMag:0, ultMag:0, fullname : "기장 바알", name : "기바알", element : 2, role : 0, hpUp : 40},
 {ok : true, id : 10179, rarity : 3, po:1, hp:1056717, atk:255543, cd:4, atkMag:0, ultMag:0, fullname : "백의의 천사 루루", name : "백루루", element : 0, role : 1, hpUp : 50},
 {ok : true, id : 10180, rarity : 3, po:2, hp:1001799, atk:269715, cd:4, atkMag:100, ultMag:514, fullname : "간호사 유리", name : "유리", element : 1, role : 4, hpUp : 40},
-{ok : true, id : 10181, rarity : 3, hp:1360091, atk:198411, cd:4, atkMag:100, ultMag:514, fullname : "여유로운 삷 칸다 아야네", name : "여야네", element : 0, role : 2, hpUp : 30},
-{ok : true, id : 10182, rarity : 3, hp:1033244, atk:261300, cd:5, atkMag:0, ultMag:0, fullname : "커리어 우먼 칸다 리오", name : "리오", element : 4, role : 3, hpUp : 45},
-{ok : true, id : 10183, rarity : 3, hp:1047859, atk:257757, cd:4, atkMag:100, ultMag:120, fullname : "짓궂은 갸루 브리트니", name : "갸브리", element : 1, role : 0, hpUp : 45},
+{ok : true, id : 10181, rarity : 3, po:3, hp:1360091, atk:198411, cd:4, atkMag:100, ultMag:514, fullname : "여유로운 삷 칸다 아야네", name : "여야네", element : 0, role : 2, hpUp : 30},
+{ok : true, id : 10182, rarity : 3, po:1, hp:1033244, atk:261300, cd:5, atkMag:0, ultMag:0, fullname : "커리어 우먼 칸다 리오", name : "리오", element : 4, role : 3, hpUp : 45},
+{ok : true, id : 10183, rarity : 3, po:1, hp:1047859, atk:257757, cd:4, atkMag:100, ultMag:120, fullname : "짓궂은 갸루 브리트니", name : "갸브리", element : 1, role : 0, hpUp : 45},
 
 /*
       element  role     rarity
