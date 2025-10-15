@@ -142,6 +142,7 @@ function makeComp(list) {
       const ch = getCharacter(id);
       stringArr.push(`
          <div style="display:flex; flex-direction:column; align-items:center">
+            <div id="hit${idx}" class="act_btn" onclick="do_hit(${idx})" style="border:1px solid white;">HIT</div>
             <img id="ult${idx}" class="act_btn" onclick="do_ult(${idx})" src="${address}/images/icons/btn_up.png">
             <div id="cd-max${idx}" class="cd-container"><div id="cd${idx}" class="cd"></div></div>
             <div class="character" style="margin:0.2rem;">
@@ -259,6 +260,17 @@ function do_def(idx) {
    comp[idx].defense();
    act_after();
 }
+
+const reserve_hit = [false, false, false, false, false];
+function do_hit(idx) {
+   reserve_hit[idx] = !reserve_hit[idx];
+   setHitBox(idx);
+}
+function setHitBox(idx) {
+   const ths = document.getElementById(`hit${idx}`);
+   if (reserve_hit[idx]) ths.style.borderColor = "blue";
+   else ths.style.borderColor = "white";
+}
 function act_after() {
    for(let i = 0; i < 5; i++) comp[i].isHealed = false;
    endAct();
@@ -273,6 +285,11 @@ let scarecrowTurn = 99, isEnd = false;
 function endAct() {
    if (isAllActed()) {
       for(let i = 0; i < 5; i++) comp[i].turnover();
+      for(let i = 0; i < 5; i++) {
+         if (reserve_hit[i]) comp[i].hit();
+         reserve_hit[i] = false;
+         setHitBox(i);
+      }
       nextTurn();
       boss.def = false;
       if (boss.hp <= 0 && scarecrowTurn > GLOBAL_TURN-1) scarecrowTurn = GLOBAL_TURN-1;
@@ -489,6 +506,10 @@ loadBefore = function() {
    loadBefore2();
    log.pop();
    while (log[log.length-1][2] > 0) log.pop();
+   for(let i = 0; i < 5; i++) {
+      reserve_hit[i] = false;
+   setHitBox(i);
+   }
 }
 const applyDotDmg2 = applyDotDmg;
 applyDotDmg = function(...args) {
