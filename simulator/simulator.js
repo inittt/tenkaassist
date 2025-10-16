@@ -48,7 +48,27 @@ document.addEventListener("DOMContentLoaded", function() {
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
    })
+
+   document.addEventListener("adminAuto", onKeyUp);
 });
+
+// 키를 뗄 때 실행되는 함수
+function onKeyUp(event) {
+   if (event.key === "a" || event.key === "A") {
+      for(const a of commandList) {
+         const _idx = Number(a[0])-1;
+         switch(a[1]) {
+            case "평" : do_atk(_idx); break;
+            case "궁" : do_ult(_idx); break;
+            case "방" : do_def(_idx); break;
+            default : break;
+         }
+      }
+   }
+}
+
+// 문서 전체에 keyup 이벤트 등록
+document.addEventListener("adminAuto", onKeyUp);
 
 function extractActions(data) {
    return data.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
