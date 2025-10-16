@@ -169,7 +169,7 @@ function makeCompBlock(comp) {
       //////
 
       document.getElementById('fit-dmg').innerHTML = `${formatNumber(fitDmg)} (${formatNumber(noHitDmg)})`;
-      if (recommend > 0 && bondList_tmp.every(i => i == 5) && fitDmg != recommend) {
+      if (recommend >= 0 && bondList_tmp.every(i => i == 5) && fitDmg != recommend) {
          const formData = new FormData();
          formData.append("compId", id);
          formData.append("dmg13", fitDmg);
