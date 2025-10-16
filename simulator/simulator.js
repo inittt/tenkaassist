@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function() {
       console.log(t("데이터 로드 실패"), e);
    })
 
-   document.addEventListener("adminAuto", onKeyUp);
+   document.addEventListener("keyup", onKeyUp);
 });
 
 // 키를 뗄 때 실행되는 함수
