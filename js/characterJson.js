@@ -339,6 +339,7 @@ function toChInfo(id) {
 
    let str = translate[cur.name].en;
    str = str.replace('.', '_').replace('-',"").replace('Ⅷ', '8').toLowerCase();
+   str = str.replace('momdaphne', 'momDaphne');
 
    const lang_tmp = {
       "ko" : "kr/",
