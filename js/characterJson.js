@@ -156,9 +156,8 @@ const chJSON = { data : [
 {ok : true, id : 10183, rarity : 3, po:1, hp:1047859, atk:257757, cd:4, atkMag:100, ultMag:120, fullname : "짓궂은 갸루 브리트니", name : "갸브리", element : 1, role : 0, hpUp : 45},
 {ok : true, id : 10184, rarity : 3, po:1, hp:1053617, atk:256428, cd:3, atkMag:0, ultMag:0, fullname : "밝히는 토끼 더피", name : "농피", element : 4, role : 1, hpUp : 45},
 {ok : true, id : 10185, rarity : 3, po:1, hp:907908, atk:297616, cd:4, atkMag:100, ultMag:0, fullname : "광망의 페어리 리리나", name : "리리나", element : 3, role : 0, hpUp : 45},
-
-// {ok : true, id : 10186, rarity : 3, hp:1278601, atk:211254, cd:1, atkMag:100, ultMag:0, fullname : "우아한 메이드 살루시아", name : "메살루", element : 1, role : 2, hpUp : 45},
-// {ok : true, id : 10187, rarity : 3, hp:1105877, atk:244028, cd:3, atkMag:100, ultMag:397, fullname : "엘프 메이드 루티", name : "루티", element : 4, role : 4, hpUp : 45},
+{ok : true, id : 10186, rarity : 3, hp:1278601, atk:211254, cd:1, atkMag:100, ultMag:0, fullname : "우아한 메이드 살루시아", name : "메살루", element : 1, role : 2, hpUp : 45},
+{ok : true, id : 10187, rarity : 3, hp:1105877, atk:244028, cd:3, atkMag:100, ultMag:397, fullname : "엘프 메이드 루티", name : "루티", element : 4, role : 4, hpUp : 45},
 
 /*
       element  role     rarity
