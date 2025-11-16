@@ -636,7 +636,7 @@ const translate = {
    "리오" : {en : "Ria", sc : "勇妈", tc : "勇媽", jp : "神田莉央"},
    "농피" : {en : "H.MomDaphne", sc : "小兔妈", tc : "幼媽", jp : "ロリ ダフィー"},
    "리리나" : {en : "Lilinor", sc : "仙子", tc : "仙子", jp : "狂気の妖精 リリナ"},
-   "메살루" : {en : "*Salucia", sc : "*赛露西亚", tc : "*賽露西亞", jp : "メイド セルシア"},
+   "메살루" : {en : "M.Salucia", sc : "仆王", tc : "僕精", jp : "メイド セルシア"},
    "루티" : {en : "Lutty", sc : "露媞", tc : "露媞", jp : "ルティ"},
 
    "아이카" : {en : "Aiko", sc : "艾可", tc : "艾可", jp : "アイカ"},
