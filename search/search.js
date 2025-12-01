@@ -26,9 +26,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
          isEnd = false; cnt = 0; sort = 1; page = 0;
          if ("허수+(5)" === this.value) sort = 0;
-         else if ("최신등록순" === this.value) sort = 2;
-         else if ("최신수정순" === this.value) sort = 3;
-         else if ("13턴딜(1)" === this.value) sort = 4;
+         if ("최신등록순" === this.value) sort = 2;
+         if ("최신수정순" === this.value) sort = 3;
+         if ("13턴딜(1)" === this.value) sort = 4;
          
          document.getElementById('compcontainer').innerHTML = "";
          getComps();
