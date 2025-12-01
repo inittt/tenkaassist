@@ -26,9 +26,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
          isEnd = false; cnt = 0; sort = 1; page = 0;
          if ("허수+(5)" === this.value) sort = 0;
-         if ("최신등록순" === this.value) sort = 2;
-         if ("최신수정순" === this.value) sort = 3;
-         if ("13턴딜(1)" === this.value) sort = 4;
+         else if ("최신등록순" === this.value) sort = 2;
+         else if ("최신수정순" === this.value) sort = 3;
+         else if ("13턴딜(1)" === this.value) sort = 4;
          
          document.getElementById('compcontainer').innerHTML = "";
          getComps();
@@ -138,8 +138,8 @@ function makeBlock(curData) {
       let last;
       switch(sort) {
          case 1 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`; break;
-         case 2 : last = `${rankOrBond1(ranking, vote)}`; break;
-         case 3 : last = `${rankOrBond1(ranking, vote)}`; break;
+         case 2 : last = `${bond5OrBond1(recommend, vote)}`; break;
+         case 3 : last = `${bond5OrBond1(recommend, vote)}`; break;
          case 4 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(vote)}`; break;
          default : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}${t("턴")}`;
       } stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
@@ -157,9 +157,9 @@ function makeBlock(curData) {
    `;
 }
 
-function rankOrBond1(ranking, dmg13_1) {
-   if (ranking < 99 || dmg13_1 == 0) return `<i class="fa-solid fa-skull"></i> `+ranking.toFixed(0)+t("턴");
-   return `<i class="fa-solid fa-burst"></i> `+formatNumber(dmg13_1)+" (1)";
+function bond5OrBond1(recommend, vote) {
+   if (recommend > 0) return `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`;
+   return `<i class="fa-solid fa-burst"></i> ${formatNumber(vote)} (1)`;
 }
 
 function init() {
