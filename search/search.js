@@ -4,7 +4,7 @@ const chIds = _c == "0" ? null : _c;
 const banList = _b == "0" ? null : _b;
 const deckName = _d == "0" ? null : `${getCharacter(Number(_d)).name}덱`;
 const curHeader = 2;
-let page = 0, sort = 0, isLoading = false;
+let page = 0, sort = 1, isLoading = false;
 
 document.addEventListener("DOMContentLoaded", function() {
    var dropdownBtn = document.getElementById("dropdownBtn");
@@ -24,11 +24,11 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
-         isEnd = false; cnt = 0; sort = 0; page = 0;
-         if ("13턴딜(5)" === this.value) sort = 1;
-         if ("최신등록순" === this.value) sort = 2;
-         if ("최신수정순" === this.value) sort = 3;
-         if ("13턴딜(1)" === this.value) sort = 4;
+         isEnd = false; cnt = 0; sort = 1; page = 0;
+         if ("허수+(5)" === this.value) sort = 0;
+         else if ("최신등록순" === this.value) sort = 2;
+         else if ("최신수정순" === this.value) sort = 3;
+         else if ("13턴딜(1)" === this.value) sort = 4;
          
          document.getElementById('compcontainer').innerHTML = "";
          getComps();

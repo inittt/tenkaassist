@@ -1,6 +1,6 @@
 let page = 0; // 시작 페이지
 let isLoading = false;
-let sort = 0;
+let sort = 1;
 let cnt = 1;
 const curHeader = 1;
 
@@ -23,12 +23,12 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
-         sort = 0;
-         document.getElementById('titleboxText').innerHTML = `${t("조합")} - ${t(this.value)}`;
-         if ("13턴딜(5)" === this.value) sort = 1;
-         if ("최신등록순" === this.value) sort = 2;
-         if ("최신수정순" === this.value) sort = 3;
-         if ("13턴딜(1)" === this.value) sort = 4;
+         sort = 1;
+         document.getElementById('titleboxText').innerHTML = `${t("조합")}`;
+         if ("허수+(5)" === this.value) sort = 0;
+         else if ("최신등록순" === this.value) sort = 2;
+         else if ("최신수정순" === this.value) sort = 3;
+         else if ("13턴딜(1)" === this.value) sort = 4;
          
          page = 0; cnt = 1; isLoading = true;
          getComps();
