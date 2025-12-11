@@ -158,10 +158,10 @@ const chJSON = { data : [
 {ok : true, id : 10185, rarity : 3, po:1, hp:907908, atk:297616, cd:4, atkMag:100, ultMag:0, fullname : "광망의 페어리 리리나", name : "리리나", element : 3, role : 0, hpUp : 45},
 {ok : true, id : 10186, rarity : 3, po:3, hp:1278601, atk:211254, cd:1, atkMag:100, ultMag:0, fullname : "우아한 메이드 살루시아", name : "메살루", element : 1, role : 2, hpUp : 45},
 {ok : true, id : 10187, rarity : 3, po:1, hp:1105877, atk:244028, cd:3, atkMag:100, ultMag:397, fullname : "엘프 메이드 루티", name : "루티", element : 4, role : 4, hpUp : 45},
-// {ok : true, id : 10188, rarity : 3, hp:1133336, atk:249785, cd:4, atkMag:0, ultMag:0, fullname : "시들어버린 장미 이블리스", name : "장이블", element : 3, role : 3, hpUp : 50},
-// {ok : true, id : 10189, rarity : 3, hp:959726, atk:294959, cd:4, atkMag:100, ultMag:0, fullname : "죽음의 장송곡 사탄", name : "장사탄", element : 0, role : 0, hpUp : 50},
+{ok : true, id : 10188, rarity : 3, hp:1133336, atk:249785, cd:4, atkMag:0, ultMag:0, fullname : "시들어버린 장미 이블리스", name : "장이블", element : 3, role : 3, hpUp : 50},
+{ok : true, id : 10189, rarity : 3, hp:959726, atk:294959, cd:4, atkMag:100, ultMag:0, fullname : "죽음의 장송곡 사탄", name : "장사탄", element : 0, role : 0, hpUp : 50},
 // {ok : true, id : 10190, rarity : 3, hp:991613, atk:285659, cd:4, atkMag:0, ultMag:0, fullname : "쇠락한 장미 바알", name : "장바알", element : 1, role : 1, hpUp : 50},
-// {ok : true, id : 10191, rarity : 3, hp:967255, atk:292745, cd:4, atkMag:0, ultMag:504, fullname : "마왕 나나", name : "마나나", element : 2, role : 0, hpUp : 50},
+{ok : true, id : 10191, rarity : 3, hp:967255, atk:292745, cd:4, atkMag:0, ultMag:504, fullname : "마왕 나나", name : "마나나", element : 2, role : 0, hpUp : 50},
 
 /*
       element  role     rarity
