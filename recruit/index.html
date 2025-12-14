@@ -93,13 +93,9 @@
       "폭발력", "생존력", "전투", "범위공격", "반격"
    ]
    for(let i = 0; i < 33; i++) {
-      let _isEn = false;
-      if (lang == "en") _isEn = true;
-      if (_isEn && textList[i].includes("속성")) {
-         document.getElementById(`c${i+1}`).innerText = t(textList[i]) + " Attr";
-      } else {
-         document.getElementById(`c${i+1}`).innerText = t(textList[i]);
-      }
+      const _cur = document.getElementById(`c${i+1}`);
+      if (lang == "en" && textList[i].includes("속성")) _cur.innerText = t(textList[i]) + " Attr";
+      else _cur.innerText = t(textList[i]);
    }
 </script>
 </html>
