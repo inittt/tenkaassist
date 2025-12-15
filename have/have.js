@@ -27,24 +27,6 @@ document.addEventListener("DOMContentLoaded", function() {
       });
    });
 
-   const dropdownBtn2 = document.getElementById(`btn2`);
-   const dropdownContent2 = document.getElementById(`drop2`);
-   dropdownBtn2.addEventListener("click", function() {
-      dropdownContent2.style.display = dropdownContent2.style.display === "block" ? "none" : "block";
-   });
-   const radios2 = document.querySelectorAll(`.dropdown-content input[name='b2']`);
-   radios2.forEach(function(option) {
-      option.addEventListener("click", function() {
-         if (this.value == "-1") dropdownBtn2.innerText = `auto`;
-         else dropdownBtn2.innerText = `${formatNumber2(this.value)}`;
-         const spanElement = document.createElement('span');
-         spanElement.classList.add('absolute-right');
-         spanElement.innerHTML = '▼'
-         dropdownBtn2.appendChild(spanElement);
-         dropdownContent2.style.display = "none";
-      });
-   });
-
    const dropdownBtn3 = document.getElementById(`btn3`);
    const dropdownContent3 = document.getElementById(`drop3`);
    dropdownBtn3.addEventListener("click", function() {
@@ -63,16 +45,6 @@ document.addEventListener("DOMContentLoaded", function() {
    });
    makeOptionUI();
 });
-
-function formatNumber2(value) {
-   if (typeof value == "string") value = Number(value);
-
-   if (lang == "en") return (value / 1000000000).toFixed(0) + ' B';
-   else if (lang == "sc") return (value / 100000000).toFixed(0) + '亿';
-   else if (lang == "tc") return (value / 100000000).toFixed(0) + '億';
-   else if (lang == "jp") return (value / 100000000).toFixed(0) + '億';
-   else return (value / 100000000).toFixed(0) + '억';
-}
 
 
 function getCharactersWithCondition(element, role, rarity, search) {
@@ -120,11 +92,29 @@ function searchDeck() {
    if (go.length < 1) return alert(t("하나 이상의 캐릭터를 선택해 주세요"));
 
    const hpUp = document.querySelector('input[name="b1"]:checked').value;
-   const fit13t = document.querySelector('input[name="b2"]:checked').value;
+   const fit13t = getB2Value();
+   if (fit13t == -2) return alert(t("올바르지 않은 입력이 있습니다"));
+   
    const bel = document.querySelector('input[name="b3"]:checked').value;
    const hitAll = document.getElementById('hitAllChkBox').checked;
 
    location.href = `${address}/make/?hpUp=${hpUp}&fit13t=${fit13t}&list=${go}&bond=${b}&bossEl=${bel}&options=${options}&hitAll=${hitAll}`;
+}
+function getB2Value() {
+   const input = document.querySelector('input[name="b2"]');
+   const value = input.value.trim();
+
+   if (value === '') return -1; // 값 없음
+   if (!/^\d+$/.test(value)) return -2; // 정수 체크
+
+   const num = Number(value);
+   if (lang === "en") {
+      if (num > 99) return -2;
+      return num*1000000000;
+   } else {
+      if (num > 999) return -2;
+      return num*100000000;
+   }
 }
 
 // 코드 복사 누를시

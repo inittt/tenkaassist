@@ -361,7 +361,7 @@ const translate = {
    "클립보드 복사 실패" : {en : "Failed to copy to clipboard.", sc : "无法复制到剪贴板。", tc : "無法複製到剪貼簿。", jp : "クリップボードにコピーできませんでした"},
    "코드복사" : {en : "Copy Code", sc : "复制代码", tc : "複製代碼", jp : "コードをコピー"},
    "붙여넣기" : {en : "Paste", sc : "粘贴", tc : "貼上", jp : "貼り付け"},
-   "최소조건" : {en : "Requirement", sc : "最低条件", tc : "最低條件", jp : "必要条件"},
+   "최소조건" : {en : "Min", sc : "最低条件", tc : "最低條件", jp : "必要条件"},
 
 
 

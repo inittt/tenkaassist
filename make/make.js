@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
-         mod = 0; curCalc = 15;
+         mod = 0; curCalc = maxCur13t/e9;;
          if ("2개" === this.value) mod = 1;
          else if ("3개" === this.value) mod = 2;
          else if ("4개" === this.value) mod = 3;
@@ -210,6 +210,7 @@ function check_class_option(team) {
    }
 }
 
+let maxCur13t = 0;
 function setPossible() {
    const hpUpMap = new Map();
    for(let d of chJSON.data) {
@@ -239,7 +240,10 @@ function setPossible() {
             else if (bonds.every(item => item === 1) && d.vote > 0) d.fit13t = d.vote;
             else d.fit13t = autoCalc(compList, d.description, bonds, -1, _optionList);
 
-            if (d.fit13t >= limit_fit) possible.push(d);
+            if (d.fit13t >= limit_fit) {
+               if (d.fit13t > maxCur13t) maxCur13t = d.fit13t;
+               possible.push(d);
+            }
          } else {
             if (hpUpMap.get(compList[0]) < limit_hp_up) continue;
 
@@ -248,7 +252,10 @@ function setPossible() {
 
             d.fit13t = autoCalc(compList, d.description, bonds, boss_element, _optionList);
 
-            if (d.fit13t >= limit_fit) possible.push(d);
+            if (d.fit13t >= limit_fit) {
+               if (d.fit13t > maxCur13t) maxCur13t = d.fit13t;
+               possible.push(d);
+            }
          }
       }
    }
@@ -359,7 +366,7 @@ function onOffEss() {
    else {
       setEss(false);
       if (isSameSet(essSave, essSet) && isSameSet(exSave, exSet)) return;
-      curCalc = 15;
+      curCalc = maxCur13t/e9;
       makeBlock();
       essSave = new Set(essSet); exSave = new Set(exSet);
    }

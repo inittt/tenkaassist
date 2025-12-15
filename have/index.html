@@ -59,42 +59,11 @@
          </div>
          <span>&</span>
          <div class="select_dropdown">
-            <div class="dropdown">
-               <button id="btn2" class="dropdown-btn" style="height:1.5rem;">auto<span class="absolute-right">▼</span></button>
-               <div id="drop2" class="dropdown-content">
-                  <input type="radio" id="b2-1" name="b2" value="-1" checked>
-                  <label id="l_b2-1" for="b2-1">auto</label>
-                  <input type="radio" id="b214" name="b2" value="15000000000">
-                  <label id="l_b214" for="b214">15000000000</label>
-                  <input type="radio" id="b213" name="b2" value="14000000000">
-                  <label id="l_b213" for="b213">14000000000</label>
-                  <input type="radio" id="b212" name="b2" value="13000000000">
-                  <label id="l_b212" for="b212">13000000000</label>
-                  <input type="radio" id="b211" name="b2" value="12000000000">
-                  <label id="l_b211" for="b211">12000000000</label>
-                  <input type="radio" id="b210" name="b2" value="11000000000">
-                  <label id="l_b210" for="b210">11000000000</label>
-                  <input type="radio" id="b29" name="b2" value="10000000000">
-                  <label id="l_b29" for="b29">10000000000</label>
-                  <input type="radio" id="b28" name="b2" value="9000000000">
-                  <label id="l_b28" for="b28">9000000000</label>
-                  <input type="radio" id="b27" name="b2" value="8000000000">
-                  <label id="l_b27" for="b27">8000000000</label>
-                  <input type="radio" id="b26" name="b2" value="7000000000">
-                  <label id="l_b26" for="b26">7000000000</label>
-                  <input type="radio" id="b25" name="b2" value="6000000000">
-                  <label id="l_b25" for="b25">6000000000</label>
-                  <input type="radio" id="b24" name="b2" value="5000000000">
-                  <label id="l_b24" for="b24">5000000000</label>
-                  <input type="radio" id="b23" name="b2" value="4000000000">
-                  <label id="l_b23" for="b23">4000000000</label>
-                  <input type="radio" id="b22" name="b2" value="3000000000">
-                  <label id="l_b22" for="b22">3000000000</label>
-                  <input type="radio" id="b21" name="b2" value="0">
-                  <label id="l_b21" for="b21">0</label>
-               </div>
+            <div class="dropdown" style="width:2.8rem;">
+               <input name="b2" type="text" class="dropdown-btn" style="width:2.8rem;" placeholder="auto">
             </div>
          </div>
+         <span id="unit">억</span>
          <div class="select_dropdown">
             <div class="dropdown" style="width:3rem;">
                <button id="btn3" class="dropdown-btn" style="height:1.5rem; width:3rem;"><img class="icon-middle" src="../images/elements/ico_none.png"><span class="absolute-right">▼</span></button>
@@ -164,11 +133,17 @@
    document.title = "TenkaAssist - " + t("보유 캐릭터");
    document.getElementById("titleBox").innerText = t("보유");
 
-   for(let i = 1; i < 15; i++) {
-      const set13t = document.getElementById(`l_b2${i}`);
-      let val = set13t.innerText;
-      set13t.innerText = formatNumber2(val);
+   document.getElementById("unit").innerText = getUnit();
+   function getUnit() {
+      switch(lang) {
+         case "en" : return 'B';
+         case "sc" : return '亿';
+         case "tc" : return '億';
+         case "jp" : return '億';
+         default : return '억';
+      }
    }
+   document.getElementById("unit").innerText ;
    
    document.getElementById("selectedCh").innerHTML = `${t("보유중인 캐릭터를 선택해 주세요")}<br>(${t("로그인 된 경우 동기화 가능")})`;
    document.getElementById("characterSearchBtn2").innerText = t(" 검색").trim();
