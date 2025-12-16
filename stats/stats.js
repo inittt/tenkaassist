@@ -160,8 +160,8 @@ function setCharacters(curSortList) {
 }
 
 function clickedCh(id) {
-   if (mod == 1) window.open(`${address}/search/?list=${id}&leader=${id}`, '_blank');
-   else window.open(`${address}/search/?list=${id}`, '_blank');
+   if (mod == 1) window.open(`${address}/search/?list=${id}&&ban=0&leader=${id}`, '_blank');
+   else window.open(`${address}/search/?list=${id}&ban=0&leader=0`, '_blank');
 }
 
 function setUserCnt() {
