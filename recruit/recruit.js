@@ -238,7 +238,7 @@ function makeSSRBlock(list) {
                </div>
             </div>
             <div style="width:3rem;">${Math.floor(ch.per*100)}%</div>
-            <div style="width:12rem;">${t("리더")} ${getTranslatedTags(ch.cur)}</div>
+            <div style="width:12rem;">${t("리더")}, ${getTranslatedTags(ch.cur)}</div>
          </div>
       `)
    }
