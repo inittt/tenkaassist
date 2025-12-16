@@ -105,14 +105,16 @@ function getB2Value() {
    const value = input.value.trim();
 
    if (value === '') return -1; // 값 없음
-   if (!/^\d+$/.test(value)) return -2; // 정수 체크
 
-   const num = Number(value);
    if (lang === "en") {
-      if (num > 99) return -2;
-      return num*1000000000;
+      if (!/^\d+(\.\d)?$/.test(value)) return -2;
+      const num = Number(value);
+      if (num > 99 || num < 0) return -2;
+      return Math.round(num * 1000000000);
    } else {
-      if (num > 999) return -2;
+      if (!/^\d+$/.test(value)) return -2; // 정수 체크
+      const num = Number(value);
+      if (num > 999 || num < 0) return -2;
       return num*100000000;
    }
 }
