@@ -386,6 +386,7 @@ const translate = {
    "조련": {en : "Discipline", sc: "调教", tc: "調教", jp: "調教"},
    "잠재": {en : "potential", sc: "潜力", tc: "潛力", jp: "潜在"},
    "적 설정": {en : "Enemy Settings", sc: "敌人设置", tc: "敵人設定", jp: "敵の設定"},
+   "허수++": {en : "dummy++", sc: "木椿++", tc: "木椿++", jp: "かかし++"},
    "허수+": {en : "dummy+", sc: "木椿+", tc: "木椿+", jp: "かかし+"},
    "허수": {en : "dummy", sc: "木椿", tc: "木椿", jp: "かかし"},
    "체험": {en : "trial", sc: "试玩", tc: "試玩", jp: "体験"},

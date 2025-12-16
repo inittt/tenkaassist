@@ -39,8 +39,9 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownContent.style.display = "none";
 
          document.getElementById("hp-txt").disabled = true;
-         if ("허수+" === this.value) hp_set = 10854389981;
-         else if ("허수" === this.value) hp_set = 2147483192;
+         if ("허수" === this.value) hp_set = 2147483192;
+         else if ("허수+" === this.value) hp_set = 10854389981;
+         else if ("허수++" === this.value) hp_set = 51116035636;
          else if ("체험" === this.value) hp_set = 5063653034;
          else if ("Lv30" === this.value) hp_set = 277604127;
          else if ("Lv40" === this.value) hp_set = 822895555;
