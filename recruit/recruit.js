@@ -246,8 +246,12 @@ function makeSSRBlock(list) {
 }
 function getTranslatedTags(str) {
    const tg = str.split(" ");
-   for(let i = 0; i < tg.length; i++) tg[i] = t(tg[i]);
-   return tg.join(" ");
+   for(let i = 0; i < tg.length; i++) {
+      const _arr = ['화속성','수속성','풍속성','광속성','암속성'];
+      if (lang == "en" && _arr.includes(tg[i])) tg[i] = t(tg[i]) + " Attr";
+      else tg[i] = t(tg[i]);
+   }
+   return tg.join(", ");
 }
 
 function makeSRBlock(list) {
