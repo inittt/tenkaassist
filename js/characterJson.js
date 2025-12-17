@@ -1,4 +1,5 @@
 const liberationList = ["바알", "사탄", "이블리스", "살루시아", "란", "루루", "밀레", "섹돌", "치즈루", "노엘리", "페바알","신이블","이치카", "적나나", "해나나"];
+const eternalList = ["바알", "사탄", "이블리스", "살루시아", "란", "루루", "밀레", "섹돌", "울타", "아야네", "무엘라", "치즈루", "아르티아", "메스미나", "라티아", "슈텐", "카시피나", "에피나", "이노리", "미루", "파야", "에밀리", "안젤리카", "렌", "테키", "세라프", "하쿠", "모모"];
 const chJSON = { data : [
 {ok : true, id : 10001, rarity : 3, po:1, hp:962383, atk:254657, cd:3, atkMag:100, ultMag:503, fullname : "마왕 바알", name : "바알", element : 0, role : 0, hpUp : 20},
 {ok : true, id : 10002, rarity : 3, po:3, hp:1384007, atk:177152, cd:3, atkMag:100, ultMag:0, fullname : "마왕 사탄", name : "사탄", element : 4, role : 2, hpUp : 0},
