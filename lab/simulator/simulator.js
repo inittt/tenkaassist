@@ -272,7 +272,10 @@ function setHitBox(idx) {
    else ths.style.borderColor = "white";
 }
 function act_after() {
-   for(let i = 0; i < 5; i++) comp[i].isHealed = false;
+   for(let i = 0; i < 5; i++) {
+      comp[i].isHealed = false;
+      comp[i].isHealed2 = false;
+   }
    endAct();
    actNum++;
    updateAll();
