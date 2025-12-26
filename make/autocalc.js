@@ -82,6 +82,7 @@ function autoCalc(idList, command, bondList, boss_element = -1, _optionList = nu
       for(let i = 0; i < 5; i++) {
          comp[i].isHealed = false;
          comp[i].isHealed2 = false;
+         comp[i].isHealed3 = false;
       }
       endAct();
       actNum++;
