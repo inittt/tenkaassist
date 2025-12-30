@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>TenkaAssist - 태그</title>
+   <meta name="description" content="tenkaAssist">
+   <script src="../js/common.js"></script>
+   <link rel="stylesheet" href="../css/common.css" type = "text/css">
+   <script>const curHeader = 3;</script>
+</head>
+<body>
+   <script src="../js/header.js"></script>
+   <div class="main-container bg-dark">
+      <div class="block">
+         <div class="margin-left titleblock"><span id="titleboxText" class="titlebox">태그</span></div>
+      </div>
+      <div class="block">
+         
+      </div>
+</body>
+<script>
+   document.title = "TenkaAssist - " + t("태그");
+   document.getElementById("titleboxText").innerText = t("태그");
+
+   function show(n) {
+      const div = document.getElementById(`ym-${n}`);
+      const bool = div.classList.contains("d-n");
+      if (bool) div.classList.remove("d-n");
+      else div.classList.add("d-n");
+   }
+</script>
+</html>

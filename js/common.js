@@ -469,6 +469,9 @@ const translate = {
    // 회원가입
    "닉네임": {en : "Nickname", sc : "昵称", tc : "暱稱", jp: "ニックネーム"},
    "회원가입 성공": {en : "Registration successful", sc : "注册成功", tc : "註冊成功", jp: "登録成功"},
+
+   // 태그
+   "태그": {"en": "Tag", "sc": "标签", "tc": "標籤", "jp": "タグ"},
    
    // 캐릭터명
    "바알" : {en : "Baal", sc : "巴尔", tc : "巴爾", jp : "バル"},
