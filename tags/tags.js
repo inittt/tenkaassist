@@ -7,7 +7,36 @@ const tagList = [
 
    "buff:fire_attr","buff:water_attr","buff:wind_attr","buff:light_attr","buff:dark_attr",
    "buff:attacker","buff:healer","buff:protector","buff:supporter","buff:obstructer",
-   "buff:1st_position","buff:2nd_position","buff:3rd_position","buff:4th_position","buff:5th_position",
-   
+
+   "pure_dps","sub_dps",
    "remove_guard","CD_reduce","increase_target_CD","dmg_to_guard","taunt","opening_CDR","shield"
 ];
+
+document.addEventListener("DOMContentLoaded", function() {
+   const input = document.getElementById("searchInput");
+   const suggestions = document.getElementById("suggestions");
+
+   input.addEventListener("input", () => {
+      const value = input.value.toLowerCase();
+      suggestions.innerHTML = "";
+
+      if (!value) return;
+
+      const filtered = tagList.filter(tag =>
+         tag.toLowerCase().includes(value)
+      );
+
+      filtered.forEach(tag => {
+         const div = document.createElement("div");
+         div.className = "suggestion-item";
+         div.textContent = tag;
+
+         div.onclick = () => {
+            input.value = tag;
+            suggestions.innerHTML = "";
+         };
+
+         suggestions.appendChild(div);
+      });
+   });
+});

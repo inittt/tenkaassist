@@ -6,7 +6,9 @@
    <title>TenkaAssist - 태그</title>
    <meta name="description" content="tenkaAssist">
    <script src="../js/common.js"></script>
+   <script src="./tags.js"></script>
    <link rel="stylesheet" href="../css/common.css" type = "text/css">
+   <link rel="stylesheet" href="./tags.css" type = "text/css">
    <script>const curHeader = 3;</script>
 </head>
 <body>
@@ -15,19 +17,21 @@
       <div class="block">
          <div class="margin-left titleblock"><span id="titleboxText" class="titlebox">태그</span></div>
       </div>
-      <div class="block">
-         
+      <div class="block" style="position:relative;">
+         <div class="search-wrapper">
+            <input
+               type="text"
+               id="searchInput"
+               class="search-box"
+               placeholder="태그를 입력하세요"
+            />
+            <div id="suggestions" class="suggestions"></div>
+         </div>
       </div>
 </body>
 <script>
    document.title = "TenkaAssist - " + t("태그");
    document.getElementById("titleboxText").innerText = t("태그");
 
-   function show(n) {
-      const div = document.getElementById(`ym-${n}`);
-      const bool = div.classList.contains("d-n");
-      if (bool) div.classList.remove("d-n");
-      else div.classList.add("d-n");
-   }
 </script>
 </html>
