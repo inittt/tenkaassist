@@ -283,7 +283,7 @@ function setTag(id) {
 
    // OK 버튼
    modal.querySelector("#tagOkBtn").onclick = () => {
-      if (!confirm("저장하시겠습니까?")) return;
+      if (!confirm(t("저장하시겠습니까?"))) return;
 
       const input = modal.querySelector("#modalTagInput");
       const value = input.value.trim();
