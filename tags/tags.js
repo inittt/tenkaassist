@@ -248,11 +248,12 @@ function setTag(id) {
   // 현재 태그 상태
   const item = chTagList.find(i => i.id == id);
   const localTags = new Set(item?.tags?.split(" ") || []);
+  const curCharacter = getCharacter(id);
 
   // 모달 내용 생성
   modal.innerHTML = `
     <div style="display:flex; gap:1rem;">
-      ${ch1(getCharacter(id), false)}
+      ${ch1(curCharacter, false)}
       <div style="flex:1;">
         <div class="tag-input-wrapper" id="modalTagWrapper">
           <input type="text" id="modalTagInput" class="search-box">
@@ -282,32 +283,73 @@ function setTag(id) {
 
    // OK 버튼
    modal.querySelector("#tagOkBtn").onclick = () => {
-   const input = modal.querySelector("#modalTagInput");
-   const value = input.value.trim();
+      if (!confirm("저장하시겠습니까?")) return;
 
-   // ⭐ 1. input에 미확정 값이 있는 경우
-   if (value) {
-      if (!tagList.includes(value)) {
-         alert(t("올바르지 않은 입력이 있습니다"));
-         input.focus();
-         return; // ❌ 서버 요청 안 함
+      const input = modal.querySelector("#modalTagInput");
+      const value = input.value.trim();
+
+      // 1️⃣ input에 미확정 값이 있는 경우
+      if (value) {
+         if (!tagList.includes(value)) {
+            alert(t("올바르지 않은 입력이 있습니다"));
+            input.focus();
+            return; // 서버 요청 안 함
+         }
+         localTags.add(value);
+         input.value = "";
       }
 
-      // ⭐ 유효하면 태그로 확정
-      localTags.add(value);
-      input.value = "";
-   }
+      // 2️⃣ 여기서 rarity, role, element 체크
+      const rarityMap = ["N", "R", "SR", "SSR"];
+      const roleMap = ["role:attacker", "role:healer", "role:protector", "role:supporter", "role:obstructer"];
+      const attrMap = ["attr:fire", "attr:water", "attr:wind", "attr:light", "attr:dark"];
 
-   // ⭐ 2. 여기까지 왔다는 건 모두 유효
-   stg(id, [...localTags].join(" "))
-      .then(() => {
-         updateLocalTags(id, [...localTags].join(" "));
-         updateCharacterResult();
-         closeTagModal();
-      })
-      .catch(err => {
-         alert(err.message || err);
-      });
+      const rarityTag = rarityMap[curCharacter.rarity];
+      const roleTag = roleMap[curCharacter.role];
+      const attrTag = attrMap[curCharacter.element];
+
+      // 2-1. 필수 태그 존재 여부 확인
+      if (!localTags.has(rarityTag)) {
+         alert(t(`필수 태그(등급/속성/역할)가 선택되지 않았습니다`));
+         return;
+      }
+      if (!localTags.has(roleTag)) {
+         alert(t(`필수 태그(등급/속성/역할)가 선택되지 않았습니다`));
+         return;
+      }
+      if (!localTags.has(attrTag)) {
+         alert(t(`필수 태그(등급/속성/역할)가 선택되지 않았습니다`));
+         return;
+      }
+
+      // 2-2. 같은 타입 여러 개 선택 여부 확인
+      const typeCheck = (map) => {
+         let count = 0;
+         for (const t of map) {
+            if (localTags.has(t)) count++;
+         }
+         if (count > 1) {
+            alert(t(`등급/속성/역할은 하나씩만 선택할 수 있습니다`));
+            return false;
+         }
+         return true;
+      }
+
+      if (!typeCheck(rarityMap)) return;
+      if (!typeCheck(roleMap)) return;
+      if (!typeCheck(attrMap)) return;
+
+      // 3️⃣ 모든 체크 통과 → 서버 요청
+      stg(id, [...localTags].join(" "))
+         .then(() => {
+            updateLocalTags(id, [...localTags].join(" "));
+            updateCharacterResult();
+            closeTagModal();
+            alert(t("저장되었습니다"));
+         })
+         .catch(err => {
+            alert(err.message || err);
+         });
    };
 
    overlay.style.display = "block";

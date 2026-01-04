@@ -471,8 +471,13 @@ const translate = {
    "회원가입 성공": {en : "Registration successful", sc : "注册成功", tc : "註冊成功", jp: "登録成功"},
 
    // 태그
-   "태그": {"en": "Tag", "sc": "标签", "tc": "標籤", "jp": "タグ"},
+   "태그": {en: "Tag", sc: "标签", tc: "標籤", jp: "タグ"},
+   "저장하시겠습니까?": {en: "Do you want to save?", sc: "您要保存吗？", tc: "您要儲存嗎？", jp: "保存しますか？"},
+   "등급/속성/역할이 올바르지 않습니다": { "en": "Rarity/Attribute/Role is invalid", "sc": "稀有度/属性/角色无效", "tc": "稀有度/屬性/角色無效", "jp": "レア度/属性/役割が正しくありません" },
+   "필수 태그(등급/속성/역할)가 선택되지 않았습니다": {en: "Required tag (Rarity/Attribute/Role) is not selected", sc: "必需标签（稀有度/属性/角色）未选择", tc: "必需標籤（稀有度/屬性/角色）未選擇", jp: "必須タグ（レア度/属性/役割）が選択されていません"},
+   "등급/속성/역할은 하나씩만 선택할 수 있습니다": {en: "Only one tag can be selected for Rarity/Attribute/Role", sc: "稀有度/属性/角色只能各选择一个", tc: "稀有度/屬性/角色只能各選擇一個", jp: "レア度/属性/役割はそれぞれ1つずつしか選択できません"},
    
+
    // 캐릭터명
    "바알" : {en : "Baal", sc : "巴尔", tc : "巴爾", jp : "バル"},
    "사탄" : {en : "Satan", sc : "撒旦", tc : "撒旦", jp : "サタン"},
