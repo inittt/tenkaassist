@@ -214,10 +214,24 @@ function tag1(id) {
 
    let tgs = item.tags.split(" ");
 
-   // ⭐ tagList 순서 기준으로 정렬
    tgs.sort((a, b) => {
-      const ia = tagList.indexOf(a), ib = tagList.indexOf(b);
-      return (ia === -1 ? 9999 : ia) - (ib === -1 ? 9999 : ib);
+      const priority = (tag) => {
+         // 1️⃣ 등급
+         if (["N", "R", "SR", "SSR"].includes(tag)) return 0 + ["N", "R", "SR", "SSR"].indexOf(tag);
+
+         // 2️⃣ 접두사 기준
+         if (tag.startsWith("attr:")) return 10;
+         if (tag.startsWith("role:")) return 20;
+         if (tag.startsWith("immunity:")) return 30;
+         if (tag.startsWith("CD:")) return 40;
+         if (tag.startsWith("core:")) return 50;
+         if (tag.startsWith("buff:")) return 60;
+
+         // 3️⃣ 나머지
+         return 99;
+      };
+
+      return priority(a) - priority(b);
    });
 
    const res = tgs.map(tag =>
