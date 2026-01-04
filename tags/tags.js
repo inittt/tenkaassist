@@ -319,12 +319,12 @@ function updateLocalTags(id, tags) {
 
   if (item) {
     // 기존 캐릭터 → 태그 갱신
-    item.tags = tags.join(" ");
+    item.tags = tags;
   } else {
     // 기존에 없던 캐릭터 → 새로 추가
     chTagList.push({
       id,
-      tags: tags.join(" ")
+      tags: tags
     });
   }
 }
