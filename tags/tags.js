@@ -359,7 +359,7 @@ function modalTagSearch(input, suggestions, wrapper, tagSet) {
     if (!v) return;
 
     tagList
-      .filter(t => t.includes(v) && !tagSet.has(t))
+      .filter(t => t.toLowerCase().includes(v) && !tagSet.has(t))
       .forEach(tag => {
         const div = document.createElement("div");
         div.className = "suggestion-item";
