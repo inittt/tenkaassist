@@ -129,6 +129,56 @@
   border-color: white;
 }
 
+#tagModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 9998;
+}
+
+#tagModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 28rem;
+  max-width: 90%;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  z-index: 9999;
+  border:0.1rem solid white;
+}
+
+#tagModal .tag-input-wrapper {
+  background: #fff;
+}
+
+#tagModal .tag-chip {
+  background: #222;
+  border-color: #555;
+  color: #fff;
+}
+
+.modal-suggestions {
+  position: static;
+  margin-top: 0.3rem;
+
+  max-height: 12rem;     /* 최대 높이 */
+  min-height: 12rem;     /* ⭐ 미리 공간 확보 */
+
+  overflow-y: auto;
+
+  background: #fff;
+  color: #000;
+  border-radius: 0.3rem;
+}
+
+.modal-suggestions:empty {
+  visibility: hidden;
+}
+
 @media (min-width: 992px) {
   .result-box {
     grid-template-columns: repeat(2, 1fr);

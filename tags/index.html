@@ -19,6 +19,7 @@
       <div class="block">
          <div id="titleblock" class="margin-left titleblock">
             <span id="titleboxText" class="titlebox">태그</span>
+            <button onclick="setAuto()">SetAll</button>
          </div>
       </div>
       <div class="block" style="position:relative;">
@@ -36,6 +37,8 @@
       </div>
       <div id="resultBox" class="result-box"></div>
    </div>
+   <div id="tagModalOverlay" style="display:none;"></div>
+   <div id="tagModal" style="display:none;"></div>
 </body>
 <script>
    document.title = "TenkaAssist - " + t("태그");
