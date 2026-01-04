@@ -172,9 +172,11 @@ function updateCharacterResult() {
       }));
    } else {
       // ⭐ 태그 있을 때 → chTagList 기준 필터
-      matched = chTagList.filter(ch =>
-         ch.tags && [...selectedTags].every(tag => ch.tags.includes(tag))
-      );
+      matched = chTagList.filter(ch => {
+         if (!ch.tags) return false;
+         const chTagArray = ch.tags.split(" "); // 태그 배열로 분리
+         return [...selectedTags].every(tag => chTagArray.includes(tag));
+      });
    }
 
    matched.forEach(ch => {
