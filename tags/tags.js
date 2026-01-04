@@ -314,6 +314,21 @@ function setTag(id) {
    modal.style.display = "block";
 }
 
+function updateLocalTags(id, tags) {
+  const item = chTagList.find(i => i.id == id);
+
+  if (item) {
+    // 기존 캐릭터 → 태그 갱신
+    item.tags = tags.join(" ");
+  } else {
+    // 기존에 없던 캐릭터 → 새로 추가
+    chTagList.push({
+      id,
+      tags: tags.join(" ")
+    });
+  }
+}
+
 function createModalChip(tag, wrapper, tagSet) {
   if (tagSet.has(tag) === false) return;
 
