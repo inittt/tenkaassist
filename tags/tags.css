@@ -1,15 +1,80 @@
+#titleblock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* ⭐ 좌우 끝으로 */
+}
+
+#btnPlus {
+  width:2rem;
+  height:2rem;
+  margin-right:1rem;
+}
+
+.flex-start {
+  display: flex;
+  align-items: flex-start
+}
+
+.tag-input-wrapper {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  background-color: white;
+
+  padding: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 0.3rem;
+}
+
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+
+  padding: 0.25rem 0.5rem 0.25rem 0.6rem;
+  border: 1px solid #333;
+  border-radius: 100rem;
+
+  font-size: 0.7rem;
+  background: #eee;
+  color: #000;
+}
+
+.tag-chip .remove-btn {
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 0.75rem;
+  line-height: 0.75rem;
+  cursor: pointer;
+
+  color: #555;
+}
+
+.tag-chip .remove-btn:hover {
+  background: #ddd;
+  color: #000;
+}
+
+.search-box {
+  border: none;
+  outline: none;
+  flex: 1;
+  height:1.5rem;
+  min-width: 5rem;
+  font-size: 1rem;
+}
+
 .search-wrapper {
   position: relative;
   width: 100%;
   box-sizing: border-box;
-}
-
-.search-box {
-  width: 100%;
-  padding: 0.5rem;
-  font-size: 1rem;
-  box-sizing: border-box; /* ⭐ 핵심 */
-  display: block;         /* ⭐ input 미묘한 여백 방지 */
 }
 
 .suggestions {
@@ -19,18 +84,53 @@
   width: 100%;
   color:black;
   background: #fff;
-  border: 1px solid #ccc;
+  border-radius: 0.3rem;
   border-top: none;
-  max-height: 200px;
+  max-height: 12.5rem;
   overflow-y: auto;
   z-index: 1000; /* 다른 컨텐츠 위로 */
 }
 
 .suggestion-item {
-  padding: 8px;
+  padding: 0.5rem;
   cursor: pointer;
 }
 
 .suggestion-item:hover {
   background-color: #f0f0f0;
+}
+
+.suggestion-item.active {
+  background-color: #dcdcdc;
+}
+
+.tag-set {
+  display: flex;
+  flex-wrap: wrap;        /* ⭐ 줄바꿈 허용 */
+  gap: 0.2rem;
+  margin-left: 0.5rem;
+  max-width: 100%;
+
+  flex: 1;
+}
+
+.result-box {
+  display: grid;
+  grid-template-columns: 1fr; /* 기본: 한 줄에 1개 */
+}
+
+.ch-box {
+  cursor:pointer;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+  border:0.1rem solid transparent;
+}
+.ch-box:hover {
+  border-color: white;
+}
+
+@media (min-width: 992px) {
+  .result-box {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

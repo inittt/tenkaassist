@@ -6,7 +6,9 @@
    <title>TenkaAssist - 태그</title>
    <meta name="description" content="tenkaAssist">
    <script src="../js/common.js"></script>
+   <script src="../js/characterJson.js"></script>
    <script src="./tags.js"></script>
+   <script src="./tagList.js"></script>
    <link rel="stylesheet" href="../css/common.css" type = "text/css">
    <link rel="stylesheet" href="./tags.css" type = "text/css">
    <script>const curHeader = 3;</script>
@@ -15,19 +17,25 @@
    <script src="../js/header.js"></script>
    <div class="main-container bg-dark">
       <div class="block">
-         <div class="margin-left titleblock"><span id="titleboxText" class="titlebox">태그</span></div>
+         <div id="titleblock" class="margin-left titleblock">
+            <span id="titleboxText" class="titlebox">태그</span>
+         </div>
       </div>
       <div class="block" style="position:relative;">
          <div class="search-wrapper">
-            <input
-               type="text"
-               id="searchInput"
-               class="search-box"
-               placeholder="태그를 입력하세요"
-            />
+            <div class="tag-input-wrapper" id="tagInputWrapper">
+               <input
+                  type="text"
+                  id="searchInput"
+                  class="search-box"
+                  placeholder="Enter Tags"
+               />
+            </div>
             <div id="suggestions" class="suggestions"></div>
          </div>
       </div>
+      <div id="resultBox" class="result-box"></div>
+   </div>
 </body>
 <script>
    document.title = "TenkaAssist - " + t("태그");
