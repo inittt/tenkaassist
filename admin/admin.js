@@ -83,3 +83,35 @@ function refreshData() {
       return alert("성공");
    }).catch(e => {});
 }
+
+function addTag() {
+   const tagName = document.getElementById("addTag").value
+   const formData = new FormData();
+   formData.append("tag", tagName);
+   request(`${server}/tags/add`, {
+      method: "POST",
+      body: formData
+   }).then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   }).then(res => {
+      if (!res.success) return alert(res.msg);
+      return alert("성공");
+   }).catch(e => {});
+}
+
+function delTag() {
+   const tagName = document.getElementById("delTag").value
+   const formData = new FormData();
+   formData.append("tag", tagName);
+   request(`${server}/tags/delete`, {
+      method: "DELETE",
+      body: formData
+   }).then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   }).then(res => {
+      if (!res.success) return alert(res.msg);
+      return alert("성공");
+   }).catch(e => {});
+}

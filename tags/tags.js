@@ -1,9 +1,25 @@
 let selectedIndex = -1;
 let modalSelectedIndex = -1;
-const chTagList = [];
+const tagList = [], chTagList = [];
 const selectedTags = new Set();
 
 document.addEventListener("DOMContentLoaded", function() {
+   request(`${server}/tags/getEnabled`, {
+      method: "GET",
+      includeJwtToken: false,
+   }).then(response => {
+      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
+      return response.json();
+   }).then(res => {
+      if (!res.success) return alert(res.msg);
+      for(let d of res.data) tagList.push(d);
+      getCharactersTag();
+   }).catch(e => {
+      return alert(e);
+   })
+});
+
+function getCharactersTag() {
    request(`${server}/characters/all`, {
       method: "GET",
       includeJwtToken: false,
@@ -18,10 +34,20 @@ document.addEventListener("DOMContentLoaded", function() {
    }).catch(e => {
       return alert(e);
    })
-});
+}
 
 function setServerData(data) {
-   for(let d of data) chTagList.push({id : d.id, tags : d.tags});
+  for (let d of data) {
+    const cleanTags = (d.tags || "")
+      .split(" ")
+      .filter(tag => tagList.includes(tag))
+      .join(" ");
+
+    chTagList.push({
+      id: d.id,
+      tags: cleanTags
+    });
+  }
 }
 
 function inputSetting() {
