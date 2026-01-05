@@ -15,6 +15,11 @@ document.addEventListener("DOMContentLoaded", function() {
       for(let d of res.data) tagList.push(d);
       getCharactersTag();
    }).catch(e => {
+      for(let i = 0; i < 100; i++) tagList.push("attr:fire");
+      tagList.push("attr:water");
+      tagList.push("attr:dark");
+      tagList.push("attr:light");
+      getCharactersTag();
       return alert(e);
    })
 });
@@ -494,4 +499,47 @@ function stg(id, tags) {
       }
       return res; // ⭐ 성공을 밖으로 전달
    });
+}
+
+function showTagListModal() {
+   const overlay = document.getElementById("tagModalOverlay");
+   const modal = document.getElementById("tagModal");
+
+   modal.innerHTML = `
+      <div>
+         <div style="display:flex; justify-content:space-between;">
+            <span style="font-size:1.3rem; font-weight:bold;">모든 태그</span>
+            <span style="font-size:1.5rem; font-weight:bold; cursor:pointer;" onclick="closeTagModal()">×</span>
+         </div>
+         <hr>
+         <div id="tagListContainer" class="tag-list-container"></div>
+      </div>
+   `;
+
+   const tagListContainer = modal.querySelector("#tagListContainer");
+
+   // 태그 목록을 동적으로 추가
+   tagList.forEach(tag => {
+      const tagItem = document.createElement("span");
+      tagItem.style.fontSize = "0.8rem";
+      tagItem.style.margin = "0.2rem";
+      tagItem.style.cursor = "pointer";
+      tagItem.classList.add("tag-chip", "chip-hover");
+      tagItem.textContent = tag;
+      tagItem.onclick = () => {
+         addTagChip(tag);  // 태그를 선택할 때 처리
+         closeTagModal();   // 모달 닫기
+      };
+      tagListContainer.appendChild(tagItem);
+   });
+
+   // 모달 표시
+   overlay.style.display = "block";
+   modal.style.display = "block";
+}
+
+// 3. 모달 닫기 함수
+function closeTagModal() {
+   document.getElementById("tagModalOverlay").style.display = "none";
+   document.getElementById("tagModal").style.display = "none";
 }
