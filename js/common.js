@@ -472,6 +472,7 @@ const translate = {
 
    // 태그
    "태그": {en: "Tag", sc: "标签", tc: "標籤", jp: "タグ"},
+   "모든 태그": { en: "All Tags", sc: "所有标签", tc: "所有標籤", jp: "すべてのタグ" },
    "저장하시겠습니까?": {en: "Do you want to save?", sc: "您要保存吗？", tc: "您要儲存嗎？", jp: "保存しますか？"},
    "등급/속성/역할이 올바르지 않습니다": { "en": "Rarity/Attribute/Role is invalid", "sc": "稀有度/属性/角色无效", "tc": "稀有度/屬性/角色無效", "jp": "レア度/属性/役割が正しくありません" },
    "필수 태그(등급/속성/역할)가 선택되지 않았습니다": {en: "Required tag (Rarity/Attribute/Role) is not selected", sc: "必需标签（稀有度/属性/角色）未选择", tc: "必需標籤（稀有度/屬性/角色）未選擇", jp: "必須タグ（レア度/属性/役割）が選択されていません"},

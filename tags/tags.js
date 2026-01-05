@@ -546,7 +546,7 @@ function showTagListModal() {
    modal.innerHTML = `
       <div>
          <div style="display:flex; justify-content:space-between;">
-            <span style="font-size:1.3rem; font-weight:bold;">모든 태그</span>
+            <span style="font-size:1.3rem; font-weight:bold;">${t("모든 태그")}</span>
             <span style="font-size:1.5rem; font-weight:bold; cursor:pointer;" onclick="closeTagModal()">×</span>
          </div>
          <hr>
