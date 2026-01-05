@@ -15,11 +15,6 @@ document.addEventListener("DOMContentLoaded", function() {
       for(let d of res.data) tagList.push(d);
       getCharactersTag();
    }).catch(e => {
-      for(let i = 0; i < 100; i++) tagList.push("attr:fire");
-      tagList.push("attr:water");
-      tagList.push("attr:dark");
-      tagList.push("attr:light");
-      getCharactersTag();
       return alert(e);
    })
 });
