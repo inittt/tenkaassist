@@ -97,10 +97,20 @@ function inputSetting() {
             (selectedIndex - 1 + items.length) % items.length;
          }
 
-         if (e.key === "Enter" && selectedIndex >= 0) {
-            e.preventDefault();
-            items[selectedIndex].click();
-            return;
+         if (e.key === "Enter") {
+            // ⭐ suggestion이 하나뿐이면 자동 선택
+            if (items.length === 1) {
+               e.preventDefault();
+               items[0].click();
+               return;
+            }
+
+            // 기존 방향키 선택 로직
+            if (selectedIndex >= 0) {
+               e.preventDefault();
+               items[selectedIndex].click();
+               return;
+            }
          }
 
          items.forEach((item, idx) => {
@@ -121,6 +131,19 @@ function inputSetting() {
          updateCharacterResult();    // ⭐ 결과 갱신
 
          e.preventDefault();
+      }
+
+      /* ␣ 스페이스 → 태그 확정 */
+      if (e.key === " ") {
+         const value = input.value.trim();
+
+         // 올바른 태그면 칩으로 변환
+         if (tagList.includes(value)) {
+            e.preventDefault();   // 스페이스 입력 막기
+            addTagChip(value);
+            suggestions.innerHTML = "";
+         }
+         // 올바르지 않으면 아무 것도 안 함 (그대로 둠)
       }
    });
 }
@@ -433,10 +456,18 @@ function modalTagSearch(input, suggestions, wrapper, tagSet) {
             (modalSelectedIndex - 1 + items.length) % items.length;
          }
 
-         if (e.key === "Enter" && modalSelectedIndex >= 0) {
-            e.preventDefault();
-            items[modalSelectedIndex].click();
-            return;
+         if (e.key === "Enter") {
+            if (items.length === 1) {
+               e.preventDefault();
+               items[0].click();
+               return;
+            }
+
+            if (modalSelectedIndex >= 0) {
+               e.preventDefault();
+               items[modalSelectedIndex].click();
+               return;
+            }
          }
 
          items.forEach((item, idx) => {
@@ -456,6 +487,18 @@ function modalTagSearch(input, suggestions, wrapper, tagSet) {
          lastChip.remove();    // DOM 삭제
 
          e.preventDefault();
+      }
+
+      /* ␣ 스페이스 → 태그 확정 */
+      if (e.key === " ") {
+         const value = input.value.trim();
+
+         // 올바른 태그 + 아직 선택 안 된 태그만
+         if (tagList.includes(value) && !tagSet.has(value)) {
+            e.preventDefault();   // 스페이스 입력 막기
+            addModalTag(value, wrapper, tagSet, input, suggestions);
+         }
+         // 올바르지 않으면 그대로 둠
       }
    });
 }
