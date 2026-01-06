@@ -265,8 +265,8 @@ function tag1(id) {
          // 2️⃣ 접두사 기준
          if (tag.startsWith("attr:")) return 10;
          if (tag.startsWith("role:")) return 20;
-         if (tag.startsWith("immunity:")) return 30;
-         if (tag.startsWith("CD:")) return 40;
+         if (tag.startsWith("CD:")) return 30;
+         if (tag.startsWith("immunity:")) return 40;
          if (tag.startsWith("core:")) return 50;
          if (tag.startsWith("buff:")) return 60;
 
