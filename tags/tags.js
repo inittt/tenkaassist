@@ -37,18 +37,44 @@ function getCharactersTag() {
 }
 
 function setServerData(data) {
-  for (let d of data) {
-    const cleanTags = (d.tags || "")
-      .split(" ")
-      .filter(tag => tagList.includes(tag))
-      .join(" ");
+   const serverIdSet = new Set();
 
-    chTagList.push({
-      id: d.id,
-      tags: cleanTags
-    });
-  }
+   // 1️⃣ 서버 데이터 먼저 반영
+   for (let d of data) {
+      const cleanTags = (d.tags || "")
+         .split(" ")
+         .filter(tag => tagList.includes(tag))
+         .join(" ");
+
+      chTagList.push({
+         id: d.id,
+         tags: cleanTags
+      });
+
+      serverIdSet.add(d.id);
+   }
+
+   // 2️⃣ chJSON에는 있지만 서버에는 없는 캐릭터 보정
+   const rarityMap = ["N", "R", "SR", "SSR"];
+   const roleMap = ["role:attacker", "role:healer", "role:protector", "role:supporter", "role:obstructer"];
+   const attrMap = ["attr:fire", "attr:water", "attr:wind", "attr:light", "attr:dark"];
+
+   for (let ch of chJSON.data) {
+      if (!serverIdSet.has(ch.id)) {
+         const tags = [
+         rarityMap[ch.rarity],
+         roleMap[ch.role],
+         attrMap[ch.element]
+         ].filter(Boolean).join(" ");
+
+         chTagList.push({
+         id: ch.id,
+         tags
+         });
+      }
+   }
 }
+
 
 function inputSetting() {
    const input = document.getElementById("searchInput");
