@@ -288,7 +288,7 @@ function tag1(id) {
 
    // 태그 없으면 비워서 반환
    if (!item || !item.tags) return `
-      <div class="tag-set" onclick="setTag(${id})">
+      <div class="tag-set ${isEditMode ? 'ch-box' : ""}" onclick="setTag(${id})">
       &nbsp;＋<br><br>&nbsp;
       </div>
    `;
@@ -318,7 +318,7 @@ function tag1(id) {
    const res = tgs.map(tag =>
       `<span class="tag-chip" style="margin:0.2rem;">${tag}</span>`
    );
-   return `<div class="tag-set" onclick="setTag(${id})">${res.join("")}</div>`;
+   return `<div class="tag-set ${isEditMode ? 'ch-box' : ""}" onclick="setTag(${id})">${res.join("")}</div>`;
 }
 
 
@@ -643,4 +643,5 @@ function editableOn(btn) {
   isEditMode = !isEditMode;
 
   btn.classList.toggle("edit-mode", isEditMode);
+  updateCharacterResult();
 }
