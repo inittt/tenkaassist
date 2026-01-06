@@ -202,6 +202,24 @@ function updateCharacterResult() {
       });
    }
 
+   const rarityOrder = ["SSR", "SR", "R", "N"];
+
+   matched.sort((a, b) => {
+      const aTags = chTagList.find(c => c.id == a.id)?.tags || "";
+      const bTags = chTagList.find(c => c.id == b.id)?.tags || "";
+
+      const aRarity = rarityOrder.findIndex(r => aTags.split(" ").includes(r));
+      const bRarity = rarityOrder.findIndex(r => bTags.split(" ").includes(r));
+
+      // 1️⃣ 등급 정렬 (SSR → N)
+      if (aRarity !== bRarity) {
+         return aRarity - bRarity;
+      }
+
+      // 2️⃣ 같은 등급이면 id 내림차순
+      return b.id - a.id;
+   });
+
    matched.forEach(ch => {
       const div = document.createElement("div");
       div.classList.add("block", "flex-start");
