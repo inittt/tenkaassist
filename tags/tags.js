@@ -293,27 +293,7 @@ function tag1(id) {
       </div>
    `;
 
-   let tgs = item.tags.split(" ");
-
-   tgs.sort((a, b) => {
-      const priority = (tag) => {
-         // 1️⃣ 등급
-         if (["N", "R", "SR", "SSR"].includes(tag)) return 0 + ["N", "R", "SR", "SSR"].indexOf(tag);
-
-         // 2️⃣ 접두사 기준
-         if (tag.startsWith("attr:")) return 10;
-         if (tag.startsWith("role:")) return 20;
-         if (tag.startsWith("CD:")) return 30;
-         if (tag.startsWith("immunity:")) return 40;
-         if (tag.startsWith("core:")) return 50;
-         if (tag.startsWith("buff:")) return 60;
-
-         // 3️⃣ 나머지
-         return 99;
-      };
-
-      return priority(a) - priority(b);
-   });
+   let tgs = sortTags(item.tags.split(" "));
 
    const res = tgs.map(tag =>
       `<span class="tag-chip" style="margin:0.2rem;">${tag}</span>`
@@ -321,6 +301,29 @@ function tag1(id) {
    return `<div class="tag-set ${isEditMode ? 'ch-box' : ""}" onclick="setTag(${id})">${res.join("")}</div>`;
 }
 
+function sortTags(tags) {
+  return [...tags].sort((a, b) => {
+    const priority = (tag) => {
+      // 1️⃣ 등급
+      if (["N", "R", "SR", "SSR"].includes(tag)) return 0;
+
+      // 2️⃣ 시스템 태그
+      if (tag.startsWith("attr:")) return 10;
+      if (tag.startsWith("role:")) return 20;
+      if (tag.startsWith("CD:")) return 30;
+      if (tag.startsWith("immunity:")) return 40;
+
+      // 3️⃣ 나머지
+      return 100;
+    };
+
+    const pA = priority(a);
+    const pB = priority(b);
+
+    if (pA !== pB) return pA - pB;
+    return a.localeCompare(b);
+  });
+}
 
 function setTag(id) {
   if (!isEditMode) return;
@@ -614,7 +617,7 @@ function showTagListModal() {
    const tagListContainer = modal.querySelector("#tagListContainer");
 
    // 태그 목록을 동적으로 추가
-   tagList.forEach(tag => {
+   sortTags(tagList).forEach(tag => {
       const tagItem = document.createElement("span");
       tagItem.style.fontSize = "0.8rem";
       tagItem.style.margin = "0.2rem";
