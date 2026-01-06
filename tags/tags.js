@@ -323,7 +323,7 @@ function tag1(id) {
 
 
 function setTag(id) {
-  if (!editable) return;
+  if (!isEditMode) return;
   const overlay = document.getElementById("tagModalOverlay");
   const modal = document.getElementById("tagModal");
 
