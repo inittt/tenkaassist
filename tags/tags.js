@@ -1,5 +1,6 @@
 let selectedIndex = -1;
 let modalSelectedIndex = -1;
+let isEditMode = false;
 const tagList = [], chTagList = [];
 const selectedTags = new Set();
 
@@ -17,6 +18,17 @@ document.addEventListener("DOMContentLoaded", function() {
    }).catch(e => {
       return alert(e);
    })
+
+   // admin일때 편집버튼 보이기
+   request(`${server}/users/isAdmin`, {
+      method: "GET",
+   }).then(response => {
+      if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
+      return response.json();
+   }).then(res => {
+      if (!res.success) return;
+      document.getElementById('editBtn').style.display = "block";
+   }).catch(e => {});
 });
 
 function getCharactersTag() {
@@ -276,7 +288,7 @@ function tag1(id) {
 
    // 태그 없으면 비워서 반환
    if (!item || !item.tags) return `
-      <div class="tag-set ch-box" onclick="setTag(${id})">
+      <div class="tag-set" onclick="setTag(${id})">
       &nbsp;＋<br><br>&nbsp;
       </div>
    `;
@@ -306,11 +318,12 @@ function tag1(id) {
    const res = tgs.map(tag =>
       `<span class="tag-chip" style="margin:0.2rem;">${tag}</span>`
    );
-   return `<div class="tag-set ch-box" onclick="setTag(${id})">${res.join("")}</div>`;
+   return `<div class="tag-set" onclick="setTag(${id})">${res.join("")}</div>`;
 }
 
 
 function setTag(id) {
+  if (!editable) return;
   const overlay = document.getElementById("tagModalOverlay");
   const modal = document.getElementById("tagModal");
 
@@ -624,4 +637,10 @@ function showTagListModal() {
 function closeTagModal() {
    document.getElementById("tagModalOverlay").style.display = "none";
    document.getElementById("tagModal").style.display = "none";
+}
+
+function editableOn(btn) {
+  isEditMode = !isEditMode;
+
+  btn.classList.toggle("edit-mode", isEditMode);
 }

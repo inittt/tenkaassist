@@ -187,6 +187,11 @@
   visibility: hidden;
 }
 
+.icon-btn.edit-mode {
+  background-color: #24a01e;
+  border-color: white;
+}
+
 @media (min-width: 992px) {
   .result-box {
     grid-template-columns: repeat(2, 1fr);
