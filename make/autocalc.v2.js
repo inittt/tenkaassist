@@ -91,6 +91,7 @@ function autoCalc(idList, command, bondList, boss_element = -1, _optionList = nu
 
    function endAct() {
       if (isAllActed()) {
+         if (hitAll) for(let c of comp) c.hit();
          for(let i = 0; i < 5; i++) comp[i].turnover();
          nextTurn();
          boss.def = false;
