@@ -163,8 +163,8 @@ const chJSON = { data : [
 {ok : true, id : 10189, rarity : 3, po:1, hp:959726, atk:294959, cd:4, atkMag:100, ultMag:0, fullname : "죽음의 장송곡 사탄", name : "장사탄", element : 0, role : 0, hpUp : 50},
 {ok : true, id : 10190, rarity : 3, po:1, hp:991613, atk:285659, cd:4, atkMag:0, ultMag:0, fullname : "쇠락한 장미 바알", name : "장바알", element : 1, role : 1, hpUp : 50},
 {ok : true, id : 10191, rarity : 3, po:1, hp:967255, atk:292745, cd:4, atkMag:0, ultMag:504, fullname : "마왕 나나", name : "마나나", element : 2, role : 0, hpUp : 50},
-// {ok : true, id : 10192, rarity : 3, hp:1091705, atk:259086, cd:4, atkMag:100, ultMag:540, fullname : "새신부 시즈카", name : "신즈카", element : 4, role : 0, hpUp : 50},
-// {ok : true, id : 10193, rarity : 3, hp:1333075, atk:212140, cd:4, atkMag:0, ultMag:397, fullname : "어전신사 우사기 히메", name : "신사기", element : 3, role : 2, hpUp : 50},
+{ok : true, id : 10192, rarity : 3, hp:1091705, atk:259086, cd:4, atkMag:100, ultMag:540, fullname : "새신부 시즈카", name : "신즈카", element : 4, role : 0, hpUp : 50},
+{ok : true, id : 10193, rarity : 3, hp:1333075, atk:212140, cd:4, atkMag:0, ultMag:397, fullname : "어전신사 우사기 히메", name : "신사기", element : 3, role : 2, hpUp : 50},
 
 /*
       element  role     rarity
