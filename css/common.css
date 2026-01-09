@@ -493,18 +493,24 @@ header {
    margin-right:1rem;
 }
 .h-toggle {
+  top: 60px; /* header 높이 */
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+}
+.h-toggle {
    display:flex;
+   position:fixed;
    width:15rem;
    transform: translateX(-100%);
    transition: transform 0.3s ease;
    background-color: #23304e;
-   height:100vh;
-   position:fixed;
+   top:3rem;
+   height:calc(100vh - 3rem);
+   overflow-y: auto;
    left: 0;
    flex-direction: column;
    align-items: center;
    z-index:5;
-   padding-top: 3rem;
    margin:0;
 }
 .active {
