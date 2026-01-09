@@ -233,7 +233,7 @@ function updateCharacterResult() {
    }
 
    const rarityOrder = ["SSR", "SR", "R", "N"];
-   document.getElementById("cnt-all").innerHTML = `${t("검색된 덱")} : ${matched ? matched.length : 0}`;
+   document.getElementById("cnt-all").innerHTML = `${t("검색결과")} : ${matched ? matched.length : 0}`;
 
    matched.sort((a, b) => {
       const aTags = chTagList.find(c => c.id == a.id)?.tags || "";
