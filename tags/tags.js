@@ -135,20 +135,12 @@ function inputSetting() {
             (selectedIndex - 1 + items.length) % items.length;
          }
 
-         if (e.key === "Enter") {
-            // ⭐ suggestion이 하나뿐이면 자동 선택
-            if (items.length === 1) {
-               e.preventDefault();
-               items[0].click();
-               return;
-            }
+         if (e.key === "Enter" && items.length) {
+            e.preventDefault();
 
-            // 기존 방향키 선택 로직
-            if (selectedIndex >= 0) {
-               e.preventDefault();
-               items[selectedIndex].click();
-               return;
-            }
+            // 선택된 게 없으면 첫 번째 자동 선택
+            const index = selectedIndex >= 0 ? selectedIndex : 0;
+            items[index].click();
          }
 
          items.forEach((item, idx) => {
@@ -517,18 +509,12 @@ function modalTagSearch(input, suggestions, wrapper, tagSet) {
             (modalSelectedIndex - 1 + items.length) % items.length;
          }
 
-         if (e.key === "Enter") {
-            if (items.length === 1) {
-               e.preventDefault();
-               items[0].click();
-               return;
-            }
+         if (e.key === "Enter" && items.length) {
+            e.preventDefault();
 
-            if (modalSelectedIndex >= 0) {
-               e.preventDefault();
-               items[modalSelectedIndex].click();
-               return;
-            }
+            // 선택된 게 없으면 첫 번째 자동 선택
+            const index = modalSelectedIndex >= 0 ? modalSelectedIndex : 0;
+            items[index].click();
          }
 
          items.forEach((item, idx) => {
