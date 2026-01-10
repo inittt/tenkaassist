@@ -258,6 +258,7 @@ const translate = {
    "속상감" : {en : "Decrease attribute buffs/debuffs by", sc : "减少属性相剋效果", tc : "減少屬性相剋效果", jp : "属性相性の低下"},
    "가지증" : {en: "Increase DoT output", sc: "持续伤害增加", tc: "持續傷害增加", jp : "加える持続ダメージ増加"},
    "방경감" : {en : "Reduce defense effect", sc : "降低防御效果", tc : "降低防禦效果", jp : "防御効果を減少"},
+   "도트뎀" : {en : "DoT Damage", sc : "持续伤害", tc : "持續傷害", jp : "継続ダメージ"},
 
    "버프상세" : {en : "Buff Details", sc : "状态详情", tc : "狀態詳情", jp : "バフ詳細"},
    "의" : {en : "'s", sc : "的", tc : "的", jp : "の"},
