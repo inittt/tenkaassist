@@ -676,7 +676,7 @@ const translate = {
    "파나나" : {en : "Panana", sc : "帕奈奈", tc : "帕奈奈", jp : "パナナ"},
    "이아" : {en : "Iyan", sc : "伊艾", tc : "伊艾", jp : "イア"},
 
-   "사이렌" : {en : "Sarina", sc : "赛莲", tc : "賽蓮", jp : "セイレーン"},
+   "사이렌" : {en : "Saria", sc : "赛莲", tc : "賽蓮", jp : "セイレーン"},
    "페트라" : {en : "Petra", sc : "佩托拉", tc : "佩托拉", jp : "ペトラ"},
    "프레이" : {en : "Flay", sc : "芙蕾", tc : "芙蕾", jp : "フレイ"},
    "마누엘라" : {en : "Manuella", sc : "玛努艾拉", tc : "瑪努艾拉", jp : "マヌエラ"},
