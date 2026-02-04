@@ -36,6 +36,7 @@ function autoCalc(idList, command, bondList, boss_element = -1, _optionList = nu
       comp[0].leader();
       for(let i = 0; i < 5; i++) comp[i].passive();
       for(let i = 0; i < 5; i++) comp[i].turnstart();
+      for(let i = 0; i < 5; i++) if (comp[i].isSealed) comp[i].isActed = true;
 
       return auto();
    }
@@ -96,6 +97,7 @@ function autoCalc(idList, command, bondList, boss_element = -1, _optionList = nu
          nextTurn();
          boss.def = false;
          for(let i = 0; i < 5; i++) comp[i].turnstart();
+         for(let i = 0; i < 5; i++) if (comp[i].isSealed) comp[i].isActed = true;
       }
    }
 
