@@ -2,9 +2,15 @@ let selectedIndex = -1;
 let modalSelectedIndex = -1;
 let isEditMode = false;
 const tagList = [], chTagList = [];
-const selectedTags = new Set();
+const selectedTags = new Set(), seqMap = new Map();
 
 document.addEventListener("DOMContentLoaded", function() {
+   // 🚀 chJSON 로드 직후 seq 부여 및 Map 생성
+    chJSON.data.forEach((item, index) => {
+        item.seq = index;
+        seqMap.set(Number(item.id), index);
+    });
+
    request(`${server}/tags/getEnabled`, {
       method: "GET",
       includeJwtToken: false,
@@ -235,6 +241,7 @@ function updateCharacterResult() {
    const rarityOrder = ["SSR", "SR", "R", "N"];
    document.getElementById("cnt-all").innerHTML = `${t("검색결과")} : ${matched ? matched.length : 0}`;
 
+   // 정렬 로직: 전역 seqMap 사용
    matched.sort((a, b) => {
       const aTags = chTagList.find(c => c.id == a.id)?.tags || "";
       const bTags = chTagList.find(c => c.id == b.id)?.tags || "";
@@ -242,13 +249,16 @@ function updateCharacterResult() {
       const aRarity = rarityOrder.findIndex(r => aTags.split(" ").includes(r));
       const bRarity = rarityOrder.findIndex(r => bTags.split(" ").includes(r));
 
-      // 1️⃣ 등급 정렬 (SSR → N)
+      // 1순위: 등급 정렬
       if (aRarity !== bRarity) {
-         return aRarity - bRarity;
+          return aRarity - bRarity;
       }
 
-      // 2️⃣ 같은 등급이면 id 내림차순
-      return b.id - a.id;
+      // 2순위: seq 역순 (Map에서 즉시 조회)
+      const aSeq = seqMap.get(Number(a.id)) ?? -1;
+      const bSeq = seqMap.get(Number(b.id)) ?? -1;
+
+      return bSeq - aSeq;
    });
 
    matched.forEach(ch => {
