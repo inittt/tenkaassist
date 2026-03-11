@@ -315,6 +315,11 @@ function isValidComp(ids) {
       for(let i = 1; i < 5; i++) if (comp[i].role == 1) return false;
       return true;
    }
+   // 놀라이티 리더
+   if (comp[0].id == 10198) {
+      for(let i = 1; i < 5; i++) if (comp[i].role == 1) return false;
+      return true;
+   }
 
    // 새바키 리더
    if (comp[0].id == 10170) {
