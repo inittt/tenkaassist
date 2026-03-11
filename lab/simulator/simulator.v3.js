@@ -284,6 +284,7 @@ function act_after() {
    updateAll();
    overflowed = false;
    atvOverflowed = false;
+   atkOverflowed = false;
 }
 function decActNum() {actNum--; updateGuide();}
 
@@ -396,7 +397,7 @@ function updateAll() {
    }
    getdiv("turn").innerHTML = `TURN ${GLOBAL_TURN}`;
    
-   if (overflowed) {
+   if (overflowed || atkOverflowed) {
       getdiv("deal").style.color = "red";
    } else getdiv("deal").style.color = "white";
    if (atvOverflowed) {
