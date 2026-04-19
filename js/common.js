@@ -414,8 +414,14 @@ const translate = {
    "서버로부터 데이터 로드 중...": {en : "Loading data from the server...", sc : "正在从服务器加载数据...", tc : "正在從伺服器加載數據...", jp : "サーバーからデータを読み込んでいます..."},
    "구속에 따른 데미지 계산 중...": {en : "Calculating damage based on bond...", sc : "根据羁绊计算伤害中...", tc : "根據羈絆計算傷害中...", jp : "絆に基づいたダメージ計算中..."},
    "계산중": {en : "Calculating", sc : "计算中", tc : "計算中", jp : "計算中"},
-   "데이터는 KST기준 6시간마다 갱신됩니다": {en : "Data is updated every 6 hours(KST)", sc : "数据每6小时根据KST更新时间", tc : "資料每6小時根據KST更新", jp : "データは6時間ごとに更新されます(KST基準)"},
-   
+   "데이터는 6시간마다 갱신됩니다": {en : "Data is updated every 6 hours", sc : "数据每6小时更新一次", tc : "資料每6小時更新一次", jp : "データは6時間ごとに更新されます"},
+   "년 전": {en: "y ago", sc: "年前", tc: "年前", jp: "年前" },
+   "개월 전": {en: "mo ago", sc: "个月前", tc: "個月前", jp: "ヶ月前" },
+   "일 전": {en: "d ago", sc: "天前", tc: "天前", jp: "日前" },
+   "시간 전": {en: "h ago", sc: "小时前", tc: "小時前", jp: "時間前" },
+   "분 전": {en: "m ago", sc: "分前", tc: "分前", jp: "分前" },
+   "방금 전": {en: "Just now", sc: "刚刚", tc: "剛剛", jp: "たった今" },
+
    // 설정
    "설정": {en : "Option", sc : "选项", tc : "選項", jp: "設定"},
    "계정 정보": {en : "Account Info", sc : "账户信息", tc : "帳戶信息", jp: "アカウント情報"},

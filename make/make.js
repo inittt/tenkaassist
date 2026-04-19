@@ -177,19 +177,66 @@ const urls = [
    "raw.staticdn.net"
 ];
 function getAllCompsFromServer(url_idx) {
-   fetchJsonFromGitHub(urls[url_idx], 'inittt', 'tenkaassist_data', 'main', 'data/data.json')
-   .then(data => {
-      if (data == null || data.length == 0) throw new Error(t("데이터 로드 실패"));
+   const owner = 'inittt';
+   const repo = 'tenkaassist_data';
+   const path = 'data/data.json';
 
-      default_per = document.getElementById("defaultPer");
-      dataAll = data.filter(i => !(i.recommend < 5*e9 && i.vote < 2*e9));
-      dataIdx = 0;
-      setPossible();
-   }).catch(e => {
-      url_idx++;
-      if (!urls[url_idx]) cc.innerHTML = `<div class="block">${t("데이터 로드 실패")}</div>`;
-      else getAllCompsFromServer(url_idx);
-   });
+   fetchJsonFromGitHub(urls[url_idx], owner, repo, 'main', path)
+      .then(data => {
+         if (!data || data.length === 0) throw new Error(t("데이터 로드 실패"));
+
+         fetch(`https://api.github.com/repos/${owner}/${repo}/commits?path=${path}&page=1&per_page=1`)
+            .then(res => {
+               if (!res.ok) return null; // API 제한 등으로 실패 시 null 반환
+               return res.json();
+            })
+            .then(commitData => {
+               if (commitData && commitData.length > 0) {
+                  const commitDate = commitData[0].commit.committer.date;
+                  const timeText = ` (${timeSince(commitDate)})`;
+                  const timeDisplay = document.getElementById("dataTime");
+                  if (timeDisplay) timeDisplay.innerText = `${timeText}`;
+               }
+            })
+            .catch(err => {
+               console.log("커밋 정보 로드 실패(무시됨):", err);
+               const timeDisplay = document.getElementById("dataTime");
+               if (timeDisplay) timeDisplay.innerText = `time load err`;
+            });
+
+         return data;
+      })
+      .then(data => {
+         default_per = document.getElementById("defaultPer");
+         dataAll = data.filter(i => !(i.recommend < 5e9 && i.vote < 2e9)); 
+         dataIdx = 0;
+         setPossible();
+      })
+      .catch(e => {
+         url_idx++;
+         if (!urls[url_idx]) {
+             if(cc) cc.innerHTML = `<div class="block">${t("데이터 로드 실패")}</div>`;
+         } else {
+             getAllCompsFromServer(url_idx);
+         }
+      });
+}
+function timeSince(dateString) {
+    const lastCommit = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.floor((now - lastCommit) / 1000);
+
+    let interval = Math.floor(seconds / 31536000);
+    if (interval >= 1) return interval + t("년 전");
+    interval = Math.floor(seconds / 2592000);
+    if (interval >= 1) return interval + t("개월 전");
+    interval = Math.floor(seconds / 86400);
+    if (interval >= 1) return interval + t("일 전");
+    interval = Math.floor(seconds / 3600);
+    if (interval >= 1) return interval + t("시간 전");
+    interval = Math.floor(seconds / 60);
+    if (interval >= 1) return interval + t("분 전");
+    return t("방금 전");
 }
 
 function check_class_option(team) {

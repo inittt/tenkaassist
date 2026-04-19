@@ -170,8 +170,8 @@ const chJSON = { data : [
 {ok : true, id : 10196, rarity : 3, po:1, hp:929610, atk:304703, cd:4, atkMag:100, ultMag:0, fullname : "새신부 란", name : "신란", element : 2, role : 3, hpUp : 50},
 {ok : true, id : 10197, rarity : 3, po:1, hp:1034573, atk:273701, cd:4, atkMag:100, ultMag:514, fullname : "유랑하는 요호 얀코", name : "얀코", element : 3, role : 0, hpUp : 50},
 {ok : true, id : 10198, rarity : 3, po:1, hp:1025715, atk:275915, cd:1, atkMag:100, ultMag:0, fullname : "냉염의 칼날 모모", name : "냉모모", element : 4, role : 0, hpUp : 50},
-{ok : true, id : 10199, rarity : 3, hp:1081961, atk:261743, cd:3, atkMag:0, ultMag:0, fullname : "신탁의 선고 피오라", name : "신오라", element : 1, role : 3, hpUp : 50},
-{ok : true, id : 10200, rarity : 3, hp:1155480, atk:244913, cd:4, atkMag:0, ultMag:514, fullname : "강욕의 천사 성녀 밀레", name : "강밀레", element : 2, role : 4, hpUp : 50},
+{ok : true, id : 10199, rarity : 3, po:2, hp:1081961, atk:261743, cd:3, atkMag:0, ultMag:0, fullname : "신탁의 선고 피오라", name : "신오라", element : 1, role : 3, hpUp : 50},
+{ok : true, id : 10200, rarity : 3, po:1, hp:1155480, atk:244913, cd:4, atkMag:0, ultMag:514, fullname : "강욕의 천사 성녀 밀레", name : "강밀레", element : 2, role : 4, hpUp : 50},
 
 /*
       element  role     rarity
