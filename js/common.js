@@ -727,7 +727,7 @@ const translate = {
    "얀코" : {en : "Cos.Yanko", sc : "小泱", tc : "小泱", jp : "ヤンコ"},
    "신오라" : {en : "Egypt.Fiora", sc : "埃菲", tc : "埃菲", jp : "神託の宣告 フィオラ"},
    "강밀레" : {en : "Egypt.Milae", sc : "埃天", tc : "埃天", jp : "強欲天使 聖女ミラ"},
-   "마피" : {en : "*Daphne", sc : "*兔妈", tc : "*兔媽", jp : "魔法少女 ダフィー"}, // will be changed to 마더피
+   "마더피" : {en : "*Daphne", sc : "*兔妈", tc : "*兔媽", jp : "魔法少女 ダフィー"},
    "나리" : {en : "Nali", sc : "娜莉", tc : "娜莉", jp : "ナリー"},
 };
 
