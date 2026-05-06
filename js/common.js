@@ -398,6 +398,7 @@ const translate = {
    "받는 궁극기 데미지 감소": {en: "Decrease ultimate skill damage taken by", sc: "减少受到的终极技能伤害", tc: "減少受到的終極技能傷害", jp: "受けるスキルダメージ減少"},
    "받는 발동기 데미지 감소": {en: "Decrease trigger skill damage taken by", sc: "减少受到的触发技能伤害", tc: "減少受到的觸發技能傷害", jp: "受ける発動ダメージ減少"},
    "올바르지 않은 입력이 있습니다": {en: "Invalid input", sc: "输入无效", tc: "輸入無效", jp: "無効な入力です"},
+   "회": {en: "times", sc: "次", tc: "次", jp: "回"},
 
    // 추천덱
    "덱": {en : "team", sc : "队伍", tc : "隊伍", jp : "チーム"},
@@ -726,6 +727,8 @@ const translate = {
    "얀코" : {en : "Cos.Yanko", sc : "小泱", tc : "小泱", jp : "ヤンコ"},
    "신오라" : {en : "Egypt.Fiora", sc : "埃菲", tc : "埃菲", jp : "神託の宣告 フィオラ"},
    "강밀레" : {en : "Egypt.Milae", sc : "埃天", tc : "埃天", jp : "強欲天使 聖女ミラ"},
+   "마피" : {en : "*Daphne", sc : "*兔妈", tc : "*兔媽", jp : "魔法少女 ダフィー"},
+   "나리" : {en : "Nali", sc : "娜莉", tc : "娜莉", jp : "ナリー"},
 };
 
 //---------------------------------------------------------------------------

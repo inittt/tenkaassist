@@ -6,6 +6,7 @@ const bond = params.get('bond'), bondList = bond == null ? [5, 5, 5, 5, 5] : bon
 const hpParam = params.get('hp'), liParam = params.get('li');
 const ability_options = params.get('options').split(",").map(Number);
 const gboss = Number(params.get('gboss'));
+let cdMinus1Cnt = 0;
 function setGboss() {
    switch(gboss) {
       case 1 :
@@ -318,8 +319,9 @@ function endGame() {
    msg.push(`${t("구속")} : ${bondList[0]}, ${bondList[1]}, ${bondList[2]}, ${bondList[3]}, ${bondList[4]}`);
    msg.push(`${t("조련")} : ${getDisLev(a_o[0][0])}, ${getDisLev(a_o[1][0])}, ${getDisLev(a_o[2][0])}, ${getDisLev(a_o[3][0])}, ${getDisLev(a_o[4][0])}`);
    msg.push(`${t("잠재")} : ${a_o[0][1]}, ${a_o[1][1]}, ${a_o[2][1]}, ${a_o[3][1]}, ${a_o[4][1]}`);
-   msg.push(`${t("허수턴")} : ${scarecrowTurn}`);
+   msg.push(`${t("허수턴")} : ${scarecrowTurn} / ${t("CD-1")} : ${cdMinus1Cnt} ${t("회")}`);
    msg.push(`${t("13턴딜")} : ${dmg13.toLocaleString()}`);
+
 
    const cmd = [];
    for(let i = 0; i < command.length; i++) {
@@ -597,6 +599,7 @@ function cdMinus1() {
    saveCur();
    for(let c of comp) cdChange(c, -1);
    updateAll();
+   cdMinus1Cnt++;
 }
 
 function EnemyDefense() {
