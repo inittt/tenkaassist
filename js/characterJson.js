@@ -240,12 +240,14 @@ const chJSON = { data : [
 {ok : false, id : 10924, rarity : 0, fullname : "미이라 무무", name : "무무", element : 4, role : 4},
 {ok : false, id : 10933, rarity : 0, fullname : "하운드 소대 안야", name : "안야", element : 2, role : 4}
 ]};
-chJSON.data.forEach((item, index) => {
-  item.seq = index;
-});
 
+const character_map = new Map();
+chJSON.data.forEach((item, index) => {
+    item.seq = index;
+    character_map.set(item.id, item);
+});
 function getCharacter(id) {
-	return chJSON.data.filter(obj => obj.id === id)[0];
+    return character_map.get(id);
 }
 
 

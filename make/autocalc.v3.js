@@ -1,3 +1,4 @@
+const lib_set = new Set(liberationList);
 function autoCalc(idList, command, bondList, boss_element = -1, _optionList = null) {
    if (command == null || command.length < 10) return 0;
 
@@ -11,7 +12,7 @@ function autoCalc(idList, command, bondList, boss_element = -1, _optionList = nu
    // functions
 
    function start(compIds) {
-      if (new Set(compIds).size !== compIds.length) return 0;
+      // if (new Set(compIds).size !== compIds.length) return 0;
 
       // init
       GLOBAL_TURN = 1; comp = []; dmg13 = 0;
@@ -22,11 +23,10 @@ function autoCalc(idList, command, bondList, boss_element = -1, _optionList = nu
       if (_optionList != null) setBossLi();
 
       for(const id of compIds) {
-         const tmp = chJSON.data.filter(ch => ch.id === id)[0];
-         if (liberationList.includes(tmp.name))
-            comp.push(new Champ(tmp.id, tmp.name, tmp.hp*1.1, tmp.atk*1.1, tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
-         else
-            comp.push(new Champ(tmp.id, tmp.name, tmp.hp, tmp.atk, tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
+         const tmp = getCharacter(id);
+         const isLib = lib_set.has(tmp.name);
+         const _mul = isLib ? 1.1 : 1.0;
+         comp.push(new Champ(tmp.id, tmp.name, tmp.hp*_mul, tmp.atk*_mul, tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
       }
       comp[0].isLeader = true;
       for(let i = 0; i < 5; i++) {
