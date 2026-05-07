@@ -33,14 +33,14 @@ const possible = [];
 let possibleCopy, isDataLoaded = false, mod = 0, cc, isCalculating = true;
 const curHeader = 5;
 
-const bondMap = new Map();
+const cbMap = new Map();
 const haveList = chIds.split(",").map(Number);
 const bondList = chBonds.split(",").map(Number);
 const essSet = new Set();
 const exSet = new Set();
 for(let i = 0; i < haveList.length; i++) {
    if (haveList[i] == null || bondList[i] == null) continue;
-   bondMap.set(haveList[i], bondList[i]);
+   cbMap.set(haveList[i], bondList[i]);
 }
 
 function setTooltip() {
@@ -267,42 +267,39 @@ function setPossible() {
 
    // 한 번에 처리할 항목 수
    const batchSize = 100;
-
    for (let i = 0; i < batchSize && dataIdx < dataAll.length; i++) {
       let d = dataAll[dataIdx++];
-      const compList = d.compstr.split(" ").map(Number);
-      d.compstr = compList.slice();
+      d.compstr = d.compstr.split(" ").map(Number);
+      const compList = d.compstr;
 
-      if (compList.every(item => haveList.includes(item))) {
-         if (_optionList != null && !check_class_option(compList)) continue;
+      if (hpUpMap.get(compList[0]) < limit_hp_up) continue;
+      if (_optionList != null && !check_class_option(compList)) continue;
 
-         if (boss_element == -1 && hitAll == true) {
-            if (d.recommend > 0 && limit_fit > d.recommend) continue;
-            if (hpUpMap.get(compList[0]) < limit_hp_up) continue;
+      const bonds = [];
+      for (let j = 0; j < compList.length; j++) {
+         const val = cbMap.get(compList[j]);
+         if (val === undefined) break;
+         bonds.push(val);
+      }
+      if (bonds.length < 5) continue;
 
-            const indexes = compList.map(item => haveList.indexOf(item)), bonds = [];
-            for (let j = 0; j < 5; j++) bonds.push(bondList[indexes[j]]);
+      if (boss_element == -1 && hitAll == true) {
+         if (d.recommend > 0 && limit_fit > d.recommend) continue;
 
-            if (bonds.every(item => item === 5) && d.recommend > 0) d.fit13t = d.recommend;
-            else if (bonds.every(item => item === 1) && d.vote > 0) d.fit13t = d.vote;
-            else d.fit13t = autoCalc(compList, d.description, bonds, -1, _optionList);
+         if (bonds.every(item => item === 5) && d.recommend > 0) d.fit13t = d.recommend;
+         else if (bonds.every(item => item === 1) && d.vote > 0) d.fit13t = d.vote;
+         else d.fit13t = autoCalc(compList, d.description, bonds, -1, _optionList);
 
-            if (d.fit13t >= limit_fit) {
-               if (d.fit13t > maxCur13t) maxCur13t = d.fit13t;
-               possible.push(d);
-            }
-         } else {
-            if (hpUpMap.get(compList[0]) < limit_hp_up) continue;
+         if (d.fit13t >= limit_fit) {
+            if (d.fit13t > maxCur13t) maxCur13t = d.fit13t;
+            possible.push(d);
+         }
+      } else {
+         d.fit13t = autoCalc(compList, d.description, bonds, boss_element, _optionList);
 
-            const indexes = compList.map(item => haveList.indexOf(item)), bonds = [];
-            for (let j = 0; j < 5; j++) bonds.push(bondList[indexes[j]]);
-
-            d.fit13t = autoCalc(compList, d.description, bonds, boss_element, _optionList);
-
-            if (d.fit13t >= limit_fit) {
-               if (d.fit13t > maxCur13t) maxCur13t = d.fit13t;
-               possible.push(d);
-            }
+         if (d.fit13t >= limit_fit) {
+            if (d.fit13t > maxCur13t) maxCur13t = d.fit13t;
+            possible.push(d);
          }
       }
    }
@@ -310,7 +307,7 @@ function setPossible() {
    default_per.innerHTML = `${(dataIdx * 100 / dataAll.length).toFixed(2)}%`;
    if (dataIdx >= dataAll.length) {
       isCalculating = false;
-      possibleCopy = JSON.parse(JSON.stringify(possible));
+      possibleCopy = structuredClone(possible);
       makeBlock();
    } else setTimeout(() => setPossible(), 16);
 }
@@ -395,7 +392,7 @@ document.addEventListener("DOMContentLoaded", function() {
          <div id="ess${cid}" class="character ess noneStyle" onclick="essClick(${cid})">
             <div style="position:relative; padding:0.2rem;">
                <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-               <div class="bond-icon z-2">${numToBond(bondMap.get(ch.id))}</div>
+               <div class="bond-icon z-2">${numToBond(cbMap.get(ch.id))}</div>
                ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                <div class="element${ch.element} ch_border z-4"></div>
             </div>
@@ -508,7 +505,7 @@ function loadBlockAllDeck() {
             <div class="character" style="margin:0.2rem;">
                <div style="position:relative; padding:0.2rem;">
                   <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-                  <div class="bond-icon z-2">${numToBond(bondMap.get(ch.id))}</div>
+                  <div class="bond-icon z-2">${numToBond(cbMap.get(ch.id))}</div>
                   ${leaderHpOn ? `<div class="hpbox" z-2"><img class="i-heart" src="../images/icons/ico-heart.svg">${ch.hpUp ? ch.hpUp : 0}</div>` : ""}
                   ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                   <div class="element${ch.element} ch_border z-4"></div>
@@ -541,7 +538,7 @@ function loadBlockAllDeck() {
 
 function makeBondList(complist) {
    const _bd = [];
-   for(const cid of complist) _bd.push(bondMap.get(cid));
+   for(const cid of complist) _bd.push(cbMap.get(cid));
    return _bd;
 }
 
@@ -589,7 +586,7 @@ function loadBlockNDeck() {
                <div class="character" style="margin:0.2rem;">
                   <div style="position:relative; padding:0.2rem;">
                      <img src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
-                     <div class="bond-icon z-2">${numToBond(bondMap.get(ch.id))}</div>
+                     <div class="bond-icon z-2">${numToBond(cbMap.get(ch.id))}</div>
                      ${leaderHpOn ? `<div class="hpbox" z-2"><img class="i-heart" src="../images/icons/ico-heart.svg">${ch.hpUp ? ch.hpUp : 0}</div>` : ""}
                      ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                      <div class="element${ch.element} ch_border z-4"></div>
@@ -663,10 +660,6 @@ function backtrackOneCycle(i) {
       for (let num of tempUsedNumbers) usedNumbers.delete(num);
    }
    backtrackCounter--;
-}
-
-function copy(a) {
-   return JSON.parse(JSON.stringify(a));
 }
 
 function backtrack(startIndex, selectedEntities, usedNumbers) {
