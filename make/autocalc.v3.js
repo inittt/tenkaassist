@@ -19,7 +19,7 @@ function autoCalc(idList, command, bondList, boss_element = -1, _optionList = nu
       boss.hp = boss.maxHp; boss.def = false;
       boss.buff = []; boss.li = []; alltimeFunc.length = 0;
       buff_ex.length = 0;
-      buff_ex.push("도트뎀", "제거");
+      buff_ex.push("도트뎀");
       if (_optionList != null) setBossLi();
 
       for(const id of compIds) {
