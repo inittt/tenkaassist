@@ -434,7 +434,7 @@ const loadBefore2 = loadBefore;
 loadBefore = function() {
    loadBefore2();
    log.pop();
-   while (log[log.length-1][2] > 0) log.pop();
+   while (log.length > 0 && log[log.length-1][2] > 0) log.pop();
 }
 const applyDotDmg2 = applyDotDmg;
 applyDotDmg = function(...args) {
