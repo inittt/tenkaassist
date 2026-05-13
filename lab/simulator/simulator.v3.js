@@ -286,6 +286,7 @@ function act_after() {
    overflowed = false;
    atvOverflowed = false;
    atkOverflowed = false;
+   if (typeof isOverflowed !== "undefined") isOverflowed.fill(false);
 }
 function decActNum() {actNum--; updateGuide();}
 
@@ -405,6 +406,19 @@ function updateAll() {
    if (atvOverflowed) {
       getdiv("deal_atv").style.color = "red";
    } else getdiv("deal_atv").style.color = "white";
+
+   if (typeof isOverflowed !== "undefined") {
+      if (isOverflowed[0]) getdiv("deal").style.color = "red";
+      else getdiv("deal").style.color = "white";
+      if (isOverflowed[1]) getdiv("deal_add").style.color = "red";
+      else getdiv("deal_add").style.color = "white";
+      if (isOverflowed[2]) getdiv("deal_atv").style.color = "red";
+      else getdiv("deal_atv").style.color = "white";
+      if (isOverflowed[3]) getdiv("deal_dot").style.color = "red";
+      else getdiv("deal_dot").style.color = "white";
+      if (isOverflowed[4]) getdiv("deal_ref").style.color = "red";
+      else getdiv("deal_ref").style.color = "white";
+   }
 
    getdiv("deal").innerHTML = `${t("공격데미지")} : ${Math.floor(lastDmg).toLocaleString()}`;
    getdiv("deal_add").innerHTML = `${t("추가데미지")} : ${Math.floor(lastAddDmg).toLocaleString()}`;
