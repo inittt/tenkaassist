@@ -195,7 +195,7 @@ function start(compIds) {
    GLOBAL_TURN = 1; comp = []; command.length = 0; dmg13 = 0;
    lastDmg = 0; lastAtvDmg = 0;
    boss.hp = boss.maxHp;
-   boss.buff = []; alltimeFunc.length = 0;
+   boss.buff = [];
    
    setBossLi();
 
