@@ -108,6 +108,10 @@ function setLang(l) {
 
 function checkAndAssign(variableName, value) {
    if (typeof window[variableName] === 'undefined') {
-     window[variableName] = value;
+      window[variableName] = value;
    }
- }
+}
+
+function img(num) {
+   return `cs${num}_0_0.webp`;
+}
