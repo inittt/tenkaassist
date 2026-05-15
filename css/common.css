@@ -1,3 +1,4 @@
+:root {color-scheme: dark !important;}
 #adminContent {display: none;}
 body {
    font-family: sans-serif;
@@ -123,6 +124,7 @@ a {color: inherit; text-decoration: none;}
    border-radius: 0.3rem;
    width:2.5rem;
    height:2.5rem;
+   filter: none !important;
 }
 .el-icon {
    border-top-right-radius: 0.3rem;
@@ -361,12 +363,12 @@ button:hover {
    border-color: white;
 }
 
-.element0 {border: 0.2rem solid red;}
-.element1 {border: 0.2rem solid deepskyblue;}
-.element2 {border: 0.2rem solid limegreen;}
-.element3 {border: 0.2rem solid yellow;}
-.element4 {border: 0.2rem solid darkviolet;}
-.element9 {border: 0.2rem solid white;}
+.element0 {border: 0.2rem solid red !important;}
+.element1 {border: 0.2rem solid deepskyblue !important;}
+.element2 {border: 0.2rem solid limegreen !important;}
+.element3 {border: 0.2rem solid yellow !important;}
+.element4 {border: 0.2rem solid darkviolet !important;}
+.element9 {border: 0.2rem solid white !important;}
 
 .addCompDescription {
    font-family: sans-serif;
