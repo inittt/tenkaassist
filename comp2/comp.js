@@ -242,6 +242,7 @@ function setCommand(str) {
          actCheck.fill(false);
          isFirst = true;
       }
+      actCheck[_idx] = true;
       if (!isFirst) res.push(" > ");
       else isFirst = false;
       res.push(`${c[0]}${t(c[1])}`);
