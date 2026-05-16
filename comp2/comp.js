@@ -235,7 +235,7 @@ function setCommand(str) {
    const res = ["1턴 : "];
    let _turn = 1, isfirst = false;
    for(let c of commandList) {
-      const _idx = Number(a[0])-1;
+      const _idx = Number(c[0])-1;
       if (actCheck[_idx] == true) {
          _turn++;
          res.push(`</br>${_turn}${t("턴")} : `);
