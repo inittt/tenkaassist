@@ -232,7 +232,7 @@ function setCommand(str) {
    if (str == null) return "";
    const commandList = str.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
    const actCheck = [false, false, false, false, false];
-   const res = ["1턴 : "];
+   const res = [`1${t("턴")} : `];
    let _turn = 1, isFirst = true;
    for(let c of commandList) {
       const _idx = Number(c[0])-1;
