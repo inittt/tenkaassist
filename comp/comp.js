@@ -230,14 +230,24 @@ function goLab() {
 
 function setCommand(str) {
    if (str == null) return "";
-   for(let i = 2; i < 101; i++) {
-      str = str.replace(`${i}턴`, `</br>${i}턴`);
+   const commandList = str.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
+   const actCheck = [false, false, false, false, false];
+   const res = ["1턴 : "];
+   let _turn = 1, isFirst = true;
+   for(let c of commandList) {
+      const _idx = Number(c[0])-1;
+      if (actCheck[_idx] == true) {
+         _turn++;
+         res.push(`</br>${_turn}${t("턴")} : `);
+         actCheck.fill(false);
+         isFirst = true;
+      }
+      actCheck[_idx] = true;
+      if (!isFirst) res.push(" > ");
+      else isFirst = false;
+      res.push(`${c[0]}${t(c[1])}`);
    }
-   str = str.replaceAll("턴", t("턴"));
-   str = str.replaceAll("평", t("평"));
-   str = str.replaceAll("궁", t("궁"));
-   str = str.replaceAll("방", t("방"));
-   return str;
+   return res.join("");
 }
 
 function initDmg() {
