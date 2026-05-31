@@ -30,7 +30,7 @@ const limit_hp_up = Number(params.get('hpUp') == null ? 0 : params.get('hpUp'));
 // -1이면 (0보다 작으면) auto
 const limit_fit = Number(params.get('fit13t') == null ? 0 : params.get('fit13t'));
 
-const possible = [];
+let possible = [];
 let possibleCopy, isDataLoaded = false, mod = 0, cc, isCalculating = true;
 const curHeader = 5;
 
@@ -211,7 +211,10 @@ function getAllCompsFromServer(url_idx) {
          default_per = document.getElementById("defaultPer");
          dataAll = data.filter(i => !(i.recommend < 5e9 && i.vote < 2e9)); 
          dataIdx = 0;
-         for(let d of dataAll) d.compstr = d.compstr.split(" ").map(Number);
+         for(let d of dataAll) {
+            d.compstr = d.compstr.split(" ").map(Number);
+            d.fit13t = 0;
+         }
          setPossible();
       })
       .catch(e => {
@@ -261,11 +264,22 @@ function check_class_option(team) {
 
 let maxCur13t = 0, _err = false;
 const glbBonds = [5,5,5,5,5];
+
+const BATCH_SIZE = 100; 
+const SLEEP_MS = 20;
 function setPossible() {
-   // 한 번에 처리할 항목 수
-   const batchSize = 100;
-   for (let i = 0; i < batchSize && dataIdx < dataAll.length; i++) {
-      let d = dataAll[dataIdx++];
+   if (!dataAll || dataAll.length === 0) return;
+
+   // 최초 실행 시에만 전체 데이터 크기 저장
+   if (!window.totalDataLength) {
+      window.totalDataLength = dataAll.length;
+      isCalculating = true;
+      maxCur13t = 0;
+      possible.length = 0;
+   }
+
+   for (let i = 0; i < BATCH_SIZE && dataAll.length > 0; i++) {
+      let d = dataAll.pop();
       const compList = d.compstr;
 
       if (hpUpMap.get(compList[0]) < limit_hp_up) continue;
@@ -298,17 +312,19 @@ function setPossible() {
          }
       }
    }
+   // UI 진행률 업데이트
+   const processedCount = window.totalDataLength - dataAll.length;
+   default_per.innerHTML = `${(processedCount * 100 / window.totalDataLength).toFixed(2)}%`;
 
-   default_per.innerHTML = `${(dataIdx * 100 / dataAll.length).toFixed(2)}%`;
-   if (dataIdx >= dataAll.length) {
-      isCalculating = false;
-      possibleCopy = structuredClone(possible);
-      makeBlock();
+   if (dataAll.length > 0) {
+      setTimeout(() => setPossible(), SLEEP_MS);
    } else {
-      if ('requestIdleCallback' in window) {
-         // 브라우저가 쉬는 시간에 실행하되, 최대 50ms 안에는 밀어넣도록 보장
-         requestIdleCallback(() => setPossible(), { timeout: 50 });
-      } else setTimeout(() => setPossible(), 16);
+      isCalculating = false;
+      possibleCopy = possible.slice(); 
+      makeBlock();
+
+      window.totalDataLength = null;
+      dataAll = null;
    }
 }
 
@@ -323,7 +339,7 @@ function makeBlock() {
 
    if (mod == 0) {
       possible.length = 0;
-      if (exSet.size == 0) possible.push(...possibleCopy);
+      if (exSet.size == 0) possible = possibleCopy.slice();
       else {
          for(let p of possibleCopy) {
             if (!p.compstr.some(i => exSet.has(i))) possible.push(p);
