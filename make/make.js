@@ -1,9 +1,10 @@
 const params = new URLSearchParams(window.location.search);
-const chIds = params.get('list');
-const chBonds = params.get('bond');
+const chIds = params.get('list'), chBonds = params.get('bond');
 const boss_element_str = params.get('bossEl') == null ? "none" : params.get('bossEl');
 
 if (params.get('hitAll') != null && params.get('hitAll') == "false") hitAll = false;
+const hpUpMap = new Map();
+for(let d of chJSON.data) hpUpMap.set(d.id, d.hpUp == undefined ? 0 : d.hpUp);
 
 const boss_element = el2Num(boss_element_str);
 function el2Num(str) {
@@ -210,6 +211,7 @@ function getAllCompsFromServer(url_idx) {
          default_per = document.getElementById("defaultPer");
          dataAll = data.filter(i => !(i.recommend < 5e9 && i.vote < 2e9)); 
          dataIdx = 0;
+         for(let d of dataAll) d.compstr = d.compstr.split(" ").map(Number);
          setPossible();
       })
       .catch(e => {
@@ -257,45 +259,38 @@ function check_class_option(team) {
    }
 }
 
-let maxCur13t = 0;
+let maxCur13t = 0, _err = false;
+const glbBonds = [5,5,5,5,5];
 function setPossible() {
-   const hpUpMap = new Map();
-   for(let d of chJSON.data) {
-      const hpup_tmp = d.hpUp == undefined ? 0 : d.hpUp;
-      hpUpMap.set(d.id, hpup_tmp);
-   }
-
    // 한 번에 처리할 항목 수
    const batchSize = 100;
    for (let i = 0; i < batchSize && dataIdx < dataAll.length; i++) {
       let d = dataAll[dataIdx++];
-      d.compstr = d.compstr.split(" ").map(Number);
       const compList = d.compstr;
 
       if (hpUpMap.get(compList[0]) < limit_hp_up) continue;
       if (_optionList != null && !check_class_option(compList)) continue;
 
-      const bonds = [];
       for (let j = 0; j < compList.length; j++) {
          const val = cbMap.get(compList[j]);
-         if (val === undefined) break;
-         bonds.push(val);
+         if (val === undefined) {_err = true; break;}
+         glbBonds[j] = val;
       }
-      if (bonds.length < 5) continue;
+      if (_err) {_err = false; continue;}
 
       if (boss_element == -1 && hitAll == true) {
          if (d.recommend > 0 && limit_fit > d.recommend) continue;
 
-         if (bonds.every(item => item === 5) && d.recommend > 0) d.fit13t = d.recommend;
-         else if (bonds.every(item => item === 1) && d.vote > 0) d.fit13t = d.vote;
-         else d.fit13t = autoCalc(compList, d.description, bonds, -1, _optionList);
+         if (glbBonds.every(item => item === 5) && d.recommend > 0) d.fit13t = d.recommend;
+         else if (glbBonds.every(item => item === 1) && d.vote > 0) d.fit13t = d.vote;
+         else d.fit13t = autoCalc(compList, d.description, glbBonds, -1, _optionList);
 
          if (d.fit13t >= limit_fit) {
             if (d.fit13t > maxCur13t) maxCur13t = d.fit13t;
             possible.push(d);
          }
       } else {
-         d.fit13t = autoCalc(compList, d.description, bonds, boss_element, _optionList);
+         d.fit13t = autoCalc(compList, d.description, glbBonds, boss_element, _optionList);
 
          if (d.fit13t >= limit_fit) {
             if (d.fit13t > maxCur13t) maxCur13t = d.fit13t;
@@ -309,7 +304,12 @@ function setPossible() {
       isCalculating = false;
       possibleCopy = structuredClone(possible);
       makeBlock();
-   } else setTimeout(() => setPossible(), 16);
+   } else {
+      if ('requestIdleCallback' in window) {
+         // 브라우저가 쉬는 시간에 실행하되, 최대 50ms 안에는 밀어넣도록 보장
+         requestIdleCallback(() => setPossible(), { timeout: 50 });
+      } else setTimeout(() => setPossible(), 16);
+   }
 }
 
 const e9 = 1000000000;
