@@ -1,5 +1,5 @@
 const lib_set = new Set(liberationList);
-let GLOBAL_ACT_NUM, GLOBAL_COMMAND_LIST, GLOBAL_OPTION_LIST;
+let GLOBAL_ACT_NUM, GLOBAL_COMMAND_LIST, GLOBAL_OPTION_LIST, GLOBAL_BOND_LIST;
 
 function autoCalc(idList, command, bondList, boss_element = -1, _optionList = null) {
    if (command == null || command.length < 10) return 0;
@@ -7,6 +7,7 @@ function autoCalc(idList, command, bondList, boss_element = -1, _optionList = nu
    GLOBAL_ACT_NUM = 0;
    GLOBAL_COMMAND_LIST = command.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
    GLOBAL_OPTION_LIST = _optionList;
+   GLOBAL_BOND_LIST = bondList;
 
    if (idList.length != 5) return 0;
    boss.maxHp = 10854389981;
@@ -42,7 +43,7 @@ function start(compIds) {
    }
    comp[0].isLeader = true;
    for(let i = 0; i < 5; i++) {
-      comp[i] = setDefault(comp[i], bondList[i]);
+      comp[i] = setDefault(comp[i], GLOBAL_BOND_LIST[i]);
       if (comp[i] == undefined || comp[i] == null) return 0;
    }
    comp[0].leader();
