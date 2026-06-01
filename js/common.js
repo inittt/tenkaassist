@@ -659,7 +659,7 @@ const translate = {
    "셀리나" : {en : "Salina", sc : "莎琳娜", tc : "莎琳娜", jp : "サリナ"},
    "이나스" : {en : "Inase", sc : "时御", tc : "時御", jp : "イネース"},
    "카디아" : {en : "Cartilla", sc : "女爵", tc : "女爵", jp : "カティア"},
-   "나나미" : {en : "Nanami", sc : "奈奈美", tc : "奈奈美", jp : "ななみ"},
+   "나나미" : {en : "Nanami", sc : "奈奈美", tc : "奈奈美", jp : "星空ななみ"},
    "가엘리" : {en : "W.Noel", sc : "闪黑", tc : "風黑", jp : "輝く歌姫 ノエル"}, // "Glittering Songstress Noel"
    "돌스미나" : {en : "W.Mesmiia", sc : "风蛇", tc : "風蛇", jp : "マネジャー メスミナヤ"}, // "Idol Agent Mesmiia"
    "안젤라" : {en : "Angelina", sc : "雪豹", tc : "雪豹", jp : "アンジェラ"},
@@ -681,7 +681,7 @@ const translate = {
    "바이블" : {en : "Bg.Iblis", sc : "兔伊", tc : "兔伊", jp : "バニー イブリース"},
    "수잔" : {en : "Susan", sc : "苏珊", tc : "蘇珊", jp : "スーザン"},
    "농탄" : {en : "H.Satan", sc : "小撒旦", tc : "幼旦", jp : "ロリ サタン"},
-   "메나미" : {en : "M.Nanami", sc : "仆奈", tc : "僕奈", jp : "メイド ななみ"},
+   "메나미" : {en : "M.Nanami", sc : "仆奈", tc : "僕奈", jp : "メイド 星空ななみ"},
    "메섹돌" : {en : "M.KS-Ⅷ", sc : "火机", tc : "僕K", jp : "メイド KS-Ⅷ"},
    "크바알" : {en : "X.Baal", sc : "诞巴", tc : "誕巴", jp : "クリスマス バル"},
    "크치카" : {en : "X.Ichika", sc : "诞姬", tc : "雪人", jp : "クリスマス 初華"},
@@ -730,6 +730,11 @@ const translate = {
    "강밀레" : {en : "Egypt.Milae", sc : "埃天", tc : "埃天", jp : "強欲天使 聖女ミラ"},
    "마더피" : {en : "M.MomDaphne", sc : "魔兔妈", tc : "魔媽", jp : "魔法少女 ダフィー"},
    "나리" : {en : "Nali", sc : "娜莉", tc : "娜莉", jp : "ナリー"},
+
+   "오토히메" : {en : "Otohime", sc : "乙姬", tc : "乙姬", jp : "乙姫"},
+   "리고라" : {en : "Legora", sc : "莉可菈", tc : "莉可菈", jp : "リゴラ"},
+   "수브리" : {en : "*Britney", sc : "*布兰妮", tc : "*布蘭妮", jp : "夏の日 ブリトニー"},
+   "수나미" : {en : "*Nanami", sc : "*奈奈美", tc : "*奈奈美", jp : "夏の日 星空ななみ"},
 };
 
 //---------------------------------------------------------------------------
