@@ -20,13 +20,13 @@ function autoCalc(idList, command, bondList, boss_element = -1, _optionList = nu
 function start(compIds) {
    // if (new Set(compIds).size !== compIds.length) return 0;
 
-   // init
-   for (let i = 0; i < 5; i++) if (comp[i]) {
-      for (let key in comp[i]) {
-         if (typeof comp[i][key] === 'function') comp[i][key] = null;
-      }
-      comp[i] = null; 
-   }
+   // // init
+   // for (let i = 0; i < 5; i++) if (comp[i]) {
+   //    for (let key in comp[i]) {
+   //       if (typeof comp[i][key] === 'function') comp[i][key] = null;
+   //    }
+   //    comp[i] = null; 
+   // }
 
    GLOBAL_TURN = 1; comp = []; dmg13 = 0;
    boss.hp = boss.maxHp; boss.def = false;
