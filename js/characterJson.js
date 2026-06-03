@@ -175,10 +175,10 @@ const chJSON = { data : [
 {ok : true, id : 10201, rarity : 3, po:1, hp:1112077, atk:254657, cd:4, atkMag:100, ultMag:0, fullname : "마법소녀 더피", name : "마더피", element : 0, role : 0, hpUp : 50},
 {ok : true, id : 10202, rarity : 3, po:3, hp:1499599, atk:188667, cd:4, atkMag:0, ultMag:257, fullname : "사악한 별 나리", name : "나리", element : 4, role : 2, hpUp : 50},
 
-// {ok : true, id : 10203, rarity : 3, hp:0, atk:0, cd:0, atkMag:0, ultMag:0, fullname : "용궁의 왕 오토히메", name : "오토히메", element : 0, role : 0, hpUp : 50},
-// {ok : true, id : 10204, rarity : 3, hp:0, atk:0, cd:0, atkMag:0, ultMag:0, fullname : "여름날 브리트니", name : "수브리", element : 0, role : 3, hpUp : 50},
-// {ok : true, id : 10205, rarity : 3, hp:0, atk:0, cd:0, atkMag:0, ultMag:0, fullname : "마도 괴수 리고라", name : "리고라", element : 2, role : 2, hpUp : 50},
-// {ok : true, id : 10206, rarity : 3, hp:0, atk:0, cd:0, atkMag:0, ultMag:0, fullname : "여름날 나나미", name : "수나미", element : 1, role : 0, hpUp : 50},
+// {ok : true, id : 10203, rarity : 3, hp:915437, atk:309131, cd:4, atkMag:0, ultMag:514, fullname : "용궁의 왕 오토히메", name : "오토히메", element : 0, role : 0, hpUp : 55},
+// {ok : true, id : 10204, rarity : 3, hp:1008443, atk:280787, cd:4, atkMag:0, ultMag:0, fullname : "여름날 브리트니", name : "수브리", element : 0, role : 3, hpUp : 55},
+// {ok : true, id : 10205, rarity : 3, hp:952197, atk:297174, cd:5, atkMag:100, ultMag:0, fullname : "여름날 나나미", name : "수나미", element : 1, role : 0, hpUp : 55},
+// {ok : true, id : 10206, rarity : 3, hp:1428295, atk:197968, cd:4, atkMag:100, ultMag:608, fullname : "마도 괴수 리고라", name : "리고라", element : 2, role : 2, hpUp : 55},
 
 /*
       element  role     rarity
