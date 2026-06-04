@@ -61,10 +61,10 @@ document.addEventListener("DOMContentLoaded", function() {
       return response.json();
    }).then(res => {
       if (!res.success) {
-         document.getElementById("cnt-all").innerHTML = `${t("검색된 덱")} : error`;
+         document.getElementById("cnt-all").innerHTML = `error`;
          return console.log(res.msg);
       }
-      document.getElementById("cnt-all").innerHTML = `${t("검색된 덱")} : ${res.data}`;
+      document.getElementById("cnt-all").innerHTML = `${res.data}`;
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
    })
