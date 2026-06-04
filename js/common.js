@@ -213,6 +213,7 @@ const translate = {
    "5개의 캐릭터를 선택해주세요" : {en : "Five characters are needed", sc : "需要5名角色", tc : "需要5名角色", jp : "5体のキャラクターを選択してください"},
    "5개까지 선택 가능합니다" : {en : "Up to 5 characters can be selected", sc : "可以选择5名角色", tc : "可以選擇5名角色", jp : "5体まで選択可能です"},
    "이미 존재하는 조합입니다" : {en : "The team already exists", sc : "团队已存在", tc : "團隊已存在", jp : "既に存在する組み合わせです"},
+   "이미 같은 조합이 있습니다" : {en : "The team already exists", sc : "团队已存在", tc : "團隊已存在", jp : "既に存在する組み合わせです"},
    "등록되지 않은 조합입니다" : {en : "The team is not registered", sc : "团队未注册", tc : "團隊未註冊", jp : "登録されていない組み合わせです"},
 
    // 시뮬레이터 Simulator
