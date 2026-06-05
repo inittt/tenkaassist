@@ -74,9 +74,8 @@ document.addEventListener("DOMContentLoaded", function() {
             dropdownBtn.appendChild(spanElement);
             dropdownContent.style.display = "none";
             setFitDmg();
-            const _tmpCommand = setCommand(curCommand);
-            document.getElementById("description").innerHTML = _tmpCommand;
-            if (checkCommandDismatch(curCompIds, _tmpCommand))
+            document.getElementById("description").innerHTML = setCommand(curCommand);
+            if (checkCommandDismatch(curCompIds, curCommand))
                document.getElementById("command-bond").innerText = `(${t("임시")})`;
             else document.getElementById("command-bond").innerText = `(${t("5구")})`;
          });
