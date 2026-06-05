@@ -221,8 +221,5 @@ function setCommandCustom(idList, command, bondList) {
 
    // 마지막 턴 잔여 명령어 처리
    flushTurnCommands(currentTurnCmds);
-
-   console.log("최종 정렬 및 보정 완료된 명령어 수:", newCmd.length);
-   console.log(newCmd.join(","));
    return newCmd;
 }
