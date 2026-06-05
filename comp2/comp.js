@@ -74,6 +74,7 @@ document.addEventListener("DOMContentLoaded", function() {
             dropdownBtn.appendChild(spanElement);
             dropdownContent.style.display = "none";
             setFitDmg();
+            document.getElementById("description").innerHTML = setCommand(curCommand);
          });
       });
    }
