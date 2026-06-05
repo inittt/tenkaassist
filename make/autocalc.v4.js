@@ -21,7 +21,9 @@ const cdDifList = [
    10205, // 수나미 33445
 ];
 function setCommandCustom(idList, command, bondList) {
-   const _cmd = command.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
+   const _cmd = Array.isArray(command) 
+      ? command 
+      : (command ? command.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat() : []);
    if (!cdDifList.some(cd => idList.includes(cd))) return _cmd;
 
    // 구속에 따라 쿨타임이 증가하는 캐릭터
