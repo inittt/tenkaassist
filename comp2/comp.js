@@ -74,7 +74,10 @@ document.addEventListener("DOMContentLoaded", function() {
             dropdownBtn.appendChild(spanElement);
             dropdownContent.style.display = "none";
             setFitDmg();
-            document.getElementById("description").innerHTML = setCommand(curCommand);
+            const _tmpCommand = setCommand(curCommand);
+            document.getElementById("description").innerHTML = _tmpCommand;
+            checkCommandDismatch(curCompIds, _tmpCommand)
+            document.getElementById("command-bond").innerText = `(${t("임시")})`
          });
       });
    }

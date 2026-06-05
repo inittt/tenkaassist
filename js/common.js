@@ -315,6 +315,7 @@ const translate = {
    "평" : {en : "A", sc : "攻", tc : "攻", jp : "攻"},
    "궁" : {en : "U", sc : "大", tc : "大", jp : "必"},
    "방" : {en : "D", sc : "防", tc : "防", jp : "防"},
+   "임시" : {en : "Temp", sc : "临时", tc : "臨時", jp : "仮"},
 
 
    // Find
