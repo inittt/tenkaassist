@@ -38,34 +38,33 @@ function setCommandCustom(idList, command, bondList) {
    if (isOk) return _cmd;
 
    const newCmd = [];
-   let currentTurnCmds = []; // 현재 턴의 명령어들을 임시 저장할 배열
+   let currentTurnCmds = []; // 현재 턴의 명령어를 임시 저장할 배열
    const actCheck = [false, false, false, false, false];
-   let turn = 1;
+   let currentTurn = 1;      // 인게임 실제 턴 추적 (1턴부터 시작)
 
-   // 턴 종료 시 cdDifList 캐릭터의 궁만 맨 앞으로 당기는 헬퍼 함수
+   // 턴이 끝날 때 cdDifList 캐릭터의 보정된 '궁'만 맨 앞으로 올리는 헬퍼 함수
    function flushTurnCommands(cmds) {
       if (cmds.length === 0) return;
 
-      // 정렬 로직 수정
       cmds.sort((a, b) => {
          const aIdx = Number(a[0]) - 1;
          const bIdx = Number(b[0]) - 1;
          const aId = idList[aIdx];
          const bId = idList[bIdx];
 
-         // 조건: cdDifList에 포함된 캐릭터이고, 행동이 '궁'인가?
+         // 조건: cdDifList 캐릭터이면서, 이번 보정으로 인해 '궁'을 쓰게 된 녀석인가?
          const aIsTargetUlt = cdDifList.includes(aId) && a.endsWith('궁');
          const bIsTargetUlt = cdDifList.includes(bId) && b.endsWith('궁');
          
-         if (aIsTargetUlt && !bIsTargetUlt) return -1; // a(특수캐릭 궁)를 앞으로
-         if (!aIsTargetUlt && bIsTargetUlt) return 1;  // b(특수캐릭 궁)를 앞으로
-         return 0;                                     // 그 외엔 원래 순서 유지
+         if (aIsTargetUlt && !bIsTargetUlt) return -1; // 맨 앞으로 당김
+         if (!aIsTargetUlt && bIsTargetUlt) return 1;
+         return 0;
       });
 
       newCmd.push(...cmds);
    }
 
-   // 원본 명령어 순회 시작
+   // 원본 명령어 순회
    for(let i = 0; i < _cmd.length; i++) {
       if (_cmd[i] == null) continue;
 
@@ -74,39 +73,51 @@ function setCommandCustom(idList, command, bondList) {
       const act = c[1];            
       const curId = idList[idx];    
 
-      // 한 턴에 같은 캐릭터가 또 행동하려고 하면 ➡️ 이전 턴 종료 및 정렬 후 새 턴 시작
+      // 한 턴에 같은 캐릭터가 또 행동하려고 하면 ➡️ 실제 인게임 턴이 바뀐 것임
       if (actCheck[idx] === true) {
          flushTurnCommands(currentTurnCmds); 
          currentTurnCmds = [];               
-         turn++;
+         currentTurn++; // 실제 턴 증가
          actCheck.fill(false);
       }
       actCheck[idx] = true;
 
-      // 보정 대상 캐릭터 처리
+      // 쿨타임 변동 특수 캐릭터 보정 로직
       if (cdDifList.includes(curId)) {
          const bond = bondList[idx];
-         let isUltTurn = false;
+         let isUltTurnNow = false;
 
-         if (curId === 10162) { // 무이카 쿨타임 주기 계산
-            if (bond === 1) isUltTurn = ((turn - 1) % 4 === 0);
-            else if (bond === 2) isUltTurn = ((turn - 1) % 5 === 0);
-            else if (bond === 3) isUltTurn = ((turn - 1) % 6 === 0);
-            else isUltTurn = ((turn - 1) % 7 === 0);
+         // 현재 구속 수치 기준, 이번 턴이 진짜 '궁'을 쓸 수 있는 타이밍인지 계산
+         if (curId === 10162) { // 무이카 (1구:4턴, 2구:5턴, 3구:6턴, 그외:7턴 주기)
+            if (bond === 1) isUltTurnNow = ((currentTurn - 1) % 4 === 0);
+            else if (bond === 2) isUltTurnNow = ((currentTurn - 1) % 5 === 0);
+            else if (bond === 3) isUltTurnNow = ((currentTurn - 1) % 6 === 0);
+            else isUltTurnNow = ((currentTurn - 1) % 7 === 0);
          } 
-         else if (curId === 10205) { // 수나미 쿨타임 주기 계산
-            if (bond === 1 || bond === 2) isUltTurn = ((turn - 1) % 3 === 0);
-            else isUltTurn = ((turn - 1) % 4 === 0);
+         else if (curId === 10205) { // 수나미 (1,2구:3턴, 그외:4턴 주기)
+            if (bond === 1 || bond === 2) isUltTurnNow = ((currentTurn - 1) % 3 === 0);
+            else isUltTurnNow = ((currentTurn - 1) % 4 === 0);
          }
 
-         // 궁극기 타이밍이면 '궁'으로 격상시켜 임시 배열에 추가
-         if (isUltTurn) {
-            currentTurnCmds.push(`${idx + 1}궁`);
+         if (act === "궁") {
+            // 1. 원래 5구 기준 궁이었는데, 지금 쿨이 안 찼다면 ➡️ 평타로 격하
+            if (!isUltTurnNow) {
+               currentTurnCmds.push(`${idx + 1}평`);
+            } else {
+               // 쿨이 딱 맞게 찬 상태라면 원래대로 궁 유지
+               currentTurnCmds.push(c);
+            }
          } else {
-            currentTurnCmds.push(act === "궁" ? `${idx + 1}평` : c);
+            // 2. 원래 평타/방어였는데, 연산해보니 지금 딱 궁 타이밍이라면 ➡️ 궁으로 변경 (정렬에 의해 맨 앞으로 감)
+            if (isUltTurnNow) {
+               currentTurnCmds.push(`${idx + 1}궁`);
+            } else {
+               // 둘 다 아니면 원래 평타/방어 유지
+               currentTurnCmds.push(c);
+            }
          }
       } else {
-         // 일반 캐릭터는 그대로 임시 배열에 추가
+         // 일반 캐릭터는 원래 의도대로 저장
          currentTurnCmds.push(c);
       }
    }
