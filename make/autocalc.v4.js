@@ -92,29 +92,25 @@ function setCommandCustom(idList, command, bondList) {
             if (bond === 1) isUltTurnNow = ((currentTurn - 1) % 4 === 0);
             else if (bond === 2) isUltTurnNow = ((currentTurn - 1) % 5 === 0);
             else if (bond === 3) isUltTurnNow = ((currentTurn - 1) % 6 === 0);
-            else isUltTurnNow = ((currentTurn - 1) % 7 === 0);
+            else if (bond === 4) isUltTurnNow = ((currentTurn - 1) % 7 === 0);
+            else isUltTurnNow = ((currentTurn - 1) % 8 === 0);
          } 
          else if (curId === 10205) { // 수나미 (1,2구:3턴, 그외:4턴 주기)
             if (bond === 1 || bond === 2) isUltTurnNow = ((currentTurn - 1) % 3 === 0);
-            else isUltTurnNow = ((currentTurn - 1) % 4 === 0);
+            else if (bond === 3 || bond === 4) isUltTurnNow = ((currentTurn - 1) % 4 === 0);
+            else isUltTurnNow = ((currentTurn - 1) % 5 === 0);
          }
 
          if (act === "궁") {
             // 1. 원래 5구 기준 궁이었는데, 지금 쿨이 안 찼다면 ➡️ 평타로 격하
-            if (!isUltTurnNow) {
-               currentTurnCmds.push(`${idx + 1}평`);
-            } else {
-               // 쿨이 딱 맞게 찬 상태라면 원래대로 궁 유지
-               currentTurnCmds.push(c);
-            }
+            if (!isUltTurnNow) currentTurnCmds.push(`${idx + 1}평`);
+            // 쿨이 딱 맞게 찬 상태라면 원래대로 궁 유지
+            else currentTurnCmds.push(c);
          } else {
             // 2. 원래 평타/방어였는데, 연산해보니 지금 딱 궁 타이밍이라면 ➡️ 궁으로 변경 (정렬에 의해 맨 앞으로 감)
-            if (isUltTurnNow) {
-               currentTurnCmds.push(`${idx + 1}궁`);
-            } else {
-               // 둘 다 아니면 원래 평타/방어 유지
-               currentTurnCmds.push(c);
-            }
+            if (isUltTurnNow) currentTurnCmds.push(`${idx + 1}궁`);
+            // 둘 다 아니면 원래 평타/방어 유지
+            else currentTurnCmds.push(c);
          }
       } else {
          // 일반 캐릭터는 원래 의도대로 저장
