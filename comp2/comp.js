@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
       curCompIds = res.data.compstr.split(" ").map(Number);
       curCommand = res.data.description;
       makeCompBlock(res.data);
+      setCmdBond();
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
       document.getElementById('titlebox').innerHTML = `ERROR`;
@@ -75,22 +76,24 @@ document.addEventListener("DOMContentLoaded", function() {
             dropdownContent.style.display = "none";
             setFitDmg();
             document.getElementById("description").innerHTML = setCommand(curCommand);
-
-            const _bondList = getBondList(); // 현재 선택된 5명의 구속 배열 [5, 3, 5, 5, 5]
-            let isTemp = false;
-
-            for (let _id of cdDifList) {
-               const tgIdx = curCompIds.indexOf(_id);
-               // 파티에 보정 대상 캐릭터가 존재하고, 그 캐릭터의 현재 구속이 5가 아니라면
-               if (tgIdx !== -1 && _bondList[tgIdx] !== 5) {isTemp = true; break;}
-            }
-
-            if (isTemp) document.getElementById("command-bond").innerText = `(${t("임시")})`;
-            else document.getElementById("command-bond").innerText = `(${t("5구")})`;
+            setCmdBond()
          });
       });
    }
 });
+function setCmdBond() {
+   const _bondList = getBondList(); // 현재 선택된 5명의 구속 배열 [5, 3, 5, 5, 5]
+   let isTemp = false;
+
+   for (let _id of cdDifList) {
+      const tgIdx = curCompIds.indexOf(_id);
+      // 파티에 보정 대상 캐릭터가 존재하고, 그 캐릭터의 현재 구속이 5가 아니라면
+      if (tgIdx !== -1 && _bondList[tgIdx] !== 5) {isTemp = true; break;}
+   }
+
+   if (isTemp) document.getElementById("command-bond").innerText = `(${t("임시")})`;
+   else document.getElementById("command-bond").innerText = `(${t("5구")})`;
+}
 
 function setFitDmg() {
    if (curCommand != null && curCommand.length > 10) {

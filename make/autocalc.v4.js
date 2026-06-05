@@ -126,34 +126,6 @@ function setCommandCustom(idList, command, bondList) {
    return newCmd;
 }
 
-// 행동순서가 달라지는지 체크
-// 전부 5구속일 때 원본과 보정 결과가 다르면 true, 같으면 false 리턴
-function checkCommandDismatch(idList, command) {
-   // 1. 문자열을 정규식으로 가공하여 원본 배열 생성
-   const _cmd = Array.isArray(command) 
-      ? command 
-      : (command ? command.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat() : []);
-
-   // 특수 캐릭터가 파티에 없다면 순서가 바뀔 일이 없으므로 정상(false) 리턴
-   if (!cdDifList.some(cd => idList.includes(cd))) return false;
-
-   // 2. 무조건 '전부 5구속' 상태를 가정한 임시 구속 리스트 작성
-   const forceBond5List = [5, 5, 5, 5, 5];
-
-   // 3. 기존에 만들어둔 setCommandCustom 로직을 그대로 활용하여 5구속 기준 배열 확보
-   // 단, 기존 setCommandCustom이 true를 리턴하는 코드로 수정되어 있다면 원상복구(배열만 리턴하게) 해두어야 합니다.
-   const newCmd = setCommandCustom(idList, _cmd, forceBond5List);
-
-   // 만약 setCommandCustom 내부에서 검사 대상을 못 찾아 원본을 그대로 뱉었다면 정상(false)
-   if (_cmd === newCmd) return false;
-
-   // 4. 원본(_cmd)과 5구속 보정본(newCmd)의 원소를 1:1로 비교
-   const isDifferent = _cmd.length !== newCmd.length || _cmd.some((val, i) => val !== newCmd[i]);
-
-   // 다르면 구조적 결함이 있는 것이므로 true 리턴
-   return isDifferent;
-}
-
 // functions
 
 function start(compIds) {
