@@ -46,7 +46,7 @@ function setCommandCustom(idList, command, bondList) {
 
             const curIdx = Number(_cmd[j][0])-1;
             if (actCheck[curIdx] == true) continue;
-            
+
             const curId = idList[curIdx];
             if (cdDifList.includes(curId)) {
                // 무이카
@@ -98,6 +98,7 @@ function setCommandCustom(idList, command, bondList) {
       }
       actCheck[idx] = true;
    }
+   console.log(newCmd.join(","));
    return newCmd;
 }
 

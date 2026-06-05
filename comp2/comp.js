@@ -9,7 +9,7 @@ else {
 
 
 const compIds_toTest = [];
-let isDataLoaded = true, curCommand = null, curCompstr = null;
+let isDataLoaded = true, curCommand = null, curCompstr = null, curCompIds = null;
 document.addEventListener("DOMContentLoaded", function() {
    // 조합 정보 세팅
    request(`${server}/comps/get/${compId}`, {
@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
          document.getElementById('titlebox').innerHTML = `ERROR`;
          return console.log(t("데이터 로드 실패"));
       }
+      curCompIds = res.data.compstr.split(" ").map(Number);
       makeCompBlock(res.data);
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
@@ -80,11 +81,12 @@ document.addEventListener("DOMContentLoaded", function() {
 function setFitDmg() {
    if (curCommand != null && curCommand.length > 10) {
       const _bondList = getBondList();
-      const fitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, _bondList);
+      const _tmpCmd = setCommandCustom(curCompIds, curCommand, _bondList);
+      const fitDmg = autoCalc(curCompIds, _tmpCmd, _bondList);
 
       // 전체피격 없을 때 계산
       hitAll = false;
-      const noHitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, _bondList);
+      const noHitDmg = autoCalc(curCompIds, _tmpCmd, _bondList);
       hitAll = true;
       //////
 
@@ -103,7 +105,6 @@ function makeCompBlock(comp) {
    const create_at = comp.create_at == null ? '-' : addNineHours(comp.create_at);
    const update_at = comp.update_at == null ? '-' : addNineHours(comp.update_at);
    curCommand = description;
-   curCompstr = compstr;
    
    document.title = `TenkaAssist - ${t_d(name)}`
    document.getElementById('titlebox').innerHTML = `${t_d(name)}`;
@@ -139,7 +140,8 @@ function makeCompBlock(comp) {
    document.getElementById('description').innerHTML = setCommand(description).trim();
 
    if (description != null && description.length > 10) {
-      const dmg13t_b1 = autoCalc(compstr.split(" ").map(Number), description, [1,1,1,1,1]);
+      const _tmpCmd = setCommandCustom(curCompIds, curCommand, [1,1,1,1,1]);
+      const dmg13t_b1 = autoCalc(compstr.split(" ").map(Number), _tmpCmd, [1,1,1,1,1]);
 
       if (dmg13t_b1 > vote) {
          const formData = new FormData();
@@ -160,11 +162,12 @@ function makeCompBlock(comp) {
 
    if (curCommand != null && curCommand.length > 10) {
       const bondList_tmp = getBondList();
-      const fitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, bondList_tmp);
+      const _tmpCmd = setCommandCustom(curCompIds, curCommand, bondList_tmp);
+      const fitDmg = autoCalc(curCompIds, _tmpCmd, bondList_tmp);
 
       // 전체피격 없을 때 계산
       hitAll = false;
-      const noHitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, bondList_tmp);
+      const noHitDmg = autoCalc(curCompIds, curCommand, bondList_tmp);
       hitAll = true;
       //////
 
@@ -230,7 +233,7 @@ function goLab() {
 
 function setCommand(str) {
    if (str == null) return "";
-   const commandList = setCommandCustom(curCompstr.split(" ").map(Number), str, getBondList());
+   const commandList = setCommandCustom(curCompIds, str, getBondList());
 
    const actCheck = [false, false, false, false, false];
    const res = [`1${t("턴")} : `];
