@@ -97,7 +97,8 @@ function setCommandCustom(idList, command, bondList) {
                actCheck[curIdx] = true;
             }
          }
-      }
+         if (_cmd[i]) newCmd.push(_cmd[i]);
+      } else newCmd.push(_cmd[i]);
       actCheck[idx] = true;
    }
    console.log(newCmd.join(","));
