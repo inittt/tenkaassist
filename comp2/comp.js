@@ -76,8 +76,9 @@ document.addEventListener("DOMContentLoaded", function() {
             setFitDmg();
             const _tmpCommand = setCommand(curCommand);
             document.getElementById("description").innerHTML = _tmpCommand;
-            checkCommandDismatch(curCompIds, _tmpCommand)
-            document.getElementById("command-bond").innerText = `(${t("임시")})`
+            if (checkCommandDismatch(curCompIds, _tmpCommand))
+               document.getElementById("command-bond").innerText = `(${t("임시")})`;
+            else document.getElementById("command-bond").innerText = `(${t("5구")})`;
          });
       });
    }
