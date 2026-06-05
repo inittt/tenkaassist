@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
          return console.log(t("데이터 로드 실패"));
       }
       curCompIds = res.data.compstr.split(" ").map(Number);
+      curCommand = res.data.description;
       makeCompBlock(res.data);
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
@@ -104,7 +105,6 @@ function makeCompBlock(comp) {
    const recommend = comp.recommend, creator = comp.creator, updater = comp.updater;
    const create_at = comp.create_at == null ? '-' : addNineHours(comp.create_at);
    const update_at = comp.update_at == null ? '-' : addNineHours(comp.update_at);
-   curCommand = description;
    
    document.title = `TenkaAssist - ${t_d(name)}`
    document.getElementById('titlebox').innerHTML = `${t_d(name)}`;
@@ -141,7 +141,7 @@ function makeCompBlock(comp) {
 
    if (description != null && description.length > 10) {
       const _tmpCmd = setCommandCustom(curCompIds, curCommand, [1,1,1,1,1]);
-      const dmg13t_b1 = autoCalc(compstr.split(" ").map(Number), _tmpCmd, [1,1,1,1,1]);
+      const dmg13t_b1 = autoCalc(curCompIds, _tmpCmd, [1,1,1,1,1]);
 
       if (dmg13t_b1 > vote) {
          const formData = new FormData();
@@ -167,7 +167,7 @@ function makeCompBlock(comp) {
 
       // 전체피격 없을 때 계산
       hitAll = false;
-      const noHitDmg = autoCalc(curCompIds, curCommand, bondList_tmp);
+      const noHitDmg = autoCalc(curCompIds, _tmpCmd, bondList_tmp);
       hitAll = true;
       //////
 
