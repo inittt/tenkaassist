@@ -9,7 +9,7 @@ else {
 
 
 const compIds_toTest = [];
-let isDataLoaded = true, curCommand = null, curCompstr = null;
+let isDataLoaded = true, curCommand = null, curCompstr = null, curCompIds = null;
 document.addEventListener("DOMContentLoaded", function() {
    // 조합 정보 세팅
    request(`${server}/comps/get/${compId}`, {
@@ -23,7 +23,10 @@ document.addEventListener("DOMContentLoaded", function() {
          document.getElementById('titlebox').innerHTML = `ERROR`;
          return console.log(t("데이터 로드 실패"));
       }
+      curCompIds = res.data.compstr.split(" ").map(Number);
+      curCommand = res.data.description;
       makeCompBlock(res.data);
+      setCmdBond();
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
       document.getElementById('titlebox').innerHTML = `ERROR`;
@@ -72,19 +75,35 @@ document.addEventListener("DOMContentLoaded", function() {
             dropdownBtn.appendChild(spanElement);
             dropdownContent.style.display = "none";
             setFitDmg();
+            document.getElementById("description").innerHTML = setCommand(curCommand);
+            setCmdBond()
          });
       });
    }
 });
+function setCmdBond() {
+   const _bondList = getBondList(); // 현재 선택된 5명의 구속 배열 [5, 3, 5, 5, 5]
+   let isTemp = false;
+
+   for (let _id of cdDifList) {
+      const tgIdx = curCompIds.indexOf(_id);
+      // 파티에 보정 대상 캐릭터가 존재하고, 그 캐릭터의 현재 구속이 5가 아니라면
+      if (tgIdx !== -1 && _bondList[tgIdx] !== 5) {isTemp = true; break;}
+   }
+
+   if (isTemp) document.getElementById("command-bond").innerText = `(${t("임시")})`;
+   else document.getElementById("command-bond").innerText = `(${t("5구")})`;
+}
 
 function setFitDmg() {
    if (curCommand != null && curCommand.length > 10) {
       const _bondList = getBondList();
-      const fitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, _bondList);
+      const _tmpCmd = setCommandCustom(curCompIds, curCommand, _bondList);
+      const fitDmg = autoCalc(curCompIds, _tmpCmd, _bondList);
 
       // 전체피격 없을 때 계산
       hitAll = false;
-      const noHitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, _bondList);
+      const noHitDmg = autoCalc(curCompIds, _tmpCmd, _bondList);
       hitAll = true;
       //////
 
@@ -102,8 +121,6 @@ function makeCompBlock(comp) {
    const recommend = comp.recommend, creator = comp.creator, updater = comp.updater;
    const create_at = comp.create_at == null ? '-' : addNineHours(comp.create_at);
    const update_at = comp.update_at == null ? '-' : addNineHours(comp.update_at);
-   curCommand = description;
-   curCompstr = compstr;
    
    document.title = `TenkaAssist - ${t_d(name)}`
    document.getElementById('titlebox').innerHTML = `${t_d(name)}`;
@@ -139,7 +156,8 @@ function makeCompBlock(comp) {
    document.getElementById('description').innerHTML = setCommand(description).trim();
 
    if (description != null && description.length > 10) {
-      const dmg13t_b1 = autoCalc(compstr.split(" ").map(Number), description, [1,1,1,1,1]);
+      const _tmpCmd = setCommandCustom(curCompIds, curCommand, [1,1,1,1,1]);
+      const dmg13t_b1 = autoCalc(curCompIds, _tmpCmd, [1,1,1,1,1]);
 
       if (dmg13t_b1 > vote) {
          const formData = new FormData();
@@ -160,11 +178,12 @@ function makeCompBlock(comp) {
 
    if (curCommand != null && curCommand.length > 10) {
       const bondList_tmp = getBondList();
-      const fitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, bondList_tmp);
+      const _tmpCmd = setCommandCustom(curCompIds, curCommand, bondList_tmp);
+      const fitDmg = autoCalc(curCompIds, _tmpCmd, bondList_tmp);
 
       // 전체피격 없을 때 계산
       hitAll = false;
-      const noHitDmg = autoCalc(curCompstr.split(" ").map(Number), curCommand, bondList_tmp);
+      const noHitDmg = autoCalc(curCompIds, _tmpCmd, bondList_tmp);
       hitAll = true;
       //////
 
@@ -230,7 +249,8 @@ function goLab() {
 
 function setCommand(str) {
    if (str == null) return "";
-   const commandList = str.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
+   const commandList = setCommandCustom(curCompIds, str, getBondList());
+
    const actCheck = [false, false, false, false, false];
    const res = [`1${t("턴")} : `];
    let _turn = 1, isFirst = true;
