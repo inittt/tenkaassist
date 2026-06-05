@@ -23,7 +23,6 @@ const cdDifList = [
 function setCommandCustom(idList, command, bondList) {
    const _cmd = command.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
    if (!cdDifList.some(cd => idList.includes(cd))) return _cmd;
-   for(let i = 0; i < bondList.length; i++) if (!bondList[i]) bondList[i] = 5;
 
    // 구속에 따라 쿨타임이 증가하는 캐릭터
    let isOk = true;
@@ -43,8 +42,11 @@ function setCommandCustom(idList, command, bondList) {
          turn++;
          actCheck.fill(false);
          for(let j = i+1; j < i+6; j++) {
+            if (!_cmd[j]) break;
+
             const curIdx = Number(_cmd[j][0])-1;
             if (actCheck[curIdx] == true) continue;
+            
             const curId = idList[curIdx];
             if (cdDifList.includes(curId)) {
                // 무이카
