@@ -480,6 +480,7 @@ const translate = {
    // 회원가입
    "닉네임": {en : "Nickname", sc : "昵称", tc : "暱稱", jp: "ニックネーム"},
    "회원가입 성공": {en : "Registration successful", sc : "注册成功", tc : "註冊成功", jp: "登録成功"},
+   "처리 중...": {en: "Processing...", sc: "处理中...", tc: "處理中...", jp: "処理中..."},
 
    // 태그
    "태그": {en: "Tag", sc: "标签", tc: "標籤", jp: "タグ"},
