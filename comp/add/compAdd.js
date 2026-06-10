@@ -51,8 +51,15 @@ function getCharactersWithCondition(element, role, rarity, search) {
 // 등록 버튼 누를시
 function registerDeck() {
    if (selected.length != 5) return alert(t("5개의 캐릭터를 선택해주세요"));
-
    if (!isValidComp(selected)) return alert(t("생존할 수 없는 조합입니다"));
+
+   // 버튼 상태 변경을 위해 요소 가져오기
+   const registerBtn = document.getElementById("registerBtn");
+   if (registerBtn.disabled) return; // 이미 처리 중이면 중복 클릭 방지
+   // 버튼 비활성화 및 '처리 중...' 상태로 변경
+   registerBtn.disabled = true;
+   registerBtn.style.cursor = "default";
+   registerBtn.style.opacity = "0.6";
 
    const deckName = `${getCharacter(selected[0]).name}덱`;
    const formData = new FormData();
@@ -66,7 +73,14 @@ function registerDeck() {
       if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
    }).then(res => {
-      if (!res.success) return alert(t(res.msg));
+      if (!res.success) {
+         alert(t(res.msg));
+         // 실패 시 버튼 원래대로 복구
+         registerBtn.disabled = false;
+         registerBtn.style.cursor = "pointer";
+         registerBtn.style.opacity = "1.0";
+         return;
+      }
       alert(
          t("등록 성공")
          //+"\n\n"+t("데미지 측정을 하지 않거나 13턴 데미지(5)가 40억 미만인 조합은 주기적으로 삭제됩니다")
@@ -74,9 +88,11 @@ function registerDeck() {
       location.href = `${address}/comp/?id=${res.data}`
    }).catch(e => {
       alert(t("조합 등록 실패"), e);
+      // 에러 발생 시 버튼 원래대로 복구
+      registerBtn.disabled = false;
+      registerBtn.style.cursor = "pointer";
+      registerBtn.style.opacity = "1.0";
    })
-
-
 }
 
 
