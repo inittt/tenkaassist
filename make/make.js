@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
-         mod = 0; curCalc = maxCur13t/e9;;
+         mod = 0; curCalc = Math.floor(maxCur13t/e9);
          if ("2개" === this.value) mod = 1;
          else if ("3개" === this.value) mod = 2;
          else if ("4개" === this.value) mod = 3;
@@ -426,7 +426,7 @@ function onOffEss() {
    else {
       setEss(false);
       if (isSameSet(essSave, essSet) && isSameSet(exSave, exSet)) return;
-      curCalc = maxCur13t/e9;
+      curCalc = Math.floor(maxCur13t/e9);
       makeBlock();
       essSave = new Set(essSet); exSave = new Set(exSet);
    }
