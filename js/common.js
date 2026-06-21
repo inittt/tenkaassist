@@ -357,6 +357,7 @@ const translate = {
    "현재 캐릭터를 저장하시겠습니까?" : {en : "Do you want to save the current character?", sc : "您要保存当前角色吗？", tc : "您要保存當前角色嗎？", jp : "現在のキャラクターを保存しますか？"},
    "저장되었습니다" : {en : "Saved successfully", sc : "保存成功", tc : "儲存成功", jp : "保存しました"},
    "로그인 후 이용가능합니다" : {en : "Login is required to use this service.", sc : "登录后方可使用.", tc:"登入後方可使用.", jp : "このサービスを利用するにはログインが必要です"},
+   "로그인 후 저장 가능" : {en : "Login is required to use this service.", sc : "登录后方可使用.", tc:"登入後方可使用.", jp : "このサービスを利用するにはログインが必要です"},
    "로그인 되어있지 않음" : {en : "You are not logged in", sc : "您未登录", tc : "您未登入", jp : "ログインしていません"},
    "추천팀 기능은 하루 한 번만 이용가능합니다" : {en : "The team suggestion feature is available only once a day.", sc : "团队推荐功能每天只能使用一次.", tc : "團隊推薦功能每天只能使用一次.", jp : "チーム提案機能は1日1回のみ利用可能です"},
    "클립보드에서 텍스트를 가져오는 데 실패했습니다" : {en : "Failed to retrieve text from clipboard.", sc : "未能从剪贴板获取文本。", tc : "無法從剪貼簿取得文字。", jp : "クリップボードからテキストを取得できませんでした"},
