@@ -31,7 +31,8 @@ const limit_hp_up = Number(params.get('hpUp') == null ? 0 : params.get('hpUp'));
 const limit_fit = Number(params.get('fit13t') == null ? 0 : params.get('fit13t'));
 
 let possible = [];
-let possibleCopy, isDataLoaded = false, mod = 0, cc, isCalculating = true;
+let possibleCopy, isDataLoaded = false
+let mod = 0, cc, dd, ddBtn, ddBox, isCalculating = true;
 const curHeader = 5;
 
 const cbMap = new Map();
@@ -122,6 +123,9 @@ document.addEventListener("DOMContentLoaded", function() {
    var dropdownBtn = document.getElementById("dropdownBtn");
    var dropdownContent = document.getElementById("dropdown-content");
    cc = document.getElementById('compcontainer');
+   ddBox = document.getElementById('ddBox');
+   dd = document.getElementById('dataDmg');
+   ddBtn = document.getElementById('ddBtn');
 
    dropdownBtn.addEventListener("click", function() {
       if (isCalculating || isEssOn) return;
@@ -143,7 +147,6 @@ document.addEventListener("DOMContentLoaded", function() {
          else if ("3개" === this.value) mod = 2;
          else if ("4개" === this.value) mod = 3;
          
-         backtrackContinue = true;
          makeBlock();
       });
    });
@@ -322,7 +325,6 @@ function setPossible() {
    } else {
       isCalculating = false;
       possibleCopy = possible.slice();
-      backtrackContinue = true;
       makeBlock();
 
       window.totalDataLength = null;
@@ -340,6 +342,7 @@ function makeBlock() {
    clickLoadOnoff(false);
 
    if (mod == 0) {
+      ddBox.style.display = "none";
       possible.length = 0;
       if (exSet.size == 0) possible = possibleCopy.slice();
       else {
@@ -356,6 +359,8 @@ function makeBlock() {
       possible.sort((a, b) => b.fit13t - a.fit13t);
       makeBlockAllDeck();
    } else {
+      ddBox.style.display = "block";
+      ddBtn.style.display = "none";
       isCalculating = true;
       deckCnt = mod+1;
 
@@ -370,6 +375,7 @@ function makeBlock() {
             }
          }
          curCalc--;
+         dd.innerHTML = formatNumber(curCalc*10);
       } else {
          possible.length = 0;
          if (exSet.size == 0) {
@@ -391,7 +397,15 @@ function makeBlock() {
             isCalculating = false;
          }
       } else backtrack0(0);
+
+      if (mod != 0) ddBtn.style.display = "block";
    }
+}
+
+function startNextDepth() {
+   if (mod == 0) return;
+   curCalc--;
+   makeBlock();
 }
 
 function init() {
@@ -429,7 +443,6 @@ function onOffEss() {
       setEss(false);
       if (isSameSet(essSave, essSet) && isSameSet(exSave, exSet)) return;
       curCalc = Math.floor(maxCur13t/e9);
-      backtrackContinue = true;
       makeBlock();
       essSave = new Set(essSet); exSave = new Set(exSet);
    }
@@ -635,7 +648,7 @@ function loadBlockNDeck() {
 
 
 /* 백트래킹 함수 -----------------------------------------------------------*/
-let backtrackCounter, backtrackContinue = true;
+let backtrackCounter;
 function backtrack0(backtrackIdx) {
    let nextIdx = possible.length-1-backtrackIdx;
    backtrackOneCycle(backtrackIdx);
@@ -654,8 +667,7 @@ function backtrack0(backtrackIdx) {
          }
          return;
       }
-      if (backtrackContinue) {makeBlock(); backtrackContinue = false;}
-      else makeBlockNDeck();
+      makeBlockNDeck();
    }
    else setTimeout(() => backtrack0(backtrackIdx+1), 16);
 }

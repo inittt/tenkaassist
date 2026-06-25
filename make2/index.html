@@ -48,6 +48,11 @@
          <span id="noti-txt">데이터는 6시간마다 갱신됩니다</span>
          <span id="dataTime"></span>
       </p>
+      <p id="ddBox" style="font-size:0.8rem; padding:0; margin: 0; margin-left:1rem;">
+         <span id="calc-txt">calculated : </span>
+         <span id="dataDmg"></span>
+         <span id="ddBtn" class="button" onclick="startNextDepth()">calc -1B</span>
+      </p>
       <div id="essBlock" class="block" style="display:none; box-sizing: border-box; border:3px solid white;">
          <span id="essText" style="font-size:0.9rem; font-weight:bold;">필수/제외 캐릭터</span>
          <div id="essBox" class="flex"></div>
@@ -75,6 +80,8 @@
    document.getElementById("essText").innerText = t("필수/제외 캐릭터");
    document.getElementById("defaultBox").innerText = t("구속에 따른 데미지 계산 중...");
    document.getElementById("noti-txt").innerText = t("데이터는 6시간마다 갱신됩니다");
+   document.getElementById("calc-txt").innerText = `${t("calculated")} : `;
+   document.getElementById("ddBtn").innerText = `calc -1B`;
    document.getElementById("clickLoad").innerText = t("클릭하여 로드");
 </script>
 </html>
