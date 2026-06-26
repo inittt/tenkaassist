@@ -670,7 +670,7 @@ function calcUpToTxt(numTxt) {
    else if (lang == "sc") return `计至${numTxt}`;
    else if (lang == "tc") return `計至${numTxt}`;
    else if (lang == "jp") return `${numTxt}まで計算`;
-   else return `${numTxt}까지 계산`;
+   else return `${numTxt}까지 계산됨`;
 }
 
 function e9format(num) {
