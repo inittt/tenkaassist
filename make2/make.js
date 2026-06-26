@@ -660,8 +660,8 @@ function backtrack0(backtrackIdx) {
       } else if (limit_fit < 0 && curCalc > 0) {
          cc.innerHTML = `
             <div class="block" style="width:100%">
-               <span>Calculated : ${formatNumber(curCalc*10)}</span>
-               <span class="button" onclick="makeBlock()">-${formatNumber(e9)}</span>
+               <span>Calculated : ${formatNumber((curCalc-1)*e9)}</span>
+               <span class="submitBtn" style="margin:0.4rem; padding:0;">-${formatNumber(e9)}</span>
             </div>`
       }
       makeBlockNDeck();
