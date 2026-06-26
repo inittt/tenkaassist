@@ -660,13 +660,21 @@ function backtrack0(backtrackIdx) {
       } else if (limit_fit < 0 && curCalc > 0) {
          cc.innerHTML = `
             <div class="block" style="width:100%">
-               <span>Calculated : ${formatNumber((curCalc-1)*e9)}</span>
-               <span class="submitBtn" style="margin:0.4rem; padding:0;">-${formatNumber(e9)}</span>
+               <span>Calculated : ${formatNumber((curCalc+1)*e9)}</span>
+               <button class="submitBtn" style="margin:0.4rem; padding:0.2;">-${e9format()}</button>
             </div>`
       }
       makeBlockNDeck();
    }
    else setTimeout(() => backtrack0(backtrackIdx+1), 16);
+}
+
+function e9format() {
+   if (lang == "en") return "1B"
+   else if (lang == "sc") return '10亿';
+   else if (lang == "tc") return '10億';
+   else if (lang == "jp") return '10億';
+   else return '10억';
 }
 
 function backtrackOneCycle(i) {
