@@ -660,13 +660,21 @@ function backtrack0(backtrackIdx) {
       } else if (limit_fit < 0 && curCalc > 0) {
          cc.innerHTML = `
             <div class="block" style="width:100%">
-               <span>Calculated : ${e9format((curCalc+1))}</span>
+               <span>${calcUpToTxt(e9format((curCalc+1)))}</span>
                <button class="submitBtn bg-blue" style="margin:0.4rem; padding:0.1;">-${e9format(1)}</button>
             </div>`
       }
       makeBlockNDeck();
    }
    else setTimeout(() => backtrack0(backtrackIdx+1), 16);
+}
+
+function calcUpToTxt(numTxt) {
+   if (lang == "en") return `Down to ${numTxt}`;
+   else if (lang == "sc") return `计至${numTxt}`;
+   else if (lang == "tc") return `計至${numTxt}`;
+   else if (lang == "jp") return `${numTxt}まで計算`;
+   else return `${numTxt}까지 계산`;
 }
 
 function e9format(num) {
