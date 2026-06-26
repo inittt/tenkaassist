@@ -393,12 +393,6 @@ function makeBlock() {
    }
 }
 
-function startNextDepth() {
-   if (mod == 0) return;
-   curCalc--;
-   makeBlock();
-}
-
 function init() {
    // 라디오 버튼 초기화
    var rds = document.querySelectorAll(".dropdown-content input[type='radio'][name='options']");
@@ -660,8 +654,8 @@ function backtrack0(backtrackIdx) {
       } else if (limit_fit < 0 && curCalc > 0) {
          cc.innerHTML = `
             <div class="block" style="width:100%">
-               <span>${calcUpToTxt(e9format((curCalc+1)))}</span>
-               <button class="submitBtn bg-blue" style="margin:0.4rem; padding:0.1;">-${e9format(1)}</button>
+               <span style="padding-left:0.1rem">${calcUpToTxt(e9format((curCalc+1)))}</span>
+               <button class="submitBtn" style="margin:0.4rem; padding:0.1; background-color: #007BFF;">-${e9format(1)}</button>
             </div>`
       }
       makeBlockNDeck();
