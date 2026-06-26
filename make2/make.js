@@ -32,7 +32,7 @@ const limit_fit = Number(params.get('fit13t') == null ? 0 : params.get('fit13t')
 
 let possible = [];
 let possibleCopy, isDataLoaded = false
-let mod = 0, cc, dd, ddBtn, ddBox, isCalculating = true;
+let mod = 0, cc, isCalculating = true;
 const curHeader = 5;
 
 const cbMap = new Map();
@@ -123,9 +123,6 @@ document.addEventListener("DOMContentLoaded", function() {
    var dropdownBtn = document.getElementById("dropdownBtn");
    var dropdownContent = document.getElementById("dropdown-content");
    cc = document.getElementById('compcontainer');
-   ddBox = document.getElementById('ddBox');
-   dd = document.getElementById('dataDmg');
-   ddBtn = document.getElementById('ddBtn');
 
    dropdownBtn.addEventListener("click", function() {
       if (isCalculating || isEssOn) return;
@@ -342,7 +339,6 @@ function makeBlock() {
    clickLoadOnoff(false);
 
    if (mod == 0) {
-      ddBox.style.display = "none";
       possible.length = 0;
       if (exSet.size == 0) possible = possibleCopy.slice();
       else {
@@ -359,8 +355,6 @@ function makeBlock() {
       possible.sort((a, b) => b.fit13t - a.fit13t);
       makeBlockAllDeck();
    } else {
-      ddBox.style.display = "block";
-      ddBtn.style.display = "none";
       isCalculating = true;
       deckCnt = mod+1;
 
@@ -375,7 +369,6 @@ function makeBlock() {
             }
          }
          curCalc--;
-         dd.innerHTML = formatNumber(curCalc*10);
       } else {
          possible.length = 0;
          if (exSet.size == 0) {
@@ -397,8 +390,6 @@ function makeBlock() {
             isCalculating = false;
          }
       } else backtrack0(0);
-
-      if (mod != 0) ddBtn.style.display = "block";
    }
 }
 
@@ -666,6 +657,12 @@ function backtrack0(backtrackIdx) {
             isCalculating = false;
          }
          return;
+      } else if (limit_fit < 0 && curCalc > 0) {
+         cc.innerHTML = `
+            <div class="block">
+               <span>Calculated : ${formatNumber(curCalc*10)}</span>
+               <span class="button" onclick="makeBlock()">-${formatNumber(e9)}</span>
+            </div>`
       }
       makeBlockNDeck();
    }
