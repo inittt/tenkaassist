@@ -351,23 +351,26 @@ function sortHave() {
       let isEt = eternalList.includes(curCh.name);
       let rarity = curCh.rarity;
       
-      // 정렬에 사용할 rarity와 isEt를 객체에 함께 넣어줍니다.
+      // 정렬에 필요한 rarity와 isEt를 객체에 포함
       res.push({id : curId, el : curEl, ro : curRo, bond : curBond, rarity : rarity, isEt : isEt});
    }
    
    res.sort((a, b) => {
-      if (a.el !== b.el) return a.el - b.el;
-      if (a.ro !== b.ro) return a.ro - b.ro;
-      
-      // 1. rarity 기준 내림차순 정렬 (3 -> 2 -> 1)
+      // 1. RARITY로 1차 정렬 (3 -> 2 -> 1 내림차순)
       if (a.rarity !== b.rarity) return b.rarity - a.rarity;
       
-      // 2. rarity가 3일 때, isEt가 true인 것을 뒤로 (false -> true)
-      // (a.rarity === 3 조건은 위에서 걸러지므로 사실상 둘 다 3인 상태입니다)
-      if (a.rarity === 3 && a.isEt !== b.isEt) {
+      // 2. RARITY가 3이고 두 카드의 isEt 값이 다를 때, true인 것을 뒤로 (false -> true)
+      if (a.rarity === 3 && b.rarity === 3 && a.isEt !== b.isEt) {
          return (a.isEt ? 1 : 0) - (b.isEt ? 1 : 0);
       }
       
+      // 3. element 정렬
+      if (a.el !== b.el) return a.el - b.el;
+      
+      // 4. role 정렬
+      if (a.ro !== b.ro) return a.ro - b.ro;
+      
+      // 5. 최종 id 정렬
       return a.id - b.id;
    });
 
