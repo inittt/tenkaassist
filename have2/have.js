@@ -356,8 +356,8 @@ function sortHave() {
    }
    
    res.sort((a, b) => {
-      // 1. RARITY로 1차 정렬 (3 -> 2 -> 1 내림차순)
-      if (a.rarity !== b.rarity) return b.rarity - a.rarity;
+      // 1. RARITY로 1차 정렬 (3 -> 0,1,2)
+      if ((a.rarity === 3) !== (b.rarity === 3)) return a.rarity === 3 ? -1 : 1;
       
       // 2. RARITY가 3이고 두 카드의 isEt 값이 다를 때, true인 것을 뒤로 (false -> true)
       if (a.rarity === 3 && b.rarity === 3 && a.isEt !== b.isEt) {
