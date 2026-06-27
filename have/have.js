@@ -366,6 +366,50 @@ function sortHave() {
    updateSelected();   
 }
 
+// function sortHave() {
+//    if (selected.length < 2) return;
+
+//    const res = [];
+//    for(let i = 0; i < selected.length; i++) {
+//       let curId = selected[i], curBond = selectedBond[i];
+//       const curCh = getCharacter(curId);
+//       let curEl = curCh.element, curRo = curCh.role;
+//       let isEt = eternalList.includes(curCh.name);
+//       let rarity = curCh.rarity;
+      
+//       // 정렬에 필요한 rarity와 isEt를 객체에 포함
+//       res.push({id : curId, el : curEl, ro : curRo, bond : curBond, rarity : rarity, isEt : isEt});
+//    }
+   
+//    res.sort((a, b) => {
+//       // 1. RARITY로 1차 정렬 (3 -> 0,1,2)
+//       if ((a.rarity === 3) !== (b.rarity === 3)) return a.rarity === 3 ? -1 : 1;
+      
+//       // 2. RARITY가 3이고 두 카드의 isEt 값이 다를 때, true인 것을 뒤로 (false -> true)
+//       if (a.rarity === 3 && b.rarity === 3 && a.isEt !== b.isEt) {
+//          return (b.isEt ? 1 : 0) - (a.isEt ? 1 : 0);
+//       }
+      
+//       // 3. element 정렬
+//       if (a.el !== b.el) return a.el - b.el;
+      
+//       // 4. role 정렬
+//       if (a.ro !== b.ro) return a.ro - b.ro;
+      
+//       // 5. 최종 id 정렬
+//       return a.id - b.id;
+//    });
+
+//    selected.length = 0;
+//    selectedBond.length = 0;
+//    for(let tmp of res) {
+//       selected.push(tmp.id);
+//       selectedBond.push(tmp.bond);
+//    }
+
+//    updateSelected();   
+// }
+
 // [직업, 부등호, 개수, 속상감, 받뎀감, 받평뎀감, 받궁뎀감, 받발뎀감]
 const options = [0, 0, 0, 0, 0, 0, 0, 0];
 const signList = ["≥", ">", "=", "<", "≤"];
