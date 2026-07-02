@@ -55,6 +55,7 @@ function getCharactersWithCondition(element, role, rarity, search) {
    const dataArray = chJSON.data;
    const exNames = findExIncludes(search);
    const filteredData = dataArray.filter(function(obj) { 
+      if (!obj.ok) return false;
       let b1 = true, b2 = true, b3 = true, b4 = true;
       if (element != null) b1 = (obj.element === element); 
       if (role != null) b2 = (obj.role === role); 
