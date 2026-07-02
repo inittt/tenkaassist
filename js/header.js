@@ -189,14 +189,14 @@ function setCommandCustom(idList, command, bondList) {
          let isUltTurnNow = false;
 
          // 현재 구속 수치 기준, 이번 턴이 진짜 '궁'을 쓸 수 있는 타이밍인지 계산
-         if (curId === 10162) { // 무이카 (1구:4턴, 2구:5턴, 3구:6턴, 그외:7턴 주기)
+         if (curId === 10162) { // 무이카 (1구:4턴, 2구:5턴, 3구:6턴, 4구:7턴, 그외:8턴 주기)
             if (bond === 1) isUltTurnNow = ((currentTurn - 1) % 4 === 0);
             else if (bond === 2) isUltTurnNow = ((currentTurn - 1) % 5 === 0);
             else if (bond === 3) isUltTurnNow = ((currentTurn - 1) % 6 === 0);
             else if (bond === 4) isUltTurnNow = ((currentTurn - 1) % 7 === 0);
             else isUltTurnNow = ((currentTurn - 1) % 8 === 0);
          } 
-         else if (curId === 10205) { // 수나미 (1,2구:3턴, 그외:4턴 주기)
+         else if (curId === 10205) { // 수나미 (1,2구:3턴, 3,4구:4턴, 그외:5턴 주기)
             if (bond === 1 || bond === 2) isUltTurnNow = ((currentTurn - 1) % 3 === 0);
             else if (bond === 3 || bond === 4) isUltTurnNow = ((currentTurn - 1) % 4 === 0);
             else isUltTurnNow = ((currentTurn - 1) % 5 === 0);
