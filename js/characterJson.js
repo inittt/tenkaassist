@@ -179,6 +179,9 @@ const chJSON = { data : [
 {ok : true, id : 10205, rarity : 3, po:1, hp:952197, atk:297174, cd:5, atkMag:100, ultMag:0, fullname : "여름날 나나미", name : "수나미", element : 1, role : 0, hpUp : 55},
 {ok : true, id : 10206, rarity : 3, po:3, hp:1428295, atk:197968, cd:4, atkMag:100, ultMag:608, fullname : "마도 괴수 리고라", name : "리고라", element : 2, role : 2, hpUp : 55},
 
+// {ok : true, id : 10207, rarity : 3, hp:, atk:, cd:, atkMag:, ultMag:, fullname : "라이브 한정 노엘리", name : "라엘리", element : 1, role : 1, hpUp : },
+// {ok : true, id : 10208, rarity : 3, hp:, atk:, cd:, atkMag:, ultMag:, fullname : "엘프 아이돌 릴리엘자", name : "릴리엘자", element : 3, role : 0, hpUp : },
+
 /*
       element  role     rarity
 0     화       딜러     N
