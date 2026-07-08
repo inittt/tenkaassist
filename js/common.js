@@ -740,7 +740,7 @@ const translate = {
    "수브리" : {en : "S.Britney", sc : "夏军", tc : "夏軍", jp : "夏の日 ブリトニー"},
    "수나미" : {en : "S.Nanami", sc : "夏奈", tc : "夏奈", jp : "夏の日 星空ななみ"},
 
-   "릴리엘자" : {en : "LilyElsa", sc : "莉莉艾爾莎", tc : "莉莉艾尔莎", jp : "リリエルザ"},
+   "릴리엘자" : {en : "LilyElsa", sc : "莉莉", tc : "莉莉", jp : "リリエルザ"},
    "라엘리" : {en : "*Noel", sc : "水黑", tc : "水黑", jp : "配信限定 ノエル"},
 };
 
