@@ -1,4 +1,4 @@
-const liberationList = ["바알", "사탄", "이블리스", "살루시아", "란", "루루", "밀레", "섹돌", "치즈루", "노엘리", "페바알","신이블","이치카", "적나나", "해나나"];
+const liberationList = ["바알", "사탄", "이블리스", "살루시아", "란", "루루", "밀레", "섹돌", "치즈루", "노엘리", "페바알","신이블","이치카", "적나나", "해나나", "할살루"];
 const eternalList = ["바알", "사탄", "이블리스", "살루시아", "란", "루루", "밀레", "섹돌", "울타", "아야네", "무엘라", "치즈루", "아르티아", "메스미나", "라티아", "슈텐", "카시피나", "에피나", "이노리", "미루", "파야", "에밀리", "안젤리카", "렌", "테키", "세라프", "하쿠", "모모"];
 const chJSON = { data : [
 {ok : true, id : 10001, rarity : 3, po:1, hp:962383, atk:254657, cd:3, atkMag:100, ultMag:503, fullname : "마왕 바알", name : "바알", element : 0, role : 0, hpUp : 20},
@@ -178,9 +178,8 @@ const chJSON = { data : [
 {ok : true, id : 10204, rarity : 3, po:1, hp:1008443, atk:280787, cd:4, atkMag:0, ultMag:0, fullname : "여름날 브리트니", name : "수브리", element : 0, role : 3, hpUp : 55},
 {ok : true, id : 10205, rarity : 3, po:1, hp:952197, atk:297174, cd:5, atkMag:100, ultMag:0, fullname : "여름날 나나미", name : "수나미", element : 1, role : 0, hpUp : 55},
 {ok : true, id : 10206, rarity : 3, po:3, hp:1428295, atk:197968, cd:4, atkMag:100, ultMag:608, fullname : "마도 괴수 리고라", name : "리고라", element : 2, role : 2, hpUp : 55},
-
-// {ok : true, id : 10207, rarity : 3, hp:, atk:, cd:, atkMag:, ultMag:, fullname : "라이브 한정 노엘리", name : "라엘리", element : 1, role : 1, hpUp : },
-// {ok : true, id : 10208, rarity : 3, hp:, atk:, cd:, atkMag:, ultMag:, fullname : "엘프 아이돌 릴리엘자", name : "릴리엘자", element : 3, role : 0, hpUp : },
+{ok : true, id : 10207, rarity : 3, hp:1166552, atk:242699, cd:4, atkMag:0, ultMag:0, fullname : "라이브 한정 노엘리", name : "라엘리", element : 1, role : 1, hpUp : 55},
+{ok : true, id : 10208, rarity : 3, hp:1025715, atk:275915, cd:3, atkMag:0, ultMag:397, fullname : "엘프 아이돌 릴리엘자", name : "릴리엘자", element : 3, role : 0, hpUp : 55},
 
 /*
       element  role     rarity
@@ -330,9 +329,22 @@ function isValidComp(ids) {
    }
    // 냉모모 리더
    if (comp[0].id == 10198) {
-      for(let i = 1; i < 5; i++) if (comp[i].role == 1) return false;
+      for(let i = 1; i < 5; i++) if (comp[i].role != 0 && comp[i].role != 1) return false;
       return true;
    }
+   // 릴리엘자 리더
+   if (comp[0].id == 10208) {
+      const _ct = [0,0,0,0,0];
+      for(let i = 0; i < 5; i++) {
+         const _r = comp[i].role;
+         if (_r == 1) return true;
+         _ct[_r]++;
+      }
+      const poss = arr.filter(n => n > 0).length;
+      if (poss == 3) return true;
+      return false;
+   }
+
    // 나리 리더
    if (comp[0].id == 10202) return true;
 
