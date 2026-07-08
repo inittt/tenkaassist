@@ -340,7 +340,7 @@ function isValidComp(ids) {
          if (_r == 1) return true;
          _ct[_r]++;
       }
-      const poss = arr.filter(n => n > 0).length;
+      const poss = _ct.filter(n => n > 0).length;
       if (poss == 3) return true;
       return false;
    }
