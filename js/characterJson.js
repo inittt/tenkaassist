@@ -29,7 +29,7 @@ const chJSON = { data : [
 {ok : true, id : 10056, rarity : 3, po:3, hp:1400394, atk:174938, cd:4, atkMag:100, ultMag:0, fullname : "타룡 카시피나", name : "카시피나", element : 1, role : 2, hpUp : 0},
 {ok : true, id : 10045, rarity : 3, po:1, hp:922524, atk:265286, cd:1, atkMag:100, ultMag:0, fullname : "탐닉의 오니 이부키 슈텐", name : "슈텐", element : 0, role : 0, hpUp : 0},
 {ok : true, id : 10040, rarity : 3, po:1, hp:974784, atk:277244, cd:4, atkMag:100, ultMag:468, fullname : "서큐버스 브리트니", name : "할브리", element : 0, role : 0, hpUp : 0},
-{ok : true, id : 10043, rarity : 3, po:1, hp:960611, atk:281230, cd:4, atkMag:100, ultMag:514, fullname : "할로 퀸 살루시아", name : "할살루", element : 2, role : 0, hpUp : 35},
+{ok : true, id : 10043, rarity : 3, po:1, hp:960611, atk:281230, cd:4, atkMag:100, ultMag:514, fullname : "할로 퀸 살루시아", name : "할살루", element : 2, role : 0, hpUp : 55},
 {ok : true, id : 10059, rarity : 3, po:1, hp:975227, atk:251114, cd:2, atkMag:100, ultMag:289, fullname : "소닉 팬텀 이노리", name : "이노리", element : 2, role : 0, hpUp : 0},
 {ok : true, id : 10083, rarity : 3, po:1, hp:991170, atk:272372, cd:4, atkMag:0, ultMag:0, fullname : "DP-TOY 점장 사쿠야 유메", name : "유메", element : 4, role : 3},
 {ok : true, id : 10052, rarity : 3, po:1, hp:1035459, atk:260857, cd:5, atkMag:125, ultMag:775, fullname : "암흑의 산타 아이카", name : "산타카", element : 4, role : 0, hpUp : 0},
