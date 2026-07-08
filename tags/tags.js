@@ -59,6 +59,7 @@ function setServerData(data) {
 
    // 1️⃣ 서버 데이터 먼저 반영
    for (let d of data) {
+      if (d.tags == '') continue;
       const cleanTags = (d.tags || "")
          .split(" ")
          .filter(tag => tagList.includes(tag))

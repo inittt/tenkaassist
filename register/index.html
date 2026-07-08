@@ -31,13 +31,23 @@
    document.getElementById("signUpBtn").innerText = t("회원가입");
 
    function register() {
+      const signUpBtn = document.getElementById("signUpBtn");
+      if (signUpBtn.disabled) return;
+
       const username = document.querySelector('input[name="username"]').value;
       const password = document.querySelector('input[name="password"]').value;
       const name = document.querySelector('input[name="name"]').value;
+
+      signUpBtn.disabled = true;
+      signUpBtn.style.cursor = "default";
+      signUpBtn.style.opacity = "0.6";
+      signUpBtn.innerText = t("처리 중...");
+
       const formData = new FormData();
       formData.append("username", username);
       formData.append("password", password);
       formData.append("name", name);
+
       request(`${server}/users/register`, {
          method: 'POST',
          includeJwtToken: false,
@@ -46,13 +56,22 @@
          if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
          return response.json();
       }).then(res => {
-         if (!res.success) alert(t(res.msg));
-         else {
+         if (!res.success) {
+            alert(t(res.msg));
+            signUpBtn.disabled = false;
+            signUpBtn.style.cursor = "pointer";
+            signUpBtn.style.opacity = "1.0";
+            signUpBtn.innerText = t("회원가입");
+         } else {
             alert(t("회원가입 성공"));
             location.href = `${address}/login/`;
          }
       }).catch(error => {
          alert(error);
+         signUpBtn.disabled = false;
+         signUpBtn.style.cursor = "pointer";
+         signUpBtn.style.opacity = "1.0";
+         signUpBtn.innerText = t("회원가입");
       });
    }
 </script>

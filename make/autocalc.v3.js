@@ -5,7 +5,7 @@ function autoCalc(idList, command, bondList, boss_element = -1, _optionList = nu
    if (command == null || command.length < 10) return 0;
 
    GLOBAL_ACT_NUM = 0;
-   GLOBAL_COMMAND_LIST = command.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
+   GLOBAL_COMMAND_LIST = setCommandCustom(idList, command, bondList);
    GLOBAL_OPTION_LIST = _optionList;
    GLOBAL_BOND_LIST = bondList;
 

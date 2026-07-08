@@ -109,7 +109,8 @@ function redirectOnCheck() {
 }
 
 function extractActions(data) {
-   return data.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
+   // return data.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
+   return setCommandCustom(idList, data, bondList);
 }
 function refresh() {location.reload();}
 function setComp() {

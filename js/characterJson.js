@@ -1,4 +1,4 @@
-const liberationList = ["바알", "사탄", "이블리스", "살루시아", "란", "루루", "밀레", "섹돌", "치즈루", "노엘리", "페바알","신이블","이치카", "적나나", "해나나"];
+const liberationList = ["바알", "사탄", "이블리스", "살루시아", "란", "루루", "밀레", "섹돌", "치즈루", "노엘리", "페바알","신이블","이치카", "적나나", "해나나", "할살루"];
 const eternalList = ["바알", "사탄", "이블리스", "살루시아", "란", "루루", "밀레", "섹돌", "울타", "아야네", "무엘라", "치즈루", "아르티아", "메스미나", "라티아", "슈텐", "카시피나", "에피나", "이노리", "미루", "파야", "에밀리", "안젤리카", "렌", "테키", "세라프", "하쿠", "모모"];
 const chJSON = { data : [
 {ok : true, id : 10001, rarity : 3, po:1, hp:962383, atk:254657, cd:3, atkMag:100, ultMag:503, fullname : "마왕 바알", name : "바알", element : 0, role : 0, hpUp : 20},
@@ -29,7 +29,7 @@ const chJSON = { data : [
 {ok : true, id : 10056, rarity : 3, po:3, hp:1400394, atk:174938, cd:4, atkMag:100, ultMag:0, fullname : "타룡 카시피나", name : "카시피나", element : 1, role : 2, hpUp : 0},
 {ok : true, id : 10045, rarity : 3, po:1, hp:922524, atk:265286, cd:1, atkMag:100, ultMag:0, fullname : "탐닉의 오니 이부키 슈텐", name : "슈텐", element : 0, role : 0, hpUp : 0},
 {ok : true, id : 10040, rarity : 3, po:1, hp:974784, atk:277244, cd:4, atkMag:100, ultMag:468, fullname : "서큐버스 브리트니", name : "할브리", element : 0, role : 0, hpUp : 0},
-{ok : true, id : 10043, rarity : 3, po:1, hp:960611, atk:281230, cd:4, atkMag:100, ultMag:514, fullname : "할로 퀸 살루시아", name : "할살루", element : 2, role : 0, hpUp : 35},
+{ok : true, id : 10043, rarity : 3, po:1, hp:960611, atk:281230, cd:4, atkMag:100, ultMag:514, fullname : "할로 퀸 살루시아", name : "할살루", element : 2, role : 0, hpUp : 55},
 {ok : true, id : 10059, rarity : 3, po:1, hp:975227, atk:251114, cd:2, atkMag:100, ultMag:289, fullname : "소닉 팬텀 이노리", name : "이노리", element : 2, role : 0, hpUp : 0},
 {ok : true, id : 10083, rarity : 3, po:1, hp:991170, atk:272372, cd:4, atkMag:0, ultMag:0, fullname : "DP-TOY 점장 사쿠야 유메", name : "유메", element : 4, role : 3},
 {ok : true, id : 10052, rarity : 3, po:1, hp:1035459, atk:260857, cd:5, atkMag:125, ultMag:775, fullname : "암흑의 산타 아이카", name : "산타카", element : 4, role : 0, hpUp : 0},
@@ -174,11 +174,12 @@ const chJSON = { data : [
 {ok : true, id : 10200, rarity : 3, po:1, hp:1155480, atk:244913, cd:4, atkMag:0, ultMag:514, fullname : "강욕의 천사 성녀 밀레", name : "강밀레", element : 2, role : 4, hpUp : 50},
 {ok : true, id : 10201, rarity : 3, po:1, hp:1112077, atk:254657, cd:4, atkMag:100, ultMag:0, fullname : "마법소녀 더피", name : "마더피", element : 0, role : 0, hpUp : 50},
 {ok : true, id : 10202, rarity : 3, po:3, hp:1499599, atk:188667, cd:4, atkMag:0, ultMag:257, fullname : "사악한 별 나리", name : "나리", element : 4, role : 2, hpUp : 50},
-
-// {ok : true, id : 10203, rarity : 3, hp:915437, atk:309131, cd:4, atkMag:0, ultMag:514, fullname : "용궁의 왕 오토히메", name : "오토히메", element : 0, role : 0, hpUp : 55},
-// {ok : true, id : 10204, rarity : 3, hp:1008443, atk:280787, cd:4, atkMag:0, ultMag:0, fullname : "여름날 브리트니", name : "수브리", element : 0, role : 3, hpUp : 55},
-// {ok : true, id : 10205, rarity : 3, hp:952197, atk:297174, cd:5, atkMag:100, ultMag:0, fullname : "여름날 나나미", name : "수나미", element : 1, role : 0, hpUp : 55},
-// {ok : true, id : 10206, rarity : 3, hp:1428295, atk:197968, cd:4, atkMag:100, ultMag:608, fullname : "마도 괴수 리고라", name : "리고라", element : 2, role : 2, hpUp : 55},
+{ok : true, id : 10203, rarity : 3, po:1, hp:915437, atk:309131, cd:4, atkMag:0, ultMag:514, fullname : "용궁의 왕 오토히메", name : "오토히메", element : 0, role : 0, hpUp : 55},
+{ok : true, id : 10204, rarity : 3, po:1, hp:1008443, atk:280787, cd:4, atkMag:0, ultMag:0, fullname : "여름날 브리트니", name : "수브리", element : 0, role : 3, hpUp : 55},
+{ok : true, id : 10205, rarity : 3, po:1, hp:952197, atk:297174, cd:5, atkMag:100, ultMag:0, fullname : "여름날 나나미", name : "수나미", element : 1, role : 0, hpUp : 55},
+{ok : true, id : 10206, rarity : 3, po:3, hp:1428295, atk:197968, cd:4, atkMag:100, ultMag:608, fullname : "마도 괴수 리고라", name : "리고라", element : 2, role : 2, hpUp : 55},
+{ok : true, id : 10207, rarity : 3, hp:1166552, atk:242699, cd:4, atkMag:0, ultMag:0, fullname : "라이브 한정 노엘리", name : "라엘리", element : 1, role : 1, hpUp : 55},
+{ok : true, id : 10208, rarity : 3, hp:1025715, atk:275915, cd:3, atkMag:0, ultMag:397, fullname : "엘프 아이돌 릴리엘자", name : "릴리엘자", element : 3, role : 0, hpUp : 55},
 
 /*
       element  role     rarity
@@ -328,9 +329,22 @@ function isValidComp(ids) {
    }
    // 냉모모 리더
    if (comp[0].id == 10198) {
-      for(let i = 1; i < 5; i++) if (comp[i].role == 1) return false;
+      for(let i = 1; i < 5; i++) if (comp[i].role != 0 && comp[i].role != 1) return false;
       return true;
    }
+   // 릴리엘자 리더
+   if (comp[0].id == 10208) {
+      const _ct = [0,0,0,0,0];
+      for(let i = 0; i < 5; i++) {
+         const _r = comp[i].role;
+         if (_r == 1) return true;
+         _ct[_r]++;
+      }
+      const poss = _ct.filter(n => n > 0).length;
+      if (poss == 3) return true;
+      return false;
+   }
+
    // 나리 리더
    if (comp[0].id == 10202) return true;
 

@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownBtn.appendChild(spanElement);
          dropdownContent.style.display = "none";
 
-         mod = 0; curCalc = maxCur13t/e9;;
+         mod = 0; curCalc = Math.floor(maxCur13t/e9);
          if ("2개" === this.value) mod = 1;
          else if ("3개" === this.value) mod = 2;
          else if ("4개" === this.value) mod = 3;
@@ -426,7 +426,7 @@ function onOffEss() {
    else {
       setEss(false);
       if (isSameSet(essSave, essSet) && isSameSet(exSave, exSet)) return;
-      curCalc = maxCur13t/e9;
+      curCalc = Math.floor(maxCur13t/e9);
       makeBlock();
       essSave = new Set(essSet); exSave = new Set(exSet);
    }
@@ -511,7 +511,7 @@ function loadBlockAllDeck() {
       const id = comp.id, name = comp.name, compstr = comp.compstr;
       const fit13t = comp.fit13t;
       stringArr.push(`<div class="comp-box">`);
-      stringArr.push(`<div class="comp-order">#${++bundleCnt}</div>`)
+      stringArr.push(`<div class="comp-order"># ${++bundleCnt}</div>`);
       stringArr.push(`<div class="comp-name">${t_d(name)}</div><div class="comp-deck">`);
 
       let leaderHpOn = true;
@@ -623,7 +623,9 @@ function loadBlockNDeck() {
          });
          deckBundle.appendChild(compblock);
       }
-      newP.innerHTML = `<div> # ${++bundleCnt}</div><div>${formatNumber(dmgSum)}</div>`;
+      ++bundleCnt;
+      if (bundleCnt == 1) newP.innerHTML = `<div> # ${bundleCnt} / ${maxHeapSize}</div><div>${formatNumber(dmgSum)}</div>`;
+      else newP.innerHTML = `<div> # ${bundleCnt}</div><div>${formatNumber(dmgSum)}</div>`;
       cc.appendChild(deckBundle);
    }
    page++;
@@ -632,7 +634,7 @@ function loadBlockNDeck() {
 
 
 /* 백트래킹 함수 -----------------------------------------------------------*/
-let backtrackCounter;
+let backtrackCounter, maxHeapSize;
 function backtrack0(backtrackIdx) {
    let nextIdx = possible.length-1-backtrackIdx;
    backtrackOneCycle(backtrackIdx);
@@ -650,10 +652,33 @@ function backtrack0(backtrackIdx) {
             isCalculating = false;
          }
          return;
+      } else if (limit_fit < 0 && curCalc > 0) {
+         cc.innerHTML = `
+            <div class="block" style="width:100%">
+               <span style="padding-left:0.2rem">${calcUpToTxt(e9format((curCalc+1)))}</span>
+               <button class="btn-1B" onclick="makeBlock()">-${e9format(1)}</button>
+            </div>`;
       }
+      maxHeapSize = maxHeap.size();
       makeBlockNDeck();
    }
    else setTimeout(() => backtrack0(backtrackIdx+1), 16);
+}
+
+function calcUpToTxt(numTxt) {
+   if (lang == "en") return `Calculated to ${numTxt}`;
+   else if (lang == "sc") return `计至${numTxt}`;
+   else if (lang == "tc") return `計至${numTxt}`;
+   else if (lang == "jp") return `${numTxt}まで計算`;
+   else return `${numTxt}까지 계산됨`;
+}
+
+function e9format(num) {
+   if (lang == "en") return num + 'B';
+   else if (lang == "sc") return num*10 + '亿';
+   else if (lang == "tc") return num*10 + '億';
+   else if (lang == "jp") return num*10 + '億';
+   else return num*10 + '억';
 }
 
 function backtrackOneCycle(i) {

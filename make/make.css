@@ -110,6 +110,18 @@
   right: 0.5rem;
 }
 
+.btn-1B {
+  font-family: sans-serif;
+  border: 2px solid transparent;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 0.3rem;
+  margin-left:0.1rem;
+  padding:0.2rem 0.4rem;
+  color:white;
+  background-color: #007BFF;
+}
+
 #compcontainer {
   display: flex;
   flex-wrap: wrap;

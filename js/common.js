@@ -213,6 +213,7 @@ const translate = {
    "5개의 캐릭터를 선택해주세요" : {en : "Five characters are needed", sc : "需要5名角色", tc : "需要5名角色", jp : "5体のキャラクターを選択してください"},
    "5개까지 선택 가능합니다" : {en : "Up to 5 characters can be selected", sc : "可以选择5名角色", tc : "可以選擇5名角色", jp : "5体まで選択可能です"},
    "이미 존재하는 조합입니다" : {en : "The team already exists", sc : "团队已存在", tc : "團隊已存在", jp : "既に存在する組み合わせです"},
+   "이미 같은 조합이 있습니다" : {en : "The team already exists", sc : "团队已存在", tc : "團隊已存在", jp : "既に存在する組み合わせです"},
    "등록되지 않은 조합입니다" : {en : "The team is not registered", sc : "团队未注册", tc : "團隊未註冊", jp : "登録されていない組み合わせです"},
 
    // 시뮬레이터 Simulator
@@ -314,6 +315,7 @@ const translate = {
    "평" : {en : "A", sc : "攻", tc : "攻", jp : "攻"},
    "궁" : {en : "U", sc : "大", tc : "大", jp : "必"},
    "방" : {en : "D", sc : "防", tc : "防", jp : "防"},
+   "임시" : {en : "Temp", sc : "临时", tc : "臨時", jp : "仮"},
 
 
    // Find
@@ -355,6 +357,7 @@ const translate = {
    "현재 캐릭터를 저장하시겠습니까?" : {en : "Do you want to save the current character?", sc : "您要保存当前角色吗？", tc : "您要保存當前角色嗎？", jp : "現在のキャラクターを保存しますか？"},
    "저장되었습니다" : {en : "Saved successfully", sc : "保存成功", tc : "儲存成功", jp : "保存しました"},
    "로그인 후 이용가능합니다" : {en : "Login is required to use this service.", sc : "登录后方可使用.", tc:"登入後方可使用.", jp : "このサービスを利用するにはログインが必要です"},
+   "로그인 후 저장 가능" : {en : "Login is required to use this service.", sc : "登录后方可使用.", tc:"登入後方可使用.", jp : "このサービスを利用するにはログインが必要です"},
    "로그인 되어있지 않음" : {en : "You are not logged in", sc : "您未登录", tc : "您未登入", jp : "ログインしていません"},
    "추천팀 기능은 하루 한 번만 이용가능합니다" : {en : "The team suggestion feature is available only once a day.", sc : "团队推荐功能每天只能使用一次.", tc : "團隊推薦功能每天只能使用一次.", jp : "チーム提案機能は1日1回のみ利用可能です"},
    "클립보드에서 텍스트를 가져오는 데 실패했습니다" : {en : "Failed to retrieve text from clipboard.", sc : "未能从剪贴板获取文本。", tc : "無法從剪貼簿取得文字。", jp : "クリップボードからテキストを取得できませんでした"},
@@ -478,6 +481,7 @@ const translate = {
    // 회원가입
    "닉네임": {en : "Nickname", sc : "昵称", tc : "暱稱", jp: "ニックネーム"},
    "회원가입 성공": {en : "Registration successful", sc : "注册成功", tc : "註冊成功", jp: "登録成功"},
+   "처리 중...": {en: "Processing...", sc: "处理中...", tc: "處理中...", jp: "処理中..."},
 
    // 태그
    "태그": {en: "Tag", sc: "标签", tc: "標籤", jp: "タグ"},
@@ -735,6 +739,9 @@ const translate = {
    "리고라" : {en : "Legora", sc : "莉可菈", tc : "莉可菈", jp : "リゴラ"},
    "수브리" : {en : "S.Britney", sc : "夏军", tc : "夏軍", jp : "夏の日 ブリトニー"},
    "수나미" : {en : "S.Nanami", sc : "夏奈", tc : "夏奈", jp : "夏の日 星空ななみ"},
+
+   "릴리엘자" : {en : "LilyElsa", sc : "莉莉艾爾莎", tc : "莉莉艾尔莎", jp : "リリエルザ"},
+   "라엘리" : {en : "*Noel", sc : "水黑", tc : "水黑", jp : "配信限定 ノエル"},
 };
 
 //---------------------------------------------------------------------------
