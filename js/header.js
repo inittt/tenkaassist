@@ -113,7 +113,7 @@ function checkAndAssign(variableName, value) {
 }
 
 function img(num) {
-   return `/characters/cs${num}_0_0.webp`;
+   return `characters/cs${num}_0_0.webp`;
 }
 
 // 행동순서 커스텀
