@@ -47,15 +47,15 @@ document.addEventListener("DOMContentLoaded", function() {
    // 감지할 요소
    observer.observe(document.getElementById('scroll-observer'));
 
-   const formData = new FormData();
-   if (chIds != null) formData.append("chIds", chIds);
-   if (banList != null) formData.append("banList", banList);
-   if (deckName != null) formData.append("deckName", deckName);
+   const params = new URLSearchParams();
+   if (chIds != null) params.append("chIds", chIds);
+   if (banList != null) params.append("banList", banList);
+   if (deckName != null) params.append("deckName", deckName);
 
-   request(`${server}/comps/searchCnt`, {
-      method: "POST",
-      includeJwtToken: false,
-      body: formData
+   // 2. URL 뒤에 ?params 형태로 붙이고 method를 "GET"으로 변경
+   request(`${server}/comps/searchCnt2?${params.toString()}`, {
+      method: "GET",
+      includeJwtToken: false
    }).then(response => {
       if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
@@ -67,23 +67,24 @@ document.addEventListener("DOMContentLoaded", function() {
       document.getElementById("cnt-all").innerHTML = `${res.data}`;
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
-   })
+   });
 });
 
 function getComps() {
    clickLoadOnoff(false);
    isLoading = true;
-   const formData = new FormData();
-   formData.append("sort", sort);
-   if (chIds != null) formData.append("chIds", chIds);
-   if (banList != null) formData.append("banList", banList);
-   if (deckName != null) formData.append("deckName", deckName);
-   formData.append("page", page);
 
-   request(`${server}/comps/search`, {
-      method: "POST",
-      includeJwtToken: false,
-      body: formData
+   const params = new URLSearchParams();
+   if (sort != null) params.append("sort", sort);
+   if (chIds != null) params.append("chIds", chIds);
+   if (banList != null) params.append("banList", banList);
+   if (deckName != null) params.append("deckName", deckName);
+   if (page != null) params.append("page", page);
+
+   // 2. URL 뒤에 ?params 형태로 붙이고 method를 "GET"으로 변경
+   request(`${server}/comps/search2?${params.toString()}`, {
+      method: "GET",
+      includeJwtToken: false
    }).then(response => {
       if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
@@ -95,7 +96,7 @@ function getComps() {
       clickLoadOnoff(!isEnd);
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
-   })
+   });
 }
 
 let cnt = 0, isEnd = false;
