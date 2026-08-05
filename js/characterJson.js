@@ -181,8 +181,8 @@ const chJSON = { data : [
 {ok : true, id : 10207, rarity : 3, po:1, hp:1166552, atk:242699, cd:4, atkMag:0, ultMag:0, fullname : "라이브 한정 노엘리", name : "라엘리", element : 1, role : 1, hpUp : 55},
 {ok : true, id : 10208, rarity : 3, po:1, hp:1025715, atk:275915, cd:3, atkMag:0, ultMag:397, fullname : "엘프 아이돌 릴리엘자", name : "릴리엘자", element : 3, role : 0, hpUp : 55},
 
-// {ok : true, id : 10209, rarity : 3, hp:, atk:, cd:, atkMag:0, ultMag:0, fullname : "멍멍이 모험가 시엘", name : "시엘", element : 4, role : 3, hpUp : },
-// {ok : true, id : 10210, rarity : 3, hp:, atk:, cd:, atkMag:0, ultMag:0, fullname : "월하의 늑대 놀라이티", name : "놀라", element : 2, role : 0, hpUp : },
+// {ok : true, id : 10209, rarity : 3, hp:1190024, atk:237827, cd:5, atkMag:0, ultMag:0, fullname : "달빛 아래의 광랑 놀라이티", name : "달놀라", element : 2, role : 0, hpUp : 55},
+// {ok : true, id : 10210, rarity : 3, hp:1101891, atk:256871, cd:3, atkMag:0, ultMag:0, fullname : "멍멍이 모험가 시엘", name : "시엘", element : 4, role : 3, hpUp : 55},
 
 /*
       element  role     rarity
