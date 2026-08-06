@@ -407,7 +407,7 @@ document.addEventListener("DOMContentLoaded", function() {
       stringArr.push(`
          <div id="ess${cid}" class="character ess noneStyle" onclick="essClick(${cid})">
             <div style="position:relative; padding:0.2rem;">
-               <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
+               <img id="img_${ch.id}" src="${address}/images/${img(ch.id)}" class="img z-1" alt="">
                <div class="bond-icon z-2">${numToBond(cbMap.get(ch.id))}</div>
                ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                <div class="element${ch.element} ch_border z-4"></div>
@@ -520,7 +520,7 @@ function loadBlockAllDeck() {
          stringArr.push(`
             <div class="character" style="margin:0.2rem;">
                <div style="position:relative; padding:0.2rem;">
-                  <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
+                  <img id="img_${ch.id}" src="${address}/images/${img(ch.id)}" class="img z-1" alt="">
                   <div class="bond-icon z-2">${numToBond(cbMap.get(ch.id))}</div>
                   ${leaderHpOn ? `<div class="hpbox" z-2"><img class="i-heart" src="../images/icons/ico-heart.svg">${ch.hpUp ? ch.hpUp : 0}</div>` : ""}
                   ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
@@ -601,7 +601,7 @@ function loadBlockNDeck() {
             stringArr.push(`
                <div class="character" style="margin:0.2rem;">
                   <div style="position:relative; padding:0.2rem;">
-                     <img src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
+                     <img src="${address}/images/${img(ch.id)}" class="img z-1" alt="">
                      <div class="bond-icon z-2">${numToBond(cbMap.get(ch.id))}</div>
                      ${leaderHpOn ? `<div class="hpbox" z-2"><img class="i-heart" src="../images/icons/ico-heart.svg">${ch.hpUp ? ch.hpUp : 0}</div>` : ""}
                      ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}

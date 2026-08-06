@@ -149,7 +149,7 @@ function makeComp(list) {
             <div id="cd-max${idx}" class="cd-container"><div id="cd${idx}" class="cd"></div></div>
             <div class="character" style="margin:0.2rem;">
                <div id="atk${idx}" style="position:relative; padding:0.2rem;" onclick="do_atk(${idx})">
-                  <img id="img${idx}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
+                  <img id="img${idx}" src="${address}/images/${img(ch.id)}" class="img z-1" alt="">
                   <div class="bond-icon z-2">${numToBond(bondList[idx])}</div>
                   <div class="potential" z-2">${a_o[idx][1]}</div>
                   <div class="discipline" z-2">${getDiscipline(a_o[idx][0])}</div>
@@ -589,7 +589,7 @@ function show_graph() {
 function graphCharacter(idx) {
    return `<div class="character" style="margin:0.2rem;">
       <div style="position:relative; padding:0.2rem;">
-         <img src="${address}/images/characters/cs${comp[idx].id}_0_0.webp" class="img z-1" alt="">
+         <img src="${address}/images/${img(comp[idx].id)}" class="img z-1" alt="">
          <div class="bond-icon z-2">${numToBond(bondList[idx])}</div>
          ${liberationList.includes(comp[idx].name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
          <div class="element${comp[idx].element} ch_border z-4"></div>

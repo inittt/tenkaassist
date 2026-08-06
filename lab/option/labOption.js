@@ -96,7 +96,7 @@ function makeComp(list) {
          <div style="display:flex; flex-direction:column; align-items:center">
             <div class="character" style="margin:0.2rem;">
                <div id="atk${idx}" style="position:relative; padding:0.2rem;">
-                  <img id="img${idx}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
+                  <img id="img${idx}" src="${address}/images/${img(ch.id)}" class="img z-1" alt="">
                   ${leaderHpOn ? `<div class="hpbox" z-2"><img class="i-heart" src="../../images/icons/ico-heart.svg">${ch.hpUp ? ch.hpUp : 0}</div>` : ""}
                   <div class="bond-icon z-2">${numToBond(bondList[idx])}</div>
                   ${liberationList.includes(ch.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}

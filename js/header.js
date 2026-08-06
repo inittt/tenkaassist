@@ -114,6 +114,7 @@ function checkAndAssign(variableName, value) {
 
 function img(num) {
    return `characters/cs${num}_0_0.webp`;
+   // return `cs_0_1/cs${num}_0_1.webp`;
 }
 
 // 행동순서 커스텀

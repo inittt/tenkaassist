@@ -233,7 +233,7 @@ function makeSSRBlock(list) {
          <div style="display:flex; flex-wrap:wrap; justify-content: space-around; align-items:center; border-bottom:1px solid #6d717a;">
             <div class="character">   
                <div style="position:relative; padding:0.2rem;">
-                  <img id="img_${ch.id}" src="${address}/images/characters/cs${ch.id}_0_0.webp" class="img z-1" alt="">
+                  <img id="img_${ch.id}" src="${address}/images/${img(ch.id)}" class="img z-1" alt="">
                   <div class="text-mini" style="text-align:center;">${t(ch.name)}</div>
                </div>
             </div>

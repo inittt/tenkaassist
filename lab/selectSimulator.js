@@ -87,7 +87,7 @@ function getCharactersWithCondition(element, role, rarity, search) {
       innerArray.push(`
          <div class="character" onclick="clickedCh(${id})" style="margin:0.2rem;">
             <div style="position:relative; padding:0.2rem;">
-               <img id="img_${id}" src="${address}/images/characters/cs${id}_0_0.webp" class="img z-1" alt="">
+               <img id="img_${id}" src="${address}/images/${img(id)}" class="img z-1" alt="">
                ${roleImg}
                ${liberationList.includes(name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                <img id="chk_${id}" src="${address}/images/checkmark.png" class="chked z-3" style="display:${chk_option}">
@@ -129,7 +129,7 @@ function updateSelected() {
          innerArray.push(`
             <div class="character" data-id="${id}" draggable="true" onclick="clickedSel(this, ${id})" ontouchstart="chDragStart(event.touches[0].target)" ontouchend="chTouchEnd(event)" ondragstart="chDragStart(event.target)" ondrop="chDrop(event.target)" ondragover="chDragOver(event)" style="margin:0.2rem;">
                <div style="position:relative; padding:0.2rem;">
-                  <img src="${address}/images/characters/cs${id}_0_0.webp" class="img z-1" alt="">
+                  <img src="${address}/images/${img(id)}" class="img z-1" alt="">
                   ${roleImg}
                   ${liberationList.includes(name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
                   <div class="element${element} ch_img ch_border z-4"></div>
