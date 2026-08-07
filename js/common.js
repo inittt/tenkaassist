@@ -32,7 +32,7 @@ var faviconUrl = `${address}/images/icons/main.webp`;
 setFavicon(faviconUrl);
 
 function request(url, options) {
-   // 우리가 기본으로 넣고 싶은 헤더
+   // 기본으로 넣고 싶은 헤더
    const defaultOptions = {
       headers: {}
    };
