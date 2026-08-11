@@ -107,7 +107,7 @@ function updateSelected() {
          let id = champ.id, name = champ.name, element = champ.element, role = champ.role;
          let roleImg = isAny(id) ? "" : `<img src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">`;
          innerArray.push(`
-            <div class="character" onclick="clickedSel(this, ${id})" style="margin:0.2rem;">
+            <div class="character" data-id="${id}" onclick="clickedSel(this, ${id})" style="margin:0.2rem;" ${dragParam}>
                <div style="position:relative; padding:0.2rem;">
                   <img src="${address}/images/${img(id)}" class="img z-1" alt="">
                   ${roleImg}
@@ -158,6 +158,25 @@ function clickedSel(div, id) {
    updateSelected()
 }
 
+// 드래그앤드랍 순서 변경
+let draggedId;
+const dragParam = `draggable="true" ontouchstart="chDragStart(event.touches[0].target)" ontouchend="chTouchEnd(event)" ondragstart="chDragStart(event.target)" ondrop="chDrop(event.target)" ondragover="chDragOver(event)"`;
+function chDragStart(target) {draggedId = Number(target.closest('.character').dataset.id);}
+function chDrop(target) {
+   const draggedIndex = selected.indexOf(draggedId);
+   const dropIndex = selected.indexOf(Number(target.closest('.character').dataset.id));
+   if (draggedIndex > -1 && dropIndex > -1) {
+      selected.splice(draggedIndex, 1);
+      selected.splice(dropIndex, 0, draggedId);
+      updateSelected();
+   }
+   draggedId = null;
+}
+function chDragOver(event) {event.preventDefault();}
+function chTouchEnd(event) {
+   const touch = event.changedTouches[0];
+   chDrop(document.elementFromPoint(touch.clientX, touch.clientY));
+}
 
 /* input:radio 버튼해제 로직 --------------------------------------------------*/
 function checkElement(num) {

@@ -109,7 +109,10 @@ function dupTeamCheck() {
       return response.json();
    }).then(res => {
       if (!res.success) return alert(t("데이터 로드 실패"));
-      alert(res.data ? t("이미 존재하는 조합입니다") : t("등록되지 않은 조합입니다"));
+      if (res.data) {
+         if (confirm(`${t("이미 존재하는 조합입니다")}. ${t("이동하시겠습니까?")}`))
+            window.open(`${address}/comp/?id=${res.data}`, '_blank');
+      } else alert(t("등록되지 않은 조합입니다"));
    }).catch(e => {
       alert(t("데이터 로드 실패"));
    })
