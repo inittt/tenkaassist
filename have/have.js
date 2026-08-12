@@ -160,7 +160,7 @@ function setCopiedCharacters() {
       if (!encodedText) return;
       let decodedText;
       try {
-         decodedText = encodedText.trim().split(':');
+         decodedText = encodedText.replaceAll(/\s/g, "").split(':');
          if (decodedText.length != 2) return alert(t("올바르지 않은 코드입니다."));
       } catch(e) {
          return alert(t("올바르지 않은 코드입니다."));
