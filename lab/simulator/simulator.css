@@ -162,7 +162,7 @@ body {
    top:0.2rem;
    width:1.2rem;
    height:0.8rem;
-   color:white;
+   color:rgb(255, 255, 255);
    background-color: rgba(0, 0, 0, 0.5);
 }
 
@@ -185,7 +185,7 @@ body {
    /*
    0%, 100% {border-color: #916a00;}
    */
-   0%, 100% {border-color: #9a7100;}
+   0%, 100% {border-color: #ffe59d;}
    50% { border-color: #ffbb00;}
 }
 
