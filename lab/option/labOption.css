@@ -259,3 +259,43 @@ input[type="checkbox"]:checked + label::before {
 .gboss {
    cursor:pointer;
 }
+
+/*elv 버튼 커스텀*/
+.elvButton {
+   margin-left:1rem;
+   width:4.5rem;
+   border: 2px solid white;
+   font-weight: bold;
+   cursor: pointer;
+   border-radius: 0.3rem;
+   padding: 0.3rem 0.3rem;
+   background-color: #a21d1d;
+   color:white;
+}
+
+.elvOn {
+   background-color: #ff8800;
+}
+.elvOff {
+   background-color: transparent;
+}
+
+.elvBox {
+   visibility: hidden;
+   position:absolute;
+   top:0;
+}
+.elvText {
+   text-align: center;
+   width:3.3rem;
+   font-size:0.7rem;
+   background-color: #ff8800;
+   margin-bottom:-0.2rem;
+   border-radius: 0.3rem 0.3rem 0 0;
+}
+.elvBorder {
+   width:2.9rem;
+   height:4rem;
+   border:0.2rem solid #ff8800;
+   border-radius: 0.3rem;
+}
