@@ -786,7 +786,6 @@ const translate = {
    "라엘리" : {en : "SE.Noel", sc : "水黑", tc : "水黑", jp : "配信限定 ノエル"},
    "시엘" : {en : "Ciel", sc : "希耶儿", tc : "希耶兒", jp : "シエル"},
    "달놀라" : {en : "*Noma", sc : "*狂犬", tc : "*狂犬", jp : "月下の狂狼 ノルディ"},
-
    "칼리버" : {en : "Calibur", sc : "圣剑", tc : "聖劍", jp : "カリバー"},
    "비타" : {en : "Vita", sc : "魔剑", tc : "魔劍", jp : "ヴィータ"},
    "후지카" : {en : "Fujihana", sc : "妖刀", tc : "妖刀", jp : "藤花"},
