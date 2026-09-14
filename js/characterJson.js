@@ -337,24 +337,6 @@ function getCompInvalidReason(ids) {
       if (violators.length) return { kind: 'leaderNoHealer', leader: comp[0], violators };
       return null;
    }
-   // Cos.Momo leader: members must be attackers or healers only (must run before the generic healer check)
-   if (comp[0].id == 10198) {
-      const violators = comp.slice(1).filter(i => i.role != 0 && i.role != 1);
-      if (violators.length) return { kind: 'leaderRole', leader: comp[0], allowedRoles: [0, 1], violators };
-      return null;
-   }
-   // LilyElsa leader: passes if the team has a healer; otherwise it must cover exactly 3 distinct roles
-   if (comp[0].id == 10208) {
-      const _ct = [0,0,0,0,0];
-      for(let i = 0; i < 5; i++) {
-         const _r = comp[i].role;
-         if (_r == 1) return null;
-         _ct[_r]++;
-      }
-      const poss = _ct.filter(n => n > 0).length;
-      if (poss == 3) return null;
-      return { kind: 'leaderKinds', leader: comp[0], kinds: poss };
-   }
 
    // 나리 리더
    if (comp[0].id == 10202) return null;
@@ -379,6 +361,24 @@ function getCompInvalidReason(ids) {
    // 구릴리 리더
    if (comp[0].id == 10054) return null;
 
+   // Cos.Momo leader: members must be attackers or healers only (must run before the generic healer check)
+   if (comp[0].id == 10198) {
+      const violators = comp.slice(1).filter(i => i.role != 0);
+      if (violators.length) return { kind: 'leaderRole', leader: comp[0], allowedRoles: [0], violators };
+      return null;
+   }
+   // LilyElsa leader: passes if the team has a healer; otherwise it must cover exactly 3 distinct roles
+   if (comp[0].id == 10208) {
+      const _ct = [0,0,0,0,0];
+      for(let i = 0; i < 5; i++) {
+         const _r = comp[i].role;
+         _ct[_r]++;
+      }
+      const poss = _ct.filter(n => n > 0).length;
+      if (poss == 3) return null;
+      return { kind: 'leaderKinds', leader: comp[0], kinds: poss };
+   }
+      
    /*
    // 아이카, 유메
    if (comp.find(i => i.id == 10009 || i.id == 10083)) return true;
@@ -404,7 +404,7 @@ function formatCompInvalidReason(reason) {
       case 'count':
          return t("5개의 캐릭터를 선택해주세요");
       case 'blacklist':
-         return tFmt("{0}와(과) {1}의 조합은 시뮬레이터의 피해 계산이 아직 정확하지 않아 등록할 수 없습니다", t(reason.farmer.name), names(reason.counters));
+         return tFmt("{0}와(과) {1}의 조합은 반격이 스스로에게 피해를 입히기 때문에 생존할 수 없습니다", t(reason.farmer.name), names(reason.counters));
       case 'noHealer':
          return t("생존할 수 없는 조합입니다: 힐러가 없어 13턴을 버티기 어렵습니다");
       case 'leaderNoHealer':
