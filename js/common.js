@@ -336,7 +336,7 @@ const translate = {
    "조합 등록" : {en : "Register Team", sc : "登记队伍", tc : "登記隊伍", jp : "チーム登録"},
    "등록" : {en : "OK", sc : "OK", tc : "OK", jp : "OK"},
    "생존할 수 없는 조합입니다": {en: "This team cannot survive", sc: "这个队伍无法生存", tc: "這個隊伍無法生存", jp: "このチームは生存できません"},
-   "{0}와(과) {1}의 조합은 시뮬레이터의 피해 계산이 아직 정확하지 않아 등록할 수 없습니다": {en: "{0} cannot be registered together with {1}: the simulator's damage calculation for this interaction is not yet accurate", sc: "{0} 与 {1} 的组合暂不支持登记：模拟器对该交互的伤害计算尚不准确", tc: "{0} 與 {1} 的組合暫不支援登記：模擬器對該互動的傷害計算尚不準確", jp: "{0} と {1} の組み合わせは、シミュレーターのダメージ計算がまだ正確でないため登録できません"},
+   "{0}와(과) {1}의 조합은 반격이 스스로에게 피해를 입히기 때문에 생존할 수 없습니다": {en: "{0} cannot survive when combined with {1} because counterattacks inflict damage on themselves", sc: "{0} 与 {1} 的组合无法存活：反击会对自身造成伤害", tc: "{0} 與 {1} 的組合無法存活：反擊會對自身造成傷害", jp: "{0} と {1} の組み合わせは、反撃が reflective/self-damage（自分自身にダメージを与える）のため生き残れません"}
    "생존할 수 없는 조합입니다: 힐러가 없어 13턴을 버티기 어렵습니다": {en: "This team cannot survive: there is no healer to sustain it through the 13-turn run", sc: "这个队伍无法生存：没有治疗者，难以撑过13回合", tc: "這個隊伍無法生存：沒有治療者，難以撐過13回合", jp: "このチームは生存できません：13ターンを耐えうるヒーラーがいません"},
    "리더 {0} 편성 시에는 힐러를 편성할 수 없습니다 ({1})": {en: "When {0} is the leader, no healer can be in the team ({1})", sc: "队长为 {0} 时，队伍不能包含治疗者（{1}）", tc: "隊長為 {0} 時，隊伍不能包含治療者（{1}）", jp: "リーダーが {0} の場合、ヒーラーを編成できません（{1}）"},
    "리더 {0} 편성 시 팀원은 {1} 직군만 가능합니다 ({2} 위반)": {en: "When {0} is the leader, members must be {1} ({2} violates this)", sc: "队长为 {0} 时，队员只能是 {1}（{2} 不符合）", tc: "隊長為 {0} 時，隊員只能是 {1}（{2} 不符合）", jp: "リーダーが {0} の場合、メンバーは {1} のみ編成できます（{2} が違反）"},
