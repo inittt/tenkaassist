@@ -317,66 +317,68 @@ function isAny(id) {
    return Math.floor(id/10000) == 9;
 }
 
-function isValidComp(ids) {
-   if (ids.length != 5) return false;
+// Validate a team composition. Returns null when the team passes, otherwise an object describing the exact violated constraint (which characters / which leader restriction), so the registration page can explain each rejection separately instead of lumping every failure into one message.
+// NOTE: the check order below is meaningful — the Noma/W.Tsubaki/Cos.Momo/LilyElsa leader checks must run BEFORE the generic healer check, while the S.Iblis/S.Noel leader checks must run AFTER it, to preserve the original behavior. Leader branches are mutually exclusive by comp[0].id, so the order between different leader branches does not affect results.
+function getCompInvalidReason(ids) {
+   if (ids.length != 5) return { kind: 'count', count: ids.length };
    const comp = ids.map(id => getCharacter(id));
 
-   // 반격캐 + 농탄(10153) 제외
+   // Exclude H.Satan combined with counter-attack characters — this combination is rejected not because the team cannot survive, but because the simulator cannot yet calculate the interaction damage accurately.
    const refList = [10002, 10027, 10056, 10130, 10164]; // 반격캐 목록
-   if (
-      comp.some(i => i.id == 10153) // 농탄
-   ) if (comp.some(i => refList.includes(i.id))) return false;
-   
-   // 놀라이티 리더
-   if (comp[0].id == 10022) {
-      for(let i = 1; i < 5; i++) if (comp[i].role == 1) return false;
-      return true;
+   const farmer = comp.find(i => i.id == 10153); // H.Satan
+   if (farmer) {
+      const counters = comp.filter(i => refList.includes(i.id));
+      if (counters.length) return { kind: 'blacklist', farmer, counters };
    }
-   // 냉모모 리더
+
+   // Noma / W.Tsubaki leaders: no healer allowed among members (must run before the generic healer check)
+   if (comp[0].id == 10022 || comp[0].id == 10170) {
+      const violators = comp.slice(1).filter(i => i.role == 1);
+      if (violators.length) return { kind: 'leaderNoHealer', leader: comp[0], violators };
+      return null;
+   }
+
+   // 나리 리더
+   if (comp[0].id == 10202) return null;
+
+   // Generic rule: passes when the team contains at least one healer
+   if (comp.find(i => i.role == 1)) return null;
+
+   // S.Iblis leader: members must be attackers or healers only (must run after the generic healer check to preserve the original behavior)
+   if (comp[0].id == 10042) {
+      const violators = comp.slice(1).filter(i => i.role != 0 && i.role != 1);
+      if (violators.length) return { kind: 'leaderRole', leader: comp[0], allowedRoles: [0, 1], violators };
+      return null;
+   }
+   // S.Noel leader: members must be protectors or obstructers only
+   if (comp[0].id == 10091) {
+      const violators = comp.slice(1).filter(i => i.role != 2 && i.role != 4);
+      if (violators.length) return { kind: 'leaderRole', leader: comp[0], allowedRoles: [2, 4], violators };
+      return null;
+   }
+   // 노엘리 리더
+   if (comp[0].id == 10026) return null;
+   // 구릴리 리더
+   if (comp[0].id == 10054) return null;
+
+   // Cos.Momo leader: members must be attackers or healers only (must run before the generic healer check)
    if (comp[0].id == 10198) {
-      for(let i = 1; i < 5; i++) if (comp[i].role != 0 && comp[i].role != 1) return false;
-      return true;
+      const violators = comp.slice(1).filter(i => i.role != 0);
+      if (violators.length) return { kind: 'leaderRole', leader: comp[0], allowedRoles: [0], violators };
+      return null;
    }
-   // 릴리엘자 리더
+   // LilyElsa leader: passes if the team has a healer; otherwise it must cover exactly 3 distinct roles
    if (comp[0].id == 10208) {
       const _ct = [0,0,0,0,0];
       for(let i = 0; i < 5; i++) {
          const _r = comp[i].role;
-         if (_r == 1) return true;
          _ct[_r]++;
       }
       const poss = _ct.filter(n => n > 0).length;
-      if (poss == 3) return true;
-      return false;
+      if (poss == 3) return null;
+      return { kind: 'leaderKinds', leader: comp[0], kinds: poss };
    }
-
-   // 나리 리더
-   if (comp[0].id == 10202) return true;
-
-   // 새바키 리더
-   if (comp[0].id == 10170) {
-      for(let i = 1; i < 5; i++) if (comp[i].role == 1) return false;
-      return true;
-   }
-
-   // 힐러
-   if (comp.find(i => i.role == 1)) return true;
-
-   // 수이블 리더
-   if (comp[0].id == 10042) {
-      for(let i = 1; i < 5; i++) if (comp[i].role != 0 && comp[i].role != 1) return false;
-      return true;
-   }
-   // 수앨리 리더
-   if (comp[0].id == 10091) {
-      for(let i = 1; i < 5; i++) if (comp[i].role != 2 && comp[i].role != 4) return false;
-      return true;
-   }
-   // 노엘리 리더
-   if (comp[0].id == 10026) return true;
-   // 구릴리 리더
-   if (comp[0].id == 10054) return true;
-
+      
    /*
    // 아이카, 유메
    if (comp.find(i => i.id == 10009 || i.id == 10083)) return true;
@@ -384,7 +386,36 @@ function isValidComp(ids) {
    if (comp[4].id == 10063) return true;
    */
 
-   return false;
+   // No healer and no leader exemption applies → the team cannot sustain itself over the long run
+   return { kind: 'noHealer' };
+}
+
+// The simulator only needs a boolean, so keep the original signature unchanged.
+function isValidComp(ids) {
+   return getCompInvalidReason(ids) === null;
+}
+
+// Convert the object returned by getCompInvalidReason into a localized message naming the exact violated character/leader constraint, replacing the single "cannot survive" message that previously covered every kind of rejection.
+function formatCompInvalidReason(reason) {
+   if (!reason) return "";
+   const ROLE = ['딜러', '힐러', '탱커', '서포터', '디스럽터'];
+   const names = list => list.map(c => t(c.name)).join(', ');
+   switch (reason.kind) {
+      case 'count':
+         return t("5개의 캐릭터를 선택해주세요");
+      case 'blacklist':
+         return tFmt("{0}와(과) {1}의 조합은 반격이 스스로에게 피해를 입히기 때문에 생존할 수 없습니다", t(reason.farmer.name), names(reason.counters));
+      case 'noHealer':
+         return t("생존할 수 없는 조합입니다: 힐러가 없어 13턴을 버티기 어렵습니다");
+      case 'leaderNoHealer':
+         return tFmt("리더 {0} 편성 시에는 힐러를 편성할 수 없습니다 ({1})", t(reason.leader.name), names(reason.violators));
+      case 'leaderRole':
+         return tFmt("리더 {0} 편성 시 팀원은 {1} 직군만 가능합니다 ({2} 위반)", t(reason.leader.name), reason.allowedRoles.map(r => t(ROLE[r])).join(', '), names(reason.violators));
+      case 'leaderKinds':
+         return tFmt("리더 {0} 편성 시 힐러가 있거나 팀이 정확히 3종의 직군으로 구성되어야 합니다 (현재 {1}종)", t(reason.leader.name), reason.kinds);
+      default:
+         return t("생존할 수 없는 조합입니다");
+   }
 }
 
 function toChInfo(id) {

@@ -51,7 +51,8 @@ function getCharactersWithCondition(element, role, rarity, search) {
 // 등록 버튼 누를시
 function registerDeck() {
    if (selected.length != 5) return alert(t("5개의 캐릭터를 선택해주세요"));
-   if (!isValidComp(selected)) return alert(t("생존할 수 없는 조합입니다"));
+   const invalidReason = getCompInvalidReason(selected);
+   if (invalidReason) return alert(formatCompInvalidReason(invalidReason));
 
    // 버튼 상태 변경을 위해 요소 가져오기
    const registerBtn = document.getElementById("registerBtn");
