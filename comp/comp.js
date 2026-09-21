@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
       curCommand = res.data.description;
       makeCompBlock(res.data);
       setCmdBond();
+      setELVList();
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
       document.getElementById('titlebox').innerHTML = `ERROR`;
@@ -108,6 +109,23 @@ function setFitDmg() {
       //////
 
       document.getElementById('fit-dmg').innerHTML = `${formatNumber(fitDmg)} (${formatNumber(noHitDmg)})`;
+   }
+   setElvDmg();
+}
+
+function setElvDmg() {
+   if (curCommand != null && curCommand.length > 10) {
+      const _bondList = getBondList();
+      const _tmpCmd = setCommandCustom(curCompIds, curCommand, _bondList);
+      const fitDmg = autoCalc(curCompIds, _tmpCmd, _bondList, -1, null, getELVValuesList());
+
+      // 전체피격 없을 때 계산
+      hitAll = false;
+      const noHitDmg = autoCalc(curCompIds, _tmpCmd, _bondList, -1, null, getELVValuesList());
+      hitAll = true;
+      //////
+
+      document.getElementById('elv-dmg').innerHTML = `${formatNumber(fitDmg)} (${formatNumber(noHitDmg)})`;
    }
 }
 
@@ -203,6 +221,7 @@ function makeCompBlock(comp) {
          }).then(res => {}).catch(e => {console.log("error : ", e)})
       }
    }
+   setElvDmg();
 }
 
 // 구속력 리스트 리턴
@@ -282,4 +301,225 @@ function initDmg() {
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
    })
+}
+
+function setELVList() {
+   const elvBlock = document.getElementById("elv");
+   const res = [];
+
+   const textEllipsisStyle = "white-space: nowrap; overflow: hidden; text-overflow: clip; display: block;";
+
+   // 1. 테이블 시작
+   res.push(`<table class="elv-table" style="width: 100%; border-collapse: collapse;"><tbody>`);
+
+   for (const id of curCompIds) {
+      const cur = getCharacter(id);
+      const e = cur.element, r = cur.role;
+
+      const groups = [
+         { groupName: "g1", options: ["v11", "v12"] },
+         { groupName: "g2", options: ["v21", "v22"] },
+         { groupName: "g3", options: ["v31", "v32"] },
+         { groupName: "g4", options: ["v41", "v42", "v43"] }
+      ];
+
+      // 하나의 행(tr) 시작
+      let charHtml = `<tr class="character-elv-item" data-id="${id}" data-element="${e}" data-role="${r}" style="border-bottom: 1px solid #fff;">`;
+
+      // [2열] 버튼 4개를 담는 전용 열
+      charHtml += `<td style="padding: 0.2rem 0;">`;
+      charHtml += `<div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">`;
+
+      groups.forEach((g) => {
+         const defaultVal = g.options[0];
+         const defaultText = getELVText(e, r, defaultVal);
+         const radioName = `elv_${id}_${g.groupName}`;
+
+         const roleNum = Number(r);
+         const isG1 = g.options.includes("v11");
+         const isG4 = g.options.includes("v41");
+
+         // 1) v31 포함 그룹
+         const hasV31 = g.options.includes("v31");
+         const hasV21 = g.options.includes("v21");
+
+         // 2) r 조건별 지정
+         // - r이 1 또는 2일 때: g1, g4
+         // - r이 4일 때: g1
+         const isR1Or2Group = (roleNum === 1 || roleNum === 2) && (isG1 || isG4);
+         const isR4Group = roleNum === 4 && isG1;
+
+         const isTargetGroup = hasV31 || hasV21 || isR1Or2Group || isR4Group;
+         
+         // 비활성화 디자인 스타일 (기능은 동작)
+         const pseudoDisabledStyle = isTargetGroup 
+         ? "opacity: 0.45; filter: grayscale(100%);" 
+         : "";
+
+         // dropdown 요소 너비 3.5rem 지정
+         charHtml += `
+            <div class="dropdown" style="width: 3.5rem; margin-left:0">
+               <button type="button" class="dropdownBtn" style="width: 3.5rem; overflow: hidden; ${pseudoDisabledStyle}">
+                  <span class="selected-text" style="${textEllipsisStyle} width: 100%; min-width: 0;">${defaultText}</span>
+               </button>
+               <div class="dropdown-content" style="width: 3.5rem;">
+         `;
+
+         g.options.forEach((val) => {
+            const optionText = getELVText(e, r, val);
+            const inputId = `${radioName}_${val}`;
+            const isChecked = val === defaultVal ? "checked" : "";
+
+            charHtml += `
+               <input type="radio" id="${inputId}" name="${radioName}" value="${val}" ${isChecked}>
+               <label for="${inputId}" style="${textEllipsisStyle}">${optionText}</label>
+            `;
+         });
+
+         charHtml += `
+               </div>
+            </div>
+         `;
+      });
+
+      charHtml += `</div></td></tr>`;
+      res.push(charHtml);
+   }
+
+   res.push(`</tbody></table>`);
+   elvBlock.innerHTML = res.join("");
+
+   bindELVEvents(elvBlock);
+}
+
+function bindELVEvents(container) {
+   // 버튼 클릭 시 드롭다운 토글
+   container.querySelectorAll(".dropdownBtn").forEach((btn) => {
+      btn.addEventListener("click", (evt) => {
+         evt.stopPropagation();
+         const content = btn.nextElementSibling;
+         const isVisible = content.style.display === "block";
+
+         // 현재 페이지 내 열려있는 모든 드롭다운 닫기
+         document.querySelectorAll(".dropdown-content").forEach((el) => {
+            el.style.display = "none";
+         });
+
+         // 클릭한 드롭다운 표시 토글
+         content.style.display = isVisible ? "none" : "block";
+      });
+   });
+
+   // 라디오 버튼 선택 시 텍스트 변경
+   container.querySelectorAll('.dropdown-content input[type="radio"]').forEach((radio) => {
+      radio.addEventListener("change", (evt) => {
+         const target = evt.target;
+         const dropdown = target.closest(".dropdown");
+         const charItem = target.closest(".character-elv-item");
+
+         const e = parseInt(charItem.dataset.element, 10);
+         const r = parseInt(charItem.dataset.role, 10);
+         const selectedValue = target.value;
+
+         // 새 옵션 텍스트 가져오기
+         const newText = getELVText(e, r, selectedValue);
+         const btnText = dropdown.querySelector(".selected-text");
+         if (btnText) {
+            btnText.innerText = newText;
+         }
+
+         // 메뉴 닫기
+         dropdown.querySelector(".dropdown-content").style.display = "none";
+         setElvDmg();
+      });
+   });
+}
+
+function getELVText(e, r, v) {
+   switch(v) {
+      case "v11":
+         if (r == 0) return "DMG+";
+         else if (r == 1) return "ATK+";
+         else if (r == 2) return "ATK+";
+         else if (r == 3) return "ATK+";
+         else return "Vuln+";
+      case "v12":
+         if (r == 0) return "ATK+";
+         else if (r == 1) return "Heal+";
+         else if (r == 2) return "DMG-";
+         else if (r == 3) return "DMG+";
+         else return "Heal-";
+      case "v21": return "ATK+";
+      case "v22": return "HP+";
+      case "v31":
+         if (e == 0) return "Attr+";
+         else if (e == 1) return "Attr+";
+         else if (e == 2) return "Attr+";
+         else if (e == 3) return "Attr+";
+         else return "Attr+";
+      case "v32":
+         if (e == 0) return "Attr-";
+         else if (e == 1) return "Attr-";
+         else if (e == 2) return "Attr-";
+         else if (e == 3) return "Attr-";
+         else return "Attr-";
+      case "v41":
+         if (r == 0) return "Ult+";
+         else if (r == 1) return "DMG+";
+         else if (r == 2) return "ATK+";
+         else if (r == 3) return "AA+";
+         else return "Ult+";
+      case "v42":
+         if (r == 0) return "AA+";
+         else if (r == 1) return "Heal+";
+         else if (r == 2) return "Def+";
+         else if (r == 3) return "Ult+";
+         else return "AA+";
+      case "v43":
+         if (r == 0) return "TRG+";
+         else if (r == 1) return "HoT+";
+         else if (r == 2) return "Shld+";
+         else if (r == 3) return "TRG+";
+         else return "TRG+";
+   }
+}
+
+function getELVValuesList() {
+   const groups = ["g1", "g2", "g3", "g4"];
+
+   return curCompIds.map((id) => {
+      let codeStr = "";
+
+      groups.forEach((groupName) => {
+         const radioName = `elv_${id}_${groupName}`;
+         // 현재 캐릭터의 그룹별 선택된 radio input 조회
+         const checkedInput = document.querySelector(`input[name="${radioName}"]:checked`);
+
+         if (checkedInput) {
+            // 예: "v12" -> "2" (두 번째 숫자 추출)
+            const valNum = checkedInput.value.replace("v", "").slice(1);
+            codeStr += valNum;
+         } else {
+            // 선택된 값이 없을 경우 기본값 처리 (필요에 따라 "1" 등으로 변경 가능)
+            codeStr += "1";
+         }
+      });
+
+      // 4자리 문자열 그대로 리턴
+      return codeStr;
+   });
+}
+
+let elvtggl = false;
+function toggleElv() {
+   const target = document.getElementById("elv");
+    if (target) {
+      if (target.style.display === 'none') {
+        target.style.display = 'block'; // 또는 'flex', 'grid' 등 원래 디스플레이 속성
+        document.getElementById("elvCtrl").innerHTML = "▲";
+      } else {
+        target.style.display = 'none';
+        document.getElementById("elvCtrl").innerHTML = "▼";
+      }
+    }
 }

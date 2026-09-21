@@ -36,11 +36,17 @@ function start(compIds) {
    buff_ex.push("도트뎀");
    if (GLOBAL_OPTION_LIST != null) setBossLi();
 
+   const is_elv_on = GLOBAL_ELV_LIST != null;
+   const elvCoef = is_elv_on ? 1.06 : 1;
    for(const id of compIds) {
       const tmp = getCharacter(id);
       const isLib = lib_set.has(tmp.name);
       const _mul = isLib ? 1.1 : 1.0;
-      comp.push(new Champ(tmp.id, tmp.name, tmp.hp*_mul, tmp.atk*_mul, tmp.cd, tmp.element, tmp.role, tmp.atkMag, tmp.ultMag));
+      
+      comp.push(new Champ(tmp.id, tmp.name,
+         tmp.hp*_mul, tmp.atk*_mul, tmp.cd,
+         tmp.element, tmp.role, tmp.atkMag, tmp.ultMag,
+         2*1.3*1.25*elvCoef, 2*1.3*1.25*elvCoef));
    }
    comp[0].isLeader = true;
    for(let i = 0; i < 5; i++) {
@@ -48,7 +54,10 @@ function start(compIds) {
       if (comp[i] == undefined || comp[i] == null) return 0;
    }
    comp[0].leader();
-   for(let i = 0; i < 5; i++) comp[i].passive();
+   for(let i = 0; i < 5; i++) {
+      comp[i].passive();
+      if (is_elv_on) setElvBuff(i);
+   }
    for(let i = 0; i < 5; i++) comp[i].turnstart();
    for(let i = 0; i < 5; i++) if (comp[i].isSealed) comp[i].isActed = true;
 
@@ -120,7 +129,7 @@ function isAllActed() {
 }
 
 function setElvBuff(idx) {
-   const curList = Array.from(elvList[idx], (c, i) => `v${i + 1}${c}`);
+   const curList = Array.from(GLOBAL_ELV_LIST[idx], (c, i) => `v${i + 1}${c}`);
    const e = comp[idx].element, r = comp[idx].role;
    for(v of curList) {
       switch(v) {

@@ -202,6 +202,21 @@
    font-weight:bold;
    font-size:0.9rem;
  }
+ .dropdownBtn {
+   position:relative;
+   display: flex;
+   align-items: center;
+   box-sizing:border-box;
+   border:1px solid black;
+   border-radius: 0.2rem;
+   width:2.2rem;
+   padding: 0.1rem 0.3rem;
+   background-color: white;
+   color: black;
+   cursor: pointer;
+   font-weight:bold;
+   font-size:0.9rem;
+ }
  
  .absolute-right {
    position:absolute;
