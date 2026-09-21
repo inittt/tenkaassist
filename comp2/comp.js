@@ -291,8 +291,8 @@ function setELVList() {
 
    const textEllipsisStyle = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;";
 
-   // 1. 테이블 시작
-   res.push(`<table class="elv-table" style="width: 100%; border-collapse: collapse;"><tbody>`);
+   // 1. 전체를 가로 5줄(5열)로 배치하기 위한 flex 컨테이너 시작
+   res.push(`<div class="elv-container" style="display: flex; gap: 1rem; width: 100%;">`);
 
    for (const id of curCompIds) {
       const cur = getCharacter(id);
@@ -305,24 +305,23 @@ function setELVList() {
          { groupName: "g4", options: ["v41", "v42", "v43"] }
       ];
 
-      // 하나의 행(tr) 시작
-      let charHtml = `<tr class="character-elv-item" data-id="${id}" data-element="${e}" data-role="${r}" style="border-bottom: 1px solid #fff;">`;
-      
-      // 드롭다운 4개를 세로로 담는 영역 (flex-direction: column 적용)
-      charHtml += `<td style="padding: 0.5rem 0;">`;
-      charHtml += `<div style="display: flex; flex-direction: column; gap: 0.4rem;">`;
+      // 캐릭터 1명당 세로 1줄(1개 컬럼)을 담당하는 단일 영역
+      let charHtml = `
+         <div class="character-elv-item" data-id="${id}" data-element="${e}" data-role="${r}" style="display: flex; flex-direction: column; gap: 0.4rem; flex: 1; min-width: 0;">
+      `;
 
       groups.forEach((g) => {
          const defaultVal = g.options[0];
          const defaultText = getELVText(e, r, defaultVal);
          const radioName = `elv_${id}_${g.groupName}`;
 
+         // 부모 열 너비에 맞게 width를 100%로 지정
          charHtml += `
-            <div class="dropdown" style="width: 15rem; margin-left:0">
-               <button type="button" class="dropdown-btn" style="overflow: hidden;">
+            <div class="dropdown" style="width: 100%; margin-left: 0;">
+               <button type="button" class="dropdownBtn" style="width: 100%; overflow: hidden;">
                   <span class="selected-text" style="${textEllipsisStyle} width: 100%; min-width: 0;">${defaultText}</span>
                </button>
-               <div class="dropdown-content">
+               <div class="dropdown-content" style="width: 100%;">
          `;
 
          g.options.forEach((val) => {
@@ -342,11 +341,11 @@ function setELVList() {
          `;
       });
 
-      charHtml += `</div></td></tr>`;
+      charHtml += `</div>`;
       res.push(charHtml);
    }
 
-   res.push(`</tbody></table>`);
+   res.push(`</div>`);
    elvBlock.innerHTML = res.join("");
 
    bindELVEvents(elvBlock);
