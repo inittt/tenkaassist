@@ -291,61 +291,67 @@ function setELVList() {
 
    const textEllipsisStyle = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;";
 
-   // 1. 전체를 가로 5줄(5열)로 배치하기 위한 flex 컨테이너 시작
-   res.push(`<div class="elv-container" style="display: flex; gap: 1rem; width: 100%;">`);
-
-   for (const id of curCompIds) {
+   // 1. 캐릭터 5명의 데이터를 먼저 정제
+   const characters = curCompIds.map(id => {
       const cur = getCharacter(id);
-      const e = cur.element, r = cur.role;
+      return {
+         id,
+         e: cur.element,
+         r: cur.role,
+         groups: [
+            { groupName: "g1", options: ["v11", "v12"] },
+            { groupName: "g2", options: ["v21", "v22"] },
+            { groupName: "g3", options: ["v31", "v32"] },
+            { groupName: "g4", options: ["v41", "v42", "v43"] }
+         ]
+      };
+   });
 
-      const groups = [
-         { groupName: "g1", options: ["v11", "v12"] },
-         { groupName: "g2", options: ["v21", "v22"] },
-         { groupName: "g3", options: ["v31", "v32"] },
-         { groupName: "g4", options: ["v41", "v42", "v43"] }
-      ];
+   // 2. 테이블 시작
+   res.push(`<table class="elv-table" style="width: 100%; border-collapse: collapse; table-layout: fixed;"><tbody>`);
 
-      // 캐릭터 1명당 세로 1줄(1개 컬럼)을 담당하는 단일 영역
-      let charHtml = `
-         <div class="character-elv-item" data-id="${id}" data-element="${e}" data-role="${r}" style="display: flex; flex-direction: column; gap: 0.4rem; flex: 1; min-width: 0;">
-      `;
+   // 3. g1, g2, g3, g4 총 4개의 행(tr)을 생성
+   for (let gIdx = 0; gIdx < 4; gIdx++) {
+      res.push(`<tr>`);
 
-      groups.forEach((g) => {
+      // 각 행 안에서 5개 캐릭터의 해당 그룹 드롭다운을 가로(td)로 배치
+      characters.forEach(({ id, e, r, groups }) => {
+         const g = groups[gIdx];
          const defaultVal = g.options[0];
          const defaultText = getELVText(e, r, defaultVal);
          const radioName = `elv_${id}_${g.groupName}`;
 
-         // 부모 열 너비에 맞게 width를 100%로 지정
-         charHtml += `
-            <div class="dropdown" style="width: 100%; margin-left: 0;">
-               <button type="button" class="dropdownBtn" style="width: 100%; overflow: hidden;">
-                  <span class="selected-text" style="${textEllipsisStyle} width: 100%; min-width: 0;">${defaultText}</span>
-               </button>
-               <div class="dropdown-content" style="width: 100%;">
-         `;
+         res.push(`
+            <td class="character-elv-item" data-id="${id}" data-element="${e}" data-role="${r}" style="padding: 0.3rem; vertical-align: top;">
+               <div class="dropdown" style="width: 100%; margin-left: 0;">
+                  <button type="button" class="dropdown-btn" style="width: 100%; overflow: hidden;">
+                     <span class="selected-text" style="${textEllipsisStyle} width: 100%; min-width: 0;">${defaultText}</span>
+                  </button>
+                  <div class="dropdown-content" style="width: 100%;">
+         `);
 
          g.options.forEach((val) => {
             const optionText = getELVText(e, r, val);
             const inputId = `${radioName}_${val}`;
             const isChecked = val === defaultVal ? "checked" : "";
 
-            charHtml += `
+            res.push(`
                <input type="radio" id="${inputId}" name="${radioName}" value="${val}" ${isChecked}>
                <label for="${inputId}" style="${textEllipsisStyle}">${optionText}</label>
-            `;
+            `);
          });
 
-         charHtml += `
+         res.push(`
+                  </div>
                </div>
-            </div>
-         `;
+            </td>
+         `);
       });
 
-      charHtml += `</div>`;
-      res.push(charHtml);
+      res.push(`</tr>`);
    }
 
-   res.push(`</div>`);
+   res.push(`</tbody></table>`);
    elvBlock.innerHTML = res.join("");
 
    bindELVEvents(elvBlock);
