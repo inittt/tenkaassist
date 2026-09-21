@@ -522,4 +522,4 @@ function toggleElv() {
         document.getElementById("elvCtrl").innerHTML = "▼";
       }
     }
-}
+} 
