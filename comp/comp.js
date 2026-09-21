@@ -464,16 +464,16 @@ function getELVText(e, r, v) {
          else if (e == 3) return "Attr-";
          else return "Attr-";
       case "v41":
-         if (r == 0) return "Ult+";
+         if (r == 0) return "ULT+";
          else if (r == 1) return "DMG+";
          else if (r == 2) return "ATK+";
          else if (r == 3) return "AA+";
-         else return "Ult+";
+         else return "ULT+";
       case "v42":
          if (r == 0) return "AA+";
          else if (r == 1) return "Heal+";
          else if (r == 2) return "Def+";
-         else if (r == 3) return "Ult+";
+         else if (r == 3) return "ULT+";
          else return "AA+";
       case "v43":
          if (r == 0) return "TRG+";
