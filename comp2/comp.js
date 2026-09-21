@@ -299,45 +299,30 @@ function setELVList() {
       const e = cur.element, r = cur.role;
 
       const groups = [
-         { groupName: "g1", options: ["1", "2"] },
-         { groupName: "g2", options: ["1", "2"] },
-         { groupName: "g3", options: ["1", "2"] },
-         { groupName: "g4", options: ["1", "2", "3"] }
+         { groupName: "g1", options: ["v11", "v12"] },
+         { groupName: "g2", options: ["v21", "v22"] },
+         { groupName: "g3", options: ["v31", "v32"] },
+         { groupName: "g4", options: ["v41", "v42", "v43"] }
       ];
 
       // 하나의 행(tr) 시작
       let charHtml = `<tr class="character-elv-item" data-id="${id}" data-element="${e}" data-role="${r}" style="border-bottom: 1px solid #fff;">`;
       
-      // [1열] 캐릭터 이름
-      charHtml += `
-         <td class="character-name" style="width: 5rem; min-width: 5rem; white-space: nowrap; font-weight: bold; vertical-align: top; padding: 0.5rem 0.4rem 0.5rem 0;">
-            <div class="character" style="margin:0.2rem;">
-               <div style="position:relative; padding:0.2rem;">
-                  <img src="${address}/images/${img(cur.id)}" class="img z-1" alt="">
-                  ${liberationList.includes(cur.name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
-                  <div class="element${cur.element} ch_border z-4"></div>
-               </div>
-               <div class="text-mini">${t(cur.name)}</div>
-            </div>
-         </td>
-      `;
-
-      // [2열] 버튼 4개를 담는 전용 열
-      charHtml += `<td style="padding: 0.2rem 0;">`;
-      charHtml += `<div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">`;
+      // 드롭다운 4개를 세로로 담는 영역 (flex-direction: column 적용)
+      charHtml += `<td style="padding: 0.5rem 0;">`;
+      charHtml += `<div style="display: flex; flex-direction: column; gap: 0.4rem;">`;
 
       groups.forEach((g) => {
          const defaultVal = g.options[0];
          const defaultText = getELVText(e, r, defaultVal);
          const radioName = `elv_${id}_${g.groupName}`;
 
-         // dropdown 요소 너비 15rem 지정
          charHtml += `
             <div class="dropdown" style="width: 15rem; margin-left:0">
-               <button type="button" class="dropdownBtn" style="width: 15rem; overflow: hidden;">
+               <button type="button" class="dropdown-btn" style="overflow: hidden;">
                   <span class="selected-text" style="${textEllipsisStyle} width: 100%; min-width: 0;">${defaultText}</span>
                </button>
-               <div class="dropdown-content" style="width: 15rem;">
+               <div class="dropdown-content">
          `;
 
          g.options.forEach((val) => {
@@ -411,49 +396,49 @@ function bindELVEvents(container) {
 function getELVText(e, r, v) {
    switch(v) {
       case "v11":
-         if (r == 0) return t("딜러:데미지+");
-         else if (r == 1) return t("힐러:전체 공격+");
-         else if (r == 2) return t("탱커:전체 공격+");
-         else if (r == 3) return t("서포터:전체 공격+");
-         else return t("디스럽터:데미지+");
+         if (r == 0) "DMG+";
+         else if (r == 1) "ATK+";
+         else if (r == 2) "ATK+";
+         else if (r == 3) "ATK+";
+         else "VULN+";
       case "v12":
-         if (r == 0) return t("딜러:공격+");
-         else if (r == 1) return t("힐러:전체 회복+");
-         else if (r == 2) return t("탱커:전체 데미지 감소+");
-         else if (r == 3) return t("서포터:전체 데미지+");
-         else return t("디스럽터:치유 감소+");
-      case "v21": return t("통용:공격+");
-      case "v22": return t("통용:최대HP+");
+         if (r == 0) "ATK+";
+         else if (r == 1) "HEAL+";
+         else if (r == 2) "DMG-";
+         else if (r == 3) "DMG+";
+         else "HEAL-";
+      case "v21": return "ATK+";
+      case "v22": return "HP+";
       case "v31":
-         if (e == 0) return t("화속성:데미지+");
-         else if (e == 1) return t("수속성:데미지+");
-         else if (e == 2) return t("풍속성:데미지+");
-         else if (e == 3) return t("광속성:데미지+");
-         else return t("암속성:데미지+");
+         if (e == 0) return "ATTR+";
+         else if (e == 1) return "ATTR+";
+         else if (e == 2) return "ATTR+";
+         else if (e == 3) return "ATTR+";
+         else return "ATTR+";
       case "v32":
-         if (e == 0) return t("화속성:데미지 감소+");
-         else if (e == 1) return t("수속성:데미지 감소+");
-         else if (e == 2) return t("풍속성:데미지 감소+");
-         else if (e == 3) return t("광속성:데미지 감소+");
-         else return t("암속성:데미지 감소+");
+         if (e == 0) "ATTR-";
+         else if (e == 1) "ATTR-";
+         else if (e == 2) "ATTR-";
+         else if (e == 3) "ATTR-";
+         else return "ATTR-";
       case "v41":
-         if (r == 0) return t("딜러:궁극기 추가 공격+");
-         else if (r == 1) return t("힐러:전체 데미지+");
-         else if (r == 2) return t("탱커:전체 공격+");
-         else if (r == 3) return t("서포터:일반 공격 추가 공격+");
-         else return t("디스럽터:궁극기+");
+         if (r == 0) "ULT+";
+         else if (r == 1) "DMG+";
+         else if (r == 2) "ATK+";
+         else if (r == 3) "AA+";
+         else "ULT+";
       case "v42":
-         if (r == 0) return t("딜러:일반 공격 추가 공격+");
-         else if (r == 1) return t("힐러:치유+");
-         else if (r == 2) return t("탱커:전체 방어 데미지 감소+");
-         else if (r == 3) return t("서포터:궁극기 추가 공격+");
-         else return t("디스럽터:일반 공격+");
+         if (r == 0) "AA+";
+         else if (r == 1) "HEAL+";
+         else if (r == 2) "DEF+";
+         else if (r == 3) "ULT+";
+         else "AA+";
       case "v43":
-         if (r == 0) return t("딜러:공격 트리거+");
-         else if (r == 1) return t("힐러:지속 치유+");
-         else if (r == 2) return t("탱커:전체 아머+");
-         else if (r == 3) return t("서포터:공격 트리거+");
-         else return t("디스럽터:트리거+");
+         if (r == 0) "TRG+";
+         else if (r == 1) "HoT+";
+         else if (r == 2) "SHLD+";
+         else if (r == 3) "TRG+";
+         else "TRG+";
    }
 }
 
