@@ -1,12 +1,13 @@
 const lib_set = new Set(liberationList);
-let GLOBAL_ACT_NUM, GLOBAL_COMMAND_LIST, GLOBAL_OPTION_LIST, GLOBAL_BOND_LIST;
+let GLOBAL_ACT_NUM, GLOBAL_COMMAND_LIST, GLOBAL_OPTION_LIST, GLOBAL_BOND_LIST, GLOBAL_ELV_LIST;
 
-function autoCalc(idList, command, bondList, boss_element = -1, _optionList = null) {
+function autoCalc(idList, command, bondList, boss_element = -1, _optionList = null, _elvList = null) {
    if (command == null || command.length < 10) return 0;
 
    GLOBAL_ACT_NUM = 0;
    GLOBAL_COMMAND_LIST = setCommandCustom(idList, command, bondList);
    GLOBAL_OPTION_LIST = _optionList;
+   GLOBAL_ELV_LIST = _elvList;
    GLOBAL_BOND_LIST = bondList;
 
    if (idList.length != 5) return 0;
@@ -116,4 +117,67 @@ function endAct() {
 function isAllActed() {
    for(let c of comp) if (!c.isActed) return false;
    return true;
+}
+
+function setElvBuff(idx) {
+   const curList = Array.from(elvList[idx], (c, i) => `v${i + 1}${c}`);
+   const e = comp[idx].element, r = comp[idx].role;
+   for(v of curList) {
+      switch(v) {
+         case "v11":
+            if (r == 0) {tbf(comp[idx], "가뎀증", 9, "딜러:데미지+", always);}
+            else if (r == 1) tbf(all, "공퍼증", 10, "힐러:전체 공격+", always);
+            else if (r == 2) tbf(all, "공고증", comp[idx].hp, "탱커:전체 공격+", 50);
+            else if (r == 3) atbf(comp[idx], "공격", all, "공고증", myCurAtk+comp[idx].id+3, "서포터:전체 공격+", 1, always);
+            else nbf(boss, "받뎀증", 6, "디스럽터:데미지+", 1, 5);
+            break;
+         case "v12":
+            if (r == 0) tbf(comp[idx], "공퍼증", 30, "딜러:공격+", always);
+            else if (r == 1) ;// t("힐러:전체 회복+")
+            else if (r == 2) ;// t("탱커:전체 데미지 감소+");
+            else if (r == 3) tbf(all, "가뎀증", 5.4, "서포터:전체 데미지+", always);
+            else ;// t("디스럽터:치유 감소+");
+            break;
+         case "v21": tbf(comp[idx], "공퍼증", 10, "통용:공격+", always); break;
+         case "v22": hpUpMe(comp[idx], 10); break;
+         case "v31":
+            if (e == 0) for(let idx2 of getElementIdx("화")) nbf(comp[idx2], "받속뎀", 3, "화속성:데미지+", 1, 5);
+            else if (e == 1) for(let idx2 of getElementIdx("수")) nbf(comp[idx2], "받속뎀", 3, "수속성:데미지+", 1, 5);
+            else if (e == 2) for(let idx2 of getElementIdx("풍")) nbf(comp[idx2], "받속뎀", 3, "풍속성:데미지+", 1, 5);
+            else if (e == 3) for(let idx2 of getElementIdx("광")) nbf(comp[idx2], "받속뎀", 3, "광속성:데미지+", 1, 5);
+            else for(let idx2 of getElementIdx("암")) nbf(comp[idx2], "받속뎀", 3, "암속성:데미지+", 1, 5);
+            break;
+         case "v32":
+            if (e == 0) ;// t("화속성:데미지 감소+")
+            else if (e == 1) ;// t("수속성:데미지 감소+")
+            else if (e == 2) ;// t("풍속성:데미지 감소+")
+            else if (e == 3) ;// t("광속성:데미지 감소+")
+            else ;// t("암속성:데미지 감소+")
+            break;
+         case "v41":
+            if (r == 0) tbf(comp[idx], "궁추가*", 20, "딜러:궁극기 추가 공격+", always);
+            else if (r == 1) tbf(all, "가뎀증", 3, "힐러:전체 데미지+", always);
+            else if (r == 2) tbf(all, "공퍼증", 5, "탱커:전체 공격+", always);
+            else if (r == 3) for(let idx2 of getRoleIdx("딜", "탱", "디"))
+               tbf(comp[idx2], "평추가*", 5, "서포터:일반 공격 추가 공격+", always);
+            else nbf(boss, "받궁뎀", 5, "디스럽터:궁극기+", 1, 5);
+            break;
+         case "v42":
+            if (r == 0) tbf(comp[idx], "평추가*", 10, "딜러:일반 공격 추가 공격+", always);
+            else if (r == 1) ;// t("힐러:치유+");
+            else if (r == 2) ;// t("탱커:전체 방어 데미지 감소+");
+            else if (r == 3) for(let idx2 of getRoleIdx("딜", "탱", "디"))
+               tbf(comp[idx2], "궁추가*", 10, "서포터:궁극기 추가 공격+", always);
+            else nbf(boss, "받일뎀", 7.5, "디스럽터:일반 공격+", 1, 5);
+            break;
+         case "v43":
+            if (r == 0) tbf(comp[idx], "공발동*", 6, "딜러:공격 트리거+", always);
+            else if (r == 1) ;// t("힐러:지속 치유+");
+            else if (r == 2) tbf(all, "받아증", 15, "탱커:전체 아머+", always);
+            else if (r == 3) for(let idx2 of getRoleIdx("딜", "탱", "디"))
+               tbf(comp[idx2], "공발동*", 3, "서포터:공격 트리거+", always);
+            else nbf(boss, "받발뎀", 10, "디스럽터:트리거+", 1, 5);
+            break;
+      }
+   }
 }
