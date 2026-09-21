@@ -408,6 +408,68 @@ function bindELVEvents(container) {
       });
    });
 }
+function getELVText(e, r, v) {
+   switch(v) {
+      case "v11":
+         if (r == 0) return t("딜러:데미지+");
+         else if (r == 1) return t("힐러:전체 공격+");
+         else if (r == 2) return t("탱커:전체 공격+");
+         else if (r == 3) return t("서포터:전체 공격+");
+         else return t("디스럽터:데미지+");
+      case "v12":
+         if (r == 0) return t("딜러:공격+");
+         else if (r == 1) return t("힐러:전체 회복+");
+         else if (r == 2) return t("탱커:전체 데미지 감소+");
+         else if (r == 3) return t("서포터:전체 데미지+");
+         else return t("디스럽터:치유 감소+");
+      case "v21": return t("통용:공격+");
+      case "v22": return t("통용:최대HP+");
+      case "v31":
+         if (e == 0) return t("화속성:데미지+");
+         else if (e == 1) return t("수속성:데미지+");
+         else if (e == 2) return t("풍속성:데미지+");
+         else if (e == 3) return t("광속성:데미지+");
+         else return t("암속성:데미지+");
+      case "v32":
+         if (e == 0) return t("화속성:데미지 감소+");
+         else if (e == 1) return t("수속성:데미지 감소+");
+         else if (e == 2) return t("풍속성:데미지 감소+");
+         else if (e == 3) return t("광속성:데미지 감소+");
+         else return t("암속성:데미지 감소+");
+      case "v41":
+         if (r == 0) return t("딜러:궁극기 추가 공격+");
+         else if (r == 1) return t("힐러:전체 데미지+");
+         else if (r == 2) return t("탱커:전체 공격+");
+         else if (r == 3) return t("서포터:일반 공격 추가 공격+");
+         else return t("디스럽터:궁극기+");
+      case "v42":
+         if (r == 0) return t("딜러:일반 공격 추가 공격+");
+         else if (r == 1) return t("힐러:치유+");
+         else if (r == 2) return t("탱커:전체 방어 데미지 감소+");
+         else if (r == 3) return t("서포터:궁극기 추가 공격+");
+         else return t("디스럽터:일반 공격+");
+      case "v43":
+         if (r == 0) return t("딜러:공격 트리거+");
+         else if (r == 1) return t("힐러:지속 치유+");
+         else if (r == 2) return t("탱커:전체 아머+");
+         else if (r == 3) return t("서포터:공격 트리거+");
+         else return t("디스럽터:트리거+");
+   }
+}
+
+function getELVString() {
+   let elvStr = "";
+   const rows = document.querySelectorAll(".character-elv-item");
+
+   rows.forEach((row) => {
+      const checkedInputs = row.querySelectorAll('input[type="radio"]:checked');
+      checkedInputs.forEach((input) => {
+         elvStr += input.value; // 예: "v11" + "v22" + "v31" + "v43" ...
+      });
+   });
+
+   return elvStr; // "v11v22v31v43v12v21v32v42..."
+}
 
 let elvtggl = false;
 function toggleElv() {

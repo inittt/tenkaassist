@@ -99,11 +99,11 @@ function setFitDmg() {
    if (curCommand != null && curCommand.length > 10) {
       const _bondList = getBondList();
       const _tmpCmd = setCommandCustom(curCompIds, curCommand, _bondList);
-      const fitDmg = autoCalc(curCompIds, _tmpCmd, _bondList);
+      const fitDmg = autoCalc(curCompIds, _tmpCmd, _bondList, -1, null);
 
       // 전체피격 없을 때 계산
       hitAll = false;
-      const noHitDmg = autoCalc(curCompIds, _tmpCmd, _bondList);
+      const noHitDmg = autoCalc(curCompIds, _tmpCmd, _bondList, -1, null);
       hitAll = true;
       //////
 
@@ -157,7 +157,7 @@ function makeCompBlock(comp) {
 
    if (description != null && description.length > 10) {
       const _tmpCmd = setCommandCustom(curCompIds, curCommand, [1,1,1,1,1]);
-      const dmg13t_b1 = autoCalc(curCompIds, _tmpCmd, [1,1,1,1,1]);
+      const dmg13t_b1 = autoCalc(curCompIds, _tmpCmd, [1,1,1,1,1], -1, null);
 
       if (dmg13t_b1 > vote) {
          const formData = new FormData();
@@ -179,11 +179,11 @@ function makeCompBlock(comp) {
    if (curCommand != null && curCommand.length > 10) {
       const bondList_tmp = getBondList();
       const _tmpCmd = setCommandCustom(curCompIds, curCommand, bondList_tmp);
-      const fitDmg = autoCalc(curCompIds, _tmpCmd, bondList_tmp);
+      const fitDmg = autoCalc(curCompIds, _tmpCmd, bondList_tmp, -1, null);
 
       // 전체피격 없을 때 계산
       hitAll = false;
-      const noHitDmg = autoCalc(curCompIds, _tmpCmd, bondList_tmp);
+      const noHitDmg = autoCalc(curCompIds, _tmpCmd, bondList_tmp, -1, null);
       hitAll = true;
       //////
 
