@@ -249,7 +249,7 @@ function endGame() {
    
    if (isValidComp(idList) && bondList.every(e => e == 5) && scarecrowTurn <= 50) saveBond5(command_tmp);
    
-   savedData.length = 0;
+   // savedData is kept on purpose: undo must stay usable after the end-of-run summary so the player can step back before turn 14.
    alert(msg.join("\n"));
 }
 
@@ -450,6 +450,8 @@ loadBefore = function() {
    loadBefore2();
    log.pop();
    while (log.length > 0 && log[log.length-1][2] > 0) log.pop();
+   // Restoring a state where the boss is alive retracts the game-over event: clear the isEnd latch so a replayed kill triggers endGame again, and reset scarecrowTurn so the undone death doesn't pollute the next summary.
+   if (boss.hp > 0) { isEnd = false; scarecrowTurn = 99; }
 }
 const applyDotDmg2 = applyDotDmg;
 applyDotDmg = function(...args) {
