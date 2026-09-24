@@ -1,5 +1,7 @@
-const address = "https://inittt.github.io/tenkaassist"
-// const address = "http://127.0.0.1:5500";
+// Resolve the site base URL from the current origin instead of hard-coding the production host. Local debugging serves the repo root directly (so the base is just the origin), while GitHub Pages deployments live under a /tenkaassist path. Either way every nav link, cross-page redirect and image stays on whatever deployment the user is currently browsing, never bouncing back to the production site.
+const address = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+   ? location.origin
+   : location.origin + "/tenkaassist";
 
 const server = "https://port-0-tenkafuma-assistant-server-1272llx2xidhk.sel5.cloudtype.app"
 const noImg = `${address}/images/default.jpg`;
