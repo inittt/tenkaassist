@@ -147,7 +147,28 @@ document.addEventListener("DOMContentLoaded", function() {
       });
    });
 
-   getAllCompsFromServer(0);
+   // Language switching performs a full page reload, but the heavy per-composition damage calculation below is language-independent. If a cached result for the exact same query parameters exists, render it immediately so that switching the language never triggers a recomputation. The upstream data commit date is verified afterwards; if the data has changed, the cache is discarded and a full recomputation runs.
+   const cached = readMakeCache();
+   if (cached != null) {
+      maxCur13t = cached.maxCur13t || 0;
+      possibleCopy = cached.list;
+      isCalculating = false;
+      makeBlock();
+      updateDataTime().then(() => {
+         if (cached.commitDate != null && dataCommitDate != null && cached.commitDate !== dataCommitDate) {
+            clearMakeCache();
+            // The cached render replaced the whole result container, destroying the progress bar the recalculation expects. Restore the initial progress markup so the user sees the recalculation proceed and setPossible has a live element to write percentages into.
+            cc.innerHTML = `
+               <div class="block">
+                  <span id="defaultBox">${t("구속에 따른 데미지 계산 중...")}</span>
+                  <span id="defaultPer">0.00%</span><br>
+               </div>`;
+            getAllCompsFromServer(0);
+         }
+      });
+   } else {
+      getAllCompsFromServer(0);
+   }
 });
 
 async function fetchJsonFromGitHub(_url, _owner, _repo, _branch, _filePath) {
@@ -177,33 +198,34 @@ const urls = [
    "raw.fastgit.org",
    "raw.staticdn.net"
 ];
-function getAllCompsFromServer(url_idx) {
-   const owner = 'inittt';
-   const repo = 'tenkaassist_data';
-   const path = 'data/data.json';
+const dataOwner = 'inittt', dataRepo = 'tenkaassist_data', dataPath = 'data/data.json';
+let dataCommitDate = null;
 
-   fetchJsonFromGitHub(urls[url_idx], owner, repo, 'main', path)
+// Render the data freshness label on the cached-result path. The result list itself is already displayed from the cache, so this runs independently of the data download. Failures are ignored, matching the original behavior.
+async function updateDataTime() {
+   try {
+      const res = await fetch(`https://api.github.com/repos/${dataOwner}/${dataRepo}/commits?path=${dataPath}&page=1&per_page=1`);
+      const commitData = res.ok ? await res.json() : null;
+      if (commitData && commitData.length > 0) {
+         dataCommitDate = commitData[0].commit.committer.date;
+         const timeDisplay = document.getElementById("dataTime");
+         if (timeDisplay) timeDisplay.innerText = ` (${timeSince(dataCommitDate)})`;
+         // The cache may have been written before this async response arrived, in which case its commitDate is missing. Backfill it so that a later data update can be detected and the cache invalidated.
+         patchMakeCacheCommitDate();
+      }
+   } catch (err) {
+      console.log("커밋 정보 로드 실패(무시됨):", err);
+      const timeDisplay = document.getElementById("dataTime");
+      if (timeDisplay) timeDisplay.innerText = `time load err`;
+   }
+}
+
+function getAllCompsFromServer(url_idx) {
+   fetchJsonFromGitHub(urls[url_idx], dataOwner, dataRepo, 'main', dataPath)
       .then(data => {
          if (!data || data.length === 0) throw new Error(t("데이터 로드 실패"));
 
-         fetch(`https://api.github.com/repos/${owner}/${repo}/commits?path=${path}&page=1&per_page=1`)
-            .then(res => {
-               if (!res.ok) return null; // API 제한 등으로 실패 시 null 반환
-               return res.json();
-            })
-            .then(commitData => {
-               if (commitData && commitData.length > 0) {
-                  const commitDate = commitData[0].commit.committer.date;
-                  const timeText = ` (${timeSince(commitDate)})`;
-                  const timeDisplay = document.getElementById("dataTime");
-                  if (timeDisplay) timeDisplay.innerText = `${timeText}`;
-               }
-            })
-            .catch(err => {
-               console.log("커밋 정보 로드 실패(무시됨):", err);
-               const timeDisplay = document.getElementById("dataTime");
-               if (timeDisplay) timeDisplay.innerText = `time load err`;
-            });
+         updateDataTime();
 
          return data;
       })
@@ -225,6 +247,49 @@ function getAllCompsFromServer(url_idx) {
              getAllCompsFromServer(url_idx);
          }
       });
+}
+
+// Result cache -------------------------------------------------------------
+// The recommendation calculation depends only on the page query (owned characters, bonds, options) and the upstream data snapshot, never on the display language. Caching the computed result in sessionStorage makes a language-switch reload render instantly instead of recomputing everything. The cache entry is keyed by the exact query string and carries the data commit date it was computed from, so it is invalidated whenever the search conditions or the upstream data change.
+const CACHE_KEY = "makeResultCache.v1";
+function makeCacheKey() { return window.location.search; }
+function clearMakeCache() {
+   try { sessionStorage.removeItem(CACHE_KEY); } catch (e) { /* ignore */ }
+}
+function writeMakeCache(list, maxFit) {
+   try {
+      // Keep only the minimal fields needed for rendering, and drop the huge `description` command strings; they can be several tens of megabytes, far beyond the sessionStorage quota.
+      const slim = list.map(d => ({ id: d.id, name: d.name, compstr: d.compstr, fit13t: d.fit13t }));
+      slim.sort((a, b) => b.fit13t - a.fit13t);
+      const payload = JSON.stringify({ key: makeCacheKey(), commitDate: dataCommitDate, maxCur13t: maxFit, list: slim });
+      sessionStorage.setItem(CACHE_KEY, payload);
+   } catch (e) {
+      // Quota exceeded or storage unavailable: the feature simply stays off and the original recomputation path is used. If even the slimmed payload does not fit, keep the most relevant top entries, and in the worst case give up silently.
+      try {
+         const trimmed = { key: makeCacheKey(), commitDate: dataCommitDate, maxCur13t: maxFit, list: list.slice(0, 3000).map(d => ({ id: d.id, name: d.name, compstr: d.compstr, fit13t: d.fit13t })) };
+         sessionStorage.setItem(CACHE_KEY, JSON.stringify(trimmed));
+      } catch (e2) { clearMakeCache(); }
+   }
+}
+function readMakeCache() {
+   try {
+      const raw = sessionStorage.getItem(CACHE_KEY);
+      if (raw == null) return null;
+      const cache = JSON.parse(raw);
+      if (cache.key !== makeCacheKey()) return null; // different search conditions
+      return cache;
+   } catch (e) { return null; }
+}
+// updateDataTime resolves asynchronously, so writeMakeCache may have recorded a null commitDate before the upstream commit date became known. Once known, backfill it into the stored entry (only when the key still matches and the date is missing) so that a later upstream data change can be detected and the cache invalidated on the next load.
+function patchMakeCacheCommitDate() {
+   try {
+      const raw = sessionStorage.getItem(CACHE_KEY);
+      if (raw == null || dataCommitDate == null) return;
+      const cache = JSON.parse(raw);
+      if (cache.key !== makeCacheKey() || cache.commitDate != null) return;
+      cache.commitDate = dataCommitDate;
+      sessionStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+   } catch (e) { /* ignore */ }
 }
 function timeSince(dateString) {
     const lastCommit = new Date(dateString);
@@ -322,6 +387,8 @@ function setPossible() {
       isCalculating = false;
       possibleCopy = possible.slice(); 
       makeBlock();
+      // Remember the computed result so that a language-switch reload can render it directly instead of recalculating every composition.
+      writeMakeCache(possibleCopy, maxCur13t);
 
       window.totalDataLength = null;
       dataAll = null;
