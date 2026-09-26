@@ -3,7 +3,7 @@ const chIds = params.get('list'), idList = chIds.split(",").map(Number);
 const bond = params.get('bond'), bondList = bond == null ? [5, 5, 5, 5, 5] : bond.split(",").map(Number);
 const HP_MAX = 10854389981;
 const curHeader = 6;
-let isOn = false, actNum = 0, commandList;
+let isOn = false, actNum = 0, commandList, top_dmg13 = 0;;
 
 document.addEventListener("DOMContentLoaded", function() {
    getdiv("bossBuffBtn").innerHTML = `
@@ -219,7 +219,12 @@ function endAct() {
       if (boss.hp <= 0 && GLOBAL_TURN >= 14) {
          if (!isEnd) {endGame(); isEnd = true;}
       }
-      if (GLOBAL_TURN == 14 && isValidComp(idList) && bondList.every(e => e == 1)) saveBond1();
+      if (GLOBAL_TURN == 14 && isValidComp(idList) && bondList.every(e => e == 1)) {
+         if (dmg13 > top_dmg13) {
+            saveBond1();
+            top_dmg13 = dmg13;
+         }
+      }
       for(let i = 0; i < 5; i++) comp[i].turnstart();
       for(let i = 0; i < 5; i++) if (comp[i].isSealed) comp[i].isActed = true;
    }
@@ -247,9 +252,14 @@ function endGame() {
    const command_tmp = cmd.join("");
    console.log(command_tmp);
    
-   if (isValidComp(idList) && bondList.every(e => e == 5) && scarecrowTurn <= 50) saveBond5(command_tmp);
+   if (isValidComp(idList) && bondList.every(e => e == 5) && scarecrowTurn <= 50) {
+      if (dmg13 > top_dmg13) {
+         saveBond5(command_tmp);
+         top_dmg13 = dmg13;
+      }
+   }
    
-   savedData.length = 0;
+   // savedData is kept on purpose: undo must stay usable after the end-of-run summary so the player can step back before turn 14.
    alert(msg.join("\n"));
 }
 
@@ -450,6 +460,8 @@ loadBefore = function() {
    loadBefore2();
    log.pop();
    while (log.length > 0 && log[log.length-1][2] > 0) log.pop();
+   // Restoring a state where the boss is alive retracts the game-over event: clear the isEnd latch so a replayed kill triggers endGame again, and reset scarecrowTurn so the undone death doesn't pollute the next summary.
+   if (boss.hp > 0) { isEnd = false; scarecrowTurn = 99; }
 }
 const applyDotDmg2 = applyDotDmg;
 applyDotDmg = function(...args) {
