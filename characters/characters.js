@@ -3,6 +3,12 @@ const curHeader = 2;
 
 const selected = [];
 const banList = [];
+
+// Cross-site fullname additions (js/drNameIndex.js): the remote index loads in the background and only ADDS characters to the current query results; DRNameIndex.watchSearchPage owns all the async-append glue (applied-signature bookkeeping, onReady re-render, background load), so this page only supplies how to re-run its own query.
+const drSearch = window.DRNameIndex ? DRNameIndex.watchSearchPage(() => {
+   getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, document.getElementById('searchInput').value);
+}) : { idsFor: () => new Set() };
+
 document.addEventListener("DOMContentLoaded", function() {
    const searchInput = document.getElementById('searchInput');
    searchInput.addEventListener('input', function() {
@@ -36,13 +42,14 @@ function getCharactersWithCondition(element, role, rarity, search) {
 
    search = fixName(search);
    const exNames = findExIncludes(search);
+   const drIds = drSearch.idsFor(search);
    const dataArray = chJSON.data;
    const filteredData = dataArray.filter(function(obj) { 
       let b1 = true, b2 = true, b3 = true, b4 = true;
       if (element != null) b1 = (obj.element === element); 
       if (role != null) b2 = (obj.role === role); 
       if (rarity != null) b3 = (obj.rarity === rarity);
-      if (search != "") b4 = (obj.name.includes(search) || obj.fullname.includes(search) || exNames.has(obj.name));
+      if (search != "") b4 = (obj.name.includes(search) || obj.fullname.includes(search) || exNames.has(obj.name) || drIds.has(obj.id));
       return b1 && b2 && b3 && b4;
    });
    let innerArray = [];
