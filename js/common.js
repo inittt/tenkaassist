@@ -1,7 +1,6 @@
-// Resolve the site base URL from the current origin instead of hard-coding the production host. Local debugging serves the repo root directly (so the base is just the origin), while GitHub Pages deployments live under a /tenkaassist path. Either way every nav link, cross-page redirect and image stays on whatever deployment the user is currently browsing, never bouncing back to the production site.
-const address = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
-   ? location.origin
-   : location.origin + "/tenkaassist";
+// Resolve the site base URL from this script's own address: every page references js/common.js with a document-relative path, so one directory up from wherever this file is served is the site root — correct at a domain root, under a sub-path or through a mirror, with no knowledge of any deployment shape.
+// document.currentScript is only non-null while the script itself executes, so the address is captured synchronously here at top level.
+const address = new URL('..', document.currentScript.src).href.replace(/\/$/, '');
 
 const server = "https://port-0-tenkafuma-assistant-server-1272llx2xidhk.sel5.cloudtype.app"
 const noImg = `${address}/images/default.jpg`;
@@ -197,6 +196,10 @@ const translate = {
    "허수+(5)" : {en : "dummy+(5)", sc : "木椿+(5)", tc : "木椿+(5)", jp : "かかし+(5)"},
    "13턴딜" : {en : "13t dmg", sc : "13t伤害", tc : "13t傷害", jp : "13t dmg"},
    "13턴딜(5)" : {en : "13t dmg(5)", sc : "13t伤害(5)", tc : "13t傷害(5)", jp : "13t dmg(5)"},
+   "13턴딜(5+ELV)" : {en : "13t dmg(5+ELV)", sc : "13t伤害(5+ELV)", tc : "13t傷害(5+ELV)", jp : "13t dmg(5+ELV)"},
+   "계산대기" : {en : "waiting", sc : "等待计算", tc : "等待計算", jp : "計算待ち"},
+   "탐색중" : {en : "searching", sc : "搜索中", tc : "搜尋中", jp : "探索中"},
+   "최적화 완료" : {en : "optimized", sc : "优化完成", tc : "最佳化完成", jp : "最適化完了"},
    "13턴딜(1)" : {en : "13t dmg(1)", sc : "13t伤害(1)", tc : "13t傷害(1)", jp : "13t dmg(1)"},
    "13턴(5)" : {en : "13t (5)", sc : "13t (5)", tc : "13t (5)", jp : "13t(5)"},
    "13턴(1)" : {en : "13t (1)", sc : "13t (1)", tc : "13t (1)", jp : "13t(1)"},
@@ -472,7 +475,7 @@ const translate = {
    "3개": {en : "3 team", sc : "队伍3", tc : "隊伍3", jp : "3チーム"},
    "4개": {en : "4 team", sc : "队伍4", tc : "隊伍4", jp : "4チーム"},
    "맞춤": {en : "fit", sc : "合适", tc : "合適", jp : "カスタム"},
-   "필수/제외 캐릭터": {en: "Required/Excluded Characters", sc: "必需/排除字符", tc: "必需/排除字符", jp: "必須/除外キャラクター"},
+   "필수/제외 캐릭터": {en: "Required/Excluded Characters", sc: "必需/排除角色", tc: "必需/排除角色", jp: "必須/除外キャラクター"},
    "서버로부터 데이터 로드 중...": {en : "Loading data from the server...", sc : "正在从服务器加载数据...", tc : "正在從伺服器加載數據...", jp : "サーバーからデータを読み込んでいます..."},
    "구속에 따른 데미지 계산 중...": {en : "Calculating damage based on bond...", sc : "根据羁绊计算伤害中...", tc : "根據羈絆計算傷害中...", jp : "絆に基づいたダメージ計算中..."},
    "계산중": {en : "Calculating", sc : "计算中", tc : "計算中", jp : "計算中"},

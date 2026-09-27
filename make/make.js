@@ -34,6 +34,13 @@ let possible = [];
 let possibleCopy, isDataLoaded = false, mod = 0, cc, isCalculating = true;
 const curHeader = 5;
 
+// The ELV board may only be built over the finished candidate list. During the fit13t scan teams that have not been scanned yet carry no value and are dropped by the candidate filter, so a board built then is missing those teams forever — this flag keeps the ELV button hidden until the list is complete.
+let elvReady = false;
+function setElvReady(ready) {
+   elvReady = ready;
+   if (typeof ELVUI !== 'undefined') ELVUI.setAvailable(ready);
+}
+
 const cbMap = new Map();
 const haveList = chIds.split(",").map(Number);
 const bondList = chBonds.split(",").map(Number);
@@ -142,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function() {
          if ("2개" === this.value) mod = 1;
          else if ("3개" === this.value) mod = 2;
          else if ("4개" === this.value) mod = 3;
-         
+         nDeckRerankPending = true;   // let the ELV first values re-rank this view once when they land
          makeBlock();
       });
    });
@@ -164,6 +171,9 @@ document.addEventListener("DOMContentLoaded", function() {
                   <span id="defaultPer">0.00%</span><br>
                </div>`;
             getAllCompsFromServer(0);
+         } else {
+            // The cached list is a finished list, but the ELV button waits for this freshness check: when the cache turns out stale the recomputation above takes the container back over, and entering ELV mode across that handover would build the board on a list about to be discarded
+            setElvReady(true);
          }
       });
    } else {
@@ -201,15 +211,25 @@ const urls = [
 const dataOwner = 'inittt', dataRepo = 'tenkaassist_data', dataPath = 'data/data.json';
 let dataCommitDate = null;
 
+// One shared promise per page: the ELV activation waits on it and the cached-result path reports the timestamp from it, so the commit endpoint is fetched exactly once either way
+let dataTimePromise = null;
+function updateDataTime() {
+   if (!dataTimePromise) dataTimePromise = updateDataTimeImpl();
+   return dataTimePromise;
+}
+
 // Render the data freshness label on the cached-result path. The result list itself is already displayed from the cache, so this runs independently of the data download. Failures are ignored, matching the original behavior.
-async function updateDataTime() {
+async function updateDataTimeImpl() {
    try {
-      const res = await fetch(`https://api.github.com/repos/${dataOwner}/${dataRepo}/commits?path=${dataPath}&page=1&per_page=1`);
+      // Timeout guard: api.github.com can be slow or unreachable on some mobile networks, and a fetch that never settles would keep every ELV activation waiting forever — resolve as "freshness unknown" after 8 seconds instead
+      const res = await fetch(`https://api.github.com/repos/${dataOwner}/${dataRepo}/commits?path=${dataPath}&page=1&per_page=1`, { signal: (typeof AbortSignal !== 'undefined' && AbortSignal.timeout) ? AbortSignal.timeout(8000) : undefined });
       const commitData = res.ok ? await res.json() : null;
       if (commitData && commitData.length > 0) {
          dataCommitDate = commitData[0].commit.committer.date;
          const timeDisplay = document.getElementById("dataTime");
          if (timeDisplay) timeDisplay.innerText = ` (${timeSince(dataCommitDate)})`;
+         // The data.json commit hash keys the ELV result cache, so a data refresh invalidates it naturally
+         window.ELV_DATA_HASH = commitData[0].sha;
          // The cache may have been written before this async response arrived, in which case its commitDate is missing. Backfill it so that a later data update can be detected and the cache invalidated.
          patchMakeCacheCommitDate();
       }
@@ -237,6 +257,7 @@ function getAllCompsFromServer(url_idx) {
             d.compstr = d.compstr.split(" ").map(Number);
             d.fit13t = 0;
          }
+         // ELV mode waits for the finished list (see setElvReady at the end of the scan): over a half-scanned candidate set the board would silently lose every team whose fit13t is not computed yet
          setPossible();
       })
       .catch(e => {
@@ -386,6 +407,7 @@ function setPossible() {
    } else {
       isCalculating = false;
       possibleCopy = possible.slice(); 
+      setElvReady(true);
       makeBlock();
       // Remember the computed result so that a language-switch reload can render it directly instead of recalculating every composition.
       writeMakeCache(possibleCopy, maxCur13t);
@@ -398,11 +420,28 @@ function setPossible() {
 const e9 = 1000000000;
 let maxHeap, curCalc;
 function makeBlock() {
+   renderGen++;   // this flow takes over the container: any earlier chunked search must stop touching it
    page = 0;
    bundleCnt = 0;
    maxHeap = new MaxHeap();
    isEndOfDeck = false;
    clickLoadOnoff(false);
+
+   // ELV mode: ELVUI takes over rendering (the sort key is the team's currently known best ELV damage, searched continuously by background workers and refreshed as the search reports improvements); outside this mode the original logic runs untouched
+   if (typeof ELVUI !== 'undefined' && ELVUI.isOn()) {
+      if (mod != 0) {
+         // The N-deck bundle views rank by the same ELV values (teamVal reads the live bests), so the board only hands the container over while its search keeps running headless; the plain flow below then builds the bundles. Returning to the 1-team mode re-attaches the board through this same branch.
+         if (ELVUI.active) ELVUI.handOver();
+         const elvCandidates = ELVUI.candidates();
+         if (elvCandidates) updateDataTime().finally(() => { if (ELVUI.isOn()) ELVUI.activate(elvCandidates, false); });
+      } else {
+         isCalculating = false;
+         const elvCandidates = ELVUI.candidates();
+         // Activation waits for the data commit hash so it reads and writes one cache namespace. It runs on every makeBlock (ELVUI.activate is an internal no-op while the candidate set and the contract are unchanged), so a changed candidate set — a filter edit, or a list that finished scanning — always resyncs the board instead of leaving it stale.
+         if (elvCandidates) updateDataTime().finally(() => { if (ELVUI.isOn()) ELVUI.activate(elvCandidates); });
+         return;
+      }
+   }
 
    if (mod == 0) {
       possible.length = 0;
@@ -427,10 +466,10 @@ function makeBlock() {
       if (limit_fit < 0) {
          possible.length = 0;
          if (exSet.size == 0) {
-            for(let pc of possibleCopy) if (pc.fit13t >= curCalc*e9) possible.push(pc);
+            for(let pc of possibleCopy) if (teamVal(pc) >= curCalc*e9) possible.push(pc);
          } else {
             for(let pc of possibleCopy) {
-               if (pc.fit13t >= curCalc*e9 && !pc.compstr.some(i => exSet.has(i)))
+               if (teamVal(pc) >= curCalc*e9 && !pc.compstr.some(i => exSet.has(i)))
                   possible.push(pc);
             }
          }
@@ -438,10 +477,10 @@ function makeBlock() {
       } else {
          possible.length = 0;
          if (exSet.size == 0) {
-            for(let pc of possibleCopy) if (pc.fit13t >= limit_fit) possible.push(pc);
+            for(let pc of possibleCopy) if (teamVal(pc) >= limit_fit) possible.push(pc);
          } else {
             for(let pc of possibleCopy) {
-               if (pc.fit13t >= limit_fit && !pc.compstr.some(i => exSet.has(i)))
+               if (teamVal(pc) >= limit_fit && !pc.compstr.some(i => exSet.has(i)))
                   possible.push(pc);
             }
          }
@@ -455,7 +494,7 @@ function makeBlock() {
             cc.innerHTML = `<div class="block">${t("검색결과 없음")}</div>`;
             isCalculating = false;
          }
-      } else backtrack0(0);
+      } else backtrack0(0, renderGen);
    }
 }
 
@@ -529,6 +568,25 @@ function essClick(id) {
 
 let deckCnt, bundleCnt = 0, page = 0, isEndOfDeck = false;
 
+// The N-deck bundles are ranked by the ELV values known at calculation time. The background search keeps improving them, so when its first values land after a user action (mode switch / ELV toggle) the view re-ranks exactly once: one brief refresh right after entering the view, then it stays stable while being read. Further refreshes stay manual (mode switch, threshold step, ELV toggle).
+let nDeckRerankPending = false, nDeckRerankTimer = 0;
+function nDeckRerankOnce() {
+   if (!nDeckRerankPending || mod == 0) return;
+   if (typeof ELVUI === 'undefined' || !ELVUI.isOn() || ELVUI.active || isCalculating) return;
+   nDeckRerankPending = false;
+   if (nDeckRerankTimer) return;
+   nDeckRerankTimer = setTimeout(() => {
+      nDeckRerankTimer = 0;
+      if (mod == 0 || !ELVUI.isOn() || ELVUI.active) return;
+      curCalc++;   // the auto-threshold branch decrements on every pass; cancel it so the re-rank keeps the threshold the user is looking at
+      makeBlock();
+   }, 1500);
+}
+if (typeof ELVUI !== 'undefined') {
+   ELVUI.onSearchUpdate = nDeckRerankOnce;
+   ELVUI.onViewChange = () => { nDeckRerankPending = true; };
+}
+
 function makeBlockAllDeck() {
    loadBlockAllDeck();
 }
@@ -576,7 +634,7 @@ function loadBlockAllDeck() {
 
       const stringArr = [];
       const id = comp.id, name = comp.name, compstr = comp.compstr;
-      const fit13t = comp.fit13t;
+      const val = teamVal(comp);
       stringArr.push(`<div class="comp-box">`);
       stringArr.push(`<div class="comp-order"># ${++bundleCnt}</div>`);
       stringArr.push(`<div class="comp-name">${t_d(name)}</div><div class="comp-deck">`);
@@ -598,7 +656,7 @@ function loadBlockAllDeck() {
          `);
          leaderHpOn = false;
       }
-      let last = `<i class="fa-solid fa-burst"></i> ${formatNumber(fit13t)}`;
+      let last = `<i class="fa-solid fa-burst"></i> ${formatNumber(val)}`;
       stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 
       let compblock = document.createElement('div');
@@ -606,7 +664,7 @@ function loadBlockAllDeck() {
       compblock.style.width = "100%";
       compblock.innerHTML = stringArr.join("");
       compblock.addEventListener("click", function() {
-         window.open(`${address}/comp/?id=${id}&bond=${makeBondList(compstr)}`, '_blank');
+         window.open(compUrl(id, compstr), '_blank');
       });
       cc.appendChild(compblock);
       _count++;
@@ -623,6 +681,20 @@ function makeBondList(complist) {
    const _bd = [];
    for(const cid of complist) _bd.push(cbMap.get(cid));
    return _bd;
+}
+
+// Per-team damage for ranking and display: the fit13t damage normally, and in ELV mode the team's currently known best ELV damage (falling back to fit13t until the search reports one). The key matches ELVUI's registration key — the compstr exactly as recorded — so every comp keeps its own value.
+function teamVal(comp) {
+   if (typeof ELVUI === 'undefined' || !ELVUI.isOn() || typeof elvGet !== 'function') return comp.fit13t;
+   const r = elvGet(comp.compstr.join(' '));
+   return r && r.dmg > 0 ? r.dmg : comp.fit13t;
+}
+
+// Comp-page URL for a team row: in ELV mode carry the team's best ELV config along, so the detail page shows exactly the number the row ranks by.
+function compUrl(id, compstr) {
+   const r = (typeof elvGet === 'function') ? elvGet(compstr.join(' ')) : null;
+   const elvQs = (typeof ELVUI !== 'undefined' && ELVUI.isOn() && r && r.code) ? `&elv=${r.code}` : '';
+   return `${address}/comp/?id=${id}&bond=${makeBondList(compstr)}${elvQs}`;
 }
 
 function makeBlockNDeck() {
@@ -652,14 +724,14 @@ function loadBlockNDeck() {
       newP.classList.add('newP');
       deckBundle.appendChild(newP);
 
-      bundle.sort((a, b) => b.fit13t - a.fit13t);
+      bundle.sort((a, b) => teamVal(b) - teamVal(a));
 
       let dmgSum = 0;
       for(const comp of bundle) {
          const stringArr = [];
          const id = comp.id, compstr = comp.compstr;
-         const fit13t = comp.fit13t;
-         dmgSum += fit13t;
+         const val = teamVal(comp);
+         dmgSum += val;
          stringArr.push(`<div class="comp-box"><div class="comp-deck">`);
 
          let leaderHpOn = true;
@@ -679,14 +751,14 @@ function loadBlockNDeck() {
             `); 
             leaderHpOn = false;      
          }
-         let last = `<i class="fa-solid fa-burst"></i> ${formatNumber(fit13t)}`;
+         let last = `<i class="fa-solid fa-burst"></i> ${formatNumber(val)}`;
          stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 
          let compblock = document.createElement('div');
          compblock.classList.add("block", "hoverblock");
          compblock.innerHTML = stringArr.join("");
          compblock.addEventListener("click", function() {
-            window.open(`${address}/comp/?id=${id}&bond=${makeBondList(compstr)}`, '_blank');
+            window.open(compUrl(id, compstr), '_blank');
          });
          deckBundle.appendChild(compblock);
       }
@@ -702,7 +774,10 @@ function loadBlockNDeck() {
 
 /* 백트래킹 함수 -----------------------------------------------------------*/
 let backtrackCounter, maxHeapSize;
-function backtrack0(backtrackIdx) {
+// Generation of the flow that owns the container: every makeBlock bumps it, and a running N-deck search bails out on its first stale chunk. Without this the chunked search of a mode the user already left keeps rewriting the progress block into cc and wipes whatever view replaced it — switching back to the ELV board mid-search destroyed its rows on the next chunk.
+let renderGen = 0;
+function backtrack0(backtrackIdx, gen) {
+   if (gen !== renderGen) return;
    let nextIdx = possible.length-1-backtrackIdx;
    backtrackOneCycle(backtrackIdx);
    if (nextIdx > backtrackIdx) backtrackOneCycle(nextIdx);
@@ -729,7 +804,7 @@ function backtrack0(backtrackIdx) {
       maxHeapSize = maxHeap.size();
       makeBlockNDeck();
    }
-   else setTimeout(() => backtrack0(backtrackIdx+1), 16);
+   else setTimeout(() => backtrack0(backtrackIdx + 1, gen), 16);
 }
 
 function calcUpToTxt(numTxt) {
@@ -807,6 +882,7 @@ document.addEventListener('DOMContentLoaded', function() {
    const observer = new IntersectionObserver(function(entries, observer) {
       entries.forEach(entry => {
          if (entry.isIntersecting) {
+            if (typeof ELVUI !== 'undefined' && ELVUI.active) return; // ELV mode has its own sentinel observer
             if (page > 0 && !isEndOfDeck) {
                if (mod == 0) loadBlockAllDeck();
                else loadBlockNDeck(page++);
@@ -864,7 +940,7 @@ class MaxHeap {
       }
    }
 
-   getSum(item) {return item.reduce((sum, obj) => sum + (obj.fit13t || 0), 0);}
+   getSum(item) {return item.reduce((sum, obj) => sum + (teamVal(obj) || 0), 0);}
    size() {return this.heap.length;}
    getAll() {return this.heap;}
 }

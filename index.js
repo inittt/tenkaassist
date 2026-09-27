@@ -29,7 +29,16 @@ document.addEventListener("DOMContentLoaded", function() {
          else if ("최신등록순" === this.value) sort = 2;
          else if ("최신수정순" === this.value) sort = 3;
          else if ("13턴딜(1)" === this.value) sort = 4;
-         
+         else if ("13턴딜(5+ELV)" === this.value) sort = 5;
+
+         // The ELV board: ELV_LIST takes over rendering and paging (a background worker searches each team's best ELV damage and refreshes the board as the search reports improvements); for any other option the original logic runs untouched
+         if (typeof ELV_LIST !== 'undefined' && ELV_LIST.active) ELV_LIST.deactivate();
+         if (sort === 5) {
+            page = 0; cnt = 1; isLoading = true;
+            ELV_LIST.activate();
+            return;
+         }
+
          page = 0; cnt = 1; isLoading = true;
          getComps();
       });
@@ -38,6 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
    const observer = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
          if (entry.isIntersecting && !isLoading) {
+            if (typeof ELV_LIST !== 'undefined' && ELV_LIST.active) return; // ELV mode has its own sentinel observer
             getComps();
          }
       });
@@ -57,6 +67,8 @@ function getComps() {
       if (!response.ok) throw new Error(t('네트워크 응답이 올바르지 않습니다.'));
       return response.json();
    }).then(res => {
+      // While the ELV board owns the container, the plain loader must not render anything into it: a request still in flight when the user switched sorts would otherwise land late and pollute the board with plain rows.
+      if (typeof ELV_LIST !== 'undefined' && ELV_LIST.active) return;
       if (!res.success) {
          isLoading = true;
          document.getElementById('nextTrigger').innerHTML = `${res.msg}`;

@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
       makeCompBlock(res.data);
       setCmdBond();
       setELVList();
+      applyELVParam();
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
       document.getElementById('titlebox').innerHTML = `ERROR`;
@@ -508,6 +509,40 @@ function getELVValuesList() {
       // 4자리 문자열 그대로 리턴
       return codeStr;
    });
+}
+
+// ELV config handed over by an ELV ranking board (make page / comp list) through the ?elv= URL parameter: 20 digits = 4 upgrade slots per member in compstr order (slots 1-3 pick 1..2, slot 4 picks 1..3). Returns the validated code string or null.
+function getELVParam() {
+   const raw = params.get('elv');
+   if (!raw) return null;
+   const s = raw.replace(/[,\s]/g, '');
+   if (!/^\d{20}$/.test(s)) return null;
+   for (let i = 0; i < 5; i++) {
+      for (let g = 0; g < 4; g++) {
+         const d = Number(s[i * 4 + g]);
+         if (d < 1 || d > (g === 3 ? 3 : 2)) return null;
+      }
+   }
+   return s;
+}
+
+// Preset the ELV radios to the ?elv= board config and recompute the ELV damage, so this page shows exactly the number the ranking board sorted by instead of the default all-v11 config.
+function applyELVParam() {
+   const code = getELVParam();
+   if (code == null) return;
+   curCompIds.forEach((id, i) => {
+      const cur = getCharacter(id);
+      ["g1", "g2", "g3", "g4"].forEach((groupName, g) => {
+         const val = `v${g + 1}${code[i * 4 + g]}`;
+         const input = document.getElementById(`elv_${id}_${groupName}_${val}`);
+         if (!input) return;
+         input.checked = true;
+         const dropdown = input.closest(".dropdown");
+         const btnText = dropdown && dropdown.querySelector(".selected-text");
+         if (btnText) btnText.innerText = getELVText(cur.element, cur.role, val);
+      });
+   });
+   setElvDmg();
 }
 
 let elvtggl = false;

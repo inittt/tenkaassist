@@ -206,3 +206,18 @@
   border-style: solid;
   border-color: transparent transparent #FFF transparent;
 }
+
+/* ELV mode toggle button (reuses the lab page's elvButton color language) */
+.elvButton {
+   margin-left:0.5rem;
+   width:4rem;
+   border: 2px solid white;
+   font-weight: bold;
+   cursor: pointer;
+   border-radius: 0.3rem;
+   padding: 0.3rem 0.3rem;
+   color:white;
+   background-color: transparent;
+}
+.elvButton.elvOn { background-color: #ff8800; }
+.elvButton.elvOff { background-color: transparent; }
