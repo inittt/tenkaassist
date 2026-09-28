@@ -312,6 +312,7 @@ function setELVList() {
    // 1. 테이블 시작
    res.push(`<table class="elv-table" style="width: 100%; border-collapse: collapse;"><tbody>`);
 
+   let cur_idx = 0;
    for (const id of curCompIds) {
       const cur = getCharacter(id);
       const e = cur.element, r = cur.role;
@@ -327,8 +328,8 @@ function setELVList() {
       let charHtml = `<tr class="character-elv-item" data-id="${id}" data-element="${e}" data-role="${r}" style="border-bottom: 1px solid #fff;">`;
 
       // [2열] 버튼 4개를 담는 전용 열
-      charHtml += `<td style="padding: 0.2rem 0;">`;
-      charHtml += `<div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">`;
+      charHtml += `<td style="padding: 0.2rem 0;">`
+      charHtml += `<div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">${++cur_idx}`;
 
       groups.forEach((g) => {
          const defaultVal = g.options[0];
