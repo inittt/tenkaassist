@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownContent.style.display = "none";
 
          isEnd = false; cnt = 0; sort = 1; page = 0;
-         if ("허수+(5)" === this.value) sort = 0;
+         if ("13턴딜(E)" === this.value) sort = 0;
          else if ("최신등록순" === this.value) sort = 2;
          else if ("최신수정순" === this.value) sort = 3;
          else if ("13턴딜(1)" === this.value) sort = 4;
@@ -110,7 +110,7 @@ function makeBlock(curData) {
       const stringArr = [];
       cnt++;
       const id = comp.id, name = comp.name, compstr = comp.compstr;
-      const ranking = comp.ranking, recommend = comp.recommend, vote = comp.vote;
+      const dmgElv = comp.dmgElv, dmg5 = comp.dmg5, dmg1 = comp.dmg1;
       const create_at = comp.create_at == null ? '-' : addNineHours(comp.create_at);
       const update_at = comp.update_at == null ? '-' : addNineHours(comp.update_at);
       stringArr.push(`<div class="comp-box">`);
@@ -138,11 +138,11 @@ function makeBlock(curData) {
       }
       let last;
       switch(sort) {
-         case 1 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`; break;
-         case 2 : last = `${bond5OrBond1(recommend, vote)}`; break;
-         case 3 : last = `${bond5OrBond1(recommend, vote)}`; break;
-         case 4 : last = `<i class="fa-solid fa-burst"></i> ${formatNumber(vote)}`; break;
-         default : last = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}${t("턴")}`;
+         case 1 : last = `${formatNumber(dmg5)}`; break;
+         case 2 : last = `${bond5OrBond1(dmg5, dmg1)}`; break;
+         case 3 : last = `${bond5OrBond1(dmg5, dmg1)}`; break;
+         case 4 : last = `${formatNumber(dmg1)}`; break;
+         default : last = `${formatNumber(dmgElv)}`; break;
       } stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
       let compcontainer = document.getElementById('compcontainer');
       let compblock = document.createElement('div');
@@ -158,9 +158,9 @@ function makeBlock(curData) {
    `;
 }
 
-function bond5OrBond1(recommend, vote) {
-   if (recommend > 0) return `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)}`;
-   return `<i class="fa-solid fa-burst"></i> ${formatNumber(vote)} (1)`;
+function bond5OrBond1(dmg5, dmg1) {
+   if (dmg5 > 0) return `${formatNumber(dmg5)}`;
+   return `${formatNumber(dmg1)} (1)`;
 }
 
 function init() {

@@ -130,13 +130,13 @@ function setElvDmg() {
 }
 
 function makeCompBlock(comp) {
-   if (comp.recommend == 0) {
-      if (comp.vote != 0) document.getElementById("command-bond").innerText = `(${t("1구")})`;
+   if (comp.recomdmg5mend == 0) {
+      if (comp.dmg1 != 0) document.getElementById("command-bond").innerText = `(${t("1구")})`;
    } else document.getElementById("command-bond").innerText = `(${t("5구")})`;
 
    const id = comp.id, name = comp.name, compstr = comp.compstr;
-   const description = comp.description, ranking = comp.ranking, vote = comp.vote;
-   const recommend = comp.recommend, creator = comp.creator, updater = comp.updater;
+   const description = comp.description, dmgElv = comp.dmgElv, dmg1 = comp.dmg1;
+   const dmg5 = comp.dmg5, creator = comp.creator, updater = comp.updater;
    const create_at = comp.create_at == null ? '-' : addNineHours(comp.create_at);
    const update_at = comp.update_at == null ? '-' : addNineHours(comp.update_at);
    
@@ -167,9 +167,9 @@ function makeCompBlock(comp) {
    document.getElementById('create_at').innerHTML = `${t("등록 : ")}${create_at} ${creator}`;
    document.getElementById('update_at').innerHTML = `${t("수정 : ")}${update_at == null ? " - " : update_at} ${updater}`;
 
-   document.getElementById('scarecrow').innerHTML = `<i class="fa-solid fa-skull"></i> ${ranking.toFixed(0)}${t("턴")}`;
-   document.getElementById('dmg13').innerHTML = `<i class="fa-solid fa-burst"></i> ${formatNumber(recommend)} (5)`;
-   document.getElementById('dmg13-1').innerHTML = `<i class="fa-solid fa-burst"></i> ${formatNumber(vote)} (1)`;
+   document.getElementById('dmgElv').innerHTML = `${formatNumber(dmgElv)} (E)`;
+   document.getElementById('dmg13').innerHTML = `${formatNumber(dmg5)} (5)`;
+   document.getElementById('dmg13-1').innerHTML = `${formatNumber(dmg1)} (1)`;
 
    document.getElementById('description').innerHTML = setCommand(description).trim();
 
@@ -177,7 +177,7 @@ function makeCompBlock(comp) {
       const _tmpCmd = setCommandCustom(curCompIds, curCommand, [1,1,1,1,1]);
       const dmg13t_b1 = autoCalc(curCompIds, _tmpCmd, [1,1,1,1,1], -1, null);
 
-      if (dmg13t_b1 > vote) {
+      if (dmg13t_b1 > dmg1) {
          const formData = new FormData();
          formData.append("compId", id);
          formData.append("dmg13", dmg13t_b1);
@@ -206,7 +206,7 @@ function makeCompBlock(comp) {
       //////
 
       document.getElementById('fit-dmg').innerHTML = `${formatNumber(fitDmg)} (${formatNumber(noHitDmg)})`;
-      if (recommend > 0 && bondList_tmp.every(i => i == 5) && fitDmg != recommend) {
+      if (dmg5 > 0 && bondList_tmp.every(i => i == 5) && fitDmg != dmg5) {
          const formData = new FormData();
          formData.append("compId", id);
          formData.append("dmg13", fitDmg);

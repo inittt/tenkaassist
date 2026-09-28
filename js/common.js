@@ -75,19 +75,19 @@ function formatNumber(value) {
       else if (value >= 1000000) return (value / 1000000).toFixed(0) + 'M';
       else return value.toString();
    } else if (lang == "sc") {
-      if (value >= 100000000) return (value / 100000000).toFixed(2) + '亿';
+      if (value >= 100000000) return (value / 100000000).toFixed(1) + '亿';
       else if (value >= 10000) return (value / 10000).toFixed(0) + '万';
       else return value.toString();
    } else if (lang == "tc") {
-      if (value >= 100000000) return (value / 100000000).toFixed(2) + '億';
+      if (value >= 100000000) return (value / 100000000).toFixed(1) + '億';
       else if (value >= 10000) return (value / 10000).toFixed(0) + '萬';
       else return value.toString();
    } else if (lang == "jp") {
-      if (value >= 100000000) return (value / 100000000).toFixed(2) + '億';
+      if (value >= 100000000) return (value / 100000000).toFixed(1) + '億';
       else if (value >= 10000) return (value / 10000).toFixed(0) + '万';
       else return value.toString();
    } else {
-      if (value >= 100000000) return (value / 100000000).toFixed(2) + '억';
+      if (value >= 100000000) return (value / 100000000).toFixed(1) + '억';
       else if (value >= 10000) return (value / 10000).toFixed(0) + '만';
       else return value.toString();
    }

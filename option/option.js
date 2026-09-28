@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
       if (!res.success) alert(t(res.msg));
       else {
          document.getElementById("curNick").innerText = res.data.name;
-         document.getElementById("curEmail").innerText = res.data.reportIds == null ? "-" : res.data.reportIds;
+         document.getElementById("curEmail").innerText = res.data.email == null ? "-" : res.data.email;
          document.getElementById("curReg").innerText = res.data.addcount;
          document.getElementById("curSim").innerText = res.data.contribution;
       }

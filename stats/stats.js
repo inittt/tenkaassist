@@ -114,8 +114,8 @@ function setData() {
    isloading = true;
    const res = [];
    const data = JSON.parse(JSON.stringify(server_data));
-   if (sort == 1) data.sort((a, b) => b.vote - a.vote);
-   else data.sort((a, b) => b.recommend - a.recommend);
+   if (sort == 1) data.sort((a, b) => b.dmg1 - a.dmg1);
+   else data.sort((a, b) => b.dmg5 - a.dmg5);
    
    const sortedList = data.slice(0, Math.floor(data.length * 0.2));
 
@@ -178,8 +178,8 @@ function setUserCnt() {
 }
 function setCompNum(data) {
    document.getElementById("allcomp").innerText = data.length;
-   // document.getElementById("dealok").innerText = data.filter(i => i.ranking < 90).length;
-   // document.getElementById("dealok1").innerText = data.filter(i => i.vote > 0).length;
+   // document.getElementById("dealok").innerText = data.filter(i => i.dmgElv < 90).length;
+   // document.getElementById("dealok1").innerText = data.filter(i => i.dmg1 > 0).length;
 }
 
 function drawGraph(data) {

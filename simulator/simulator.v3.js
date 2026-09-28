@@ -296,7 +296,6 @@ function saveBond5(command_tmp) {
    formData.append("name", `${comp[0].name}덱`);
    formData.append("compstr", chIds);
    formData.append("dmg13", dmg13);
-   formData.append("scarecrow", scarecrowTurn);
    formData.append("command", command_tmp);
    request(`${server}/comps/setPower`, {
       method: "POST",

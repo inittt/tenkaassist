@@ -231,7 +231,7 @@ function getAllCompsFromServer(url_idx) {
       })
       .then(data => {
          default_per = document.getElementById("defaultPer");
-         dataAll = data.filter(i => !(i.recommend < 5e9 && i.vote < 2e9)); 
+         dataAll = data.filter(i => !(i.dmg5 < 5e9 && i.dmg1 < 2e9)); 
          dataIdx = 0;
          for(let d of dataAll) {
             d.compstr = d.compstr.split(" ").map(Number);
@@ -358,10 +358,10 @@ function setPossible() {
       if (_err) {_err = false; continue;}
 
       if (boss_element == -1 && hitAll == true) {
-         if (d.recommend > 0 && limit_fit > d.recommend) continue;
+         if (d.dmg5 > 0 && limit_fit > d.dmg5) continue;
 
-         if (glbBonds.every(item => item === 5) && d.recommend > 0) d.fit13t = d.recommend;
-         else if (glbBonds.every(item => item === 1) && d.vote > 0) d.fit13t = d.vote;
+         if (glbBonds.every(item => item === 5) && d.dmg5 > 0) d.fit13t = d.dmg5;
+         else if (glbBonds.every(item => item === 1) && d.dmg1 > 0) d.fit13t = d.dmg1;
          else d.fit13t = autoCalc(compList, d.description, glbBonds, -1, _optionList);
 
          if (d.fit13t >= limit_fit) {
@@ -598,7 +598,7 @@ function loadBlockAllDeck() {
          `);
          leaderHpOn = false;
       }
-      let last = `<i class="fa-solid fa-burst"></i> ${formatNumber(fit13t)}`;
+      let last = `${formatNumber(fit13t)}`;
       stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 
       let compblock = document.createElement('div');
@@ -679,7 +679,7 @@ function loadBlockNDeck() {
             `); 
             leaderHpOn = false;      
          }
-         let last = `<i class="fa-solid fa-burst"></i> ${formatNumber(fit13t)}`;
+         let last = `${formatNumber(fit13t)}`;
          stringArr.push(`</div><div class="comp-rank">${last}</div></div>`);
 
          let compblock = document.createElement('div');
