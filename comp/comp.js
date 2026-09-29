@@ -9,7 +9,7 @@ else {
 
 
 const compIds_toTest = [];
-let isDataLoaded = true, curCommand = null, curCompstr = null, curCompIds = null;
+let isDataLoaded = true, curCommand = null, curCompIds = null;
 document.addEventListener("DOMContentLoaded", function() {
    // 조합 정보 세팅
    request(`${server}/comps/get/${compId}`, {
@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
       makeCompBlock(res.data);
       setCmdBond();
       setELVList();
+      optimizeElv(res.data.dmgElv);
    }).catch(e => {
       console.log(t("데이터 로드 실패"), e);
       document.getElementById('titlebox').innerHTML = `ERROR`;
@@ -221,7 +222,6 @@ function makeCompBlock(comp) {
          }).then(res => {}).catch(e => {console.log("error : ", e)})
       }
    }
-   setElvDmg();
 }
 
 // 구속력 리스트 리턴
@@ -331,26 +331,12 @@ function setELVList() {
       charHtml += `<td style="padding: 0.2rem 0;">`;
       charHtml += `<div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">${++cur_idx}`;
 
-      groups.forEach((g) => {
+      groups.forEach((g, gi) => {
          const defaultVal = g.options[0];
          const defaultText = getELVText(e, r, defaultVal);
          const radioName = `elv_${id}_${g.groupName}`;
 
-         const roleNum = Number(r);
-         const isG1 = g.options.includes("v11");
-         const isG4 = g.options.includes("v41");
-
-         // 1) v31 포함 그룹
-         const hasV31 = g.options.includes("v31");
-         const hasV21 = g.options.includes("v21");
-
-         // 2) r 조건별 지정
-         // - r이 1 또는 2일 때: g1, g4
-         // - r이 4일 때: g1
-         const isR1Or2Group = (roleNum === 1 || roleNum === 2) && (isG1 || isG4);
-         const isR4Group = roleNum === 4 && isG1;
-
-         const isTargetGroup = hasV31 || hasV21 || isR1Or2Group || isR4Group;
+         const isTargetGroup = isElvGroupDisabled(r, gi);
          
          // 비활성화 디자인 스타일 (기능은 동작)
          const pseudoDisabledStyle = isTargetGroup 
@@ -436,6 +422,77 @@ function bindELVEvents(container) {
    });
 }
 
+let elvOptToken = 0;       // 최신 요청만 반영하기 위한 토큰
+// 공통 탐색 함수 호출
+async function findBestElv(token) {
+   return findBestElvFor(curCompIds, curCommand, getBondList(), () => token !== elvOptToken);
+}
+
+// 최적화 실행 → 드롭다운 반영 → 데미지 표기 (→ 서버 값 전달 시 저장)
+async function optimizeElv(serverDmgElv) {
+   const token = ++elvOptToken;
+   const elvDmgEl = document.getElementById('elv-dmg');
+   if (elvDmgEl) elvDmgEl.innerHTML = t("계산 중...");
+
+   await yieldToBrowser(); // "계산 중..." 먼저 그리기
+
+   try {
+      const result = await findBestElv(token);
+      if (token !== elvOptToken) return; // 더 최신 요청이 있으면 결과 버림
+      if (result && result.codes) {
+         applyElvCodes(result.codes);
+         // 서버 값을 넘겨받은 경우(페이지 진입 시)에만 저장 시도
+         if (serverDmgElv !== undefined) saveElvDmgIfChanged(result, serverDmgElv ?? 0);
+      }
+   } catch (e) {
+      console.log("ELV 최적화 실패", e);
+   } finally {
+      hitAll = true;
+   }
+   if (token === elvOptToken) setElvDmg();
+}
+
+// 최적 ELV 데미지가 서버 값과 다르면 저장
+function saveElvDmgIfChanged(result, serverDmgElv) {
+   if (!getBondList().every(b => b === 5)) return;   // 5구 기준만 저장
+   if (result.dmg === serverDmgElv) return;          // 같으면 저장 안 함
+
+   const formData = new FormData();
+   formData.append("compId", compId);
+   formData.append("dmg13", result.dmg);
+   formData.append("elvStr", result.codes.join(""));  // 예: "11111213122111212213"
+   request(`${server}/comps/setPowerEAuto`, {
+      method: "POST",
+      includeJwtToken: false,
+      body: formData
+   }).then(response => {
+      if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+      return response.json();
+   }).then(res => {
+      if (!res.success) return console.log("ELV 데미지 저장 실패", res.msg);
+      document.getElementById('dmgElv').innerHTML = `${formatNumber(result.dmg)} (E)`;
+   }).catch(e => { console.log("error : ", e); });
+}
+
+// 코드 배열을 드롭다운에 반영
+function applyElvCodes(codes) {
+   curCompIds.forEach((id, idx) => {
+      const code = codes[idx];
+      const item = document.querySelector(`.character-elv-item[data-id="${id}"]`);
+      if (!item || !code) return;
+      const e = Number(item.dataset.element), r = Number(item.dataset.role);
+
+      ELV_GROUPS.forEach((g, gi) => {
+         const val = `v${gi + 1}${code[gi]}`;
+         const radio = document.getElementById(`elv_${id}_${g}_${val}`);
+         if (!radio) return;
+         radio.checked = true; // change 이벤트는 발생하지 않음
+         const btnText = radio.closest(".dropdown").querySelector(".selected-text");
+         if (btnText) btnText.innerText = getELVText(e, r, val);
+      });
+   });
+}
+
 function getELVText(e, r, v) {
    switch(v) {
       case "v11":
@@ -486,12 +543,11 @@ function getELVText(e, r, v) {
 }
 
 function getELVValuesList() {
-   const groups = ["g1", "g2", "g3", "g4"];
 
    return curCompIds.map((id) => {
       let codeStr = "";
 
-      groups.forEach((groupName) => {
+      ELV_GROUPS.forEach((groupName) => {
          const radioName = `elv_${id}_${groupName}`;
          // 현재 캐릭터의 그룹별 선택된 radio input 조회
          const checkedInput = document.querySelector(`input[name="${radioName}"]:checked`);
@@ -511,7 +567,6 @@ function getELVValuesList() {
    });
 }
 
-let elvtggl = false;
 function toggleElv() {
    const target = document.getElementById("elv");
     if (target) {

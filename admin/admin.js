@@ -246,3 +246,85 @@ async function runElvBulk() {
       btn.disabled = false;
    }
 }
+
+// ===== 허용되지 않는 조합 삭제 =====
+const INVALID_DEL_REST_MS = 500; // 삭제 요청 사이 쉬는 시간
+let invalidComps = [];
+let invalidRunning = false;
+
+// 1단계: 검사 (삭제하지 않고 목록만 표시)
+async function checkInvalidComps() {
+   if (invalidRunning) return;
+   invalidRunning = true;
+   const status = document.getElementById("invalidStatus");
+   const list = document.getElementById("invalidList");
+   list.innerHTML = "";
+   invalidComps = [];
+
+   try {
+      status.innerText = "데이터 로드 중...";
+      const data = await loadAllComps();
+      if (!data) { status.innerText = "데이터 로드 실패"; return; }
+
+      let errored = 0;
+      for (const c of data) {
+         const ids = String(c.compstr).trim().split(/\s+/).map(Number);
+         try {
+            const reason = getCompInvalidReason(ids);
+            if (reason !== null) invalidComps.push({ id: c.id, name: c.name, compstr: c.compstr, reason });
+         } catch (e) {
+            errored++;   // 판단 자체가 실패한 조합은 삭제 대상에서 제외
+            console.log(`조합 ${c.id} 검사 실패`, e);
+         }
+      }
+
+      // 조합 이름은 사용자 입력이라 innerHTML 대신 textContent로 표시
+      for (const c of invalidComps) {
+         const row = document.createElement("div");
+         row.textContent = `#${c.id} ${c.name} [${c.compstr}] : ${c.reason}`;
+         list.appendChild(row);
+      }
+      status.innerText = `전체 ${data.length}개 중 삭제 대상 ${invalidComps.length}개` +
+         (errored ? ` · 검사 실패 ${errored}개(제외됨)` : "");
+   } finally {
+      invalidRunning = false;
+   }
+}
+
+// 2단계: 검사 결과를 하나씩 삭제
+async function deleteInvalidComps() {
+   if (invalidRunning) return;
+   if (!invalidComps.length) return alert("먼저 검사를 실행하세요");
+   if (!confirm(`${invalidComps.length}개 조합을 삭제합니다. 되돌릴 수 없습니다. 진행할까요?`)) return;
+
+   invalidRunning = true;
+   const status = document.getElementById("invalidStatus");
+   const checkBtn = document.getElementById("invalidCheckBtn");
+   const delBtn = document.getElementById("invalidDelBtn");
+   checkBtn.disabled = delBtn.disabled = true;
+
+   let ok = 0, fail = 0;
+   try {
+      for (let i = 0; i < invalidComps.length; i++) {
+         const c = invalidComps[i];
+         try {
+            const response = await request(`${server}/comps/remove/${c.id}`, { method: "DELETE" });
+            if (!response.ok) throw new Error('네트워크 응답이 올바르지 않습니다.');
+            const res = await response.json();
+            if (res.success) ok++;
+            else { fail++; console.log(`조합 ${c.id} 삭제 실패`, res.msg); }
+         } catch (e) {
+            fail++;
+            console.log(`조합 ${c.id} 삭제 오류`, e);
+         }
+         status.innerText = `${i + 1} / ${invalidComps.length} 처리 · 성공 ${ok} · 실패 ${fail}`;
+         await elvSleep(INVALID_DEL_REST_MS);
+      }
+      status.innerText = `완료 : 성공 ${ok} · 실패 ${fail}`;
+      invalidComps = [];
+      document.getElementById("invalidList").innerHTML = "";
+   } finally {
+      invalidRunning = false;
+      checkBtn.disabled = delBtn.disabled = false;
+   }
+}

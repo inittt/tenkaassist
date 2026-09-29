@@ -50,6 +50,13 @@
          <button class="button" onclick="stopElvBulk()" style="height:2rem; margin-left:0.5rem;">중지</button>
          <div id="elvBulkStatus" style="margin-top:0.5rem;"></div>
       </div>
+      <div class="block">
+         허용되지 않는 조합 삭제<br>
+         <button id="invalidCheckBtn" class="button" onclick="checkInvalidComps()" style="height:2rem; margin-left:1rem;">검사</button>
+         <button id="invalidDelBtn" class="button" onclick="deleteInvalidComps()" style="height:2rem; margin-left:0.5rem;">삭제</button>
+         <div id="invalidStatus" style="margin-top:0.5rem;"></div>
+         <div id="invalidList" style="margin-top:0.5rem; max-height:20rem; overflow-y:auto;"></div>
+      </div>
    </div>
 </body>
 </html>

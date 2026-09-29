@@ -323,7 +323,7 @@ function getCompInvalidReason(ids) {
    if (ids.length != 5) return { kind: 'count', count: ids.length };
    const comp = ids.map(id => getCharacter(id));
 
-   // Exclude H.Satan combined with counter-attack characters — this combination is rejected not because the team cannot survive, but because the simulator cannot yet calculate the interaction damage accurately.
+   // 농탄 + 반격 캐릭터
    const refList = [10002, 10027, 10056, 10130, 10164]; // 반격캐 목록
    const farmer = comp.find(i => i.id == 10153); // H.Satan
    if (farmer) {
@@ -331,7 +331,7 @@ function getCompInvalidReason(ids) {
       if (counters.length) return { kind: 'blacklist', farmer, counters };
    }
 
-   // Noma / W.Tsubaki leaders: no healer allowed among members (must run before the generic healer check)
+   // 놀라/새바키 리더 : 힐러가 있으면 안됨
    if (comp[0].id == 10022 || comp[0].id == 10170) {
       const violators = comp.slice(1).filter(i => i.role == 1);
       if (violators.length) return { kind: 'leaderNoHealer', leader: comp[0], violators };
@@ -339,35 +339,47 @@ function getCompInvalidReason(ids) {
    }
 
    // 나리 리더
-   if (comp[0].id == 10202) return null;
+   if (comp[0].id == 10202) {
+      const violators = comp.slice(1).filter(i => i.id == 10196);
+      if (violators.length) {
+         const _ct = [0,0,0,0,0];
+         for(let i = 0; i < 5; i++) {
+            const _r = comp[i].role;
+            _ct[_r]++;
+         }
+         if (_ct[1] > 0) return null;
+         else if (_ct[3] >= 2) return { kind: 'exception' };
+      }
+      return null;
+   }
 
-   // Generic rule: passes when the team contains at least one healer
+   // 공통 : 힐러가 있어야 함
    if (comp.find(i => i.role == 1)) return null;
 
-   // S.Iblis leader: members must be attackers or healers only (must run after the generic healer check to preserve the original behavior)
+   // 수이블 리더 : 딜러만 배치 (힐러도 가능)
    if (comp[0].id == 10042) {
       const violators = comp.slice(1).filter(i => i.role != 0 && i.role != 1);
       if (violators.length) return { kind: 'leaderRole', leader: comp[0], allowedRoles: [0, 1], violators };
       return null;
    }
-   // S.Noel leader: members must be protectors or obstructers only
+   // 수엘리 리더 : 디럽/탱커만 배치 (힐러도 가능)
    if (comp[0].id == 10091) {
       const violators = comp.slice(1).filter(i => i.role != 2 && i.role != 4);
       if (violators.length) return { kind: 'leaderRole', leader: comp[0], allowedRoles: [2, 4], violators };
       return null;
    }
-   // 노엘리 리더
+   // 노엘리 리더 : 힐러 없어도 됨
    if (comp[0].id == 10026) return null;
-   // 구릴리 리더
+   // 구릴리 리더 : 힐러 없어도 됨
    if (comp[0].id == 10054) return null;
 
-   // Cos.Momo leader: members must be attackers or healers only (must run before the generic healer check)
+   // 냉모모 리더 : 딜러만 배치 (힐러도 가능)
    if (comp[0].id == 10198) {
       const violators = comp.slice(1).filter(i => i.role != 0);
       if (violators.length) return { kind: 'leaderRole', leader: comp[0], allowedRoles: [0], violators };
       return null;
    }
-   // LilyElsa leader: passes if the team has a healer; otherwise it must cover exactly 3 distinct roles
+   // 릴리엘자 리더 : 힐러가 있거나 3직군 편성해야함
    if (comp[0].id == 10208) {
       const _ct = [0,0,0,0,0];
       for(let i = 0; i < 5; i++) {
@@ -386,7 +398,7 @@ function getCompInvalidReason(ids) {
    if (comp[4].id == 10063) return true;
    */
 
-   // No healer and no leader exemption applies → the team cannot sustain itself over the long run
+   // 힐러가 없을 경우
    return { kind: 'noHealer' };
 }
 
