@@ -8,6 +8,11 @@
    <script src="../js/common.js"></script>
    <link rel="stylesheet" href="../css/common.css" type = "text/css">
    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
+   <script src="../js/characterJson.js"></script>
+   <script src="../simulator/calculator.v3.js"></script>
+   <script src="../make/autocalc.v3.js"></script>
+   <script src="../js/elv.js"></script>
    <script src="./admin.js"></script>
 </head>
 <body>
@@ -38,6 +43,12 @@
       </div>
       <div class="block">
          <button class="button" onclick="refreshData()" style="height:2rem; margin-left:1rem;">추천덱 갱신</button>
+      </div>
+      <div class="block">
+         ELV 최적 데미지 일괄 갱신<br>
+         <button id="elvBulkBtn" class="button" onclick="runElvBulk()" style="height:2rem; margin-left:1rem;">실행</button>
+         <button class="button" onclick="stopElvBulk()" style="height:2rem; margin-left:0.5rem;">중지</button>
+         <div id="elvBulkStatus" style="margin-top:0.5rem;"></div>
       </div>
    </div>
 </body>
