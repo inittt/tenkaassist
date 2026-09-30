@@ -383,6 +383,7 @@ const translate = {
    "붙여넣기" : {en : "Paste", sc : "粘贴", tc : "貼上", jp : "貼り付け"},
    "최소조건" : {en : "Min", sc : "最低条件", tc : "最低條件", jp : "必要条件"},
    "상시\u200B" : {en : "Eternal", sc : "常驻", tc : "常駐", jp : "常駐"},
+   "적 속성" : {en : "Enemy Attr", sc : "敌属性", tc : "敵屬性", jp : "敵属性"},
 
 
    // 로그인
