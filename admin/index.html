@@ -46,7 +46,8 @@
       </div>
       <div class="block">
          ELV 최적 데미지 일괄 갱신<br>
-         <button id="elvBulkBtn" class="button" onclick="runElvBulk()" style="height:2rem; margin-left:1rem;">실행</button>
+         <button id="elvBulkBtn" class="button" onclick="runElvBulk(false)" style="height:2rem; margin-left:1rem;">전체</button>
+         <button id="elvMissingBtn" class="button" onclick="runElvBulk(true)" style="height:2rem; margin-left:0.5rem;">누락분</button>
          <button class="button" onclick="stopElvBulk()" style="height:2rem; margin-left:0.5rem;">중지</button>
          <div id="elvBulkStatus" style="margin-top:0.5rem;"></div>
       </div>

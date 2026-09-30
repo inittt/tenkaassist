@@ -4,6 +4,12 @@ const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list'), idList = chIds.split(",").map(Number);
 const bond = params.get('bond'), bondList = bond == null ? [5, 5, 5, 5, 5] : bond.split(",").map(Number);
 
+// elv 파라미터: "11111213122111212213" → ["1111", "1213", ...] (형식이 틀리면 무시)
+const elvParam = params.get('elv');
+const initElvCodes = (elvParam && /^[1-3]{20}$/.test(elvParam))
+   ? Array.from({ length: 5 }, (_, i) => elvParam.slice(i * 4, i * 4 + 4))
+   : null;
+
 let hp_set = 10854389981, elvOn = false;
 document.addEventListener("DOMContentLoaded", function() {
    const chNameList = [];
@@ -72,6 +78,8 @@ document.addEventListener("DOMContentLoaded", function() {
    makePotentialUI();
 
    setELVList();
+   // elv 파라미터가 있으면 드롭다운에 적용
+   if (initElvCodes) applyInitElvCodes(initElvCodes);
 });
 
 function numToBond(num) {
@@ -569,4 +577,23 @@ function getELVString() {
    });
 
    return elvStr; // "v11v22v31v43v12v21v32v42..."
+}
+
+// 코드 배열을 ELV 드롭다운에 반영 (행 순서 기준)
+function applyInitElvCodes(codes) {
+   const rows = document.querySelectorAll("#elv .character-elv-item");
+   rows.forEach((row, idx) => {
+      const code = codes[idx];
+      if (!code) return;
+      const e = Number(row.dataset.element), r = Number(row.dataset.role);
+
+      ["g1", "g2", "g3", "g4"].forEach((g, gi) => {
+         const val = `v${gi + 1}${code[gi]}`;
+         const radio = row.querySelector(`input[type="radio"][value="${val}"]`);
+         if (!radio) return;   // 없는 옵션(예: g1에 "3")이면 기본값 유지
+         radio.checked = true;
+         const btnText = radio.closest(".dropdown").querySelector(".selected-text");
+         if (btnText) btnText.innerText = getELVText(e, r, val);
+      });
+   });
 }

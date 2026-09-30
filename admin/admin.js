@@ -182,68 +182,99 @@ function stopElvBulk() {
    if (elvBulkRunning) elvBulkStop = true;
 }
 
-async function runElvBulk() {
+async function runElvBulk(onlyMissing = false) {
    if (elvBulkRunning) return;
-   if (!confirm("모든 조합의 ELV 최적 데미지를 다시 계산해서 저장합니다. 진행할까요?")) return;
+
+   // 같은 모드로 중지된 진행이 있을 때만 이어서 할지 묻기
+   let resume = false;
+   if (elvBulkState && elvBulkState.onlyMissing === onlyMissing
+       && elvBulkState.nextIdx < elvBulkState.targets.length) {
+      resume = confirm(
+         `이전 진행(${elvBulkState.nextIdx} / ${elvBulkState.targets.length})에서 이어서 할까요?\n` +
+         `취소를 누르면 처음부터 시작합니다.`
+      );
+   }
 
    elvBulkRunning = true;
    elvBulkStop = false;
-   const btn = document.getElementById("elvBulkBtn");
+   const btns = [document.getElementById("elvBulkBtn"), document.getElementById("elvMissingBtn")];
    const status = document.getElementById("elvBulkStatus");
-   btn.disabled = true;
+   btns.forEach(b => b.disabled = true);
 
    try {
-      status.innerText = "데이터 로드 중...";
-      const data = await loadAllComps();
-      if (!data) { status.innerText = "데이터 로드 실패"; return; }
+      if (!resume) {
+         status.innerText = "데이터 로드 중...";
+         const data = await loadAllComps();
+         if (!data) { status.innerText = "데이터 로드 실패"; return; }
 
-      const targets = data.filter(c => c.description && c.description.length > 10);
+         const targets = data.filter(c =>
+            c.description && c.description.length > 10 && (!onlyMissing || isElvMissing(c))
+         );
+         if (targets.length === 0) { status.innerText = "갱신할 조합이 없습니다"; return; }
+
+         // 대상 개수를 보고 진행 여부 결정
+         const label = onlyMissing ? "ELV가 없는 조합" : "모든 조합";
+         if (!confirm(`${label} ${targets.length}개의 ELV 최적 데미지를 계산해서 저장합니다. 진행할까요?`)) {
+            status.innerText = "";
+            return;
+         }
+         elvBulkState = { onlyMissing, targets, nextIdx: 0, queued: 0, updated: 0, failed: 0 };
+      }
+
+      const st = elvBulkState;
+      const targets = st.targets;
       const bondList = [5, 5, 5, 5, 5];
       const buffer = [];
-      let done = 0, queued = 0, updated = 0, failed = 0;
+      const startIdx = st.nextIdx;
       const startAt = performance.now();
 
-      for (const c of targets) {
+      while (st.nextIdx < targets.length) {
          if (elvBulkStop) break;
+
+         const c = targets[st.nextIdx];
+         let interrupted = false;
 
          try {
             const ids = String(c.compstr).trim().split(/\s+/).map(Number);
             const result = await findBestElvFor(ids, c.description, bondList, () => elvBulkStop);
-            if (result && result.dmg > 0) {                 // 0보다 클 때만
+
+            if (!result && elvBulkStop) {
+               interrupted = true;
+            } else if (result && result.dmg > 0) {
                const elvStr = result.codes.join("");
-               // 스냅샷 값과 같으면 보낼 필요 없음 (최종 판단은 서버에서)
                if (result.dmg !== (c.dmgElv ?? 0) || elvStr !== c.elv) {
-                  buffer.push({
-                     compId: c.id,
-                     compstr: c.compstr,
-                     dmgElv: result.dmg,
-                     elv: elvStr
-                  });
-                  queued++;
+                  buffer.push({ compId: c.id, compstr: c.compstr, dmgElv: result.dmg, elv: elvStr });
+                  st.queued++;
                }
             }
          } catch (e) {
-            failed++;
+            st.failed++;
             console.log(`조합 ${c.id} 계산 실패`, e);
          }
-         done++;
+
+         if (interrupted) break;
+         st.nextIdx++;
 
          if (buffer.length >= ELV_BULK_CHUNK) {
-            updated += await sendElvChunk(buffer.splice(0));
-            await elvSleep(ELV_BULK_REST_MS);   // 서버 부하 분산
+            st.updated += await sendElvChunk(buffer.splice(0));
+            await elvSleep(ELV_BULK_REST_MS);
          }
 
+         const processed = st.nextIdx - startIdx;
          const elapsed = (performance.now() - startAt) / 1000;
-         const eta = Math.ceil(elapsed / done * (targets.length - done));
-         status.innerText = `${done} / ${targets.length} 계산 · 전송 ${queued} · 저장 ${updated} · 실패 ${failed} · 남은 시간 약 ${eta}초`;
+         const eta = Math.ceil(elapsed / processed * (targets.length - st.nextIdx));
+         status.innerText = `${st.nextIdx} / ${targets.length} 계산 · 전송 ${st.queued} · 저장 ${st.updated} · 실패 ${st.failed} · 남은 시간 약 ${eta}초`;
       }
 
-      if (buffer.length) updated += await sendElvChunk(buffer.splice(0));
-      status.innerText = `${elvBulkStop ? "중지됨" : "완료"} : ${done} / ${targets.length} 계산 · 저장 ${updated} · 실패 ${failed}`;
+      if (buffer.length) st.updated += await sendElvChunk(buffer.splice(0));
+
+      const finished = st.nextIdx >= targets.length;
+      status.innerText = `${finished ? "완료" : "중지됨"} : ${st.nextIdx} / ${targets.length} 계산 · 전송 ${st.queued} · 저장 ${st.updated} · 실패 ${st.failed}`;
+      if (finished) elvBulkState = null;
    } finally {
       hitAll = true;
       elvBulkRunning = false;
-      btn.disabled = false;
+      btns.forEach(b => b.disabled = false);
    }
 }
 
@@ -327,4 +358,10 @@ async function deleteInvalidComps() {
       invalidRunning = false;
       checkBtn.disabled = delBtn.disabled = false;
    }
+}
+
+// ELV가 비어 있는 조합인지 (elv 없음/형식 오류, 또는 dmgElv가 0 이하)
+function isElvMissing(c) {
+   const validElv = typeof c.elv === "string" && /^[1-3]{20}$/.test(c.elv);
+   return !validElv || !(c.dmgElv > 0);
 }

@@ -206,3 +206,12 @@
   border-style: solid;
   border-color: transparent transparent #FFF transparent;
 }
+
+#ttb {
+   box-sizing: border-box;
+   border: 2px solid transparent;
+}
+
+#ttb.elv-active {
+   border-color: #ff8800;
+}

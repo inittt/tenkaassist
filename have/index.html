@@ -65,28 +65,10 @@
             </div>
          </div>
          <span id="unit">억</span>
-         <div class="select_dropdown">
-            <div class="dropdown" style="width:3rem;">
-               <button id="btn3" class="dropdown-btn" style="height:1.5rem; width:3rem;"><img class="icon-middle" src="../images/elements/ico_none.png"><span class="absolute-right">▼</span></button>
-               <div id="drop3" class="dropdown-content" style="width:3rem;">
-                  <input type="radio" id="b36" name="b3" value="none" checked>
-                  <label id="l_b36" for="b36"><img class="icon-middle" src="../images/elements/ico_none.png"></label>
-                  <input type="radio" id="b35" name="b3" value="fire">
-                  <label id="l_b35" for="b35"><img class="icon-middle" src="../images/elements/ico_fire.png"></label>
-                  <input type="radio" id="b34" name="b3" value="water">
-                  <label id="l_b34" for="b34"><img class="icon-middle" src="../images/elements/ico_water.png"></label>
-                  <input type="radio" id="b33" name="b3" value="wind">
-                  <label id="l_b33" for="b33"><img class="icon-middle" src="../images/elements/ico_wind.png"></label>
-                  <input type="radio" id="b32" name="b3" value="light">
-                  <label id="l_b32" for="b32"><img class="icon-middle" src="../images/elements/ico_light.png"></label>
-                  <input type="radio" id="b31" name="b3" value="dark">
-                  <label id="l_b31" for="b31"><img class="icon-middle" src="../images/elements/ico_dark.png"></label>
-               </div>
-            </div>
-         </div>
+         <button id="elvBtn" class="elvButton elvOff" style="width:3rem;">ELV</button>
          <button class="icon-btn i-gear" onclick="open_option()" style="margin:0; margin-left:0.3rem;"><img class="icon" src="../images/icons/ico-gear.svg"></button>
       </div>
-      <div class="block">
+      <div id="ownedBlock" class="block">
          <div style="display: flex; justify-content: space-between;">
             <div class="icon-copy-btn" onclick="setClipBoard()">
                <img class="icon" src="../images/icons/ico-copy.svg" style="vertical-align: middle;" alt="copy">

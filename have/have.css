@@ -212,3 +212,32 @@
 .border-btm {
    border-bottom:1px solid white;
 }
+
+/*elv 버튼 커스텀*/
+.elvButton {
+   margin-left:0.5rem;
+   width:4.5rem;
+   border: 2px solid white;
+   font-weight: bold;
+   cursor: pointer;
+   border-radius: 0.3rem;
+   padding: 0.3rem 0.3rem;
+   background-color: #a21d1d;
+   color:white;
+}
+
+.elvOn {
+   background-color: #ff8800;
+}
+.elvOff {
+   background-color: transparent;
+}
+
+#ownedBlock {
+   box-sizing: border-box;
+   border: 2px solid transparent;
+}
+
+#ownedBlock.elv-active {
+   border-color: #ff8800;
+}

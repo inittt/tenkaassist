@@ -2,6 +2,13 @@ const params = new URLSearchParams(window.location.search);
 const chIds = params.get('list'), chBonds = params.get('bond');
 const boss_element_str = params.get('bossEl') == null ? "none" : params.get('bossEl');
 
+const useElv = params.get('elv') === 'true';
+// "11111213122111212213" → ["1111", "1213", ...] / 형식이 틀리거나 없으면 null
+function parseElv(str) {
+   if (typeof str !== "string" || !/^[1-3]{20}$/.test(str)) return null;
+   return [0, 1, 2, 3, 4].map(i => str.slice(i * 4, i * 4 + 4));
+}
+
 if (params.get('hitAll') != null && params.get('hitAll') == "false") hitAll = false;
 const hpUpMap = new Map();
 for(let d of chJSON.data) hpUpMap.set(d.id, d.hpUp == undefined ? 0 : d.hpUp);
@@ -108,6 +115,7 @@ function setTooltip() {
 
 document.addEventListener("DOMContentLoaded", function() {
    setTooltip();
+   if (useElv) document.getElementById("ttb").classList.add("elv-active");
    if (boss_element != -1) {
       document.getElementById("element-image").innerHTML = 
          `<img class="icon-big" src="../images/elements/ico_${boss_element_str}.png">`;
@@ -357,24 +365,35 @@ function setPossible() {
       }
       if (_err) {_err = false; continue;}
 
+      // ELV 모드: 저장된 elv가 없는 조합은 제외
+      let elvCodes = null;
+      if (useElv) {
+         elvCodes = parseElv(d.elv);
+         if (elvCodes == null) continue;
+      }
+      // elv가 있을 때만 6번째 인자를 넘겨서, 기존 계산은 호출 형태까지 그대로 유지
+      const calc = (bossEl) => elvCodes
+         ? autoCalc(compList, d.description, glbBonds, bossEl, _optionList, elvCodes)
+         : autoCalc(compList, d.description, glbBonds, bossEl, _optionList);
+
       if (boss_element == -1 && hitAll == true) {
-         if (d.dmg5 > 0 && limit_fit > d.dmg5) continue;
-
-         if (glbBonds.every(item => item === 5) && d.dmg5 > 0) d.fit13t = d.dmg5;
-         else if (glbBonds.every(item => item === 1) && d.dmg1 > 0) d.fit13t = d.dmg1;
-         else d.fit13t = autoCalc(compList, d.description, glbBonds, -1, _optionList);
-
-         if (d.fit13t >= limit_fit) {
-            if (d.fit13t > maxCur13t) maxCur13t = d.fit13t;
-            possible.push(d);
+         if (useElv) {
+            if (d.dmgElv > 0 && limit_fit > d.dmgElv) continue;
+            if (glbBonds.every(item => item === 5) && d.dmgElv > 0) d.fit13t = d.dmgElv;
+            else d.fit13t = calc(-1);
+         } else {
+            if (d.dmg5 > 0 && limit_fit > d.dmg5) continue;
+            if (glbBonds.every(item => item === 5) && d.dmg5 > 0) d.fit13t = d.dmg5;
+            else if (glbBonds.every(item => item === 1) && d.dmg1 > 0) d.fit13t = d.dmg1;
+            else d.fit13t = calc(-1);
          }
       } else {
-         d.fit13t = autoCalc(compList, d.description, glbBonds, boss_element, _optionList);
+         d.fit13t = calc(boss_element);
+      }
 
-         if (d.fit13t >= limit_fit) {
-            if (d.fit13t > maxCur13t) maxCur13t = d.fit13t;
-            possible.push(d);
-         }
+      if (d.fit13t >= limit_fit) {
+         if (d.fit13t > maxCur13t) maxCur13t = d.fit13t;
+         possible.push(d);
       }
    }
    // UI 진행률 업데이트

@@ -1,4 +1,4 @@
-let checkElementN, checkRoleN, checkRarityN, isOn = false;
+let checkElementN, checkRoleN, checkRarityN, elvOn = false;
 const curHeader = 5;
 
 const selected = [];
@@ -32,7 +32,15 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownContent1.style.display = "none";
       });
    });
+   
+   const toggleButton = document.getElementById('elvBtn');
+   toggleButton.addEventListener('click', () => {
+      elvOn = toggleButton.classList.toggle('elvOn');
+      toggleButton.classList.toggle('elvOff', !elvOn);
+      document.getElementById('ownedBlock').classList.toggle('elv-active', elvOn);
+   });
 
+   makeOptionUI();
    const dropdownBtn3 = document.getElementById(`btn3`);
    const dropdownContent3 = document.getElementById(`drop3`);
    dropdownBtn3.addEventListener("click", function() {
@@ -49,7 +57,6 @@ document.addEventListener("DOMContentLoaded", function() {
          dropdownContent3.style.display = "none";
       });
    });
-   makeOptionUI();
 });
 
 
@@ -109,7 +116,7 @@ function searchDeck() {
    const bel = document.querySelector('input[name="b3"]:checked').value;
    const hitAll = document.getElementById('hitAllChkBox').checked;
 
-   location.href = `${address}/make/?hpUp=${hpUp}&fit13t=${fit13t}&list=${go}&bond=${b}&bossEl=${bel}&options=${options}&hitAll=${hitAll}`;
+   location.href = `${address}/make/?hpUp=${hpUp}&fit13t=${fit13t}&list=${go}&bond=${b}&bossEl=${bel}&options=${options}&hitAll=${hitAll}&elv=${elvOn}`;
 }
 function getB2Value() {
    const input = document.querySelector('input[name="b2"]');
@@ -420,6 +427,28 @@ function makeOptionUI() {
       `<div style="width:100%; display:flex; justify-content: space-between;">
          <div></div>
          <img class="i-x" src="../images/icons/ico-x.svg" onclick="close_option()">
+      </div>`,
+      `<div class="flex align-item-center border-btm" style="justify-content:center; padding-bottom:0.4rem;">
+         <span>${t("적 속성")} : </span>
+         <div class="select_dropdown">
+            <div class="dropdown" style="width:3rem;">
+               <button id="btn3" class="dropdown-btn" style="height:1.5rem; width:3rem;"><img class="icon-middle" src="../images/elements/ico_none.png"><span class="absolute-right">▼</span></button>
+               <div id="drop3" class="dropdown-content" style="width:3rem;">
+                  <input type="radio" id="b36" name="b3" value="none" checked>
+                  <label id="l_b36" for="b36"><img class="icon-middle" src="../images/elements/ico_none.png"></label>
+                  <input type="radio" id="b35" name="b3" value="fire">
+                  <label id="l_b35" for="b35"><img class="icon-middle" src="../images/elements/ico_fire.png"></label>
+                  <input type="radio" id="b34" name="b3" value="water">
+                  <label id="l_b34" for="b34"><img class="icon-middle" src="../images/elements/ico_water.png"></label>
+                  <input type="radio" id="b33" name="b3" value="wind">
+                  <label id="l_b33" for="b33"><img class="icon-middle" src="../images/elements/ico_wind.png"></label>
+                  <input type="radio" id="b32" name="b3" value="light">
+                  <label id="l_b32" for="b32"><img class="icon-middle" src="../images/elements/ico_light.png"></label>
+                  <input type="radio" id="b31" name="b3" value="dark">
+                  <label id="l_b31" for="b31"><img class="icon-middle" src="../images/elements/ico_dark.png"></label>
+               </div>
+            </div>
+         </div>
       </div>`,
       `<div class="flex align-item-center border-btm" style="justify-content:center; padding-bottom:0.4rem;">
          <input type="checkbox" id="hitAllChkBox" style="width:1rem; height:1rem; cursor:pointer;" class="exclude-checkbox" checked>&nbsp;

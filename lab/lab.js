@@ -17,6 +17,15 @@ else {
   _bond = items.every(num => !isNaN(num) && num >= 1 && num <= 5) ? items : null;
 }
 
+// elv 파라미터: 캐릭터 id별 4자리 코드로 기억 (순서가 바뀌어도 캐릭터를 따라가도록)
+let elvParam = params.get('elv'), _elvById = null;
+if (elvParam !== null && /^[1-3]{20}$/.test(elvParam) && selected.length === 5) {
+   _elvById = new Map();
+   selected.forEach((id, i) => {
+      if (!_elvById.has(id)) _elvById.set(id, elvParam.slice(i * 4, i * 4 + 4));
+   });
+}
+
 const chJsonList = chJSON.data.slice();
 document.addEventListener("DOMContentLoaded", function() {
    const searchInput = document.getElementById('searchInput');
@@ -110,10 +119,18 @@ function getBondList() {
    return b_arr;
 }
 
+// 현재 선택 순서에 맞춰 elv 문자열 재조립 (코드가 없는 캐릭터는 "1111")
+function getElvStr() {
+   if (!_elvById) return null;
+   return selected.map(id => _elvById.get(id) ?? "1111").join("");
+}
+
 // 시작 버튼 누를시
 function startSimulator() {
    if (selected.length != 5) return alert(t("5개의 캐릭터를 선택해주세요"));
-   location.href = `${address}/lab/option/?list=${selected}&bond=${getBondList()}`;
+   const elvStr = getElvStr();
+   location.href = `${address}/lab/option/?list=${selected}&bond=${getBondList()}`
+      + (elvStr ? `&elv=${elvStr}` : "");
 }
 
 // 검색창에 선택된 캐릭터 이미지 띄우기
