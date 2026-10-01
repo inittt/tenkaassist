@@ -241,7 +241,7 @@ function endGame() {
    msg.push(`${t("허수턴")} : ${scarecrowTurn}`);
    msg.push(`${t("13턴딜")} : ${dmg13.toLocaleString()}`);
 
-   const command_tmp = command.join("");   // 예: "1평2평3궁4평5방1평..."
+   const command_tmp = command.join("").replace(/,$/, "");   // 끝 쉼표 제거
    console.log(command_tmp);
    
    if (isValidComp(idList) && bondList.every(e => e == 5) && scarecrowTurn <= 50) {
@@ -256,7 +256,7 @@ function endGame() {
 }
 
 function saveBond1() {
-   const command_tmp = command.join("");   // 예: "1평2평3궁4평5방1평..."
+   const command_tmp = command.join("").replace(/,$/, "");   // 끝 쉼표 제거
 
    const formData = new FormData();
    formData.append("name", `${comp[0].name}덱`);
