@@ -124,9 +124,7 @@ const cdDifList = [
 ];
 function setCommandCustom(idList, command, bondList) {
    // 배열/문자열 체크
-   const _cmd = Array.isArray(command) 
-      ? command 
-      : (command ? command.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat() : []);
+   const { cmd: _cmd, starts } = parseCommand(command);   // ← 교체
 
    // 대상 캐릭터가 없으면 원본 그대로 반환
    if (!cdDifList.some(cd => idList.includes(cd))) return _cmd;
@@ -171,15 +169,16 @@ function setCommandCustom(idList, command, bondList) {
       if (_cmd[i] == null) continue;
 
       const c = _cmd[i];
-      const idx = Number(c[0]) - 1; 
-      const act = c[1];            
-      const curId = idList[idx];    
+      const idx = Number(c[0]) - 1;
+      const act = c[1];
+      const curId = idList[idx];
 
-      // 한 턴에 같은 캐릭터가 또 행동하려고 하면 ➡️ 실제 인게임 턴이 바뀐 것임
-      if (actCheck[idx] === true) {
-         flushTurnCommands(currentTurnCmds); 
-         currentTurnCmds = [];               
-         currentTurn++; // 실제 턴 증가
+      // 쉼표 형식이면 기록된 턴 경계를, 아니면 "같은 캐릭터 재행동"으로 추측
+      const isNewTurn = starts ? (i > 0 && starts.has(i)) : actCheck[idx] === true;
+      if (isNewTurn) {
+         flushTurnCommands(currentTurnCmds);
+         currentTurnCmds = [];
+         currentTurn++;
          actCheck.fill(false);
       }
       actCheck[idx] = true;
@@ -223,4 +222,25 @@ function setCommandCustom(idList, command, bondList) {
    // 마지막 턴 잔여 명령어 처리
    flushTurnCommands(currentTurnCmds);
    return newCmd;
+}
+
+// 커맨드 파싱. 쉼표 형식이면 턴 시작 위치(starts)도 함께 반환
+function parseCommand(command) {
+   if (Array.isArray(command)) return { cmd: command, starts: null };
+   if (!command) return { cmd: [], starts: null };
+
+   if (command.includes(",")) {
+      const cmd = [], starts = new Set();
+      for (const seg of command.split(",")) {
+         const tokens = seg.match(/\d+[평궁방]/g);
+         if (!tokens) continue;
+         starts.add(cmd.length);
+         cmd.push(...tokens);
+      }
+      return { cmd, starts };
+   }
+
+   // 옛 형식("N턴 : ..." 또는 구분자 없는 압축 형식): 턴 경계는 추측
+   const cmd = command.split('\n').map(line => line.match(/\d+[평궁방]/g)).filter(Boolean).flat();
+   return { cmd, starts: null };
 }

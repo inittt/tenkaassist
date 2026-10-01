@@ -211,6 +211,7 @@ function decActNum() {actNum--; updateGuide();}
 let scarecrowTurn = 99, isEnd = false;
 function endAct() {
    if (isAllActed()) {
+      command[command.length - 1] += ","; // ← 이 행동으로 턴이 끝남을 표시
       if (hitAll) for(let c of comp) c.hit();
       for(let i = 0; i < 5; i++) comp[i].turnover();
       nextTurn();
@@ -240,16 +241,7 @@ function endGame() {
    msg.push(`${t("허수턴")} : ${scarecrowTurn}`);
    msg.push(`${t("13턴딜")} : ${dmg13.toLocaleString()}`);
 
-   const cmd = [];
-   for(let i = 0; i < command.length; i++) {
-      if (i%5 == 0) {
-         if (Math.floor(i/5)+1 < 10) cmd.push(" ");
-         cmd.push(`${Math.floor(i/5)+1}턴 : `);
-      }
-      cmd.push(command[i]);
-      cmd.push((i+1)%5 == 0 ? "\n" : " > "); 
-   }
-   const command_tmp = cmd.join("");
+   const command_tmp = command.join("");   // 예: "1평2평3궁4평5방1평..."
    console.log(command_tmp);
    
    if (isValidComp(idList) && bondList.every(e => e == 5) && scarecrowTurn <= 50) {
@@ -264,17 +256,7 @@ function endGame() {
 }
 
 function saveBond1() {
-   const cmd = [];
-   for(let i = 0; i < 13*5; i++) {
-      if (i%5 == 0) {
-         if (Math.floor(i/5)+1 < 10) cmd.push(" ");
-         cmd.push(`${Math.floor(i/5)+1}턴 : `);
-      }
-      cmd.push(command[i]);
-      cmd.push((i+1)%5 == 0 ? "\n" : " > "); 
-   }
-   const command_tmp = cmd.join("");
-
+   const command_tmp = command.join("");   // 예: "1평2평3궁4평5방1평..."
 
    const formData = new FormData();
    formData.append("name", `${comp[0].name}덱`);

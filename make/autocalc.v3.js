@@ -73,15 +73,14 @@ function setBossLi() {
 }
 
 function auto() {
-   if (GLOBAL_COMMAND_LIST.length < 13*5) return 0;
-   for(let i = 0; i < 13*5; i++) {
+   for (let i = 0; i < GLOBAL_COMMAND_LIST.length && GLOBAL_TURN <= 13; i++) {
       const guide_idx = Number(GLOBAL_COMMAND_LIST[i][0])-1;
       const guide_act = GLOBAL_COMMAND_LIST[i][1];
       if (guide_act == "평") {if (!do_atk(guide_idx)) return 0;}
       else if (guide_act == "궁") {if (!do_ult(guide_idx)) return 0;}
       else if (guide_act == "방") {if (!do_def(guide_idx)) return 0;}
    }
-   return dmg13;
+   return GLOBAL_TURN > 13 ? dmg13 : 0;   // 13턴을 다 채우지 못했으면 0
 }
 
 function do_ult(idx) {
@@ -131,7 +130,7 @@ function isAllActed() {
 function setElvBuff(idx) {
    const curList = Array.from(GLOBAL_ELV_LIST[idx], (c, i) => `v${i + 1}${c}`);
    const e = comp[idx].element, r = comp[idx].role;
-   for(v of curList) {
+   for (const v of curList) {
       switch(v) {
          case "v11":
             if (r == 0) {tbf(comp[idx], "가뎀증", 9, "딜러:데미지+", always);}

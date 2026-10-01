@@ -126,7 +126,7 @@ const dataUrls = [
    "raw.staticdn.net"
 ];
 const dataOwner = 'inittt', dataRepo = 'tenkaassist_data', dataPath = 'data/data.json';
-let elvBulkRunning = false, elvBulkStop = false;
+let elvBulkRunning = false, elvBulkStop = false, elvBulkState = null;
 
 async function fetchJsonFromGitHub(_url, _owner, _repo, _branch, _filePath) {
    if (!_url) return null;

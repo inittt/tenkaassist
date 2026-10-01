@@ -177,18 +177,6 @@ body {
    height:0.8rem;
 }
 
-.guide-now {
-   animation: blink 1s infinite;
-}
-
-@keyframes blink {
-   /*
-   0%, 100% {border-color: #916a00;}
-   */
-   0%, 100% {border-color: #ffe59d;}
-   50% { border-color: #ffbb00;}
-}
-
 #autoBtn {
    display:none;
 }
@@ -210,4 +198,24 @@ body {
    margin-left:0.5rem;
    height: 2rem;
    width: 2rem;
+}
+
+/* 가이드: 궁극기·방어 버튼은 흰색 테두리 깜빡임 */
+.act_btn.guide-now {
+   animation: guide-blink-border 0.8s infinite;
+}
+
+/* 가이드: 캐릭터는 속성색 테두리를 유지하고, 바깥 링만 깜빡임 */
+#comp .ch_border.guide-now {
+   animation: guide-blink-ring 0.8s infinite;
+}
+
+@keyframes guide-blink-border {
+   0%, 100% { border-color: transparent; }
+   50%      { border-color: white; }
+}
+
+@keyframes guide-blink-ring {
+   0%, 100% { box-shadow: 0 0 0 2px transparent; }
+   50%      { box-shadow: 0 0 0 2px white; }
 }
