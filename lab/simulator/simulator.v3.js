@@ -6,13 +6,21 @@ const bond = params.get('bond'), bondList = bond == null ? [5, 5, 5, 5, 5] : bon
 const hpParam = params.get('hp'), liParam = params.get('li');
 const ability_options = params.get('options').split(",").map(Number);
 
-const elvOn = params.get("elv") === "true";
+// elvMask: "10100" → 캐릭터별 ELV 적용 여부
+const elvMaskParam = params.get("elvMask") ?? "00000";
+const elvOnList = /^[01]{5}$/.test(elvMaskParam)
+   ? elvMaskParam.split("").map(c => c === "1")
+   : [false, false, false, false, false];
+
+// elvList: "11111213122111212213" → [["v11","v21","v31","v41"], ...]
 const elvStr = params.get("elvList");
-let elvList = [];
-if (elvOn && elvStr) {
-   const flatList = elvStr.split("v").filter(Boolean).map((val) => "v" + val);
-   for (let i = 0; i < flatList.length; i += 4) elvList.push(flatList.slice(i, i + 4));
-}
+const elvValid = elvStr != null && /^[1-3]{20}$/.test(elvStr);
+if (!elvValid) elvOnList.fill(false);   // ELV 값이 없거나 형식이 틀리면 전부 끔
+
+const elvList = Array.from({ length: 5 }, (_, i) => {
+   const code = elvValid ? elvStr.slice(i * 4, i * 4 + 4) : "1111";
+   return [...code].map((d, gi) => `v${gi + 1}${d}`);
+});
 
 const gboss = Number(params.get('gboss'));
 let cdMinus1Cnt = 0;
@@ -167,7 +175,7 @@ function makeComp(list) {
                   <div id="el${idx}" class="element${ch.element} ch_border z-4"></div>
                </div>
                <div id="cd-max${idx}" class="shd-container"><div id="shd${idx}" class="shd"></div></div>
-               <div class="text-mini" ${elvOn ? `style="text-decoration : underline"` : ""}>${t(ch.name)}</div>
+               <div class="text-mini" ${elvOnList[idx] ? `style="text-decoration : underline"` : ""}>${t(ch.name)}</div>
             </div>
             <img id="def${idx}" class="act_btn" onclick="do_def(${idx})" src="${address}/images/icons/btn_down.png">
             <div class="act_btn" style="height:1.2rem;">
@@ -209,10 +217,10 @@ function start(compIds) {
    
    setBossLi();
 
-   const elvCoef = elvOn ? 1.06 : 1;
    let curIdx = 0;
    for(const id of compIds) {
       const tmp = chJSON.data.filter(ch => ch.id === id)[0];
+      const elvCoef = elvOnList[curIdx] ? 1.06 : 1;   // ← 캐릭터별
       const coef_atk = a_o[curIdx][0]*a_o[curIdx][2]*1.25*elvCoef;
       const coef_hp = a_o[curIdx][0]*a_o[curIdx][3]*1.25*elvCoef;
       curIdx++;
@@ -239,12 +247,11 @@ function start(compIds) {
    comp[0].leader();
    for(let i = 0; i < 5; i++) {
       comp[i].passive();
-      if (elvOn) setElvBuff(i);
+      if (elvOnList[i]) setElvBuff(i);   // ← 캐릭터별
    }
    setGboss();
    for(let i = 0; i < 5; i++) comp[i].turnstart();
    for(let i = 0; i < 5; i++) if (comp[i].isSealed) comp[i].isActed = true;
-   
 
    savedData.length = 0;
    updateAll();
@@ -253,7 +260,7 @@ function start(compIds) {
 function setElvBuff(idx) {
    const curList = elvList[idx];
    const e = comp[idx].element, r = comp[idx].role;
-   for(v of curList) {
+   for(const v of curList) {
       switch(v) {
          case "v11":
             if (r == 0) {tbf(comp[idx], "가뎀증", 9, "딜러:데미지+", always);}
@@ -397,9 +404,9 @@ function endGame() {
    updateAll();
 
    const msg = [];
-   msg.push(`Target : ${getBossElement()}/${getBossInitBuffStr()}${elvOn ? " / ELV" : ""}`);
+   msg.push(`Target : ${getBossElement()}/${getBossInitBuffStr()}`);
    msg.push(`${t(comp[0].name)}, ${t(comp[1].name)}, ${t(comp[2].name)}, ${t(comp[3].name)}, ${t(comp[4].name)}`);
-   msg.push(`${t("구속")} : ${bondList[0]}, ${bondList[1]}, ${bondList[2]}, ${bondList[3]}, ${bondList[4]}`);
+   msg.push(`${t("구속")} : ${bondList.map((b, i) => elvOnList[i] ? `${b}e` : b).join(", ")}`);
    msg.push(`${t("조련")} : ${getDisLev(a_o[0][0])}, ${getDisLev(a_o[1][0])}, ${getDisLev(a_o[2][0])}, ${getDisLev(a_o[3][0])}, ${getDisLev(a_o[4][0])}`);
    msg.push(`${t("잠재")} : ${a_o[0][1]}, ${a_o[1][1]}, ${a_o[2][1]}, ${a_o[3][1]}, ${a_o[4][1]}`);
    msg.push(`${t("허수턴")} : ${scarecrowTurn} / ${t("CD-1")} : ${cdMinus1Cnt} ${t("회")}`);

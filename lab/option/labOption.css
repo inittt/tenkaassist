@@ -262,9 +262,9 @@ input[type="checkbox"]:checked + label::before {
 
 /*elv 버튼 커스텀*/
 .elvButton {
-   margin-left:1rem;
    width:4.5rem;
-   border: 2px solid white;
+   height:1.5rem;
+   border: 1px solid white;
    font-weight: bold;
    cursor: pointer;
    border-radius: 0.3rem;

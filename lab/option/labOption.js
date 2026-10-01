@@ -10,7 +10,8 @@ const initElvCodes = (elvParam && /^[1-3]{20}$/.test(elvParam))
    ? Array.from({ length: 5 }, (_, i) => elvParam.slice(i * 4, i * 4 + 4))
    : null;
 
-let hp_set = 10854389981, elvOn = false;
+let hp_set = 10854389981;
+const elvOnList = [false, false, false, false, false];
 document.addEventListener("DOMContentLoaded", function() {
    const chNameList = [];
    for(let id of idList) {
@@ -63,15 +64,6 @@ document.addEventListener("DOMContentLoaded", function() {
       });
    });
 
-   const toggleButton = document.getElementById('elvBtn');
-   toggleButton.addEventListener('click', () => {
-      elvOn = toggleButton.classList.toggle('elvOn');
-      toggleButton.classList.toggle('elvOff', !elvOn);
-      if (elvOn) document.getElementById("elv").style.display = "block";
-      else document.getElementById("elv").style.display = "none";
-   });
-
-
    setComp();
    
    // 잠재 ui 만들기
@@ -112,6 +104,7 @@ function makeComp(list) {
 
       stringArr.push(`
          <div style="display:flex; flex-direction:column; align-items:center">
+            <button id="elvBtn${idx}" class="elvButton elvOff" style="width:3rem; margin-bottom:0.2rem;" onclick="toggleCharElv(${idx})">ELV</button>
             <div class="character" style="margin:0.2rem;">
                <div id="atk${idx}" style="position:relative; padding:0.2rem;">
                   <img id="img${idx}" src="${address}/images/${img(ch.id)}" class="img z-1" alt="">
@@ -160,11 +153,12 @@ function goLab() {
    const selectedGB = document.querySelector('input[name="gboss"]:checked');
    const gboss = selectedGB ? selectedGB.value : 0;
 
-   // 1. 선택된 ELV를 단순 문자열로 생성
+   // 1. 선택된 ELV를 단순 문자열로 생성 (꺼진 캐릭터 행도 값은 그대로 포함)
    const elvStr = getELVString();
+   const elvMask = elvOnList.map(v => v ? 1 : 0).join("");   // 예: "10100"
 
    // 2. URL로 전달
-   location.href = `${address}/lab/simulator/?hp=${hp}&el=${el}&options=${options}&li=${li}&list=${chIds}&bond=${bond}&hitAll=${hitAll}&gboss=${gboss}&elv=${elvOn}&elvList=${elvStr}`;
+   location.href = `${address}/lab/simulator/?hp=${hp}&el=${el}&options=${options}&li=${li}&list=${chIds}&bond=${bond}&hitAll=${hitAll}&gboss=${gboss}&elvMask=${elvMask}&elvList=${elvStr}`;
 }
 
 // 잠재능력 -----------------------------
@@ -401,7 +395,7 @@ function setELVList() {
    // 1. 테이블 시작
    res.push(`<table class="elv-table" style="width: 100%; border-collapse: collapse;"><tbody>`);
 
-   for (const id of idList) {
+   idList.forEach((id, idx) => {
       const cur = getCharacter(id);
       const e = cur.element, r = cur.role;
 
@@ -413,8 +407,8 @@ function setELVList() {
       ];
 
       // 하나의 행(tr) 시작
-      let charHtml = `<tr class="character-elv-item" data-id="${id}" data-element="${e}" data-role="${r}" style="border-bottom: 1px solid #fff;">`;
-      
+      let charHtml = `<tr id="elv-row-${idx}" class="character-elv-item" data-id="${id}" data-element="${e}" data-role="${r}" style="border-bottom: 1px solid #fff; display:none;">`;
+
       // [1열] 캐릭터 이름
       charHtml += `
          <td class="character-name" style="width: 5rem; min-width: 5rem; white-space: nowrap; font-weight: bold; vertical-align: top; padding: 0.5rem 0.4rem 0.5rem 0;">
@@ -436,7 +430,7 @@ function setELVList() {
       groups.forEach((g) => {
          const defaultVal = g.options[0];
          const defaultText = getELVText(e, r, defaultVal);
-         const radioName = `elv_${id}_${g.groupName}`;
+         const radioName = `elv_${idx}_${g.groupName}`;
 
          // dropdown 요소 너비 15rem 지정
          charHtml += `
@@ -466,7 +460,7 @@ function setELVList() {
 
       charHtml += `</div></td></tr>`;
       res.push(charHtml);
-   }
+   });
 
    res.push(`</tbody></table>`);
    elvBlock.innerHTML = res.join("");
@@ -565,18 +559,19 @@ function getELVText(e, r, v) {
    }
 }
 
+// 선택된 ELV를 20자리 숫자 문자열로 생성 (예: "11111213122111212213")
 function getELVString() {
+   const rows = document.querySelectorAll("#elv .character-elv-item");
    let elvStr = "";
-   const rows = document.querySelectorAll(".character-elv-item");
 
-   rows.forEach((row) => {
-      const checkedInputs = row.querySelectorAll('input[type="radio"]:checked');
-      checkedInputs.forEach((input) => {
-         elvStr += input.value; // 예: "v11" + "v22" + "v31" + "v43" ...
+   rows.forEach((row, idx) => {
+      ["g1", "g2", "g3", "g4"].forEach((g) => {
+         const checked = row.querySelector(`input[name="elv_${idx}_${g}"]:checked`);
+         elvStr += checked ? checked.value.slice(2) : "1";   // "v12" → "2", 없으면 첫 번째 옵션
       });
    });
 
-   return elvStr; // "v11v22v31v43v12v21v32v42..."
+   return elvStr;
 }
 
 // 코드 배열을 ELV 드롭다운에 반영 (행 순서 기준)
@@ -596,4 +591,20 @@ function applyInitElvCodes(codes) {
          if (btnText) btnText.innerText = getELVText(e, r, val);
       });
    });
+}
+
+// 캐릭터별 ELV 켜기/끄기
+function toggleCharElv(idx) {
+   const on = elvOnList[idx] = !elvOnList[idx];
+
+   const btn = document.getElementById(`elvBtn${idx}`);
+   btn.classList.toggle('elvOn', on);
+   btn.classList.toggle('elvOff', !on);
+
+   // 해당 캐릭터의 ELV 행만 표시/숨김
+   const row = document.getElementById(`elv-row-${idx}`);
+   if (row) row.style.display = on ? "" : "none";
+
+   // 하나라도 켜져 있으면 ELV 블록 표시
+   document.getElementById("elv").style.display = elvOnList.some(v => v) ? "block" : "none";
 }
