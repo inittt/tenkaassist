@@ -85,6 +85,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
          sort = 0;
          if ("1구" === this.value) sort = 1;
+         else if ("ELV" === this.value) sort = 2;
          setData();
       });
    });
@@ -115,6 +116,7 @@ function setData() {
    const res = [];
    const data = JSON.parse(JSON.stringify(server_data));
    if (sort == 1) data.sort((a, b) => b.dmg1 - a.dmg1);
+   else if (sort == 2) data.sort((a, b) => (b.dmgElv || 0) - (a.dmgElv || 0));
    else data.sort((a, b) => b.dmg5 - a.dmg5);
    
    const sortedList = data.slice(0, Math.floor(data.length * 0.2));
