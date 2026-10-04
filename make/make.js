@@ -115,7 +115,6 @@ function setTooltip() {
 
 document.addEventListener("DOMContentLoaded", function() {
    setTooltip();
-   if (useElv) document.getElementById("ttb").classList.add("elv-active");
    if (boss_element != -1) {
       document.getElementById("element-image").innerHTML = 
          `<img class="icon-big" src="../images/elements/ico_${boss_element_str}.png">`;
@@ -622,6 +621,7 @@ function loadBlockAllDeck() {
 
       let compblock = document.createElement('div');
       compblock.classList.add("block", "hoverblock");
+      if (useElv) compblock.classList.add("elv-comp");
       compblock.style.width = "100%";
       compblock.innerHTML = stringArr.join("");
       compblock.addEventListener("click", function() {
@@ -666,6 +666,7 @@ function loadBlockNDeck() {
 
       let deckBundle = document.createElement('div');
       deckBundle.classList.add('deckBundle');
+      if (useElv) deckBundle.classList.add('elv-bundle');
 
       const newP = document.createElement('p');
       newP.classList.add('newP');
