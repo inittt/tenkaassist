@@ -66,6 +66,7 @@ function setTooltip() {
    tt.classList.remove('clicked');
    });
    const str = [];
+   str.push(`ELV : ${useElv ? "on" : "off"}`);
 
    // 속성 툴팁
    let _el;
@@ -85,7 +86,7 @@ function setTooltip() {
    str.push("♥ "+ _hu + " & " + _lf);
    
    // 피격판정
-   const _htxt = t("매턴 전체공격") + (hitAll ? " (on)" : " (off)");
+   const _htxt = t("매턴 전체공격") + (hitAll ? " : on" : " : off");
    str.push(_htxt);
 
    // 조건
