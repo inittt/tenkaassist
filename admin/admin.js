@@ -360,8 +360,10 @@ async function deleteInvalidComps() {
    }
 }
 
-// ELV가 비어 있는 조합인지 (elv 없음/형식 오류, 또는 dmgElv가 0 이하)
+// ELV 누락분 대상인지:
+// 5구 기록이 있어(dmg5 > 0) 5구 기준 계산이 가능한데, elv가 없거나 형식이 틀렸거나 dmgElv가 0 이하인 조합
 function isElvMissing(c) {
+   if (!(c.dmg5 > 0)) return false;
    const validElv = typeof c.elv === "string" && /^[1-3]{20}$/.test(c.elv);
    return !validElv || !(c.dmgElv > 0);
 }
