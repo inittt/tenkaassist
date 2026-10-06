@@ -303,10 +303,8 @@ function checkRole(num) {
    getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, document.getElementById('searchInput').value);
 }
 function checkRarity(num) {
-   var obj = document.querySelectorAll('input[type="radio"][name="rarity"]');
-   const reversedObj = Array.from(obj).reverse(); 
    if (checkRarityN === num) {
-      reversedObj[num].checked = false;
+      document.querySelector(`input[type="radio"][name="rarity"][value="${num}"]`).checked = false;
       checkRarityN = null;
    } else checkRarityN = num;
    getCharactersWithCondition(checkElementN, checkRoleN, checkRarityN, document.getElementById('searchInput').value);
