@@ -75,6 +75,7 @@ function getCharactersWithCondition(element, role, rarity, search) {
       if (role != null) b2 = (obj.role === role); 
       if (rarity != null) {
          if (rarity == 0) b3 = (eternalList.includes(obj.name));
+         else if (rarity == 4) b3 = (pickUpList.includes(obj.name));
          else b3 = (obj.rarity === rarity);
       }
       if (search != "") b4 = (obj.name.includes(search) || obj.fullname.includes(search) || exNames.has(obj.name) || drIds.has(obj.id));
