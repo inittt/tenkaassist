@@ -197,6 +197,7 @@ function act_after() {
       comp[i].isHealed = false;
       comp[i].isHealed2 = false;
       comp[i].isHealed3 = false;
+      comp[i].isHit = false;
    }
    endAct();
    actNum++;
