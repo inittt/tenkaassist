@@ -4,7 +4,20 @@ let sort = 1;
 let cnt = 1;
 const curHeader = 1;
 
+// ===== 공지 배너 =====
+// 새 공지를 올릴 때는 id를 바꾸기
+// 공지를 내리려면 NOTICE = null 로
+const NOTICE = {
+   id: "2026-10-07",
+   ko: `현재 인게임 버그 : ${t("할벤더")}의 ELV옵션이 힐러로 설정됨. ${t("농바알")} 리더 효과 중 「공격 시 ${t("가뎀증")} 4.54% 증가 (최대 8중첩)」이 최대 4중첩까지만 적용됨`,
+   en: `Current in-game bug: ${t("할벤더")}'s ELV options are set to Healer. ${t("농바알")}'s leader effect 「On attack, ${t("가뎀증")} +4.54% (up to 8 stacks)」 only applies up to 4 stacks.`,
+   sc: `当前游戏内BUG：${t("할벤더")}的ELV选项被设定为治疗。${t("농바알")}的队长效果「攻击时${t("가뎀증")}提升4.54%（最多叠加8层）」最多只生效4层。`,
+   tc: `目前遊戲內BUG：${t("할벤더")}的ELV選項被設定為治療。${t("농바알")}的隊長效果「攻擊時${t("가뎀증")}提升4.54%（最多疊加8層）」最多只生效4層。`,
+   jp: `現在のゲーム内バグ：${t("할벤더")}のELVオプションがヒーラーに設定されています。${t("농바알")}のリーダー効果「攻撃時${t("가뎀증")}4.54%増加（最大8重複）」が最大4重複までしか適用されません。`
+};
+
 document.addEventListener("DOMContentLoaded", function() {
+   setNotice();
    const dropdownBtn = document.getElementById("dropdownBtn");
    const dropdownContent = document.querySelector(".dropdown-content");
 
@@ -160,4 +173,68 @@ function clickLoadOnoff(bool) {
 function clickLoad() {
    if (isLoading) return;
    getComps();
+}
+
+function setNotice() {
+   const box = document.getElementById("notice-banner");
+   if (!box || !NOTICE) return;
+
+   // 이미 닫은 공지면 표시하지 않음
+   try {
+      if (localStorage.getItem("noticeClosed") === NOTICE.id) return;
+   } catch (e) {}
+
+   // 한 줄로 표시하므로 줄바꿈은 구분점으로 바꿈
+   const text = (NOTICE[lang] ?? NOTICE.ko).replace(/\s*\n\s*/g, "   ·   ");
+
+   const viewport = document.createElement("div");
+   viewport.className = "notice-viewport";
+   const track = document.createElement("div");
+   track.className = "notice-track";
+   const item = document.createElement("span");
+   item.className = "notice-item";
+   item.textContent = text;
+   track.appendChild(item);
+   viewport.appendChild(track);
+
+   const close = document.createElement("button");
+   close.className = "notice-close";
+   close.setAttribute("aria-label", "close");
+   close.textContent = "✕";
+   close.addEventListener("click", () => {
+      box.style.display = "none";
+      try { localStorage.setItem("noticeClosed", NOTICE.id); } catch (e) {}
+   });
+
+   box.append(viewport, close);
+   box.style.display = "flex";
+
+   // 글자가 배너보다 길 때만 흐르게 함 (화면 크기가 바뀌면 다시 판단)
+   const update = () => {
+      track.classList.remove("is-scrolling");
+      track.querySelectorAll(".notice-clone").forEach(el => el.remove());
+
+      const gap = parseFloat(getComputedStyle(item).paddingRight) || 0;
+      const itemWidth = item.getBoundingClientRect().width;
+      if (itemWidth - gap <= viewport.clientWidth) return;
+
+      // 같은 문구를 하나 더 이어 붙여서 끊김 없이 반복
+      const clone = item.cloneNode(true);
+      clone.classList.add("notice-clone");
+      clone.setAttribute("aria-hidden", "true");
+      track.appendChild(clone);
+
+      const distance = itemWidth;   // 문구 + 간격
+      track.style.setProperty("--notice-distance", `${distance}px`);
+      track.style.setProperty("--notice-duration", `${distance / 45}s`);   // 초당 60px
+      track.classList.add("is-scrolling");
+   };
+   update();
+   if (document.fonts && document.fonts.ready) document.fonts.ready.then(update);
+
+   let resizeTimer;
+   window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(update, 150);
+   });
 }

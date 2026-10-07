@@ -1,7 +1,6 @@
 const liberationList = ["바알", "사탄", "이블리스", "살루시아", "란", "루루", "밀레", "섹돌", "치즈루", "노엘리", "페바알","신이블","이치카", "적나나", "해나나", "할살루"];
 const eternalList = ["바알", "사탄", "이블리스", "살루시아", "란", "루루", "밀레", "섹돌", "울타", "아야네", "무엘라", "치즈루", "아르티아", "메스미나", "라티아", "슈텐", "카시피나", "에피나", "이노리", "미루", "파야", "에밀리", "안젤리카", "렌", "테키", "세라프", "하쿠", "모모"];
-const pickUpList = [];
-const pickUpList2 = ["할벤더", "농바알",
+const pickUpList = ["할벤더", "농바알",
    "신사기", "장사탄", "강밀레", 
    "미아", "수사탄", "크브리", 
    "풍오라", "크이블", "로티아", "할야네", "닌저", "장바알", "루티", "할쿠"];
@@ -190,9 +189,8 @@ const chJSON = { data : [
 {ok : true, id : 10211, rarity : 3, po:1, hp:1062474, atk:266615, cd:4, atkMag:139.3, ultMag:566.5, fullname : "전설의 성검 칼리버", name : "칼리버", element : 3, role : 0, hpUp : 55},
 {ok : true, id : 10212, rarity : 3, po:1, hp:952197, atk:297174, cd:3, atkMag:0, ultMag:719.5, fullname : "종언의 마검 비타", name : "비타", element : 4, role : 0, hpUp : 55},
 {ok : true, id : 10213, rarity : 3, po:1, hp:1000028, atk:283001, cd:50, atkMag:0, ultMag:0, fullname : "속세의 요도 후지카", name : "후지카", element : 0, role : 0, hpUp : 55},
-
-// {ok : true, id : 10214, rarity : 3, hp:1144408, atk:247571, cd:2, atkMag:100, ultMag:257, fullname : "천진난만 소악마 바알", name : "농바알", element : 1, role : 4, hpUp : 55},
-// {ok : true, id : 10215, rarity : 3, hp:1072218, atk:263957, cd:4, atkMag:0, ultMag:0, fullname : "비PC주의 울프걸 라벤더", name : "할벤더", element : 2, role : 3, hpUp : 55},
+{ok : true, id : 10214, rarity : 3, hp:1144408, atk:247571, cd:2, atkMag:100, ultMag:257, fullname : "천진난만 소악마 바알", name : "농바알", element : 1, role : 4, hpUp : 55},
+{ok : true, id : 10215, rarity : 3, hp:1072218, atk:263957, cd:4, atkMag:0, ultMag:0, fullname : "비PC주의 울프걸 라벤더", name : "할벤더", element : 2, role : 3, hpUp : 55},
 
 /*
       element  role     rarity

@@ -701,3 +701,55 @@ header {
    .h-nav-button {display:none;}
    .h-box {display:flex;}
 }
+
+
+/* 메인 공지 배너 */
+.notice-banner {
+   display: flex;
+   align-items: center;
+   gap: 0.5rem;
+   margin: 0.5rem;
+   padding: 0.5rem 0.6rem 0.5rem 0.8rem;
+   border-radius: 0.3rem;
+   background-color: #3a2a12;
+   border: 1px solid #ff8800;
+   border-left: 0.35rem solid #ff8800;
+   color: #ffe2bf;
+}
+.notice-viewport {
+   flex: 1;
+   min-width: 0;          /* flex 안에서 넘치는 글자를 잘라내기 위해 필요 */
+   overflow: hidden;
+}
+.notice-track {
+   display: inline-flex;
+   white-space: nowrap;
+}
+.notice-item {
+   padding-right: 3rem;   /* 반복될 때 문구 사이 간격 */
+   font-size: 0.95rem;
+   font-weight: bold;
+}
+.notice-track.is-scrolling {
+   animation: notice-scroll var(--notice-duration) linear infinite;
+   will-change: transform;   /* 움직이는 글자를 별도 레이어로 처리해 더 부드럽게 */
+}
+.notice-banner:hover .notice-track.is-scrolling {
+   animation-play-state: paused;   /* 마우스를 올리면 멈춤 */
+}
+@keyframes notice-scroll {
+   from { transform: translateX(0); }
+   to   { transform: translateX(calc(-1 * var(--notice-distance))); }
+}
+.notice-close {
+   background: transparent;
+   border: none;
+   color: #ffb35c;
+   font-size: 1.1rem;
+   line-height: 1;
+   cursor: pointer;
+   padding: 0 0.2rem;
+}
+.notice-close:hover {
+   color: white;
+}
