@@ -383,7 +383,7 @@ function decActNum() {actNum--; updateGuide();}
 let scarecrowTurn = 99, isEnd = false;
 function endAct() {
    if (isAllActed()) {
-      if (hitAll) for(let c of comp) c.hit();
+      if (hitAll) for(let c of comp) {c.hit(); c.isHit = false;}
       for(let i = 0; i < 5; i++) {
          if (reserve_hit[i]) comp[i].hit();
          reserve_hit[i] = false;

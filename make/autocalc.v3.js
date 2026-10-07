@@ -114,7 +114,7 @@ function act_after() {
 
 function endAct() {
    if (isAllActed()) {
-      if (hitAll) for(let c of comp) c.hit();
+      if (hitAll) for(let c of comp) {c.hit(); c.isHit = false;}
       for(let i = 0; i < 5; i++) comp[i].turnover();
       nextTurn();
       boss.def = false;

@@ -213,7 +213,7 @@ let scarecrowTurn = 99, isEnd = false;
 function endAct() {
    if (isAllActed()) {
       command[command.length - 1] += ","; // ← 이 행동으로 턴이 끝남을 표시
-      if (hitAll) for(let c of comp) c.hit();
+      if (hitAll) for(let c of comp) {c.hit(); c.isHit = false;}
       for(let i = 0; i < 5; i++) comp[i].turnover();
       nextTurn();
       boss.def = false;
