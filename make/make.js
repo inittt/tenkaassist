@@ -259,24 +259,31 @@ function getAllCompsFromServer(url_idx) {
 
 // Result cache -------------------------------------------------------------
 // The recommendation calculation depends only on the page query (owned characters, bonds, options) and the upstream data snapshot, never on the display language. Caching the computed result in sessionStorage makes a language-switch reload render instantly instead of recomputing everything. The cache entry is keyed by the exact query string and carries the data commit date it was computed from, so it is invalidated whenever the search conditions or the upstream data change.
-const CACHE_KEY = "makeResultCache.v1";
+const CACHE_KEY = "makeResultCache.v3";
 function makeCacheKey() { return window.location.search; }
 function clearMakeCache() {
    try { sessionStorage.removeItem(CACHE_KEY); } catch (e) { /* ignore */ }
 }
+// 저장 형식(v3): 조합 하나를 [id, "캐릭터id-10000 을 쉼표로 이은 문자열", fit13t] 로 압축한다.
+// 덱 이름은 "첫 번째 캐릭터 이름 + 덱" 이므로 저장하지 않고 읽을 때 다시 만든다.
+// 혹시 이 규칙과 다른 이름이 있으면 그 조합만 4번째 칸에 이름을 함께 저장한다.
+// 전체가 들어가지 않으면 일부만 저장하지 않고 캐시를 포기한다. 일부만 저장하면 언어 변경 후 결과가 달라지기 때문.
+function defaultDeckName(compstr) {
+   const ch = getCharacter(compstr[0]);
+   return ch ? ch.name + "덱" : null;
+}
 function writeMakeCache(list, maxFit) {
    try {
-      // Keep only the minimal fields needed for rendering, and drop the huge `description` command strings; they can be several tens of megabytes, far beyond the sessionStorage quota.
-      const slim = list.map(d => ({ id: d.id, name: d.name, compstr: d.compstr, fit13t: d.fit13t }));
-      slim.sort((a, b) => b.fit13t - a.fit13t);
-      const payload = JSON.stringify({ key: makeCacheKey(), commitDate: dataCommitDate, maxCur13t: maxFit, list: slim });
+      const rows = list.map(d => {
+         const r = [d.id, d.compstr.map(c => c - 10000).join(","), d.fit13t];
+         if (d.name !== defaultDeckName(d.compstr)) r.push(d.name);
+         return r;
+      });
+      const payload = JSON.stringify({ key: makeCacheKey(), commitDate: dataCommitDate, maxCur13t: maxFit, rows: rows });
       sessionStorage.setItem(CACHE_KEY, payload);
    } catch (e) {
-      // Quota exceeded or storage unavailable: the feature simply stays off and the original recomputation path is used. If even the slimmed payload does not fit, keep the most relevant top entries, and in the worst case give up silently.
-      try {
-         const trimmed = { key: makeCacheKey(), commitDate: dataCommitDate, maxCur13t: maxFit, list: list.slice(0, 3000).map(d => ({ id: d.id, name: d.name, compstr: d.compstr, fit13t: d.fit13t })) };
-         sessionStorage.setItem(CACHE_KEY, JSON.stringify(trimmed));
-      } catch (e2) { clearMakeCache(); }
+      // 용량 초과 또는 저장소 사용 불가: 캐시 없이 원래대로 매번 계산
+      clearMakeCache();
    }
 }
 function readMakeCache() {
@@ -285,6 +292,11 @@ function readMakeCache() {
       if (raw == null) return null;
       const cache = JSON.parse(raw);
       if (cache.key !== makeCacheKey()) return null; // different search conditions
+      if (!Array.isArray(cache.rows)) return null;
+      cache.list = cache.rows.map(r => {
+         const compstr = r[1].split(",").map(c => Number(c) + 10000);
+         return { id: r[0], name: r.length > 3 ? r[3] : defaultDeckName(compstr), compstr: compstr, fit13t: r[2] };
+      });
       return cache;
    } catch (e) { return null; }
 }
