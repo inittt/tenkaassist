@@ -339,7 +339,29 @@ let maxCur13t = 0, _err = false;
 const glbBonds = [5,5,5,5,5];
 
 const BATCH_SIZE = 100; 
-const SLEEP_MS = 20;
+// Background-tab-safe chunk scheduling: browsers throttle setTimeout in hidden tabs down to about once per minute, which stalls this calculation the moment the user switches tabs. MessagePort deliveries are ordinary tasks (not timer tasks), so they keep firing at full speed in hidden tabs; each delivery still yields to the event loop, preserving the chunked-run contract.
+const chunkQueue = [];
+const chunkPort = new MessageChannel();
+chunkPort.port1.onmessage = () => { const job = chunkQueue.shift(); if (job) job(); };
+function scheduleChunk(fn) {
+   chunkQueue.push(fn);
+   chunkPort.port2.postMessage(0);
+}
+
+// Page-visibility repaint gate: while the tab is hidden no DOM write can show, so the hot loops park their latest progress value instead of churning innerHTML off-screen. A visibilitychange back to visible flushes the parked value immediately, then normal repainting resumes.
+let pendingPaint = null;
+function paintNow(fn) {
+   if (document.hidden) { pendingPaint = fn; return; }
+   pendingPaint = null;
+   fn();
+}
+document.addEventListener('visibilitychange', () => {
+   if (document.hidden) return;
+   const flush = pendingPaint;
+   pendingPaint = null;
+   if (flush) flush();
+});
+
 function setPossible() {
    if (!dataAll || dataAll.length === 0) return;
 
@@ -398,10 +420,11 @@ function setPossible() {
    }
    // UI 진행률 업데이트
    const processedCount = window.totalDataLength - dataAll.length;
-   default_per.innerHTML = `${(processedCount * 100 / window.totalDataLength).toFixed(2)}%`;
+   const pctText = `${(processedCount * 100 / window.totalDataLength).toFixed(2)}%`;
+   paintNow(() => { default_per.innerHTML = pctText; });
 
    if (dataAll.length > 0) {
-      setTimeout(() => setPossible(), SLEEP_MS);
+      scheduleChunk(() => setPossible());
    } else {
       isCalculating = false;
       possibleCopy = possible.slice(); 
@@ -417,6 +440,7 @@ function setPossible() {
 const e9 = 1000000000;
 let maxHeap, curCalc;
 function makeBlock() {
+   pendingPaint = null;   // a container rebuild supersedes any progress repaint parked while hidden
    page = 0;
    bundleCnt = 0;
    maxHeap = new MaxHeap();
@@ -731,6 +755,7 @@ function backtrack0(backtrackIdx) {
    updateProgress();
    if (backtrackCounter <= 0) {
       cc.innerHTML = "";
+      pendingPaint = null;   // final content replaces the progress block; drop any repaint parked while hidden
    
       if (maxHeap.size() == 0) {
          if (limit_fit < 0 && curCalc > 0) {
@@ -750,7 +775,7 @@ function backtrack0(backtrackIdx) {
       maxHeapSize = maxHeap.size();
       makeBlockNDeck();
    }
-   else setTimeout(() => backtrack0(backtrackIdx+1), 16);
+   else scheduleChunk(() => backtrack0(backtrackIdx+1));
 }
 
 function calcUpToTxt(numTxt) {
@@ -817,9 +842,14 @@ function backtrack(startIndex, selectedEntities, usedNumbers) {
    }
 }
 
+let lastProgressPaint = 0;
 function updateProgress() {
+   // Throttle the repaint to 250ms: the message-pump scheduler ticks far faster than the old 16㎳ timer chain, and rewriting cc.innerHTML on every tick would become its own bottleneck.
+   const now = performance.now();
+   if (now - lastProgressPaint < 250) return;
+   lastProgressPaint = now;
    const per = (100 - backtrackCounter*100/possible.length).toFixed(2);
-   cc.innerHTML = `<div class="block">${t("계산중")}...${per}%</div>`;
+   paintNow(() => { cc.innerHTML = `<div class="block">${t("계산중")}...${per}%</div>`; });
 }
 
 /* observer 세팅 로직 ------------------------------------------------------- */
