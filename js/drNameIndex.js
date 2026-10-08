@@ -72,14 +72,14 @@
          const map = new Map();
          for (const r of obj.rows) map.set(r.id, r);
          if (map.size < 50) return null;
-         return map;
+         return { map: map, url: obj.url || null };
       } catch (e) { return null; }
    }
 
-   function toCache(map) {
+   function toCache(map, url) {
       try {
          const rows = Array.from(map.values()).map(function (r) { return r; });
-         localStorage.setItem(LS_KEY, JSON.stringify({ ts: Date.now(), rows: rows }));
+         localStorage.setItem(LS_KEY, JSON.stringify({ ts: Date.now(), rows: rows, url: url }));
       } catch (e) { /* storage full/unavailable: ignore, feature still works in-memory */ }
    }
 
@@ -91,17 +91,40 @@
    const api = {
       get ready() { return index !== null; },
 
+      // 缓存命中后的后台新鲜度核对：bundle 文件名带内容哈希，站点重部署（新角色、数据更新）就会改名。只拉几㎅的 HTML 比对哈希列表即可近乎零成本发现更新，仅当哈希确实变化时才拉取大体积 bundle。这样缓存索引不会把刚上线的角色一直挡到 7 天 TTL 过期为止。
+      revalidate: function (cachedUrl) {
+         if (inflight) return;
+         inflight = discoverBundles()
+            .then(function (paths) {
+               if (!paths.length) return null;
+               if (cachedUrl && paths.indexOf(cachedUrl) >= 0) return null;   // 同一次部署：缓存数据仍是最新的，跳过
+               return fetchIndexFrom(paths);
+            })
+            .then(function (res) {
+               inflight = null;
+               if (res && res.map && res.map.size) {
+                  toCache(res.map, res.url);
+                  finish(res.map);   // 通知订阅方，让已打开的页面重跑查询、把新角色补进结果
+               }
+            })
+            .catch(function () { inflight = null; });
+      },
+
       // Background load: resolves with the index Map (or null on failure). Idempotent.
       load: function () {
          if (index) return Promise.resolve(index);
          const cached = fromCache();
-         if (cached) { finish(cached); return Promise.resolve(cached); }
+         if (cached) {
+            finish(cached.map);
+            api.revalidate(cached.url);   // 缓存立即可用，后台静默刷新
+            return Promise.resolve(cached.map);
+         }
          if (inflight) return inflight;
          inflight = discoverBundles()
             .then(fetchIndexFrom)
             .then(function (res) {
                inflight = null;
-               if (res && res.map && res.map.size) { toCache(res.map); finish(res.map); return res.map; }
+               if (res && res.map && res.map.size) { toCache(res.map, res.url); finish(res.map); return res.map; }
                return null;               // nothing usable: stay silent, allow a later retry
             })
             .catch(function () { inflight = null; return null; });
