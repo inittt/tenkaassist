@@ -264,7 +264,7 @@ function makeSRBlock(list) {
       if (ch.per == 0) continue;
       str.push(`
          <div style="margin:0.5rem; display:flex; flex-wrap:wrap; justify-content: space-around">
-            <div width:"3rem;">${decimalPercent(ch.per*100)}%</div>
+            <div style="width:3rem;">${decimalPercent(ch.per*100)}%</div>
             <div style="width:14rem;">${getTranslatedTags(ch.cur)}</div>
          </div>
       `)
