@@ -374,7 +374,149 @@ document.addEventListener('visibilitychange', () => {
    if (flush) flush();
 });
 
+// 병렬 계산(Web Worker) ----------------------------------------------------
+// 조합끼리는 서로 영향이 없으므로 여러 Worker 에 나눠 동시에 계산한다.
+// 필터링/결과 정리는 기존과 같은 순서로 하므로 결과(목록·순서)는 기존 방식과 동일.
+// Worker 를 쓸 수 없거나 오류가 나면 자동으로 기존 방식(setPossibleSerial)으로 계산한다.
+const USE_WORKERS = true;
+const WORKER_BATCH = 50;
+let workerRunId = 0;
+function canUseWorkers() {
+   return USE_WORKERS && typeof Worker !== "undefined" && location.protocol !== "file:";
+}
+function getWorkerCount() {
+   const hc = navigator.hardwareConcurrency || 4;
+   return Math.max(2, Math.min(8, hc - 1));
+}
 function setPossible() {
+   if (!dataAll || dataAll.length === 0) return;
+   if (canUseWorkers()) setPossibleParallel();
+   else setPossibleSerial();
+}
+
+function setPossibleParallel() {
+   const runId = ++workerRunId;
+   isCalculating = true;
+
+   // 1) 기존 setPossible 과 같은 순서(dataAll 끝에서부터)로 필터링하고, 계산이 필요한 조합만 작업으로 만든다.
+   const order = [];   // 결과에 들어갈 후보 (기존 처리 순서 그대로)
+   const jobs = [];    // [번호, compList, description, commands, bonds, bossEl, optionList, elvCodes]
+   try {
+   for (let idx = dataAll.length - 1; idx >= 0; idx--) {
+      const d = dataAll[idx];
+      const compList = d.compstr;
+
+      if (hpUpMap.get(compList[0]) < limit_hp_up) continue;
+      if (_optionList != null && !check_class_option(compList)) continue;
+
+      const bonds = [];
+      let err = false;
+      for (let j = 0; j < compList.length; j++) {
+         const val = cbMap.get(compList[j]);
+         if (val === undefined) {err = true; break;}
+         bonds.push(val);
+      }
+      if (err) continue;
+
+      let elvCodes = null;
+      if (useElv) {
+         elvCodes = parseElv(d.elv);
+         if (elvCodes == null) continue;
+      }
+      const addJob = (bossEl) => {
+         // 커맨드 해석은 페이지에서 미리 (autoCalc 와 같은 조건일 때만 해석)
+         const cmd = d.description;
+         const commands = (cmd == null || cmd.length < 10) ? null : setCommandCustom(compList, cmd, bonds);
+         jobs.push([order.length, compList, cmd, commands, bonds, bossEl, _optionList, elvCodes]);
+      };
+
+      if (boss_element == -1 && hitAll == true) {
+         if (useElv) {
+            if (d.dmgElv > 0 && limit_fit > d.dmgElv) continue;
+            if (bonds.every(item => item === 5) && d.dmgElv > 0) d.fit13t = d.dmgElv;
+            else addJob(-1);
+         } else {
+            if (d.dmg5 > 0 && limit_fit > d.dmg5) continue;
+            if (bonds.every(item => item === 5) && d.dmg5 > 0) d.fit13t = d.dmg5;
+            else if (bonds.every(item => item === 1) && d.dmg1 > 0) d.fit13t = d.dmg1;
+            else addJob(-1);
+         }
+      } else {
+         addJob(boss_element);
+      }
+      order.push(d);
+   }
+   } catch (e) { console.warn("병렬 계산 준비 실패, 기존 방식으로 계산합니다:", e); setPossibleSerial(); return; }
+
+   // 3) 모든 계산이 끝나면 기존과 같은 순서로 결과 정리
+   const finish = () => {
+      maxCur13t = 0;
+      possible.length = 0;
+      for (const d of order) {
+         if (d.fit13t >= limit_fit) {
+            if (d.fit13t > maxCur13t) maxCur13t = d.fit13t;
+            possible.push(d);
+         }
+      }
+      paintNow(() => { default_per.innerHTML = "100.00%"; });
+      isCalculating = false;
+      possibleCopy = possible.slice();
+      makeBlock();
+      writeMakeCache(possibleCopy, maxCur13t);
+      window.totalDataLength = null;
+      dataAll = null;
+   };
+   if (jobs.length === 0) { finish(); return; }
+
+   // 2) Worker 들에 나눠서 계산
+   const workers = [];
+   let next = 0, done = 0, failed = false;
+   const fallback = (reason) => {
+      if (failed) return;
+      failed = true;
+      console.warn("병렬 계산 실패, 기존 방식으로 계산합니다:", reason);
+      for (const w of workers) w.terminate();
+      if (runId !== workerRunId) return;
+      window.totalDataLength = null;
+      setPossibleSerial();
+   };
+   const sendNext = (w) => {
+      if (next >= jobs.length) return;
+      const batch = jobs.slice(next, next + WORKER_BATCH);
+      next += batch.length;
+      try { w.postMessage({type: "job", batch: batch}); } catch (e) { fallback(e); }
+   };
+
+   const n = Math.min(getWorkerCount(), Math.ceil(jobs.length / WORKER_BATCH));
+   for (let i = 0; i < n; i++) {
+      let w;
+      try { w = new Worker("./calcWorker.js"); } catch (e) { fallback(e); return; }
+      workers.push(w);
+      w.onerror = (e) => { e.preventDefault(); fallback(e.message || e); };
+      w.onmessage = (e) => {
+         if (failed || runId !== workerRunId) return;
+         const m = e.data;
+         if (m.type === "ready") { sendNext(w); sendNext(w); return; }   // 2묶음씩 미리 보내 대기 시간 줄임
+         if (m.type === "error") { fallback(m.message); return; }
+         if (m.type === "done") {
+            for (const [k, fit] of m.res) order[k].fit13t = fit;
+            done += m.res.length;
+            const pctText = `${(done * 100 / jobs.length).toFixed(2)}%`;
+            paintNow(() => { default_per.innerHTML = pctText; });
+            if (done >= jobs.length) {
+               for (const x of workers) x.terminate();
+               finish();
+            } else sendNext(w);
+         }
+      };
+      try {
+         w.postMessage({type: "init", hitAll: hitAll});
+      } catch (e) { fallback(e); return; }
+   }
+}
+
+// 기존 방식 (한 스레드에서 100개씩 계산)
+function setPossibleSerial() {
    if (!dataAll || dataAll.length === 0) return;
 
    // 최초 실행 시에만 전체 데이터 크기 저장
@@ -436,7 +578,7 @@ function setPossible() {
    paintNow(() => { default_per.innerHTML = pctText; });
 
    if (dataAll.length > 0) {
-      scheduleChunk(() => setPossible());
+      scheduleChunk(() => setPossibleSerial());
    } else {
       isCalculating = false;
       possibleCopy = possible.slice(); 
