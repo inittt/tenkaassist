@@ -14,6 +14,8 @@
       .c-p:hover {border-color:white;}
       .y-m {cursor:pointer; margin-bottom:0.5rem; font-weight: bold; font-size: 1.1rem;}
       .d-n {display:none;}
+      /* 全站 body 的 user-select:none（防复制）连带导致公告韩文无法选中、无法使用翻译选区；这里只给公告内容恢复文本可选中 */
+      #main-container { user-select: text; -webkit-user-select: text; }
       hr {
          margin-top: 0.2rem;
          margin-bottom:0.2rem;
