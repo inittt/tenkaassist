@@ -329,8 +329,9 @@ function makeTxtBox(ym = "24/07", list, isOpen = false) {
 
     const displayClass = isOpen ? "" : "d-n";
 
-    return `<div class="block c-p" onclick="show('${idNum}')">
-        <div class="y-m">${title}</div>
+    // 展开/收起只挂在月份标题上：如果挂在整个块上，条目文本里的选中动作（单击落光标、双击选词、三击选句）都会触发折叠/展开，选区随之被清除，文本等于永远选不中
+    return `<div class="block c-p">
+        <div class="y-m" onclick="show('${idNum}')">${title}</div>
         <div id="ym-${idNum}" class="${displayClass}">${res.join("")}</div>
     </div>`;
 }
