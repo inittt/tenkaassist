@@ -387,6 +387,8 @@ function canUseWorkers() {
 function getWorkerCount() {
    const hc = navigator.hardwareConcurrency || 4;
    return Math.max(2, Math.min(8, hc - 1));
+   // const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+   // return Math.max(2, Math.min(isMobile ? 4 : 8, hc - 1));
 }
 function setPossible() {
    if (!dataAll || dataAll.length === 0) return;
