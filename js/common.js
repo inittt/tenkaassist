@@ -735,7 +735,7 @@ const translate = {
    "수살루" : {en : "S.Salucia", sc : "夏王", tc : "夏精", jp : "夏の日 セルシア"},
    "수저" : {en : "S.Caesar", sc : "夏凯", tc : "夏凱", jp : "夏の日 シーザー"},
    "수사탄" : {en : "S.Satan", sc : "夏旦", tc : "夏旦", jp : "夏の日 サタン"},
-   "헌미나" : {en : "D.Minayomi", sc : "魔剑", tc : "魔劍", jp : "ハンター 神無雪"}, // "Apex Hunter Minayomi"
+   "헌미나" : {en : "D.Minayomi", sc : "暗剑", tc : "暗劍", jp : "ハンター 神無雪"}, // "Apex Hunter Minayomi"
    "요이키" : {en : "Oniyoiki", sc : "鬼厨", tc : "鬼廚", jp : "鬼酔木"},
    "곤즈카" : {en : "Beer.Shizuka", sc : "酒静", tc : "酒靜", jp : "酔狂の宴 静"}, // "Drunken Feaster Shizuka"
    "츠바키" : {en : "Tsubaki", sc : "椿", tc : "椿", jp : "椿"},
