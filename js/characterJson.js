@@ -329,9 +329,10 @@ function getCompInvalidReason(ids) {
    if (ids.length != 5) return { kind: 'count', count: ids.length };
    const comp = ids.map(id => getCharacter(id));
 
-   // 농탄 + 반격 캐릭터
+   // 아군 피격 + 반격 캐릭터
+   const farmerList = [10153, 10215]; // 아군 피격 캐릭터 목록
    const refList = [10002, 10027, 10056, 10130, 10164]; // 반격캐 목록
-   const farmer = comp.find(i => i.id == 10153); // H.Satan
+   const farmer = comp.find(i => farmerList.includes(i.id));
    if (farmer) {
       const counters = comp.filter(i => refList.includes(i.id));
       if (counters.length) return { kind: 'blacklist', farmer, counters };
