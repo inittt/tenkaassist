@@ -384,6 +384,8 @@ const translate = {
    "최소조건" : {en : "Min", sc : "最低条件", tc : "最低條件", jp : "必要条件"},
    "상시\u200B" : {en : "Eternal", sc : "常驻", tc : "常駐", jp : "常駐"},
    "적 속성" : {en : "Enemy Attr", sc : "敌属性", tc : "敵屬性", jp : "敵属性"},
+   "마정석" : {en : "Demonite", sc : "魔晶石", tc : "魔晶石", jp : "魔晶石"},
+   "크리스탈" : {en : "Souls", sc : "魂晶", tc : "魂晶", jp : "クリスタル"},
 
 
    // 로그인

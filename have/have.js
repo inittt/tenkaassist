@@ -75,33 +75,58 @@ function getCharactersWithCondition(element, role, rarity, search) {
       if (role != null) b2 = (obj.role === role); 
       if (rarity != null) {
          if (rarity == 0) b3 = (eternalList.includes(obj.name));
-         else if (rarity == 4) b3 = (pickUpList.includes(obj.name));
+         else if (rarity == 4) b3 = true;
          else b3 = (obj.rarity === rarity);
       }
       if (search != "") b4 = (obj.name.includes(search) || obj.fullname.includes(search) || exNames.has(obj.name) || drIds.has(obj.id));
       return b1 && b2 && b3 && b4;
    });
-   let innerArray = [];
-   for(const champ of filteredData) {
-      let id = champ.id, name = champ.name, element = champ.element, role = champ.role;
-      let bond = selectedBond[selected.indexOf(id)];
-      let chk_option = "none";
-      if (isAny(id)) continue;
-      if (selected.includes(id)) chk_option = "block";
-      innerArray.push(`
-         <div class="character" onclick="clickedCh(${id})" style="margin:0.2rem;">
-            <div style="position:relative; padding:0.2rem;">
-               <img id="img_${id}" src="${address}/images/${img(id)}" class="img z-1" alt="">
-               <img id="el_${id}" src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">
-               ${liberationList.includes(name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
-               <div id="chk_${id}" class="have-chked z-3" style="display:${chk_option}">${numToBond(bond)}</div>
-               <div class="element${element} ch_img ch_border z-4"></div>
+
+   // PickUp: 배너별로 그룹 표시
+   if (rarity == 4) {
+      const byName = new Map(filteredData.map(o => [o.name, o]));
+      const groups = [];
+      for (const banner of pickUpBanners) {
+         const cards = banner.list
+            .map(n => byName.get(n))
+            .filter(Boolean)
+            .map(makeChCard)
+            .filter(Boolean);
+         if (cards.length === 0) continue; // 검색/필터로 비면 배너 자체 숨김
+         groups.push(`
+            <div class="pickup-group">
+               <div class="pickup-header">
+                  <span class="pickup-badge ${banner.type}">${t(pickUpCurrency[banner.type])}</span>
+               </div>
+               <div class="pickup-list">${cards.join("")}</div>
             </div>
-            <div class="text-mini">${t(name)}</div>
-         </div>
-      `);
+         `);
+      }
+      characterContainer.innerHTML = groups.join("");
+      return;
    }
-   characterContainer.innerHTML = innerArray.join("");
+
+   characterContainer.innerHTML = filteredData.map(makeChCard).filter(Boolean).join("");
+}
+
+function makeChCard(champ) {
+   const id = champ.id, name = champ.name, element = champ.element, role = champ.role;
+   if (isAny(id)) return "";
+   const idx = selected.indexOf(id);
+   const bond = selectedBond[idx];
+   const chk_option = idx !== -1 ? "block" : "none";
+   return `
+      <div class="character" onclick="clickedCh(${id})" style="margin:0.2rem;">
+         <div style="position:relative; padding:0.2rem;">
+            <img src="${address}/images/${img(id)}" class="img z-1" alt="">
+            <img src="${address}/images/icons/ro_${role}.webp" class="el-icon z-2">
+            ${liberationList.includes(name) ? `<img src="${address}/images/icons/liberation.webp" class="li-icon z-2">` : ""}
+            <div class="have-chked chk_${id} z-3" style="display:${chk_option}">${numToBond(bond)}</div>
+            <div class="element${element} ch_img ch_border z-4"></div>
+         </div>
+         <div class="text-mini">${t(name)}</div>
+      </div>
+   `;
 }
 
 // 검색 버튼 누를시
@@ -253,35 +278,37 @@ function numToBond(num) {
    }
 }
 
-// 클릭하면 체크표시 활성/비활성화, 리스트에 추가/제거
+// 같은 캐릭터 카드가 여러 개여도 모두 갱신
+function setChk(id, show, bond) {
+   document.querySelectorAll(`.chk_${id}`).forEach(el => {
+      el.style.display = show ? "block" : "none";
+      if (show) el.innerText = numToBond(bond);
+   });
+}
+
 function clickedCh(id) {
    let index = selected.indexOf(id);
    if (index === -1) {
       selected.push(id);
       selectedBond.push(1);
-      document.getElementById(`chk_${id}`).style.display = "block";
-      document.getElementById(`chk_${id}`).innerText = numToBond(1);
+      setChk(id, true, 1);
    } else if (selectedBond[index] == 5) {
       selected.splice(index, 1);
       selectedBond.splice(index, 1);
-      document.getElementById(`chk_${id}`).style.display = "none";
+      setChk(id, false);
    } else {
-      document.getElementById(`chk_${id}`).innerText = numToBond(++selectedBond[index]);
+      setChk(id, true, ++selectedBond[index]);
    }
    updateSelected();
 }
 
-// 검색창의 캐릭 클릭시 제거
 function clickedSel(div, id) {
    let index = selected.indexOf(id);
    if (index !== -1) {
       selected.splice(index, 1);
       selectedBond.splice(index, 1);
    }
-
-   let chk = document.getElementById(`chk_${id}`);
-   if (chk != null) chk.style.display = "none";
-
+   setChk(id, false);
    updateSelected();
 }
 

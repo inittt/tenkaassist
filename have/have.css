@@ -241,3 +241,33 @@
 #ownedBlock.elv-active {
    border-color: #ff8800;
 }
+
+.pickup-group {
+   flex: 0 0 100%;
+   width: 100%;
+   padding-bottom: 0.4rem;
+   margin-bottom: 0.4rem;
+   border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+}
+.pickup-group:last-child {
+   border-bottom: none;
+   margin-bottom: 0;
+}
+.pickup-header {
+   display: flex;
+   align-items: center;
+   margin: 0.2rem 0.4rem;
+}
+.pickup-badge {
+   padding: 0.1rem 0.5rem;
+   border-radius: 0.6rem;
+   font-size: 0.8rem;
+   font-weight: bold;
+   color: white;
+}
+.pickup-badge.demonite   { background-color: #1d8fd1; }
+.pickup-badge.souls { background-color: #7b3fd1; }
+.pickup-list {
+   display: flex;
+   flex-wrap: wrap;
+}
