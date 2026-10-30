@@ -386,6 +386,7 @@ const translate = {
    "적 속성" : {en : "Enemy Attr", sc : "敌属性", tc : "敵屬性", jp : "敵属性"},
    "마정석" : {en : "Demonite", sc : "魔晶石", tc : "魔晶石", jp : "魔晶石"},
    "크리스탈" : {en : "Souls", sc : "魂晶", tc : "魂晶", jp : "クリスタル"},
+   "위시" : {en : "Wish", sc : "心愿", tc : "心願", jp : "ウィッシュ"},
 
 
    // 로그인
