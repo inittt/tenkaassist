@@ -266,7 +266,7 @@ const translate = {
    "가아증" : {en : "increase armor output", sc : "造成护盾增加", tc : "造成護盾增加", jp : "加えるアーマー増加"},
    "받아증" : {en : "armor taken", sc : "受到护盾", tc : "受到護盾", jp : "受け取るアーマーの増加"}, 
    "받지뎀" : {en : "periodic dmg taken", sc : "受到持续伤害", tc : "受到持續傷害", jp : "受ける持続ダメージ増加"},
-   "속상감" : {en : "Decrease attribute buffs/debuffs by", sc : "减少属性相剋效果", tc : "減少屬性相剋效果", jp : "属性相性の低下"},
+   "속상감" : {en : "Decrease attribute buffs/debuffs by", sc : "减少属性相克效果", tc : "減少屬性相剋效果", jp : "属性相性の低下"},
    "가지증" : {en: "Increase DoT output", sc: "持续伤害增加", tc: "持續傷害增加", jp : "加える持続ダメージ増加"},
    "방경감" : {en : "Reduce defense effect", sc : "降低防御效果", tc : "降低防禦效果", jp : "防御効果を減少"},
    "방뎀증" : {en : "Increase dmg against Guard", sc : "对防御状态敌人伤害增加", tc : "對防禦狀態敵人傷害增加", jp : "ガード状態の敵へのダメージ増加"},
@@ -344,7 +344,7 @@ const translate = {
    "리더 {0} 편성 시에는 힐러를 편성할 수 없습니다 ({1})": {en: "When {0} is the leader, no healer can be in the team ({1})", sc: "队长为 {0} 时，队伍不能包含治疗者（{1}）", tc: "隊長為 {0} 時，隊伍不能包含治療者（{1}）", jp: "リーダーが {0} の場合、ヒーラーを編成できません（{1}）"},
    "리더 {0} 편성 시 팀원은 {1} 직군만 가능합니다 ({2} 위반)": {en: "When {0} is the leader, members must be {1} ({2} violates this)", sc: "队长为 {0} 时，队员只能是 {1}（{2} 不符合）", tc: "隊長為 {0} 時，隊員只能是 {1}（{2} 不符合）", jp: "リーダーが {0} の場合、メンバーは {1} のみ編成できます（{2} が違反）"},
    "리더 {0} 편성 시 힐러가 있거나 팀이 정확히 3종의 직군으로 구성되어야 합니다 (현재 {1}종)": {en: "When {0} is the leader, the team must include a healer or consist of exactly 3 distinct roles (currently {1})", sc: "队长为 {0} 时，队伍需含治疗者，或恰好由3种职业组成（当前{1}种）", tc: "隊長為 {0} 時，隊伍需含治療者，或恰好由3種職業組成（當前{1}種）", jp: "リーダーが {0} の場合、ヒーラーを含むか、ちょうど3種の職業で構成する必要があります（現在{1}種）"},
-   "등록 성공" : {en : "Register Successful", sc : "这队伍没有治疗能力", tc : "這隊伍沒有治療能力", jp : "登録成功"},
+   "등록 성공" : {en : "Register Successful", sc : "登记成功", tc : "登記成功", jp : "登録成功"},
    "조합 등록 실패" : {en : "Team registration failed", sc : "隊伍登記失敗", tc : "队伍登记失败", jp : "チーム登録失敗"},
    "데미지 측정을 하지 않거나 13턴 데미지(5)가 40억 미만인 조합은 주기적으로 삭제됩니다" : {en: "Teams that do not measure damage or have 13t dmg(5) below 4 billion will be periodically deleted.", sc: "未进行伤害测量或13回合伤害(5)低于40亿的团队将定期删除.", tc: "未進行傷害測量或13回合傷害(5)低於40億的團隊將定期刪除.", jp: "ダメージ測定を行っていない、または13ターンのダメージ(5)が40億未満のチームは定期的に削除されます"},
 
@@ -415,7 +415,7 @@ const translate = {
    "허수": {en : "dummy", sc: "木椿", tc: "木椿", jp: "かかし"},
    "체험": {en : "trial", sc: "试玩", tc: "試玩", jp: "体験"},
    "직접입력": {en : "manual", sc: "手动输入", tc: "手動輸入", jp: "手動入力"},
-   "속성 상성 감소": {en: "Decrease attribute buffs/debuffs by", sc: "减少属性相剋效果", tc: "減少屬性相剋效果", jp: "属性相性の低下"},
+   "속성 상성 감소": {en: "Decrease attribute buffs/debuffs by", sc: "减少属性相克效果", tc: "減少屬性相剋效果", jp: "属性相性の低下"},
    "받는 데미지 감소": {en: "Decrease damage taken by", sc: "减少受到的伤害", tc: "減少受到的傷害", jp: "受けるダメージ減少"},
    "받는 일반공격 데미지 감소": {en: "Decrease basic attack damage taken by", sc: "减少受到的基础攻击伤害", tc: "減少受到的基礎攻擊傷害", jp: "受ける一般攻撃ダメージ減少"},
    "받는 궁극기 데미지 감소": {en: "Decrease ultimate skill damage taken by", sc: "减少受到的终极技能伤害", tc: "減少受到的終極技能傷害", jp: "受けるスキルダメージ減少"},
@@ -687,7 +687,7 @@ const translate = {
    "유메" : {en : "Sakuya", sc : "店長", tc : "店長", jp : "咲野夢"}, // "SakuyaYume"
    "미루" : {en : "Miru", sc : "咪噜", tc : "咪嚕", jp : "杏仁ミル"},
    "카나" : {en : "Kana", sc : "花魁", tc : "花魁", jp : "香奈"},
-   "신빨강" : {en : "Q.Asida", sc : "星紅", tc : "星紅", jp : "二星の紅 アンスティー"},
+   "신빨강" : {en : "Q.Asida", sc : "星红", tc : "星紅", jp : "二星の紅 アンスティー"},
    "신파랑" : {en : "Q.Asina", sc : "银蓝", tc : "銀藍", jp : "銀河の蒼 アンスナー"},
    "수밀레" : {en : "S.Milae", sc : "夏天", tc : "夏天", jp : "夏の日 聖女ミラ"}, // "Summer Saint Milae"	
    "수엘리" : {en : "S.Noel", sc : "夏黑", tc : "夏黑", jp : "夏の日 ノエル"},
