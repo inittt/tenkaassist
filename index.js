@@ -7,15 +7,15 @@ const curHeader = 1;
 // ===== 공지 배너 =====
 // 새 공지를 올릴 때는 id를 바꾸기
 // 공지를 내리려면 NOTICE = null 로
-const NOTICE = null;
-// const NOTICE = {
-//    id: "2026-10-07b",
-//    ko: `현재 인게임 버그 : ${t("농바알")} 리더 효과 중 「공격 시 ${t("가뎀증")} 4.54% 증가 (최대 8중첩)」이 최대 4중첩까지만 적용됨`,
-//    en: `Current in-game bug: ${t("농바알")}'s leader effect 「On attack, ${t("가뎀증")} +4.54% (up to 8 stacks)」 only applies up to 4 stacks.`,
-//    sc: `当前游戏内BUG：${t("농바알")}的队长效果「攻击时${t("가뎀증")}提升4.54%（最多叠加8层）」最多只生效4层。`,
-//    tc: `目前遊戲內BUG：${t("농바알")}的隊長效果「攻擊時${t("가뎀증")}提升4.54%（最多疊加8層）」最多只生效4層。`,
-//    jp: `現在のゲーム内バグ：${t("농바알")}のリーダー効果「攻撃時${t("가뎀증")}4.54%増加（最大8重複）」が最大4重複までしか適用されません。`
-// };
+// const NOTICE = null;
+const NOTICE = {
+   id: "2026-11-04a",
+   ko: `버그 의심 : ${t("허셸")}의 세 번째 패시브 《반마도 장비》의 「1회 트리거 후 제거」가 적용되지 않음`,
+   en: `Suspected bug: The "removed after triggering once" effect of ${t("허셸")}'s third passive 《Anti-magic Equipment》 does not apply.`,
+   sc: `疑似BUG：${t("허셸")}的第三个被动《反魔导装备》的「触发1次后移除」未生效。`,
+   tc: `疑似BUG：${t("허셸")}的第三個被動《反魔導裝備》的「觸發1次後移除」未生效。`,
+   jp: `バグの疑い：${t("허셸")}の3番目のパッシブ《反魔導装備》の「1回発動後に解除」が適用されていません。`
+};
 
 document.addEventListener("DOMContentLoaded", function() {
    setNotice();
