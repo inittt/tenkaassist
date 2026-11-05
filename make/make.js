@@ -432,7 +432,8 @@ function setPossibleParallel() {
          jobs.push([order.length, compList, cmd, commands, bonds, bossEl, _optionList, elvCodes]);
       };
 
-      if (boss_element == -1 && hitAll == true) {
+      if (boss_element == -1 && hitAll == true &&
+            (_optionList == null || _optionList.slice(3).every(v => v == 0))) {
          if (useElv) {
             if (d.dmgElv > 0 && limit_fit > d.dmgElv) continue;
             if (bonds.every(item => item === 5) && d.dmgElv > 0) d.fit13t = d.dmgElv;
@@ -554,7 +555,8 @@ function setPossibleSerial() {
          ? autoCalc(compList, d.description, glbBonds, bossEl, _optionList, elvCodes)
          : autoCalc(compList, d.description, glbBonds, bossEl, _optionList);
 
-      if (boss_element == -1 && hitAll == true) {
+      if (boss_element == -1 && hitAll == true &&
+            (_optionList == null || _optionList.slice(3).every(v => v == 0))) {
          if (useElv) {
             if (d.dmgElv > 0 && limit_fit > d.dmgElv) continue;
             if (glbBonds.every(item => item === 5) && d.dmgElv > 0) d.fit13t = d.dmgElv;
