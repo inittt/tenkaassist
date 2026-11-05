@@ -313,6 +313,9 @@ const translate = {
    "부여" : {en : "", sc : "", tc : "", jp : "付与"},
    "타깃" : {en : "target", sc : "目标", tc : "目標", jp : "ターゲット"},
    "힐" : {en : "recovery", sc : "回复", tc : "回復", jp : "回復"},
+   "<불의 축복>" : {en : "〈Fire's Blessing〉", sc : "〈火之祝福〉", tc : "〈火之祝福〉", jp : "〈火の祝福〉"},
+   "<바람의 축복>" : {en : "〈Wind's Blessing〉", sc : "〈风之祝福〉", tc : "〈風之祝福〉", jp : "〈風の祝福〉"},
+   "<빛의 축복>" : {en : "〈Light's Blessing〉", sc : "〈光之祝福〉", tc : "〈光之祝福〉", jp : "〈光の祝福〉"},
  
 
    // 조합상세
