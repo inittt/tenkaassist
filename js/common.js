@@ -316,7 +316,10 @@ const translate = {
    "<불의 축복>" : {en : "〈Fire's Blessing〉", sc : "〈火之祝福〉", tc : "〈火之祝福〉", jp : "〈火の祝福〉"},
    "<바람의 축복>" : {en : "〈Wind's Blessing〉", sc : "〈风之祝福〉", tc : "〈風之祝福〉", jp : "〈風の祝福〉"},
    "<빛의 축복>" : {en : "〈Light's Blessing〉", sc : "〈光之祝福〉", tc : "〈光之祝福〉", jp : "〈光の祝福〉"},
- 
+   "<불의 축복>시" : {en : "Upon obtaining 〈Fire's Blessing〉,", sc : "获得〈火之祝福〉时,", tc : "獲得〈火之祝福〉時,", jp : "〈火の祝福〉を獲得した時,"},
+   "<바람의 축복>시" : {en : "Upon obtaining 〈Wind's Blessing〉,", sc : "获得〈风之祝福〉时,", tc : "獲得〈風之祝福〉時,", jp : "〈風の祝福〉を獲得した時,"},
+   "<빛의 축복>시" : {en : "Upon obtaining 〈Light's Blessing〉,", sc : "获得〈光之祝福〉时,", tc : "獲得〈光之祝福〉時,", jp : "〈光の祝福〉を獲得した時,"},
+    
 
    // 조합상세
    "체험하기" : {en : "test", sc : "测试", tc : "測試", jp : "体験"},
