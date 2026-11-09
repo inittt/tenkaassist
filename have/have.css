@@ -269,6 +269,12 @@
 .pickup-badge.demonite   { background-color: #1d8fd1; }
 .pickup-badge.souls { background-color: #7b3fd1; }
 .pickup-badge.wish { background-color: #e18700; }
+.pickup-badge.period {
+   background: transparent;
+   border: 1px solid rgba(255, 255, 255, 0.4);
+   color: #ddd;
+   font-variant-numeric: tabular-nums;
+}
 .pickup-list {
    display: flex;
    flex-wrap: wrap;

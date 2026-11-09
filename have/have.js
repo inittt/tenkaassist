@@ -94,11 +94,13 @@ function getCharactersWithCondition(element, role, rarity, search) {
             .filter(Boolean);
          if (cards.length === 0) continue; // 검색/필터로 비면 배너 자체 숨김
          const wishDiv = banner.wish ? `<span class="pickup-badge wish">${t("위시")} ${banner.wish}</span>` : "";
+         const periodDiv = banner.period ? `<span class="pickup-badge period">${banner.period}</span>` : "";
          groups.push(`
             <div class="pickup-group">
                <div class="pickup-header">
                   <span class="pickup-badge ${banner.type}">${t(pickUpCurrency[banner.type])}</span>
                   ${wishDiv}
+                  ${periodDiv}
                </div>
                <div class="pickup-list">${cards.join("")}</div>
             </div>
