@@ -10,7 +10,25 @@ const initElvCodes = (elvParam && /^[1-3]{20}$/.test(elvParam))
    ? Array.from({ length: 5 }, (_, i) => elvParam.slice(i * 4, i * 4 + 4))
    : null;
 
-let hp_set = 10854389981;
+// 적 HP 프리셋 (hp: null → 직접입력)
+const BOSS_HP_LIST = [
+   { name: "허수", hp: 2147483192 },
+   { name: "허수+", hp: 10854389981 },
+   { name: "허수++", hp: 51116035636 },
+   { name: "체험", hp: 5063653034 },
+   { name: "Lv30", hp: 356919591 },
+   { name: "Lv40", hp: 1080050416 },
+   { name: "Lv47", hp: 2405385961 },
+   { name: "Lv57", hp: 6238951701 },
+   { name: "Lv61", hp: 9134449186 },
+   { name: "Lv64", hp: 13677695850 },
+   { name: "Lv68", hp: 22250571660 },
+   { name: "Lv70", hp: 26923191709 },
+   { name: "직접입력", hp: null },
+];
+const DEFAULT_BOSS_HP_IDX = 1; // 허수+
+
+let hp_set = BOSS_HP_LIST[DEFAULT_BOSS_HP_IDX].hp;
 const elvOnList = [false, false, false, false, false];
 document.addEventListener("DOMContentLoaded", function() {
    const chNameList = [];
@@ -28,41 +46,8 @@ document.addEventListener("DOMContentLoaded", function() {
       }
    }
 
-   const dropdownBtn = document.getElementById("dropdownBtn");
-   const dropdownContent = document.querySelector(".dropdown-content");
-
-   dropdownBtn.addEventListener("click", function() {
-      dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
-   });
- 
-   const radios = document.querySelectorAll("input[type='radio'][name='options']");
-   radios.forEach(function(option) {
-      option.addEventListener("change", function() {
-         dropdownBtn.innerText = `${t(this.value)}`;
-         const spanElement = document.createElement('span');
-         spanElement.classList.add('absolute-right');
-         spanElement.innerHTML = '▼'
-         dropdownBtn.appendChild(spanElement);
-         dropdownContent.style.display = "none";
-
-         document.getElementById("hp-txt").disabled = true;
-         if ("허수" === this.value) hp_set = 2147483192;
-         else if ("허수+" === this.value) hp_set = 10854389981;
-         else if ("허수++" === this.value) hp_set = 51116035636;
-         else if ("체험" === this.value) hp_set = 5063653034;
-         else if ("Lv30" === this.value) hp_set = 277604127;
-         else if ("Lv40" === this.value) hp_set = 822895555;
-         else if ("Lv50" === this.value) hp_set = 2134379143;
-         else if ("Lv60" === this.value) hp_set = 5536029809;
-         else if ("Lv62" === this.value) hp_set = 7535920578;
-         else if ("Lv65" === this.value) hp_set = 11144789211;
-         else {
-            document.getElementById("hp-txt").disabled = false;
-         }
-         
-         document.getElementById("hp-txt").value = hp_set;
-      });
-   });
+   // 적 HP 드롭다운 만들기
+   makeBossHPUI();
 
    setComp();
    
@@ -73,6 +58,48 @@ document.addEventListener("DOMContentLoaded", function() {
    // elv 파라미터가 있으면 드롭다운에 적용
    if (initElvCodes) applyInitElvCodes(initElvCodes);
 });
+
+// 적 HP -----------------------------
+function makeBossHPUI() {
+   const dropdownBtn = document.getElementById("dropdownBtn");
+   const dropdownContent = document.getElementById("bossHP");
+   const hpTxt = document.getElementById("hp-txt");
+
+   const setBtnText = (name) => {
+      dropdownBtn.innerHTML = `${t(name)}<span class="absolute-right">▼</span>`;
+   };
+
+   // 옵션 생성 (value = 배열 인덱스)
+   dropdownContent.innerHTML = BOSS_HP_LIST.map((boss_hp, i) => `
+      <input type="radio" id="option${i + 1}" name="options" value="${i}" ${i === DEFAULT_BOSS_HP_IDX ? "checked" : ""}>
+      <label class="sortLabel" for="option${i + 1}">${t(boss_hp.name)}</label>
+   `).join("");
+
+   // 초기 상태
+   setBtnText(BOSS_HP_LIST[DEFAULT_BOSS_HP_IDX].name);
+   hpTxt.value = hp_set;
+   hpTxt.disabled = true;
+
+   dropdownBtn.addEventListener("click", function() {
+      dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+   });
+
+   dropdownContent.querySelectorAll("input[name='options']").forEach(function(option) {
+      option.addEventListener("change", function() {
+         const boss_hp = BOSS_HP_LIST[Number(this.value)];
+         setBtnText(boss_hp.name);
+         dropdownContent.style.display = "none";
+
+         if (boss_hp.hp == null) {
+            hpTxt.disabled = false;   // 직접입력: 직전 값 유지한 채 편집 가능
+         } else {
+            hp_set = boss_hp.hp;
+            hpTxt.disabled = true;
+         }
+         hpTxt.value = hp_set;
+      });
+   });
+}
 
 function numToBond(num) {
    switch(num) {
